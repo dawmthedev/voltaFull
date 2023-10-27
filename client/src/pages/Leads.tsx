@@ -95,7 +95,7 @@ export default function Leads() {
   const dispatch = useAppDispatch();
   const leads = useAppSelector(leadsList);
   const { signal, abort } = createAbortController();
-  
+
   const [categories, setCategories] = useState<CategoryResponseTypes[]>([]);
   const [lead, setLead] = useState<LeadsTypes>(leadsInitialState);
   const [category, setCategory] = useState(categoryInitialState);
@@ -307,8 +307,8 @@ export default function Leads() {
                   setLead({ ...lead, categoryId: e.target.value });
                 }}
               >
-                {categories.map((category: CategoryResponseTypes) => (
-                  <MenuItem key={category.id} value={category.id}>
+                {categories.map((category: CategoryResponseTypes & { _id: string }) => (
+                  <MenuItem key={category._id} value={category._id}>
                     {category.name}
                   </MenuItem>
                 ))}

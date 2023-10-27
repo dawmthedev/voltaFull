@@ -31,14 +31,6 @@ import compression from "compression";
       specVersion: "3.0.1"
     }
   ],
-  middlewares: [
-    "cors",
-    "cookie-parser",
-    "compression",
-    "method-override",
-    "json-parser",
-    { use: "urlencoded-parser", options: { extended: true } }
-  ],
   views: {
     root: join(process.cwd(), "../views"),
     extensions: {
