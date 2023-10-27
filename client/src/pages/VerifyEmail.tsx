@@ -12,7 +12,7 @@ const VerifyEmail = () => {
     try {
       const response = await axios.post('http://localhost:4000/rest/auth/start-verification', {
         email: email,
-        type: 'PASSWORD'
+        type: 'password'
       });
 
       if (response?.status === 200) {

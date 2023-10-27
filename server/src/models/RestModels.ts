@@ -48,14 +48,13 @@ export class OrganizationResultModel {
 }
 
 export class CategoryResultModel {
-  @Property() public readonly id: string;
+  @Property() public readonly _id: string;
   @Property() public readonly name: string;
   @Property() public readonly description: string;
   @Property() public readonly adminId: string;
   @Property() public readonly orgId: string;
   @Property() public readonly createdAt: Date;
   @Property() public readonly updatedAt: Date;
-  @Property() public readonly deletedAt: Date;
 }
 
 export class LeadResultModel {

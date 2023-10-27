@@ -27,7 +27,7 @@ const RegisterPage = () => {
     try {
       const response = await axios.post('http://localhost:4000/rest/auth/start-verification', {
         email: register.email,
-        type: 'EMAIL'
+        type: 'email'
       });
 
       if (response.status === 200) {
