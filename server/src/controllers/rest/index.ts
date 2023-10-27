@@ -3,3 +3,5 @@
  */
 
 export * from "./DynamicController";
+export * from "./OrganizationController";
+export * from "./AuthenticationController";

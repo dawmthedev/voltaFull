@@ -21,6 +21,10 @@ export class AdminModel {
   role: string;
 
   @Property()
+  @Default(false)
+  twoFactorEnabled: boolean;
+
+  @Property()
   orgId: string;
   @Property()
   @Default(new Date())

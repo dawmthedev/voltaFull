@@ -58,100 +58,100 @@ export class AuthenticationController {
   @Inject()
   private organizationService: OrganizationService;
 
-  // @Post("/start-verification")
-  // @Returns(200, SuccessResult).Of(SuccessMessageModel)
-  // public async startVerification(@BodyParams() body: StartVerificationParams) {
-  //   const { email, type } = body;
-  //   if (!email || !type) throw new BadRequest(MISSING_PARAMS);
-  //   const findAdmin = await this.adminService.findAdminByEmail(email);
-  //   if (type === "EMAIL" && findAdmin) throw new BadRequest(EMAIL_EXISTS);
-  //   if (type === "PASSWORD" && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
-  //   const verificationData = await this.verificationService.generateVerification({ email, type });
-  //   await NodemailerClient.sendVerificationEmail({
-  //     title: type || "Email",
-  //     email,
-  //     code: verificationData.code
-  //   });
-  //   return new SuccessResult({ success: true, message: "Verification Code sent successfully" }, SuccessMessageModel);
-  // }
+  @Post("/start-verification")
+  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  public async startVerification(@BodyParams() body: StartVerificationParams) {
+    const { email, type } = body;
+    if (!email || !type) throw new BadRequest(MISSING_PARAMS);
+    const findAdmin = await this.adminService.findAdminByEmail(email);
+    if (type === "EMAIL" && findAdmin) throw new BadRequest(EMAIL_EXISTS);
+    if (type === "PASSWORD" && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
+    const verificationData = await this.verificationService.generateVerification({ email, type });
+    await NodemailerClient.sendVerificationEmail({
+      title: type || "Email",
+      email,
+      code: verificationData.code
+    });
+    return new SuccessResult({ success: true, message: "Verification Code sent successfully" }, SuccessMessageModel);
+  }
 
-  // @Post("/register")
-  // @Returns(200, SuccessResult).Of(SuccessMessageModel)
-  // public async newOrg(@BodyParams() body: RegisterOrgParams) {
-  //   let { company, email, name, password, verificationToken } = body;
-  //   company = company.toLowerCase();
-  //   const organization = await this.organizationService.findOrganizationByName(company);
-  //   if (organization) throw new Error(ORGANIZATION_NAME_ALREADY_EXISTS);
-  //   const admin = await this.adminService.findAdminByEmail(email);
-  //   if (admin && organization) throw new Error(ADMIN_ALREADY_EXISTS);
-  //   await this.verificationService.verifyToken({ verificationToken, email });
-  //   const org = await this.organizationService.createOrganization({ name: company });
-  //   await this.adminService.createAdmin({
-  //     email,
-  //     name,
-  //     password,
-  //     organizationId: org.id
-  //   });
-  //   return new SuccessResult({ success: true, message: "Organization created successfully" }, SuccessMessageModel);
-  // }
+  @Post("/register")
+  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  public async newOrg(@BodyParams() body: RegisterOrgParams) {
+    let { company, email, name, password, verificationToken } = body;
+    company = company.toLowerCase();
+    const organization = await this.organizationService.findOrganizationByName(company);
+    if (organization) throw new Error(ORGANIZATION_NAME_ALREADY_EXISTS);
+    const admin = await this.adminService.findAdminByEmail(email);
+    if (admin && organization) throw new Error(ADMIN_ALREADY_EXISTS);
+    await this.verificationService.verifyToken({ verificationToken, email });
+    const org = await this.organizationService.createOrganization({ name: company });
+    await this.adminService.createAdmin({
+      email,
+      name,
+      password,
+      organizationId: org.id
+    });
+    return new SuccessResult({ success: true, message: "Organization created successfully" }, SuccessMessageModel);
+  }
 
-  // @Post("/login")
-  // @Returns(200, SuccessResult).Of(AdminResultModel)
-  // public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
-  //   const { email, password } = body;
-  //   if (!email || !password) throw new BadRequest(MISSING_PARAMS);
-  //   const admin = await this.adminService.findAdminByEmail(email);
-  //   if (!admin) throw new NotFound(EMAIL_NOT_EXISTS);
-  //   if (admin.password !== createPasswordHash({ email, password })) throw new Forbidden(INCORRECT_PASSWORD);
-  //   const expiresIn = 60 * 60 * 24 * 5 * 1000;
-  //   const options = { maxAge: expiresIn, httpOnly: true, secure: isSecure };
-  //   const sessionCookie = await this.adminService.createSessionCookie(admin);
-  //   res.cookie("session", sessionCookie, options);
-  //   return new SuccessResult(
-  //     {
-  //       email: admin.email,
-  //       role: admin.role || "",
-  //       twoFactorEnabled: admin.twoFactorEnabled,
-  //       orgId: admin.orgId || "",
-  //       company: "crm",
-  //       token: sessionCookie
-  //     },
-  //     AdminResultModel
-  //   );
-  // }
+  @Post("/login")
+  @Returns(200, SuccessResult).Of(AdminResultModel)
+  public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
+    const { email, password } = body;
+    if (!email || !password) throw new BadRequest(MISSING_PARAMS);
+    const admin = await this.adminService.findAdminByEmail(email);
+    if (!admin) throw new NotFound(EMAIL_NOT_EXISTS);
+    if (admin.password !== createPasswordHash({ email, password })) throw new Forbidden(INCORRECT_PASSWORD);
+    const expiresIn = 60 * 60 * 24 * 5 * 1000;
+    const options = { maxAge: expiresIn, httpOnly: true, secure: isSecure };
+    const sessionCookie = await this.adminService.createSessionCookie(admin);
+    res.cookie("session", sessionCookie, options);
+    return new SuccessResult(
+      {
+        email: admin.email,
+        role: admin.role || "",
+        twoFactorEnabled: admin.twoFactorEnabled,
+        orgId: admin.orgId || "",
+        company: "crm",
+        token: sessionCookie
+      },
+      AdminResultModel
+    );
+  }
 
-  // @Put("/reset-password")
-  // @Returns(200, SuccessResult).Of(SuccessMessageModel)
-  // public async resetPassword(@BodyParams() body: UpdateAdminPasswordParams) {
-  //   const { code, password } = body;
-  //   if (!code || !password) throw new BadRequest(MISSING_PARAMS);
-  //   const verification = await this.verificationService.verifyToken({ verificationToken: code });
-  //   if (!verification) throw new BadRequest(INVALID_TOKEN);
-  //   await this.adminService.updateAdminPassword({ email: verification.email, password });
-  //   return new SuccessResult({ success: true, message: "Password updated successfully" }, SuccessMessageModel);
-  // }
+  @Put("/reset-password")
+  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  public async resetPassword(@BodyParams() body: UpdateAdminPasswordParams) {
+    const { code, password } = body;
+    if (!code || !password) throw new BadRequest(MISSING_PARAMS);
+    const verification = await this.verificationService.verifyToken({ verificationToken: code });
+    if (!verification) throw new BadRequest(INVALID_TOKEN);
+    await this.adminService.updateAdminPassword({ email: verification.email, password });
+    return new SuccessResult({ success: true, message: "Password updated successfully" }, SuccessMessageModel);
+  }
 
-  // @Put("/complete-verification")
-  // @Returns(200, SuccessResult).Of(SuccessMessageModel)
-  // public async completeVerification(@BodyParams() body: VerificationSuccessModel) {
-  //   const { email, code } = body;
-  //   if (!email || !code) throw new BadRequest(MISSING_PARAMS);
-  //   await this.verificationService.verifyCode({ email, code });
-  //   return new SuccessResult(
-  //     {
-  //       success: true,
-  //       message: "verification completed successfully"
-  //     },
-  //     SuccessMessageModel
-  //   );
-  // }
+  @Put("/complete-verification")
+  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  public async completeVerification(@BodyParams() body: VerificationSuccessModel) {
+    const { email, code } = body;
+    if (!email || !code) throw new BadRequest(MISSING_PARAMS);
+    await this.verificationService.verifyCode({ email, code });
+    return new SuccessResult(
+      {
+        success: true,
+        message: "verification completed successfully"
+      },
+      SuccessMessageModel
+    );
+  }
 
-  // @Post("/logout")
-  // @Returns(200, SuccessResult).Of(SuccessMessageModel)
-  // public async adminLogout(@Req() req: Req, @Res() res: Res) {
-  //   const sessionCookie = req.cookies.session || "";
-  //   res.clearCookie("session");
-  //   await this.adminService.deleteSessionCookie(sessionCookie);
-  //   return new SuccessResult({ success: true, message: "logout successfully" }, SuccessMessageModel);
-  // }
+  @Post("/logout")
+  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  public async adminLogout(@Req() req: Req, @Res() res: Res) {
+    const sessionCookie = req.cookies.session || "";
+    res.clearCookie("session");
+    await this.adminService.deleteSessionCookie(sessionCookie);
+    return new SuccessResult({ success: true, message: "logout successfully" }, SuccessMessageModel);
+  }
 }

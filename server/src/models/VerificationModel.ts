@@ -22,7 +22,6 @@ export class VerificationModel {
   code: string;
 
   @Property()
-  @Default(new Date(Date.now() + 24 * 60 * 60 * 1000))
   expiry: Date;
 
   @Enum(TypeEnum)
