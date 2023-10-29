@@ -13,6 +13,7 @@ import Leads from './pages/Leads';
 import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
+import DynamicLead from './pages/DynamicLead';
 
 export default function Router() {
   const routes = useRoutes([
@@ -25,7 +26,8 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
-        { path: 'leads', element: <Leads /> }
+        { path: 'leads', element: <Leads /> },
+        { path: 'dynamic-leads', element: <DynamicLead /> }
       ]
     },
     {

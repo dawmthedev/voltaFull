@@ -42,6 +42,7 @@ import { getLeads } from '../redux/middleware/lead';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { leadsList } from '../redux/slice/leadSlice';
 import createAbortController from '../utils/createAbortController';
+import { categorySelector } from '../redux/slice/categorySlice';
 
 const TABLE_HEAD = [
   { id: 'firstName', label: 'First Name', alignRight: false },
@@ -94,9 +95,9 @@ const categoryInitialState = {
 export default function Leads() {
   const dispatch = useAppDispatch();
   const leads = useAppSelector(leadsList);
+  const categories: CategoryResponseTypes[] = useAppSelector(categorySelector);
   const { signal, abort } = createAbortController();
 
-  const [categories, setCategories] = useState<CategoryResponseTypes[]>([]);
   const [lead, setLead] = useState<LeadsTypes>(leadsInitialState);
   const [category, setCategory] = useState(categoryInitialState);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -119,14 +120,10 @@ export default function Leads() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   useEffect(() => {
-    axios.defaults.withCredentials = true;
+    if (!categories.length) return;
     (async () => {
       try {
-        const categoryResponse = await axios.get('http://localhost:4000/rest/category', {
-          signal
-        });
-        dispatch(getLeads({ signal }));
-        setCategories(categoryResponse?.data?.data);
+        dispatch(getLeads({ categoryId: categories[0].id, signal }));
       } catch (error) {
         console.log('Error:(', error);
       }
@@ -138,8 +135,7 @@ export default function Leads() {
 
   const submitLead = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/rest/lead', lead);
-      // setLeads([...leads, response?.data?.data]);
+      await axios.post('http://localhost:4000/rest/lead', lead);
       setIsModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -147,8 +143,7 @@ export default function Leads() {
   };
   const submitCategory = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/rest/category', category);
-      setCategories([...categories, response?.data?.data]);
+      await axios.post('http://localhost:4000/rest/category', category);
       setIsCategoryModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -160,7 +155,6 @@ export default function Leads() {
       if (!bulkLeads.length) return;
       const response = await axios.post('http://localhost:4000/rest/lead/bulk', bulkLeads);
       if (response?.status === 200) {
-        dispatch(getLeads({ signal }));
         setIsCsvModalOpen(false);
       }
     } catch (error) {
@@ -256,11 +250,12 @@ export default function Leads() {
           </Box>
         </Stack>
         <Stack direction="row" alignItems="center" gap={2} mb={5}>
-          {categories.map((category: CategoryResponseTypes) => (
-            <Button key={category.id} variant="outlined">
-              {category.name}
-            </Button>
-          ))}
+          {categories &&
+            categories.map((category: CategoryResponseTypes) => (
+              <Button key={category.id} variant="outlined">
+                {category.name}
+              </Button>
+            ))}
         </Stack>
         <CustomModal title="Add Lead" open={isModalOpen} setOpen={() => setIsModalOpen(false)} handleSubmit={submitLead}>
           <Grid>
@@ -307,8 +302,8 @@ export default function Leads() {
                   setLead({ ...lead, categoryId: e.target.value });
                 }}
               >
-                {categories.map((category: CategoryResponseTypes & { _id: string }) => (
-                  <MenuItem key={category._id} value={category._id}>
+                {categories.map((category: CategoryResponseTypes) => (
+                  <MenuItem key={category.id} value={category.id}>
                     {category.name}
                   </MenuItem>
                 ))}

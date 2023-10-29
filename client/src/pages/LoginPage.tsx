@@ -21,8 +21,8 @@ const LoginPage = () => {
         email: email,
         password: password
       });
-      const token = resonse?.data?.data?.token;
-      document.cookie = `session=${token}`;
+      // const token = resonse?.data?.data?.token;
+      // document.cookie = `session=${token}`;
       navigate('/dashboard', { replace: true });
     } catch (error) {
       console.log(error);

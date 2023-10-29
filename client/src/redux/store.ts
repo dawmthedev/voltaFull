@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
+import categorySlice from './slice/categorySlice';
 import leadSlice from './slice/leadSlice';
 
 export const store = configureStore({
   reducer: {
-    lead: leadSlice
-    // comments: commentsReducer,
-    // users: usersReducer,
+    lead: leadSlice,
+    category: categorySlice
   }
 });
 

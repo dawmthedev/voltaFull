@@ -2,16 +2,21 @@ import { createSlice } from '@reduxjs/toolkit';
 import { LeadsTypes } from '../../types';
 import { getLead, getLeads, createLead, createBulkLead, updateLead, deleteLead } from '../middleware/lead';
 
-const initialState: { data: LeadsTypes[]; loading: boolean; error: any } = {
+const initialState: { data: LeadsTypes[]; loading: boolean; isModalOpen: boolean; error: any } = {
   loading: false,
   data: [],
-  error: null
+  error: null,
+  isModalOpen: false
 };
 
 const leadSlice = createSlice({
   name: 'leadSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    openModal: (state, payload) => {
+      state.isModalOpen = payload.payload;
+    }
+  },
   extraReducers: (builder) => {
     // Get Leads
     builder.addCase(getLeads.pending, (state) => {
@@ -52,9 +57,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(createBulkLead.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.isModalOpen = false;
     });
     builder.addCase(createBulkLead.rejected, (state, action) => {
       state.error = action.error;
+      state.isModalOpen = false;
     });
 
     // Update Lead
@@ -81,5 +88,7 @@ const leadSlice = createSlice({
   }
 });
 
-export default leadSlice.reducer;
 export const leadsList = (state) => state.lead.data;
+export const leadState = (state: { lead: { data: LeadsTypes[]; loading: boolean; isModalOpen: boolean; error: any } }) => state.lead;
+export default leadSlice.reducer;
+export const { openModal } = leadSlice.actions;

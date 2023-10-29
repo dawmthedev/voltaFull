@@ -2,9 +2,9 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { get, post, put, destroy } from '../../libs/client/apiClient';
 import { LeadsTypes } from '../../types';
 
-const getLeads = createAsyncThunk('leads/get', async ({ signal }: { signal: AbortSignal }) => {
+const getLeads = createAsyncThunk('dynamic/get', async ({ categoryId, signal }: { categoryId: string; signal: AbortSignal }) => {
   try {
-    const { data } = await get('/lead', { signal });
+    const { data } = await get(`/dynamic/${categoryId}`, { signal });
     return data.data;
   } catch (error) {
     throw error;
@@ -20,18 +20,18 @@ const getLead = createAsyncThunk('lead/get', async ({ id }: { id: string }) => {
   }
 });
 
-const createLead = createAsyncThunk('lead/create', async ({ lead, signal }: { lead: LeadsTypes; signal: AbortSignal }) => {
+const createLead = createAsyncThunk('dynamic/insert', async ({ lead, signal }: { lead: any; signal: AbortSignal }) => {
   try {
-    const { data } = await post('/lead', lead);
+    const { data } = await post('/dynamic/insert', lead);
     return data.data;
   } catch (error) {
     throw error;
   }
 });
 
-const createBulkLead = createAsyncThunk('lead/createBulk', async ({ leads, signal }: { leads: LeadsTypes[]; signal: AbortSignal }) => {
+const createBulkLead = createAsyncThunk('dynamic/createBulk', async ({ leads, signal }: { leads: any; signal: AbortSignal }) => {
   try {
-    const { data } = await post('/lead/bulk', leads);
+    const { data } = await post('/dynamic/createBulk', leads);
     return data.data;
   } catch (error) {
     throw error;
