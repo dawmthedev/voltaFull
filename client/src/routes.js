@@ -14,6 +14,8 @@ import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import DynamicLead from './pages/DynamicLead';
+import DealsPage from './pages/DealsPage';
+import PayPage from './pages/PayPage';
 import CompleteRegistration from './pages/CompleteRegistration';
 
 export default function Router() {
@@ -28,6 +30,8 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
+        { path: 'pay', element: <PayPage /> },
+        { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> }
       ]
     },

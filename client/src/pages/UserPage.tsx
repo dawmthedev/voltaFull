@@ -38,6 +38,7 @@ import { register } from '../redux/middleware/authentication';
 import { authSelector } from '../redux/slice/authSlice';
 
 // ----------------------------------------------------------------------
+// Colum
 
 const TABLE_HEAD = [
   { id: 'name', name: 'Name', alignRight: false },
