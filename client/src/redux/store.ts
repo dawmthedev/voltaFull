@@ -4,9 +4,11 @@ import storage from 'redux-persist/lib/storage'; // Defaults to localStorage for
 import categorySlice from './slice/categorySlice';
 import leadSlice from './slice/leadSlice';
 import authSlice from './slice/authSlice';
+import adminSlice from './slice/adminSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
+  admin: adminSlice,
   lead: leadSlice,
   category: categorySlice
 });
@@ -15,8 +17,8 @@ const persistConfig = {
   key: 'root',
   storage,
   // Optionally, you can specify which reducers to persist or blacklist specific reducers
-  whitelist: ['auth', 'category'],
-  blacklist: ['lead']
+  whitelist: ['auth'],
+  blacklist: ['lead', 'category', 'admin']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

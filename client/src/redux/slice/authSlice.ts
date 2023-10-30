@@ -22,6 +22,9 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
+      if (document.cookie.indexOf('session=') !== -1) {
+        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+      }
       document.cookie = `session=${action.payload.token}`;
     });
     builder.addCase(login.rejected, (state, action) => {

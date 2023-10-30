@@ -19,14 +19,26 @@ const login = createAsyncThunk('aut/login', async ({ email, password }: { email:
   }
 });
 
-const register = createAsyncThunk('auth/register', async ({ email, password }: { email: string; password: string }) => {
+const register = createAsyncThunk('auth/register', async ({ name, email, password }: { name: string; email: string; password: string }) => {
   try {
-    const { data } = await post('/auth/register', { email, password });
+    const { data } = await post('/auth/register', { name, email, password });
     return data.data;
   } catch (error) {
     throw error;
   }
 });
+
+const completeRegistration = createAsyncThunk(
+  'auth/completeRegistration',
+  async ({ name, email, password }: { name: string; email: string; password: string }) => {
+    try {
+      const { data } = await post('/auth/complete-registration', { name, email, password });
+      return data.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+);
 
 const logout = createAsyncThunk('auth/logout', async () => {
   try {
@@ -46,4 +58,4 @@ const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ code, em
   }
 });
 
-export { getOrganization, login, register, logout, forgotPassword };
+export { getOrganization, login, register, logout, forgotPassword, completeRegistration };

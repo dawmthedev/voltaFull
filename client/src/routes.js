@@ -14,6 +14,7 @@ import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import DynamicLead from './pages/DynamicLead';
+import CompleteRegistration from './pages/CompleteRegistration';
 
 export default function Router() {
   const routes = useRoutes([
@@ -44,8 +45,12 @@ export default function Router() {
     },
     {
       path: 'register',
-      element: <RegisterPage />
+      element: <CompleteRegistration />
     },
+    // {
+    //   path: 'register/user',
+    //   element: <CompleteRegistration />
+    // },
     {
       path: 'reset-password',
       element: <ResetPasswordPage />

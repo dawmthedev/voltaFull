@@ -4,8 +4,10 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
 import account from '../../../_mock/account';
-import { useAppSelector } from '../../../hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { authSelector } from '../../../redux/slice/authSlice';
+import { useNavigate } from 'react-router-dom';
+import { logout } from '../../../redux/middleware/authentication';
 
 // ----------------------------------------------------------------------
 
@@ -27,6 +29,8 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const data = useAppSelector(authSelector);
   const [open, setOpen] = useState(null);
 
@@ -80,11 +84,14 @@ export default function AccountPopover() {
         }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap sx={{textTransform:'uppercase'}}>
+          <Typography variant="subtitle2" noWrap sx={{ textTransform: 'uppercase' }}>
             {data?.name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {data?.email}
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {data?.recordID}
           </Typography>
         </Box>
 
@@ -100,7 +107,15 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem
+          // onClick={handleClose}
+          sx={{ m: 1 }}
+          onClick={() => {
+            navigate('/login', { replace: true });
+            handleClose();
+            dispatch(logout());
+          }}
+        >
           Logout
         </MenuItem>
       </Popover>
