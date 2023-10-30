@@ -1,8 +1,8 @@
 // ----------------------------------------------------------------------
 
 const account = {
-  displayName: 'Byan Hossack',
-  email: 'bryanhossack@gmail.com',
+  displayName: 'Voltaic User',
+  email: 'Voltaic LLC',
   photoURL: '/assets/images/avatars/avatar_default.jpg',
 };
 

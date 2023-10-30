@@ -32,6 +32,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import USERLIST from '../_mock/user';
 
 // ----------------------------------------------------------------------
+// Colum
 
 const TABLE_HEAD = [
   { id: 'name', label: 'Name', alignRight: false },
