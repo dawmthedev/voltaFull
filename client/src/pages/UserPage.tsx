@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { sentenceCase } from 'change-case';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 // @mui
 import {
   Card,
@@ -22,28 +22,33 @@ import {
   TableContainer,
   TablePagination
 } from '@mui/material';
-// components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
-// sections
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-// mock
 import USERLIST from '../_mock/user';
+import React from 'react';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { getUsers } from '../redux/middleware/admin';
+import createAbortController from '../utils/createAbortController';
+import { adminSelector } from '../redux/slice/adminSlice';
+import CustomModal from '../components/modals/CustomModal';
+import AddUserForm from '../components/add-user-form/AddUserForm';
+import { register } from '../redux/middleware/authentication';
+import { authSelector } from '../redux/slice/authSlice';
 
 // ----------------------------------------------------------------------
 // Colum
 
 const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Company', alignRight: false },
-  { id: 'role', label: 'Role', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
+  { id: 'name', name: 'Name', alignRight: false },
+  { id: 'email', name: 'Email', alignRight: false },
+  { id: 'company', name: 'Company', alignRight: false },
+  { id: 'role', name: 'Role', alignRight: false },
+  // { id: 'isVerified', name: 'Verified', alignRight: false },
+  // { id: 'status', name: 'Status', alignRight: false },
   { id: '' }
 ];
-
-// ----------------------------------------------------------------------
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -72,20 +77,35 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const initialState = {
+  email: '',
+  role: ''
+};
+
 export default function UserPage() {
+  const dispatch = useAppDispatch();
+  const users = useAppSelector(adminSelector);
+  const loggedInUser = useAppSelector(authSelector);
+  const { signal, abort } = createAbortController();
+
   const [open, setOpen] = useState(null);
-
   const [page, setPage] = useState(0);
-
   const [order, setOrder] = useState('asc');
-
   const [selected, setSelected] = useState([]);
-
   const [orderBy, setOrderBy] = useState('name');
-
   const [filterName, setFilterName] = useState('');
-
   const [rowsPerPage, setRowsPerPage] = useState(5);
+
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [user, setUser] = useState(initialState);
+
+  useEffect(() => {
+    dispatch(getUsers({ signal }));
+
+    return () => {
+      abort();
+    };
+  }, []);
 
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
@@ -103,7 +123,8 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = USERLIST.map((n) => n.name);
+      debugger;
+      const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -139,9 +160,9 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - USERLIST.length) : 0;
+  const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
-  const filteredUsers = applySortFilter(USERLIST, getComparator(order, orderBy), filterName);
+  const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
 
@@ -156,11 +177,27 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Lead
-          </Button>
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
+            New User
+          </Button> */}
         </Stack>
 
+        <CustomModal
+          title="Add New User"
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          handleSubmit={() => {
+            // dispatch(register({ ...user, company: loggedInUser.company || '' }));
+            // setIsModalOpen(false);
+          }}
+        >
+          <AddUserForm
+            user={user}
+            getUsersData={(value, name) => {
+              setUser({ ...user, [name]: value });
+            }}
+          />
+        </CustomModal>
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
@@ -171,18 +208,18 @@ export default function UserPage() {
                   order={order}
                   orderBy={orderBy}
                   headLabel={TABLE_HEAD}
-                  rowCount={USERLIST.length}
+                  rowCount={users.length}
                   numSelected={selected.length}
                   onRequestSort={handleRequestSort}
                   onSelectAllClick={handleSelectAllClick}
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { id, name, role, status, company, avatarUrl, isVerified } = row;
+                    const { name, email, role, company, avatarUrl } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
-                      <TableRow hover key={id} tabIndex={-1} role="checkbox" selected={selectedUser}>
+                      <TableRow hover key={name} tabIndex={-1} role="checkbox" selected={selectedUser}>
                         <TableCell padding="checkbox">
                           <Checkbox checked={selectedUser} onChange={(event) => handleClick(event, name)} />
                         </TableCell>
@@ -196,15 +233,16 @@ export default function UserPage() {
                           </Stack>
                         </TableCell>
 
+                        <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{company}</TableCell>
 
                         <TableCell align="left">{role}</TableCell>
 
-                        <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell>
-
+                        {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
+                        {/* 
                         <TableCell align="left">
                           <Label color={(status === 'banned' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                        </TableCell>
+                        </TableCell> */}
 
                         <TableCell align="right">
                           <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
@@ -251,7 +289,7 @@ export default function UserPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={users.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

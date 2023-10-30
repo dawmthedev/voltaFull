@@ -6,8 +6,11 @@ import { LoadingButton } from '@mui/lab';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
 import CustomInput from '../components/input/CustomInput';
+import { useAppDispatch } from '../hooks/hooks';
+import { login } from '../redux/middleware/authentication';
 
 const LoginPage = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -17,12 +20,8 @@ const LoginPage = () => {
 
   const handleClick = async () => {
     try {
-      const resonse = await axios.post('http://localhost:4000/rest/auth/login', {
-        email: email,
-        password: password
-      });
-      // const token = resonse?.data?.data?.token;
-      // document.cookie = `session=${token}`;
+      dispatch(login({ email, password }));
+
       navigate('/dashboard', { replace: true });
     } catch (error) {
       console.log(error);

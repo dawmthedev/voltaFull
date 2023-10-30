@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { CategoryResponseTypes, CategoryTypes } from '../../types';
 import { getCategories, getCategory } from '../middleware/category';
 
-const initialState: { data: CategoryTypes[]; loading: boolean; error: any } = {
+const initialState: { data: CategoryResponseTypes[]; loading: boolean; error: any; category: CategoryResponseTypes } = {
   loading: false,
   data: [],
+  category: null,
   error: null
 };
 
@@ -24,8 +25,21 @@ const categorySlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+    // get category by id
+    builder.addCase(getCategory.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getCategory.fulfilled, (state, action) => {
+      state.loading = false;
+      state.category = action.payload;
+    });
+    builder.addCase(getCategory.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
   }
 });
 
 export default categorySlice.reducer;
 export const categorySelector = (state) => state.category.data;
+export const categoryByIdSelector = (state) => state.category.category;

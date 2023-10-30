@@ -57,14 +57,27 @@ export class AdminService {
     return await this.admin.findByIdAndUpdate({ _id: id }, { name, email });
   }
 
-  public async createAdmin(params: { email: string; name: string; password: string; organizationId: string }) {
-    const { email, name, password, organizationId } = params;
+  public async createAdmin(params: {
+    email: string;
+    name: string;
+    password: string;
+    organizationId: string;
+    role: string;
+    recordID: string;
+  }) {
+    const { email, name, password, organizationId, role, recordID } = params;
     return await this.admin.create({
       email,
       name,
+      role,
+      recordID,
       orgId: organizationId,
       password: createPasswordHash({ email, password })
     });
+  }
+
+  public async completeAdminRegistration({ id, name, email, password }: { id: string; name: string; email: string; password: string }) {
+    return await this.admin.findByIdAndUpdate({ _id: id }, { name, email, password: createPasswordHash({ email, password }) });
   }
 
   public async verifySessionCookie(sessionCookie: string) {
@@ -80,13 +93,19 @@ export class AdminService {
   }
 
   public async createSessionCookie(admin: AdminModel) {
-    const findSession = await this.verifySession.findOne({ adminId: admin._id });
-    const token = createSessionToken({
-      id: admin._id,
-      email: admin.email,
-      role: admin.role || ""
+    const findSession = await this.verifySession.findOne({
+      adminId: admin._id,
+      logout: false,
+      expiry: { $gt: new Date() },
+      token: { $ne: "" }
     });
+    let token = findSession?.token || "";
     if (!findSession) {
+      token = createSessionToken({
+        id: admin._id,
+        email: admin.email,
+        role: admin.role || ""
+      });
       await this.verifySession.create({
         token,
         adminId: admin._id,
@@ -106,5 +125,9 @@ export class AdminService {
     const admin = await this.findAdminByEmail(email);
     if (!admin) throw new Forbidden(ADMIN_NOT_FOUND);
     return await this.admin.findByIdAndUpdate({ _id: admin._id }, { password: createPasswordHash({ email, password }) });
+  }
+
+  public async findAdminsByOrgId(orgId: string) {
+    return await this.admin.find({ orgId });
   }
 }

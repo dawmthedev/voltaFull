@@ -7,9 +7,10 @@ interface CustomInputProps {
   name: string;
   label: string;
   type?: 'text' | 'number' | 'password' | 'email' | 'tel' | 'url' | 'search';
+  size?: 'small' | 'medium';
 }
 
-const CustomInput = ({ type = 'text', value, name, label, onChange }: CustomInputProps) => {
+const CustomInput = ({ type = 'text', value, name, label, size = 'medium', onChange }: CustomInputProps) => {
   return (
     <TextField
       type={type}
@@ -19,6 +20,7 @@ const CustomInput = ({ type = 'text', value, name, label, onChange }: CustomInpu
       label={label}
       fullWidth={true}
       sx={{ my: 1 }}
+      size={size}
     />
   );
 };
