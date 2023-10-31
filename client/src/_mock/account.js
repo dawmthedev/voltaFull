@@ -1,9 +1,9 @@
 // ----------------------------------------------------------------------
 
 const account = {
-  displayName: 'Byan Hossack',
-  email: 'bryanhossack@gmail.com',
-  photoURL: '/assets/images/avatars/avatar_default.jpg',
+  displayName: 'Voltaic User',
+  email: 'Voltaic LLC',
+  photoURL: '/assets/images/avatars/avatar_default.jpg'
 };
 
 export default account;

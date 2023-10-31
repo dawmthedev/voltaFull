@@ -11,8 +11,8 @@ export class CategoryService {
     private leadService: LeadService
   ) {}
 
-  public async findCategories({ orgId }: { orgId: string }) {
-    return await this.category.find({ orgId });
+  public async findCategories() {
+    return await this.category.find();
   }
 
   public async findCategoryById(id: string) {
@@ -23,8 +23,8 @@ export class CategoryService {
     return await this.category.find({ orgId }).select({ _id: true });
   }
 
-  public async createCategory({ name, description, orgId, adminId }: CategoryBodyTypes) {
-    return await this.category.create({ name, description, orgId, adminId });
+  public async createCategory({ name, description, fields, orgId, adminId }: CategoryBodyTypes) {
+    return await this.category.create({ name, description, orgId, adminId, fields });
   }
 
   public async updateCategory({ id, name, description }: CategoryBodyTypes & { id: string }) {

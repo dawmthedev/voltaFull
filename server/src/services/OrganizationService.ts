@@ -6,9 +6,10 @@ import { OrganizationModel } from "../models/OrganizationModel";
 export class OrganizationService {
   constructor(@Inject(OrganizationModel) private orgModel: MongooseModel<OrganizationModel>) {}
 
-  public async createOrganization({ name }: { name: string }) {
+  public async createOrganization({ name, email }: { name: string; email: string }) {
     const model = await this.orgModel.create({
-      name
+      name,
+      email
     });
     return model;
   }
@@ -23,5 +24,9 @@ export class OrganizationService {
 
   public async findOrganizationById(id: string) {
     return await this.orgModel.findById({ _id: id });
+  }
+
+  public async findOrganization() {
+    return await this.orgModel.findOne();
   }
 }

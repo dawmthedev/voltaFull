@@ -3,10 +3,11 @@ import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { PersistGate } from 'redux-persist/integration/react';
 // import * as serviceWorker from "./serviceWorker";
 // import reportWebVitals from "./reportWebVitals";
 import App from './App';
-import { store } from './redux/store';
+import { store, persistor } from './redux/store';
 
 // ----------------------------------------------------------------------
 
@@ -14,11 +15,13 @@ const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement)
 
 root.render(
   <Provider store={store}>
-    <HelmetProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </HelmetProvider>
+    <PersistGate loading={null} persistor={persistor}>
+      <HelmetProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </HelmetProvider>
+    </PersistGate>
   </Provider>
 );
 

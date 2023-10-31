@@ -18,6 +18,7 @@ export type CategoryResponseTypes = {
   description: string;
   adminId: string;
   orgId: string;
+  fields: FieldTypes[];
 };
 
 export type RegisterOrgTypes = {
@@ -29,4 +30,9 @@ export type RegisterOrgTypes = {
   company: string;
   agree?: boolean;
   verifyCode?: string;
+};
+
+export type FieldTypes = {
+  name: string;
+  type: string;
 };
