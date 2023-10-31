@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Checkbox, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import { Box, Button, Checkbox, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
-import { useAppDispatch } from '../hooks/hooks';
-import { register } from '../redux/middleware/authentication';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { completeVerification, register, startVerification, verifyCode } from '../redux/middleware/authentication';
+import { authSelector } from '../redux/slice/authSlice';
 
 const initialState = {
   email: '',
@@ -17,9 +18,21 @@ const initialState = {
 
 const CompleteRegistration = () => {
   const dispatch = useAppDispatch();
+  const { isStartVerification, verifyCodeLoading, verifyCodeError } = useAppSelector(authSelector);
   const navigate = useNavigate();
   const [registerData, setRegisterData] = useState(initialState);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [code, setCode] = useState<string>('');
+
+  const submitRegister = async () => {
+    await dispatch(startVerification({ email: registerData.email, type: 'email' }));
+  };
+
+  const handleCompleteVerification = async () => {
+    await dispatch(register({ email: registerData.email, name: registerData.name, password: registerData.password }));
+    await dispatch(completeVerification({ email: registerData.email, code: code }));
+    navigate('/login', { replace: true });
+  };
 
   return (
     <AuthenticationLayout title="Register" link={{ text: 'Login', to: '/login' }}>
@@ -65,6 +78,34 @@ const CompleteRegistration = () => {
         </Stack>
       </Stack>
 
+      {isStartVerification && (
+        <Box>
+          <Stack spacing={3} sx={{ position: 'relative', mt: 2 }}>
+            <TextField
+              name="code"
+              label="Code"
+              value={code}
+              onChange={(e) => {
+                setCode(e.target.value);
+                if (e.target.value.length === 6) {
+                  dispatch(
+                    verifyCode({
+                      email: registerData.email,
+                      code: e.target.value
+                    })
+                  );
+                }
+              }}
+            />
+            <Button variant="text" sx={{ position: 'absolute', bottom: '10px', right: '10px' }}>
+              Resend
+            </Button>
+          </Stack>
+          {verifyCodeLoading ? 'Loading...' : ''}
+          {verifyCodeError ? verifyCodeError : ''}
+        </Box>
+      )}
+
       <Stack direction="row" alignItems="center" justifyItems="start" sx={{ my: 2 }}>
         <Checkbox
           name="remember"
@@ -73,18 +114,15 @@ const CompleteRegistration = () => {
         />
         <Link to="#">I agree to the terms and conditions</Link>
       </Stack>
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        onClick={() => {
-          dispatch(register({ email: registerData.email, name: registerData.name, password: registerData.password }));
-          navigate('/login', { replace: true });
-        }}
-      >
-        Complete Registration
-      </LoadingButton>
+      {!isStartVerification ? (
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={submitRegister}>
+          Registration
+        </LoadingButton>
+      ) : (
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleCompleteVerification}>
+          Complete Registration
+        </LoadingButton>
+      )}
     </AuthenticationLayout>
   );
 };

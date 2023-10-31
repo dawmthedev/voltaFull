@@ -20,8 +20,8 @@ const LoginPage = () => {
 
   const handleClick = async () => {
     try {
-      dispatch(login({ email, password }));
-
+      if (!email || !password) return alert('Please fill in all fields');
+      await dispatch(login({ email, password }));
       navigate('/dashboard', { replace: true });
     } catch (error) {
       console.log(error);

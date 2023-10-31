@@ -38,7 +38,6 @@ import { register } from '../redux/middleware/authentication';
 import { authSelector } from '../redux/slice/authSlice';
 
 // ----------------------------------------------------------------------
-// Colum
 
 const TABLE_HEAD = [
   { id: 'name', name: 'Name', alignRight: false },
@@ -85,7 +84,7 @@ const initialState = {
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
-  const loggedInUser = useAppSelector(authSelector);
+  const { loggedInUser } = useAppSelector(authSelector);
   const { signal, abort } = createAbortController();
 
   const [open, setOpen] = useState(null);
@@ -100,8 +99,9 @@ export default function UserPage() {
   const [user, setUser] = useState(initialState);
 
   useEffect(() => {
-    dispatch(getUsers({ signal }));
-
+    (async () => {
+      await dispatch(getUsers({ signal }));
+    })();
     return () => {
       abort();
     };

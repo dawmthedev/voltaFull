@@ -43,24 +43,6 @@ export class AdminResultModel {
   @Property() public token: string;
 }
 
-
-export class CrmDealResultModel {
-  @Property() public readonly email: string;
-  @Property() public readonly projectID: string;
-  @Property() public readonly homeownerName: string;
-  @Property() public readonly repName: string;
-  @Property() public readonly saleDate: string;
-  @Property() public readonly leadGen: string;
-  @Property() public readonly salesRep: string;
-  @Property() public readonly ppwFinal: string;
-  @Property() public readonly systemSizeFinal: string;
-  @Property() public readonly stage: string;
-  @Property() public readonly status: string;
-  @Property() public readonly milestone: string;
-  @Property() public readonly datePaid: string; 
-  @Property() public readonly amount: string;
-
-}
 export class OrganizationResultModel {
   @Property() public readonly id: string;
   @Property() public readonly name: string;
@@ -90,6 +72,23 @@ export class LeadResultModel {
   @Property() public readonly orgId: string;
   @Property() public readonly createdAt: Date;
   @Property() public readonly updatedAt: Date;
+}
+
+export class CrmDealResultModel {
+  @Property() public readonly email: string;
+  @Property() public readonly projectID: string;
+  @Property() public readonly homeownerName: string;
+  @Property() public readonly repName: string;
+  @Property() public readonly saleDate: string;
+  @Property() public readonly leadGen: string;
+  @Property() public readonly salesRep: string;
+  @Property() public readonly ppwFinal: string;
+  @Property() public readonly systemSizeFinal: string;
+  @Property() public readonly stage: string;
+  @Property() public readonly status: string;
+  @Property() public readonly milestone: string;
+  @Property() public readonly datePaid: string;
+  @Property() public readonly amount: string;
 }
 
 export class CrmPayrollResultModel {
