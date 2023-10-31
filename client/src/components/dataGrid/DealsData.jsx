@@ -258,16 +258,6 @@ const leadsRows = data || [];
     <div style={{ height: 700, width: '100%' }}>
       {/* filter lead modal */}
 
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginTop: '40px',
-        }}
-      >
-        {/* // TODO PUT BACK */}  
-      </div>
 
       <div style={{ height: 690, width: '100%' }}>
 

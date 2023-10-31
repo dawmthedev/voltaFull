@@ -22,7 +22,7 @@ export default function NonVerifiedPage() {
   return (
     <>
       <Helmet>
-        <title> Verify | RH - CRM </title>
+        <title> Verify | VC - CRM </title>
       </Helmet>
 
       <Container>

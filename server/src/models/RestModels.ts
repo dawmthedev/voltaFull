@@ -94,6 +94,27 @@ export class CrmDealResultModel {
 export class CrmPayrollResultModel {
   @Property() public readonly lead: string;
   @Property() public readonly userStatus: string;
+  @Property() public readonly itemType: string;
+  @Property() public readonly saleDate: string;
+  @Property() public readonly relatedContractAmount: string;
+  @Property() public readonly relatedDealerFee: string;
+
+  @Property() public readonly addersFinal: string;
+  @Property() public readonly systemSizeFinal: string;
+ 
+  @Property() public readonly recordID: string;
+  @Property() public readonly saleStatus: string;
+
+  
+
+  @Property() public readonly clawbackNotes: string;
+
+
+  @Property() public readonly repRedline: string;
+
+  @Property() public readonly repRedlineOverrride: string;
+  @Property() public readonly leadgenRedlineOverrride: string;
+
   @Property() public readonly salesRep: string;
   @Property() public readonly ppwFinal: string; // Change to match the type you need
   @Property() public readonly status: string; // Change to match the type you need
