@@ -15,6 +15,8 @@ import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
 import DynamicLead from './pages/DynamicLead';
 import CompleteRegistration from './pages/CompleteRegistration';
+import PayPage from './pages/PayPage';
+import DealsPage from './pages/DealsPage';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -31,6 +33,9 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
+        { path: 'dynamic-leads', element: <DynamicLead /> },
+        { path: 'pay', element: <PayPage /> },
+        { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> }
       ]
     },
