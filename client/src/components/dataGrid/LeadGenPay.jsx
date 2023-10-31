@@ -15,7 +15,7 @@ import { gridStyles } from '../../constants/styles';
 import { styled, darken, lighten } from '@mui/material/styles';
 
 
-export default function PayrollData() {
+export default function LeadGenPay() {
 
   //USER OBJECT
 
@@ -206,7 +206,7 @@ export default function PayrollData() {
 
   useEffect(() => {
    
-    fetch('http://localhost:4000/rest/auth/crmPayroll', {
+    fetch('http://localhost:4000/rest/auth/CRMPayrollLeadGen', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

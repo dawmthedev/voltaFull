@@ -91,7 +91,7 @@ export default function AccountPopover() {
             {data?.email}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {data?.recordID}
+            {data?.role}
           </Typography>
         </Box>
 

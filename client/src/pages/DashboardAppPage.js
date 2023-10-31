@@ -3,6 +3,9 @@ import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
 import { Grid, Container, Typography } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { authSelector } from '../redux/slice/authSlice';
+
 // components
 import Iconify from '../components/iconify';
 // sections
@@ -22,6 +25,25 @@ import {
 
 export default function DashboardAppPage() {
   const theme = useTheme();
+  const data = useAppSelector(authSelector);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   return (
     <>

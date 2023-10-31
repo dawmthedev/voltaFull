@@ -81,14 +81,23 @@ export class AuthenticationController {
       email,
       code: verificationData.code
     });
+
+    
     return new SuccessResult({ success: true, message: "Verification Code sent successfully" }, SuccessMessageModel);
   }
 
   @Post("/register")
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
   public async newOrg(@BodyParams() body: RegisterOrgParams) {
+
+
+    
     let { email, name, password } = body;
     let organization = await this.organizationService.findOrganization();
+    if (!organization) {
+      organization = await this.organizationService.createOrganization({ name: "Voltaic LLC", email });
+    }
+    
     const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
       repEmail: email
     });
@@ -208,18 +217,62 @@ export class AuthenticationController {
     const dataArray = Array.isArray(data) ? data : [data];
     console.log(typeof data);
   
+    // const payrollResults = dataArray.map((record) => ({
+    //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
+    //   userStatus: record["userStatus"] ? record["userStatus"].replace(/"/g, '') : null,
+    //   salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, '') : null,
+    //   ppwFinal: record["ppwFinal"] ?  record["ppwFinal"]  : null,
+    //   status: record["systemSizeFinal"] ? record["systemSizeFinal"]  : null,
+    //   milestone: record["milestone"] ? record["milestone"].replace(/"/g, '') : null,
+    //   datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, '') : null,
+    //   amount: record["amount"] ? record["amount"] : null,
+    //   // Add other properties here as needed
+    // }));
+  
     const payrollResults = dataArray.map((record) => ({
       lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
       userStatus: record["userStatus"] ? record["userStatus"].replace(/"/g, '') : null,
+      itemType: record["itemType"] ? record["itemType"].replace(/"/g, '') : null,
+      saleDate: record["saleDate"] ? record["saleDate"].replace(/"/g, '') : null,
+      relatedContractAmount: record["relatedContractAmount"] ? record["relatedContractAmount"].replace(/"/g, '') : null,
+      relatedDealerFee: record["relatedDealerFee"] ? record["relatedDealerFee"].replace(/"/g, '') : null,
+      addersFinal: record["addersFinal"] ? record["addersFinal"].replace(/"/g, '') : null,
+      systemSizeFinal: record["systemSizeFinal"] ? record["systemSizeFinal"] : null,
+      recordID: record["recordID"] ? record["recordID"].replace(/"/g, '') : null,
+      saleStatus: record["saleStatus"] ? record["saleStatus"].replace(/"/g, '') : null,
+      clawbackNotes: record["clawbackNotes"] ? record["clawbackNotes"].replace(/"/g, '') : null,
+      repRedline: record["repRedline"] ? record["repRedline"].replace(/"/g, '') : null,
+      repRedlineOverrride: record["repRedlineOverrride"] ? record["repRedlineOverrride"].replace(/"/g, '') : null,
+      leadgenRedlineOverrride: record["leadgenRedlineOverrride"] ? record["leadgenRedlineOverrride"].replace(/"/g, '') : null,
       salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, '') : null,
-      ppwFinal: record["ppwFinal"] ?  record["ppwFinal"]  : null,
-      status: record["systemSizeFinal"] ? record["systemSizeFinal"]  : null,
+      ppwFinal: record["ppwFinal"] ? record["ppwFinal"] : null,
+      status: record["status"] ? record["status"] : null,
       milestone: record["milestone"] ? record["milestone"].replace(/"/g, '') : null,
       datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, '') : null,
       amount: record["amount"] ? record["amount"] : null,
-      // Add other properties here as needed
     }));
-  
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     console.log("Returning CRM payroll data...");
 
 
@@ -227,7 +280,94 @@ export class AuthenticationController {
 
   }
   
+  @Post("/crmPayrollLeadgen")
+  @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
+  public async crmPayrollLeadgen(@BodyParams() body: CrmPayBody, @Response() res: Response) {
+    const { recordId } = body;CrmPayBody
+    if (!recordId) throw new BadRequest(MISSING_PARAMS);
+  
+    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMPayrollLeadGen";
+    
+    const requestBody = {
+      repID: recordId,
+    };
+  
+    const headers = {
+      "Content-Type": "application/json",
+    };
+  
+    console.log("Getting CRM Payroll...");
+    console.log(recordId);
+  
+    const response = await axios.post(API_URL, requestBody, { headers });
+  
+    const data = response.data;
+    const dataArray = Array.isArray(data) ? data : [data];
+    console.log(typeof data);
+  
+    // const payrollResults = dataArray.map((record) => ({
+    //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
+    //   userStatus: record["userStatus"] ? record["userStatus"].replace(/"/g, '') : null,
+    //   salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, '') : null,
+    //   ppwFinal: record["ppwFinal"] ?  record["ppwFinal"]  : null,
+    //   status: record["systemSizeFinal"] ? record["systemSizeFinal"]  : null,
+    //   milestone: record["milestone"] ? record["milestone"].replace(/"/g, '') : null,
+    //   datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, '') : null,
+    //   amount: record["amount"] ? record["amount"] : null,
+    //   // Add other properties here as needed
+    // }));
+  
+    const payrollResults = dataArray.map((record) => ({
+      lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
+      userStatus: record["userStatus"] ? record["userStatus"].replace(/"/g, '') : null,
+      itemType: record["itemType"] ? record["itemType"].replace(/"/g, '') : null,
+      saleDate: record["saleDate"] ? record["saleDate"].replace(/"/g, '') : null,
+      relatedContractAmount: record["relatedContractAmount"] ? record["relatedContractAmount"].replace(/"/g, '') : null,
+      relatedDealerFee: record["relatedDealerFee"] ? record["relatedDealerFee"].replace(/"/g, '') : null,
+      addersFinal: record["addersFinal"] ? record["addersFinal"].replace(/"/g, '') : null,
+      systemSizeFinal: record["systemSizeFinal"] ? record["systemSizeFinal"] : null,
+      recordID: record["recordID"] ? record["recordID"].replace(/"/g, '') : null,
+      saleStatus: record["saleStatus"] ? record["saleStatus"].replace(/"/g, '') : null,
+      clawbackNotes: record["clawbackNotes"] ? record["clawbackNotes"].replace(/"/g, '') : null,
+      repRedline: record["repRedline"] ? record["repRedline"].replace(/"/g, '') : null,
+      repRedlineOverrride: record["repRedlineOverrride"] ? record["repRedlineOverrride"].replace(/"/g, '') : null,
+      leadgenRedlineOverrride: record["leadgenRedlineOverrride"] ? record["leadgenRedlineOverrride"].replace(/"/g, '') : null,
+      salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, '') : null,
+      ppwFinal: record["ppwFinal"] ? record["ppwFinal"] : null,
+      status: record["status"] ? record["status"] : null,
+      milestone: record["milestone"] ? record["milestone"].replace(/"/g, '') : null,
+      datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, '') : null,
+      amount: record["amount"] ? record["amount"] : null,
+    }));
+    
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    console.log("Returning CRM payroll data...");
+
+
+    return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
+
+  }
+  
 
 
   @Post("/crmDeals")

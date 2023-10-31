@@ -70,7 +70,7 @@ const AuthenticationLayout = ({ title, link, children }: AuthenticationLayoutPro
         <Container maxWidth="sm">
           <StyledContent>
             <Typography variant="h4" gutterBottom>
-              {title} to RH-CRM
+              {title} to Voltaic-CRM
             </Typography>
             <Typography variant="body2" sx={{ mb: 5 }}>
               Don’t have an account? {''}
