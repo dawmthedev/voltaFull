@@ -31,7 +31,7 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const data = useAppSelector(authSelector);
+  const { data } = useAppSelector(authSelector);
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -110,10 +110,10 @@ export default function AccountPopover() {
         <MenuItem
           // onClick={handleClose}
           sx={{ m: 1 }}
-          onClick={() => {
-            navigate('/login', { replace: true });
+          onClick={async () => {
+            await dispatch(logout());
             handleClose();
-            dispatch(logout());
+            navigate('/login', { replace: true });
           }}
         >
           Logout

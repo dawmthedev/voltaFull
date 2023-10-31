@@ -54,8 +54,8 @@ const DynamicLead = () => {
   }, [categoryData, selectedCategory]);
 
   useEffect(() => {
-    ((async) => {
-      dispatch(getCategories({ signal }));
+    (async () => {
+      await dispatch(getCategories({ signal }));
     })();
     return () => {
       abort();
@@ -64,8 +64,8 @@ const DynamicLead = () => {
 
   useEffect(() => {
     if (!categories.length) return;
-    ((async) => {
-      dispatch(getLeads({ categoryId: categories[0].id, signal }));
+    (async () => {
+      await dispatch(getLeads({ categoryId: categories[0].id, signal }));
     })();
     return () => {
       abort();
@@ -76,13 +76,13 @@ const DynamicLead = () => {
     setUploadedLeads(csvData);
   };
 
-  const submitBulkLeads = () => {
+  const submitBulkLeads = async () => {
     const leadsFormattedData = {
       tableName: 'dynamicleadtests',
       columns: getColumns(uploadedLeads),
       data: uploadedLeads
     };
-    dispatch(createBulkLead({ leads: leadsFormattedData, signal }));
+    await dispatch(createBulkLead({ leads: leadsFormattedData, signal }));
   };
 
   const getColumns = useCallback((data: any) => {
@@ -129,12 +129,12 @@ const DynamicLead = () => {
     setFields(updatedField);
   };
 
-  const submitAddNewLead = () => {
+  const submitAddNewLead = async () => {
     const data = {
       tableId: selectedCategory,
       data: leadValues
     };
-    dispatch(createLead({ lead: data, signal }));
+    await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
   };
 
@@ -168,9 +168,9 @@ const DynamicLead = () => {
                 key={category.name}
                 variant={selectedCategory === category.id ? 'contained' : 'outlined'}
                 sx={{ minWidth: 'auto' }}
-                onClick={() => {
-                  dispatch(getCategory({ id: category.id }));
-                  dispatch(getLeads({ categoryId: category.id, signal }));
+                onClick={async () => {
+                  await dispatch(getCategory({ id: category.id }));
+                  await dispatch(getLeads({ categoryId: category.id, signal }));
                   setSelectedCategory(category.id);
                 }}
               >

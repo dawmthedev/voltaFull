@@ -123,7 +123,7 @@ export default function Leads() {
     if (!categories.length) return;
     (async () => {
       try {
-        dispatch(getLeads({ categoryId: categories[0].id, signal }));
+        await dispatch(getLeads({ categoryId: categories[0].id, signal }));
       } catch (error) {
         console.log('Error:(', error);
       }
