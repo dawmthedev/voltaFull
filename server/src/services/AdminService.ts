@@ -8,7 +8,6 @@ import { AdminModel } from "../models/AdminModel";
 import { MongooseModel } from "@tsed/mongoose";
 import { OrganizationModel } from "../models/OrganizationModel";
 import { VerifySessionModal } from "../models/VerifySessionModal";
-import { ADMIN } from "../util/constants";
 
 @Injectable()
 export class AdminService {
@@ -34,7 +33,7 @@ export class AdminService {
    * @returns the user's role, company and orgId
    */
   public async checkPermissions(opts: { hasRole?: string[]; restrictCompany?: string }, admin: JWTPayload) {
-    const { role = ADMIN, company, email } = admin;
+    const { role, company, email } = admin;
     if (company) {
       if (opts.hasRole && (!role || !opts.hasRole.includes(role))) throw new Forbidden("Forbidden");
       if (opts.restrictCompany && company !== opts.restrictCompany) throw new Forbidden("Forbidden");

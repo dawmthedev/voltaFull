@@ -4,8 +4,8 @@ import { faker } from '@faker-js/faker';
 
 const POST_TITLES = [
   'Whiteboard Templates By Industry Leaders',
-  'Voltaic university',
-  'Voltaic Adder Sheet',
+  'Tesla Cybertruck-inspired camper trailer for Tesla fans who can’t just wait for the truck!',
+  'Designify Agency Landing Page Design',
   '✨What is Done is Done ✨',
   'Fresh Prince',
   'Six Socks Studio',
@@ -15,7 +15,7 @@ const POST_TITLES = [
   'Examining the Evolution of the Typical Web Design Client',
   'Katie Griffin loves making that homey art',
   'The American Dream retold through mid-century railroad graphics',
-  'Voltaic',
+  'Illustration System Design',
   'CarZio-Delivery Driver App SignIn/SignUp',
   'How to create a client-serverless Jamstack app using Netlify, Gatsby and Fauna',
   'Tylko Organise effortlessly -3D & Motion Design',
@@ -29,15 +29,15 @@ const POST_TITLES = [
   'How to Animate a SVG with border-image',
 ];
 
-const posts = [...Array(2)].map((_, index) => ({
+const posts = [...Array(23)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   title: POST_TITLES[index + 1],
   createdAt: faker.date.past(),
   view: faker.datatype.number(),
-  // comment: faker.datatype.number(),
-  // share: faker.datatype.number(),
-  // favorite: faker.datatype.number(),
+  comment: faker.datatype.number(),
+  share: faker.datatype.number(),
+  favorite: faker.datatype.number(),
   author: {
     name: faker.name.fullName(),
     avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`,
