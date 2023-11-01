@@ -41,7 +41,7 @@ export default function BlogPage() {
 
         <Grid container spacing={3}>
           {POSTS.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
+            <BlogPostCard key={post.id} post={post} index={index} link={post.link} />
           ))}
         </Grid>
       </Container>

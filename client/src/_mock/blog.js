@@ -28,10 +28,14 @@ const POST_TITLES = [
   'Here’s a Dyson motorcycle concept that doesn’t ‘suck’!',
   'How to Animate a SVG with border-image'
 ];
+const links = [
+  "https://www.youtube.com/channel/UCvWp2awdOyhd28f7FQOPGPw",
+"https://docs.google.com/spreadsheets/d/1TckEylF3qWgF8VjXzUjKm5KOsSokTVM9tJsySLpBA-w/edit#gid=0"];
 
 const posts = [...Array(2)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
+  link: links[index],
   title: POST_TITLES[index + 1],
   createdAt: faker.date.past(),
   view: faker.datatype.number(),

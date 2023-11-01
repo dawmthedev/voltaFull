@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
-import { Box, Link, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Box, Card, Grid, Avatar, Typography, CardContent } from '@mui/material';
+import { Link } from 'react-router-dom';
+
 // utils
 import { fDate } from '../../../utils/formatTime';
 import { fShortenNumber } from '../../../utils/formatNumber';
@@ -57,7 +59,7 @@ BlogPostCard.propTypes = {
 };
 
 export default function BlogPostCard({ post, index }) {
-  const { cover, title, view, comment, share, author, createdAt } = post;
+  const { cover, title, view, comment, share, author, createdAt, link } = post;
   const latestPostLarge = index === 0;
   const latestPost = index === 1 || index === 2;
 
@@ -69,6 +71,7 @@ export default function BlogPostCard({ post, index }) {
 
   return (
     <Grid item xs={12} sm={latestPostLarge ? 12 : 6} md={latestPostLarge ? 6 : 3}>
+      <Link to={link} target="_blank" style={{ textDecoration: 'none' }}>
       <Card sx={{ position: 'relative' }}>
         <StyledCardMedia
           sx={{
@@ -135,6 +138,7 @@ export default function BlogPostCard({ post, index }) {
             {fDate(createdAt)}
           </Typography> */}
 
+  
           <StyledTitle
             color="inherit"
             variant="subtitle2"
@@ -146,8 +150,9 @@ export default function BlogPostCard({ post, index }) {
               }),
             }}
           >
-            {title}
+            {title }
           </StyledTitle>
+
 {/* 
           <StyledInfo>
             {POST_INFO.map((info, index) => (
@@ -169,6 +174,7 @@ export default function BlogPostCard({ post, index }) {
           </StyledInfo> */}
         </CardContent>
       </Card>
+      </Link>
     </Grid>
   );
 }

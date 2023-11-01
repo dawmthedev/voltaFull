@@ -151,7 +151,7 @@ export default function DealsData(props) {
       {
         field: 'ppwFinal',
         headerName: 'PpwFinal',
-        width: 180,
+        width: 500,
         editable: false,
         hide: false,
       },
@@ -209,7 +209,6 @@ export default function DealsData(props) {
                     datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
                     email: deal.email.replace(/^"|"$/g, ''), 
                     saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
-
                     plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
                     installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
                     ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
