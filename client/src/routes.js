@@ -30,14 +30,17 @@ export default function Router() {
       path: '/dashboard',
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        {
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
+          index: true
+        },
         {
           path: 'app',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/login" replace />
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
         },
         {
           path: 'user',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/login" replace />
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
