@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 // components
 import Logo from '../../components/logo';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
