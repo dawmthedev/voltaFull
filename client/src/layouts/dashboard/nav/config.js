@@ -14,7 +14,7 @@ const navConfig = [
   {
     title: 'Deals',
     path: '/dashboard/deals',
-    icon: icon('ic_user')
+    icon: icon('ic_cart')
   },
   {
     title: 'Pay',
