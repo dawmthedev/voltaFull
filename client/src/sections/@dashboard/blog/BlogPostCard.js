@@ -104,7 +104,7 @@ export default function BlogPostCard({ post, index }) {
               ...((latestPostLarge || latestPost) && { display: 'none' }),
             }}
           />
-          <StyledAvatar
+          {/* <StyledAvatar
             alt={author.name}
             src={author.avatarUrl}
             sx={{
@@ -116,7 +116,7 @@ export default function BlogPostCard({ post, index }) {
                 height: 40,
               }),
             }}
-          />
+          /> */}
 
           <StyledCover alt={title} src={cover} />
         </StyledCardMedia>
