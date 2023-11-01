@@ -16,10 +16,7 @@ export default function DealsData(props) {
 
 
   const navigate = useNavigate();
-
-const {recordUserId} = props;
-
-
+  const {recordUserId} = props;
 
   // Add redux user info here: 
   // const { user } = useSelector((state) => state.auth);
@@ -85,12 +82,7 @@ const {recordUserId} = props;
       //   },
       // },
   
-      {
-        field: 'email',
-        headerName: 'Email',
-        width: 250,
-        editable: false,
-      },
+  
       {
         field: 'homeownerName',
         headerName: 'Homeowner Name',
@@ -98,8 +90,40 @@ const {recordUserId} = props;
         editable: false,
         type: 'text',
       },
+      {
+        field: 'status',
+        headerName: 'Status',
+        width: 180,
+        editable: false,
 
-
+        hide: false,
+        cellClassName: (params) => {
+          if (params.value === 'active') {
+            return 'active-cell';
+          } else if (params.value === 'inactive') {
+            return 'inactive-cell';
+          }
+          return '';
+        }
+      
+      },
+      {
+        field: 'email',
+        headerName: 'Email',
+        width: 250,
+        editable: false,
+      },
+      {
+        field: 'stage',
+        headerName: 'Stage',
+        width: 180,
+        editable: false,
+        hide: false,
+        renderCell: (params) => {
+          const percentage = stageToPercentMapping[params.value.toString()];  // or just params.value if it's already a string
+          return <ProgressBar percentage={percentage} status={params.value} />;
+        },
+      },
       {
         field: 'plansReceived',
         headerName: 'Plans Received Date',
@@ -123,36 +147,7 @@ const {recordUserId} = props;
       },
 
 
-
-
-      {
-        field: 'status',
-        headerName: 'Status',
-        width: 180,
-        editable: false,
-
-        hide: false,
-        cellClassName: (params) => {
-          if (params.value === 'active') {
-            return 'active-cell';
-          } else if (params.value === 'inactive') {
-            return 'inactive-cell';
-          }
-          return '';
-        }
-      
-      },
-      {
-        field: 'stage',
-        headerName: 'Stage',
-        width: 180,
-        editable: false,
-        hide: false,
-        renderCell: (params) => {
-          const percentage = stageToPercentMapping[params.value.toString()];  // or just params.value if it's already a string
-          return <ProgressBar percentage={percentage} status={params.value} />;
-        },
-      },
+   
       {
         field: 'ppwFinal',
         headerName: 'PpwFinal',
