@@ -170,7 +170,7 @@ const {recordUserId} = props;
    
     //fetch('http://localhost:4000/rest/auth/crmDeals', {
 
-    fetch('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals',{
+    fetch(`${process.env.BASE_URL}/auth/crmDeals`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

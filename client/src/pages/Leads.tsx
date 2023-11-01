@@ -135,7 +135,7 @@ export default function Leads() {
 
   const submitLead = async () => {
     try {
-      await axios.post('http://localhost:4000/rest/lead', lead);
+      await axios.post(`${process.env.BASE_URL}/lead`, lead);
       setIsModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -143,7 +143,7 @@ export default function Leads() {
   };
   const submitCategory = async () => {
     try {
-      await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/category', category);
+      await axios.post(`${process.env.BASE_URL}/category`, category);
       setIsCategoryModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -153,7 +153,7 @@ export default function Leads() {
   const submitBulkLeads = async () => {
     try {
       if (!bulkLeads.length) return;
-      const response = await axios.post('http://localhost:4000/rest/lead/bulk', bulkLeads);
+      const response = await axios.post(`${process.env.BASE_URL}/lead/bulk`, bulkLeads);
       if (response?.status === 200) {
         setIsCsvModalOpen(false);
       }

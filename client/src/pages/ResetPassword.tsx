@@ -16,7 +16,7 @@ const ResetPasswordPage = () => {
 
   const handleResetPassword = async () => {
     try {
-      const response = await axios.put('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/reset-password', {
+      const response = await axios.put(`${process.env.BASE_URL}/auth/reset-password`, {
         code: verificationCode,
         password: password
       });

@@ -25,7 +25,7 @@ const RegisterPage = () => {
 
   const handleClick = async () => {
     try {
-      const response = await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/start-verification', {
+      const response = await axios.post(`${process.env.BASE_URL}/auth/start-verification`, {
         email: register.email,
         type: 'email'
       });
@@ -39,7 +39,7 @@ const RegisterPage = () => {
   };
   const handleRegister = async () => {
     try {
-      const response = await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/register', {
+      const response = await axios.post(`${process.env.BASE_URL}/auth/register`, {
         email: register.email,
         name: register.name,
         company: register.company,
