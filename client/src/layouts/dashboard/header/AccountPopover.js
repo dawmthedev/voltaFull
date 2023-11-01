@@ -114,9 +114,6 @@ export default function AccountPopover() {
           sx={{ m: 1 }}
           onClick={async () => {
             await dispatch(logout());
-            let session = document?.cookie?.split(';')?.find((item) => item.includes('session'));
-            session = null;
-            document.cookie = session;
             handleClose();
             navigate('/login', { replace: true });
           }}
