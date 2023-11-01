@@ -22,7 +22,7 @@ const LoginPage = () => {
     try {
       if (!email || !password) return alert('Please fill in all fields');
       await dispatch(login({ email, password }));
-      navigate('/dashboard', { replace: true });
+      navigate('/dashboard/deals', { replace: true });
     } catch (error) {
       console.log(error);
     }
