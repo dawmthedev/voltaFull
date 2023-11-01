@@ -223,7 +223,7 @@ export default function LeadGenPay(props) {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
               itemType: payrollItem.itemType,
-               saleDate: formatSaleDate(payrollItem.saleDate.slice(1, -1)),
+               saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
               relatedDealerFee: payrollItem.relatedDealerFee,
               addersFinal: payrollItem.addersFinal,
@@ -235,7 +235,7 @@ export default function LeadGenPay(props) {
               ppwFinal: payrollItem.ppwFinal,
               // status: payrollItem.status,
               milestone: payrollItem.milestone,
-              datePaid: formatSaleDate(payrollItem.datePaid.slice(1, -1)),
+              datePaid: formatSaleDate(payrollItem.datePaid),
               amount: payrollItem.amount,
               id: Math.random()
             };
@@ -286,6 +286,9 @@ export default function LeadGenPay(props) {
 function formatSaleDate(dateStr) {
   const [year, month, day] = dateStr.split('-');
   const dateString =  `${month}/${day}/${year}`;
+
+
+
   return new Date(dateString); // Convert string to Date object
   
 }

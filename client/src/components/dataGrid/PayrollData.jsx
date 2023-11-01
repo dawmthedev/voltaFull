@@ -246,7 +246,7 @@ export default function PayrollData(props) {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
               itemType: payrollItem.itemType,
-               saleDate: formatSaleDate(payrollItem.saleDate.slice(1, -1)),
+               saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
               relatedDealerFee: payrollItem.relatedDealerFee,
               addersFinal: payrollItem.addersFinal,
@@ -260,7 +260,7 @@ export default function PayrollData(props) {
               ppwFinal: payrollItem.ppwFinal,
               // status: payrollItem.status,
               milestone: payrollItem.milestone,
-              datePaid: formatSaleDate(payrollItem.datePaid.slice(1, -1)),
+              datePaid: formatSaleDate(payrollItem.datePaid),
               amount: payrollItem.amount,
               id: Math.random()
             };
