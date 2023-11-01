@@ -178,21 +178,7 @@ export default function LeadGenPay(props) {
       type: 'date',
       hide: false,
     },
-    {
-      field: 'repRedline',
-      headerName: 'Rep Redline',
-      width: 180,
-      editable: false,
-      hide: true,
-    },
-    {
-      field: 'repRedlineOverrride',
-      headerName: 'Rep Redline Override',
-      width: 180,
-      editable: false,
 
-      hide: false,
-    },
     {
       field: 'leadgenRedlineOverrride',
       headerName: 'Leadgen Redline Override',
@@ -244,8 +230,6 @@ export default function LeadGenPay(props) {
               systemSizeFinal: payrollItem.systemSizeFinal,
               saleStatus: payrollItem.saleStatus,
               clawbackNotes: payrollItem.clawbackNotes,
-              repRedline: payrollItem.repRedline,
-              repRedlineOverrride: payrollItem.repRedlineOverrride,
               leadgenRedlineOverrride: payrollItem.leadgenRedlineOverrride,
               salesRep: payrollItem.salesRep,
               ppwFinal: payrollItem.ppwFinal,
