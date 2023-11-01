@@ -14,11 +14,16 @@ export default function DealsPage() {
   return (
     <Box
       sx={{
+       
         height: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: 'rgba(145, 158, 171, 0.16)',
+       width: '100%',
+        overflow: 'auto',
+        overflowX: 'hidden'
       }}
     >
       <Helmet>

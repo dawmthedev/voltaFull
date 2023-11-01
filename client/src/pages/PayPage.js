@@ -27,7 +27,7 @@ export default function PayPage() {
       <Helmet>
         <title>Payroll</title>
       </Helmet>
-
+ 
       <Box
         sx={{
           width: '100vw',
