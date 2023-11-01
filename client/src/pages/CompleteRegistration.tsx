@@ -6,7 +6,7 @@ import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { completeVerification, register, startVerification, verifyCode } from '../redux/middleware/authentication';
-import { authSelector } from '../redux/slice/authSlice';
+import { authSelector, startVerificationAction } from '../redux/slice/authSlice';
 
 const initialState = {
   email: '',
@@ -31,6 +31,7 @@ const CompleteRegistration = () => {
   const handleCompleteVerification = async () => {
     await dispatch(register({ email: registerData.email, name: registerData.name, password: registerData.password }));
     await dispatch(completeVerification({ email: registerData.email, code: code }));
+    dispatch(startVerificationAction(false));
     navigate('/login', { replace: true });
   };
 
@@ -97,7 +98,15 @@ const CompleteRegistration = () => {
                 }
               }}
             />
-            <Button variant="text" sx={{ position: 'absolute', bottom: '10px', right: '10px' }}>
+            <Button
+              variant="text"
+              sx={{ position: 'absolute', bottom: '10px', right: '10px' }}
+              onClick={async () => {
+                debugger;
+                if (!registerData.email) alert('Please enter your email');
+                dispatch(await dispatch(startVerification({ email: registerData.email, type: 'email' })));
+              }}
+            >
               Resend
             </Button>
           </Stack>
