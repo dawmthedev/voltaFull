@@ -95,6 +95,7 @@ export class AuthenticationController {
     const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
       repEmail: email
     });
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     if (response.data.recordID == "00000") throw new Unauthorized("Email is not authorized in Quickbase");
     if (!response.data.recordID) throw new NotFound("Invalid qbId received from the API.");
     await NodemailerClient.sendVerificationEmail({
@@ -126,6 +127,7 @@ export class AuthenticationController {
     const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
       repEmail: email
     });
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     if (response.data.recordID == "00000") throw new Unauthorized("Email is not authorized in Quickbase");
     if (!response.data.recordID) throw new NotFound("Invalid qbId received from the API.");
     const admin = await this.adminService.findAdminByEmail(email);
@@ -200,10 +202,9 @@ export class AuthenticationController {
     console.log(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
-    console.log(typeof data);
 
     // const payrollResults = dataArray.map((record) => ({
     //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
@@ -266,7 +267,7 @@ export class AuthenticationController {
     console.log(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
     console.log(typeof data);
@@ -331,6 +332,7 @@ export class AuthenticationController {
     console.log("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
 
     const data = response.data;
 
