@@ -17,23 +17,31 @@ import DynamicLead from './pages/DynamicLead';
 import CompleteRegistration from './pages/CompleteRegistration';
 import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
-// import LeadDetailPage from './pages/LeadDetailPage';
-
-
+import { authSelector } from './redux/slice/authSlice';
+import { useAppSelector } from './hooks/hooks';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
   session = session ? session.split('=')[1] : null;
+  const { data } = useAppSelector(authSelector);
 
   const routes = useRoutes([
     {
       path: '/dashboard',
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
-        // { element: <Navigate to="/dashboard/app" />, index: true },
-        { element: <Navigate to="/dashboard/deals" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
+        {
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
+          index: true
+        },
+        {
+          path: 'app',
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
+        },
+        {
+          path: 'user',
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
+        },
         { path: 'products', element: <ProductsPage /> },
         // { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
