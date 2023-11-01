@@ -89,12 +89,24 @@ export class AuthenticationController {
   public async startVerification(@BodyParams() body: StartVerificationParams) {
     const { email, type } = body;
     if (!email || !type) throw new BadRequest(MISSING_PARAMS);
+
+
+    console.log("\n----- Registering --- " + email)
+
     const findAdmin = await this.adminService.findAdminByEmail(email);
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
     const verificationData = await this.verificationService.generateVerification({ email, type });
+    console.log("\n----- verificationData --- " + verificationData)
+    
     const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
       repEmail: email
     });
+
+
+
+
+    console.log("\n----- Response --- " + response.data)
+    // console.log("\n----- Verification Data --- " + verificationData)
     if (response.data.recordID == "00000") throw new Unauthorized("Email is not authorized in Quickbase");
     if (!response.data.recordID) throw new NotFound("Invalid qbId received from the API.");
     await NodemailerClient.sendVerificationEmail({
