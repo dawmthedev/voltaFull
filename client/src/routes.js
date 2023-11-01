@@ -27,7 +27,8 @@ export default function Router() {
       path: '/dashboard',
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        // { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/dashboard/deals" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
