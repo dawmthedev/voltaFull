@@ -10,7 +10,7 @@ const VerifyEmail = () => {
 
   const handleVerifyEmail = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/rest/auth/start-verification', {
+      const response = await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/start-verification', {
         email: email,
         type: 'password'
       });

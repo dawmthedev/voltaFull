@@ -143,7 +143,7 @@ export default function Leads() {
   };
   const submitCategory = async () => {
     try {
-      await axios.post('http://localhost:4000/rest/category', category);
+      await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/category', category);
       setIsCategoryModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);

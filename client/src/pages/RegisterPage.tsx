@@ -39,7 +39,7 @@ const RegisterPage = () => {
   };
   const handleRegister = async () => {
     try {
-      const response = await axios.post('http://localhost:4000/rest/auth/register', {
+      const response = await axios.post('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/register', {
         email: register.email,
         name: register.name,
         company: register.company,
