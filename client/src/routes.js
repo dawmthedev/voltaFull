@@ -17,10 +17,13 @@ import DynamicLead from './pages/DynamicLead';
 import CompleteRegistration from './pages/CompleteRegistration';
 import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
+import { authSelector } from './redux/slice/authSlice';
+import { useAppSelector } from './hooks/hooks';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
   session = session ? session.split('=')[1] : null;
+  const { data } = useAppSelector(authSelector);
 
   const routes = useRoutes([
     {
@@ -28,8 +31,14 @@ export default function Router() {
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
-        { path: 'app', element: <DashboardAppPage /> },
-        { path: 'user', element: <UserPage /> },
+        {
+          path: 'app',
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/login" replace />
+        },
+        {
+          path: 'user',
+          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/login" replace />
+        },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
