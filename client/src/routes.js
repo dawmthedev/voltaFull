@@ -43,6 +43,7 @@ export default function Router() {
           element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
+        // { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },

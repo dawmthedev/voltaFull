@@ -7,6 +7,8 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 import { Link } from 'react-router-dom';
 
+ 
+
 const StyledRoot = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     display: 'flex'
@@ -48,17 +50,33 @@ const AuthenticationLayout = ({ title, link, children }: AuthenticationLayoutPro
   return (
     <Fragment>
       <Helmet>
-        <title> {title} | RH -CRM </title>
+        <title> {title} | Voltaic -CRM </title>
       </Helmet>
 
       <StyledRoot>
-        <Logo
-          sx={{
-            position: 'fixed',
-            top: { xs: 16, sm: 24, md: 40 },
-            left: { xs: 16, sm: 24, md: 40 }
-          }}
-        />
+   
+
+      <img
+  src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`} // Update the path accordingly
+  alt="Voltaic CRM Logo" // Provide a meaningful description for accessibility
+  style={{
+    position: 'fixed',
+    top: 16, // You can adjust these values as needed for responsive design
+    left: 16,
+    maxWidth: '150px', // Maximum width of the logo
+    maxHeight: '150px', // Maximum height of the logo
+    width: 'auto', // Width relative to the height to keep aspect ratio
+    height: 'auto', // Height relative to the width to keep aspect ratio
+    objectFit: 'contain' // Ensures the image is scaled properly without being cropped
+  }}
+/>
+
+
+
+
+
+
+
         {mdUp && (
           <StyledSection>
             <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
@@ -76,7 +94,7 @@ const AuthenticationLayout = ({ title, link, children }: AuthenticationLayoutPro
               Don’t have an account? {''}
               <Link to={link.to}>{link.text} here</Link>
             </Typography>
-            <Stack direction="row" spacing={2}>
+            {/* <Stack direction="row" spacing={2}>
               <Button fullWidth size="large" color="inherit" variant="outlined">
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
               </Button>
@@ -87,10 +105,10 @@ const AuthenticationLayout = ({ title, link, children }: AuthenticationLayoutPro
               <Button fullWidth size="large" color="inherit" variant="outlined">
                 <Iconify icon="eva:twitter-fill" color="#1C9CEA" width={22} height={22} />
               </Button>
-            </Stack>
+            </Stack> */}
             <Divider sx={{ my: 3 }}>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                OR
+              .
               </Typography>
             </Divider>
             {children}

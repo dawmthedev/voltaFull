@@ -15,7 +15,7 @@ import { gridStyles } from '../../constants/styles';
 export default function DealsData(props) {
 
 
-
+  const navigate = useNavigate();
 
 const {recordUserId} = props;
 
@@ -64,26 +64,26 @@ const {recordUserId} = props;
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-      {
-        field: 'Profile',
-        headerName: 'Profile',
-        width: 150,
-        editable: true,
-        renderCell: (params) => {
-          return (
-            <Button
-              variant="outlined"
-              onClick={() => {
-               //Open up user modal
-              //  navigate(`/lead/${params?.row?.id}`);
+      // {
+      //   field: 'Profile',
+      //   headerName: 'Profile',
+      //   width: 150,
+      //   editable: true,
+      //   renderCell: (params) => {
+      //     return (
+      //       <Button
+      //         variant="outlined"
+      //         onClick={() => {
+      //          //Open up user modal
+      //            navigate(`/lead/${params?.row?.id}`);
     
-              }}
-            >
-              Pipeline
-            </Button>
-          );
-        },
-      },
+      //         }}
+      //       >
+      //         Pipeline
+      //       </Button>
+      //     );
+      //   },
+      // },
   
       {
         field: 'email',
@@ -98,6 +98,33 @@ const {recordUserId} = props;
         editable: false,
         type: 'text',
       },
+
+
+      {
+        field: 'plansReceived',
+        headerName: 'Plans Received Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+      {
+        field: 'installComplete',
+        headerName: 'Install Complete Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+        {
+        field: 'ptoApproved',
+        headerName: 'PTO Approved Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+
+
+
+
       {
         field: 'status',
         headerName: 'Status',
@@ -168,9 +195,8 @@ const {recordUserId} = props;
 
   useEffect(() => {
    
-    //fetch('http://localhost:4000/rest/auth/crmDeals', {
 
-    fetch('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals',{
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -187,6 +213,13 @@ const {recordUserId} = props;
                     milestone: deal.milestone.replace(/^"|"$/g, ''),
                     datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
                     email: deal.email.replace(/^"|"$/g, ''), 
+                    saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
+
+                    plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
+                    installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
+                    ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
+
+
                     ppwFinal: truncateDecimals(deal.ppwFinal, 1),
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',
