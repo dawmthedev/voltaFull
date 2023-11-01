@@ -38,10 +38,10 @@ const posts = [...Array(2)].map((_, index) => ({
   // comment: faker.datatype.number(),
   // share: faker.datatype.number(),
   // favorite: faker.datatype.number(),
-  author: {
-    name: faker.name.fullName(),
-    avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`
-  }
+  // author: {
+  //   name: faker.name.fullName(),
+  //   avatarUrl: `/assets/images/avatars/avatar_${index + 1}.jpg`
+  // }
 }));
 
 export default posts;
