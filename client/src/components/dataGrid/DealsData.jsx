@@ -98,6 +98,33 @@ const {recordUserId} = props;
         editable: false,
         type: 'text',
       },
+
+
+      {
+        field: 'plansReceived',
+        headerName: 'Plans Received Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+      {
+        field: 'installComplete',
+        headerName: 'Install Complete Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+        {
+        field: 'ptoApproved',
+        headerName: 'PTO Approved Date',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+
+
+
+
       {
         field: 'status',
         headerName: 'Status',
@@ -186,6 +213,13 @@ const {recordUserId} = props;
                     milestone: deal.milestone.replace(/^"|"$/g, ''),
                     datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
                     email: deal.email.replace(/^"|"$/g, ''), 
+                    saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
+
+                    plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
+                    installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
+                    ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
+
+
                     ppwFinal: truncateDecimals(deal.ppwFinal, 1),
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',

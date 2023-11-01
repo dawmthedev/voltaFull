@@ -355,12 +355,17 @@ export class AuthenticationController {
         homeownerName: project["homeownerName"] || null,
         salesRep: project["salesRep"] || "crm",
         leadGen: project["leadGenerator"] || "crm",
-        saleDate: project["saleDate"] || "sessionCookie",
+        saleDate: project["saleDate"] ||null,
         ppwFinal: project["ppwFinal"] || null,
         systemSizeFinal: project["systemSizeFinal"] || null,
         stage: project["stage"] || "",
         status: project["status"] || "",
         milestone: project["milestone"] || null,
+
+        plansReceived: project["plansReceived"] || null,
+        installComplete: project["installComplete"] || null,
+        ptoApproved: project["ptoApproved"] || null,
+        
         datePaid: project["datePaid"] || null,
         amount: project["amount"] || null
       };
