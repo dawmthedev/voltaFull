@@ -93,6 +93,9 @@ export default function AccountPopover() {
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {data?.role}
           </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+            {data?.recordID}
+          </Typography>
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />

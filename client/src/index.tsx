@@ -25,6 +25,8 @@ root.render(
   </Provider>
 );
 
+//new
+
 // If you want to enable client cache, register instead.
 // serviceWorker.unregister();
 

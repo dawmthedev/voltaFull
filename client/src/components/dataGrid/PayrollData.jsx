@@ -13,13 +13,29 @@ import { authSelector } from '../../redux/slice/authSlice';
 import { gridStyles } from '../../constants/styles';
 
 import { styled, darken, lighten } from '@mui/material/styles';
+import { disableCache } from '@iconify/react';
 
 
-export default function PayrollData() {
+export default function PayrollData(props) {
 
-  //USER OBJECT
+  //USER OBJECT 
+   const {recordUserId} = props;
+   const gridContainerStyles = {
+    flexDirection: 'column',
+    alignItems: 'center',
+    width: '100%', // ensure the container takes the full width of its parent
+    overflow: 'auto', // hide the overflow
+    justifyContent: 'center',
+  };
 
-  const userData = useAppSelector(authSelector);
+  // Grid style
+  const gridStyles = {
+    height: 350,
+    maxWidth: '100%', // ensure the grid does not exceed the width of its container
+    overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
+  };
+
+
 
   const [gridRef] = useState({});
  
@@ -88,7 +104,7 @@ export default function PayrollData() {
 
       {
         field: 'relatedDealerFee',
-        headerName: 'relatedDealerFee',
+        headerName: 'Dealer Fee',
         width: 180,
         editable: false,
 
@@ -97,7 +113,7 @@ export default function PayrollData() {
 
       {
         field: 'addersFinal',
-        headerName: 'addersFinal',
+        headerName: 'Adders Total',
         width: 180,
         editable: false,
 
@@ -106,7 +122,7 @@ export default function PayrollData() {
 
       {
         field: 'systemSizeFinal',
-        headerName: 'systemSizeFinal',
+        headerName: 'System Size',
         width: 180,
         editable: false,
 
@@ -114,7 +130,7 @@ export default function PayrollData() {
       },
       {
         field: 'saleStatus',
-        headerName: 'saleStatus',
+        headerName: 'Sale Status',
         width: 180,
         editable: false,
 
@@ -130,7 +146,7 @@ export default function PayrollData() {
       },
       {
         field: 'ppwFinal',
-        headerName: 'ppwFinal',
+        headerName: 'PPW',
         width: 180,
         editable: false,
 
@@ -138,7 +154,7 @@ export default function PayrollData() {
       },
       {
         field: 'milestone',
-        headerName: 'milestone',
+        headerName: 'Milestone',
         width: 180,
         editable: false,
 
@@ -147,7 +163,7 @@ export default function PayrollData() {
      
       {
         field: 'clawbackNotes',
-        headerName: 'clawbackNotes',
+        headerName: 'Clawback Notes',
         width: 380,
         editable: false,
 
@@ -155,7 +171,7 @@ export default function PayrollData() {
       },
       {
         field: 'amount',
-        headerName: 'amount',
+        headerName: 'Amount',
         width: 180,
         editable: false,
 
@@ -163,7 +179,7 @@ export default function PayrollData() {
       },
       {
         field: 'datePaid',
-        headerName: 'datePaid',
+        headerName: 'Date Paid',
         width: 180,
         editable: false,
         type: 'date',
@@ -171,7 +187,7 @@ export default function PayrollData() {
       },
       {
         field: 'repRedline',
-        headerName: 'repRedline',
+        headerName: 'Rep Redline',
         width: 180,
         editable: false,
 
@@ -179,7 +195,7 @@ export default function PayrollData() {
       },
       {
         field: 'repRedlineOverrride',
-        headerName: 'repRedlineOverrride',
+        headerName: 'Rep Redline Override',
         width: 180,
         editable: false,
 
@@ -187,7 +203,7 @@ export default function PayrollData() {
       },
       {
         field: 'leadgenRedlineOverrride',
-        headerName: 'leadgenRedlineOverrride',
+        headerName: 'Leadgen Redline Override',
         width: 180,
         editable: false,
 
@@ -206,12 +222,12 @@ export default function PayrollData() {
 
   useEffect(() => {
    
-    fetch('http://localhost:4000/rest/auth/crmPayroll', {
+    fetch('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmPayroll', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ recordId: repIDValue })
+        body: JSON.stringify({ recordId: recordUserId })
     })
     .then(response => response.json())
     .then(responseData => {
@@ -278,7 +294,7 @@ export default function PayrollData() {
         setPayError(error);
         setLoading(false);
     });
-}, []);
+}, [recordUserId]);
 
   // remove categories and tags from data.leads and make new array
   // ORIGINAL
@@ -341,21 +357,23 @@ function formatDollar(amount) {
 
   return (
     //<div style={{ height: 700, width: '100%' }}>
-    <div style={{lex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto' }}>
-  
-
-
-      
-      <div style={{  height: 450, width: '100%', overflow: 'auto' }}>
-                <Box sx={{ height: '100%', maxWidth: '100%', overflow: 'auto' }}>
-                 <Box
+    <div style={{ 
+    
+      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
+    
+    <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
+              <Box sx={{
+                   
+                      height: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+               <Box
             sx={{
-              marginBottom: '16px',
+         
+            
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
               position: 'relative',
-              top: '60px',
+             
               right: '16px',
               zIndex: '2',
               width: '60%',
@@ -364,7 +382,7 @@ function formatDollar(amount) {
             }}
           >
          
-            <TextField
+            {/* <TextField
               size="small"
               variant="outlined"
               type={'search'}
@@ -372,7 +390,7 @@ function formatDollar(amount) {
               value={searchQuery}
            
    
-            />
+            /> */}
           </Box>
 
           {isLoading ? (
@@ -382,6 +400,12 @@ function formatDollar(amount) {
           ) : (
 
             <StyledDataGrid
+            pageSize={pageSize}
+            page={page}
+            rowCount={data?.leads?.count} // Use the state to inform the grid of the total row count
+            paginationMode="server"
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            onPageChange={(newPage) => setPage(newPage)}
             sx={gridStyles}
             //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
               rows={leadsRows}
@@ -407,11 +431,6 @@ function formatDollar(amount) {
               }}
               rowsPerPageOptions={[10, 25, 50, 100, 200]}
               pagination="true" // enable pagination
-              pageSize={pageSize} // set the page size to 10
-              page={page} // set the initial page to 1
-              rowCount={data?.leads?.count} // set the total number of rows to the length of the rows array
-              paginationMode="server" // paginate on the client-side
-             
               columns={columns}
   
 

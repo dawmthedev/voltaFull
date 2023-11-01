@@ -15,11 +15,20 @@ import { gridStyles } from '../../constants/styles';
 import { styled, darken, lighten } from '@mui/material/styles';
 
 
-export default function LeadGenPay() {
+export default function LeadGenPay(props) {
 
   //USER OBJECT
 
-  const userData = useAppSelector(authSelector);
+
+  const {recordUserId} = props;
+ 
+
+  // Grid style
+  const gridStyles = {
+    height: 350,
+    maxWidth: '100%', // ensure the grid does not exceed the width of its container
+    overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
+  };
 
   const [gridRef] = useState({});
  
@@ -40,178 +49,176 @@ export default function LeadGenPay() {
 
  
 
-  //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
-  const columns = useMemo(
-    () => [
+ //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
+ const columns = useMemo(
+  () => [
+
+
+    {
+      field: 'lead',
+      headerName: 'Homeowner Name',
+      width: 150,
+      editable: false,
+    },
+    {
+      field: 'itemType',
+      headerName: 'Payroll Item Type',
+      width: 180,
+      editable: false,
+      hide: false,
+    },
+      
+    {
+      field: 'saleDate',
+      headerName: 'SaleDate',
+      width: 180,
+      editable: false,
+      hide: false,
+      type:'date'
+    },
+    {
+      field: 'userStatus',
+      headerName: 'Project Status',
+      width: 180,
+      editable: false,
+      type: 'text',
+      
+    },
+ 
+
+    {
+      field: 'relatedContractAmount',
+      headerName: 'Related Contract Amount',
+      width: 200,
+      editable: false,
+
+      hide: false,
+    },
+
+    {
+      field: 'relatedDealerFee',
+      headerName: 'Dealer Fee',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+
+    {
+      field: 'addersFinal',
+      headerName: 'Adders Total',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+
+    {
+      field: 'systemSizeFinal',
+      headerName: 'System Size',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+    {
+      field: 'saleStatus',
+      headerName: 'Sale Status',
+      width: 180,
+      editable: false,
+
+      hide: false,
+      cellClassName: (params) => {
+        if (params.value === 'active') {
+            return 'active-cell';
+        } else if (params.value === 'inactive') {
+            return 'inactive-cell';
+        }
+        return '';
+    }
+    },
+    {
+      field: 'ppwFinal',
+      headerName: 'PPW',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+    {
+      field: 'milestone',
+      headerName: 'Milestone',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+   
+    {
+      field: 'clawbackNotes',
+      headerName: 'Clawback Notes',
+      width: 380,
+      editable: false,
+
+      hide: false,
+    },
+    {
+      field: 'amount',
+      headerName: 'Amount',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+    {
+      field: 'datePaid',
+      headerName: 'Date Paid',
+      width: 180,
+      editable: false,
+      type: 'date',
+      hide: false,
+    },
+    {
+      field: 'repRedline',
+      headerName: 'Rep Redline',
+      width: 180,
+      editable: false,
+      hide: true,
+    },
+    {
+      field: 'repRedlineOverrride',
+      headerName: 'Rep Redline Override',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+    {
+      field: 'leadgenRedlineOverrride',
+      headerName: 'Leadgen Redline Override',
+      width: 180,
+      editable: false,
+
+      hide: false,
+    },
+ 
 
   
-      {
-        field: 'lead',
-        headerName: 'Homeowner Name',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'itemType',
-        headerName: 'Payroll Item Type',
-        width: 180,
-        editable: false,
-        hide: false,
-      },
-        
-      {
-        field: 'saleDate',
-        headerName: 'SaleDate',
-        width: 180,
-        editable: false,
-        hide: false,
-        type:'date'
-      },
-      {
-        field: 'userStatus',
-        headerName: 'Project Status',
-        width: 180,
-        editable: false,
-        type: 'text',
-        
-      },
-   
+ 
 
-      {
-        field: 'relatedContractAmount',
-        headerName: 'Related Contract Amount',
-        width: 200,
-        editable: false,
-
-        hide: false,
-      },
-
-      {
-        field: 'relatedDealerFee',
-        headerName: 'relatedDealerFee',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-
-      {
-        field: 'addersFinal',
-        headerName: 'addersFinal',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-
-      {
-        field: 'systemSizeFinal',
-        headerName: 'systemSizeFinal',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'saleStatus',
-        headerName: 'saleStatus',
-        width: 180,
-        editable: false,
-
-        hide: false,
-        cellClassName: (params) => {
-          if (params.value === 'active') {
-              return 'active-cell';
-          } else if (params.value === 'inactive') {
-              return 'inactive-cell';
-          }
-          return '';
-      }
-      },
-      {
-        field: 'ppwFinal',
-        headerName: 'ppwFinal',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'milestone',
-        headerName: 'milestone',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-     
-      {
-        field: 'clawbackNotes',
-        headerName: 'clawbackNotes',
-        width: 380,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'amount',
-        headerName: 'amount',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'datePaid',
-        headerName: 'datePaid',
-        width: 180,
-        editable: false,
-        type: 'date',
-        hide: false,
-      },
-      {
-        field: 'repRedline',
-        headerName: 'repRedline',
-        width: 180,
-        editable: false,
-
-        hide: true,
-      },
-      {
-        field: 'repRedlineOverrride',
-        headerName: 'repRedlineOverrride',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'leadgenRedlineOverrride',
-        headerName: 'leadgenRedlineOverrride',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-   
-
-    
-   
-
-    ],
-    [data]
-  );
-
+  ],
+  [data]
+);
 
 
   useEffect(() => {
    
-    fetch('http://localhost:4000/rest/auth/CRMPayrollLeadGen', {
+    fetch('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/CRMPayrollLeadGen', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ recordId: repIDValue })
+        body: JSON.stringify({ recordId: recordUserId })
     })
     .then(response => response.json())
     .then(responseData => {
@@ -278,7 +285,7 @@ export default function LeadGenPay() {
         setPayError(error);
         setLoading(false);
     });
-}, []);
+}, [recordUserId]);
 
   // remove categories and tags from data.leads and make new array
   // ORIGINAL
@@ -341,14 +348,17 @@ function formatDollar(amount) {
 
   return (
     //<div style={{ height: 700, width: '100%' }}>
-    <div style={{lex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto' }}>
+    <div style={{
+    
+      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden', justifyContent: 'center' }}>
   
-
-
-      
-      <div style={{  height: 450, width: '100%', overflow: 'auto' }}>
-                <Box sx={{ height: '100%', maxWidth: '100%', overflow: 'auto' }}>
-                 <Box
+  
+      <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
+             <Box sx={{ 
+            
+                 
+                      height: 'fit-content', maxWidth: '100%', overflow: 'hidden' }}>
+               <Box
             sx={{
               marginBottom: '16px',
               display: 'flex',
@@ -359,6 +369,7 @@ function formatDollar(amount) {
               right: '16px',
               zIndex: '2',
               width: '60%',
+         
               // maxWidth: '330px',
               marginLeft: 'auto',
             }}
@@ -382,6 +393,12 @@ function formatDollar(amount) {
           ) : (
 
             <StyledDataGrid
+            pageSize={pageSize}
+            page={page}
+            rowCount={data?.leads?.count} // Use the state to inform the grid of the total row count
+            paginationMode="server"
+            onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
+            onPageChange={(newPage) => setPage(newPage)}
             sx={gridStyles}
             //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
               rows={leadsRows}
@@ -407,11 +424,6 @@ function formatDollar(amount) {
               }}
               rowsPerPageOptions={[10, 25, 50, 100, 200]}
               pagination="true" // enable pagination
-              pageSize={pageSize} // set the page size to 10
-              page={page} // set the initial page to 1
-              rowCount={data?.leads?.count} // set the total number of rows to the length of the rows array
-              paginationMode="server" // paginate on the client-side
-             
               columns={columns}
   
 

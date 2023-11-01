@@ -12,12 +12,20 @@ import { gridStyles } from '../../constants/styles';
 
 
 
-export default function DealsData() {
+export default function DealsData(props) {
+
+
+
+
+const {recordUserId} = props;
+
+
 
   // Add redux user info here: 
   // const { user } = useSelector((state) => state.auth);
   // console.log("User" , user)
-  
+
+ 
   const [sortModel, setSortModel] = useState([{ field: 'name', sort: 'asc' }]);
   const [sort, setSort] = useState('');
   const [column, setColumn] = useState('');
@@ -42,7 +50,10 @@ export default function DealsData() {
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
 
- const repIDValue = "1890"; // Replace this with the actual repID value you want to send
+ 
+  // Provide a default value if UserData or recordID is undefined
+
+//  const repIDValue = UserData.recordID; // Replace this with the actual repID value you want to send
 
   //STYLES: 
 
@@ -157,12 +168,14 @@ export default function DealsData() {
 
   useEffect(() => {
    
-    fetch('http://localhost:4000/rest/auth/crmDeals', {
+    //fetch('http://localhost:4000/rest/auth/crmDeals', {
+
+    fetch('https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals',{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ recordId: repIDValue })
+        body: JSON.stringify({ recordId: recordUserId })
     })
     .then(response => response.json())
     .then(responseData => {
@@ -186,10 +199,11 @@ export default function DealsData() {
        setLoading(false);
     })
     .catch(error => {
+      
         setDealsError(error);
         setLoading(false);
     });
-}, []);
+}, [recordUserId]);
 
 
 
@@ -257,6 +271,8 @@ const leadsRows = data || [];
   return (
     <div style={{ height: 700, width: '100%' }}>
       {/* filter lead modal */}
+
+
 
 
       <div style={{ height: 690, width: '100%' }}>
