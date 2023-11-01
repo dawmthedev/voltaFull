@@ -17,6 +17,9 @@ import DynamicLead from './pages/DynamicLead';
 import CompleteRegistration from './pages/CompleteRegistration';
 import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
+// import LeadDetailPage from './pages/LeadDetailPage';
+
+
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -32,6 +35,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'products', element: <ProductsPage /> },
+        // { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },

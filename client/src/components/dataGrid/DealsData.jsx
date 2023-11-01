@@ -15,7 +15,7 @@ import { gridStyles } from '../../constants/styles';
 export default function DealsData(props) {
 
 
-
+  const navigate = useNavigate();
 
 const {recordUserId} = props;
 
@@ -64,26 +64,26 @@ const {recordUserId} = props;
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-      {
-        field: 'Profile',
-        headerName: 'Profile',
-        width: 150,
-        editable: true,
-        renderCell: (params) => {
-          return (
-            <Button
-              variant="outlined"
-              onClick={() => {
-               //Open up user modal
-              //  navigate(`/lead/${params?.row?.id}`);
+      // {
+      //   field: 'Profile',
+      //   headerName: 'Profile',
+      //   width: 150,
+      //   editable: true,
+      //   renderCell: (params) => {
+      //     return (
+      //       <Button
+      //         variant="outlined"
+      //         onClick={() => {
+      //          //Open up user modal
+      //            navigate(`/lead/${params?.row?.id}`);
     
-              }}
-            >
-              Pipeline
-            </Button>
-          );
-        },
-      },
+      //         }}
+      //       >
+      //         Pipeline
+      //       </Button>
+      //     );
+      //   },
+      // },
   
       {
         field: 'email',
