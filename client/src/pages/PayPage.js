@@ -38,7 +38,7 @@ export default function PayPage() {
           boxSizing: 'border-box',  // ensures that padding does not increase the box's size beyond 100vw
         }}
       >
-        <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em' }}>
+        <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em', paddingLeft: '1em' }}>
       
         <h4>Sales Commissions</h4>
           <PayrollData recordUserId={recordId}/>

@@ -38,7 +38,7 @@ export default function DealsPage() {
           },
         }}
       >
-     <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em' }}>
+     <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em', paddingLeft: '1em'}}>
       
           {/* <DataGridProCSV /> */}
           <h4>Sales Deals</h4>

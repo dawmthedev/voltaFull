@@ -194,7 +194,7 @@ export default function DealsData(props) {
 
 
   useEffect(() => {
-   
+
 
     fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals`,{
         method: 'POST',
@@ -301,11 +301,13 @@ const leadsRows = data || [];
   return (
     <div style={{ 
     
-      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
+      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center',
+ }}>
     
       {/* filter lead modal */}
 
-      <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
+      <div style={{  height: 350, width: '90%', overflow: 'auto',
+  }}>
 
       <Box sx={{
                    
