@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { styled } from '@mui/material/styles';
 // components
 import Logo from '../../components/logo';
+import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
 
@@ -24,7 +25,22 @@ export default function SimpleLayout() {
   return (
     <>
       <StyledHeader>
-        <Logo />
+        {/* <Logo /> */}
+
+
+        <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+    <img
+      src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`} 
+      alt="Voltaic CRM Logo"
+      style={{
+        maxWidth: '150px',
+        maxHeight: '150px',
+        width: 'auto',
+        height: 'auto',
+        objectFit: 'contain'
+      }}
+    />
+  </Box>
       </StyledHeader>
 
       <Outlet />

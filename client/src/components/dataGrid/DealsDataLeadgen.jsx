@@ -12,7 +12,7 @@ import { styled, darken, lighten } from '@mui/material/styles';
 
 
 
-export default function DealsData(props) {
+export default function DealsDataLeadgen(props) {
 
 
   const navigate = useNavigate();
@@ -196,7 +196,7 @@ export default function DealsData(props) {
   useEffect(() => {
    
 
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals`,{
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsLeadgen`,{
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
@@ -301,31 +301,31 @@ const leadsRows = data || [];
   return (
     <div style={{ 
     
-      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
-    
-      {/* filter lead modal */}
-
-      <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
-
-      <Box sx={{
-                   
-                   height: '100%', maxWidth: '100%', overflow: 'hidden' }}>
-          <Box
-            sx={{
-         
-            
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'flex-end',
-              position: 'relative',
-             
-              right: '16px',
-              zIndex: '2',
-              width: '60%',
-              // maxWidth: '330px',
-              marginLeft: 'auto',
-            }}
-          >
+        flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
+      
+        {/* filter lead modal */}
+  
+        <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
+  
+        <Box sx={{
+                     
+                     height: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+            <Box
+              sx={{
+           
+              
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'flex-end',
+                position: 'relative',
+               
+                right: '16px',
+                zIndex: '2',
+                width: '60%',
+                // maxWidth: '330px',
+                marginLeft: 'auto',
+              }}
+            >
             {/* <Typography variant="h6" style={{ marginRight: 16 }}>
               User Fields
             </Typography> */}

@@ -27,7 +27,7 @@ export default function PayPage() {
       <Helmet>
         <title>Payroll</title>
       </Helmet>
-
+ 
       <Box
         sx={{
           width: '100vw',
@@ -40,10 +40,10 @@ export default function PayPage() {
       >
         <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em' }}>
       
-        <h1>Sales Commissions</h1>
+        <h4>Sales Commissions</h4>
           <PayrollData recordUserId={recordId}/>
  
-        <h1>Lead generation Commissions</h1>
+        <h4>Lead generation Commissions</h4>
           <LeadGenPay recordUserId={recordId} />
        
        

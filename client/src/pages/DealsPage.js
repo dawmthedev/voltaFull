@@ -5,10 +5,10 @@ import { Box } from '@mui/material';
 import DealsData from '../components/dataGrid/DealsData';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
+import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
 
 export default function DealsPage() {
-
-
+ 
   const { data } = useAppSelector(authSelector);
   const recordId = data?.recordID;
   return (
@@ -16,9 +16,13 @@ export default function DealsPage() {
       sx={{
         height: '100vh',
         display: 'flex',
+        flexDirection: 'column',
         justifyContent: 'center',
         alignContent: 'center',
         backgroundColor: 'rgba(145, 158, 171, 0.16)',
+       width: '100%',
+        overflow: 'auto',
+        overflowX: 'hidden'
       }}
     >
       <Helmet>
@@ -34,9 +38,18 @@ export default function DealsPage() {
           },
         }}
       >
-        <Box sx={{ width: '100%', height: 'fit-content' }}>
+     <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em' }}>
+      
           {/* <DataGridProCSV /> */}
+          <h4>Sales Deals</h4>
           <DealsData recordUserId={recordId}/>
+
+
+          <h4>Leadgen Deals</h4>
+
+
+          <DealsDataLeadgen recordUserId={recordId}/>
+
         </Box>
       </Box>
     </Box>
