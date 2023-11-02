@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
 import { authSelector } from '../../../redux/slice/authSlice';
 import { useNavigate } from 'react-router-dom';
 import { logout } from '../../../redux/middleware/authentication';
+import { setAlert } from '../../../redux/slice/alertSlice';
 
 // ----------------------------------------------------------------------
 
@@ -114,6 +115,7 @@ export default function AccountPopover() {
           sx={{ m: 1 }}
           onClick={async () => {
             await dispatch(logout());
+            dispatch(setAlert({ message: 'Logout successful', type: 'success', open: true }));
             handleClose();
             navigate('/login', { replace: true });
           }}

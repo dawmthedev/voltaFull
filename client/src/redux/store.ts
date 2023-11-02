@@ -5,14 +5,14 @@ import categorySlice from './slice/categorySlice';
 import leadSlice from './slice/leadSlice';
 import authSlice from './slice/authSlice';
 import adminSlice from './slice/adminSlice';
-import errorSlice from './slice/errorSlice';
+import alertSlice from './slice/alertSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
   admin: adminSlice,
   lead: leadSlice,
   category: categorySlice,
-  error: errorSlice
+  alert: alertSlice
 });
 
 const persistConfig = {
