@@ -27,6 +27,37 @@ const CompleteRegistration = () => {
   const [code, setCode] = useState<string>('');
 
   const submitRegister = async () => {
+    if (registerData.password !== registerData.confirmPassword) {
+      dispatch(
+        setAlert({
+          message: 'Password and confirm password must be the same',
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    for (const key in registerData) {
+      if (registerData[key] === '') {
+        dispatch(
+          setAlert({
+            message: `Please fill ${key} field`,
+            type: 'error'
+          })
+        );
+        return;
+      }
+    }
+    if (registerData.agree === false) {
+      dispatch(
+        setAlert({
+          message: 'Please agree with terms and conditions',
+          type: 'error'
+        })
+      );
+      return;
+    }
+
     const response: any = await dispatch(startVerification({ email: registerData.email, type: 'email' }));
 
     if (response && response.error && response.error.message) {
@@ -49,6 +80,47 @@ const CompleteRegistration = () => {
   };
 
   const handleCompleteVerification = async () => {
+    if (registerData.password !== registerData.confirmPassword) {
+      dispatch(
+        setAlert({
+          message: 'Password and confirm password must be the same',
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    for (const key in registerData) {
+      if (registerData[key] === '') {
+        dispatch(
+          setAlert({
+            message: `Please fill ${key} field`,
+            type: 'error'
+          })
+        );
+        return;
+      }
+    }
+    if (registerData.agree === false) {
+      dispatch(
+        setAlert({
+          message: 'Please agree with terms and conditions',
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    if (!code) {
+      dispatch(
+        setAlert({
+          message: 'Please enter verification code',
+          type: 'error'
+        })
+      );
+      return;
+    }
+
     const registerResponse: any = await dispatch(
       register({ email: registerData.email, name: registerData.name, password: registerData.password })
     );
@@ -153,7 +225,15 @@ const CompleteRegistration = () => {
               variant="text"
               sx={{ position: 'absolute', bottom: '10px', right: '10px' }}
               onClick={async () => {
-                if (!registerData.email) alert('Please enter your email');
+                if (!registerData.email) {
+                  dispatch(
+                    setAlert({
+                      message: 'Please enter email',
+                      type: 'error'
+                    })
+                  );
+                  return;
+                }
                 const response: any = dispatch(await dispatch(startVerification({ email: registerData.email, type: 'email' })));
                 if (response && response.error && response.error.message) {
                   dispatch(
