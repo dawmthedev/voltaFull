@@ -19,8 +19,6 @@ export default function NavSection({ data = [], ...other }) {
     <Box {...other}>
       <List disablePadding sx={{ p: 1 }}>
         {data.map((item) => {
-          if (loginData && loginData.email !== 'dominiqmartinez@voltaicnow.com' && (item.title == 'dashboard' || item.title == 'Users'))
-            return null;
           return <NavItem key={item.title} item={item} />;
         })}
       </List>
