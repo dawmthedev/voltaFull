@@ -212,8 +212,6 @@ export default function DealsData(props) {
                     plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
                     installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
                     ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
-
-
                     ppwFinal: truncateDecimals(deal.ppwFinal, 1),
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',
