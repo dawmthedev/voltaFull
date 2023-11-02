@@ -84,7 +84,7 @@ const initialState = {
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
-  const { loggedInUser } = useAppSelector(authSelector);
+
   const { signal, abort } = createAbortController();
 
   const [open, setOpen] = useState(null);
@@ -182,15 +182,7 @@ export default function UserPage() {
           </Button> */}
         </Stack>
 
-        <CustomModal
-          title="Add New User"
-          open={isModalOpen}
-          setOpen={setIsModalOpen}
-          handleSubmit={() => {
-            // dispatch(register({ ...user, company: loggedInUser.company || '' }));
-            // setIsModalOpen(false);
-          }}
-        >
+        <CustomModal title="Add New User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
           <AddUserForm
             user={user}
             getUsersData={(value, name) => {

@@ -2,7 +2,19 @@ import { createSlice } from '@reduxjs/toolkit';
 
 import { login, startVerification, register, verifyCode, completeVerification } from '../middleware/authentication';
 
-const initialState = {
+type AuthState = {
+  loading: boolean;
+  data: any;
+  error: string | null;
+  verificationData: any;
+  verificationLoading: boolean;
+  verificationError: string | null;
+  isStartVerification: boolean;
+  verifyCodeLoading: boolean;
+  verifyCodeError: string | null;
+};
+
+const initialState: AuthState = {
   loading: false,
   data: [],
   error: null,
@@ -44,7 +56,7 @@ const authSlice = createSlice({
     });
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.error = action.error.message;
     });
 
     // register user
@@ -57,7 +69,7 @@ const authSlice = createSlice({
     });
     builder.addCase(register.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.error = action.error.message;
     });
 
     //verification
@@ -71,13 +83,14 @@ const authSlice = createSlice({
     });
     builder.addCase(startVerification.rejected, (state, action) => {
       state.loading = false;
-      state.verificationError = action.payload;
+      state.verificationError = action.error.message;
+      state.error = action.error.message;
     });
 
     //verify code
     builder.addCase(verifyCode.pending, (state) => {
       state.verifyCodeLoading = true;
-      state.verifyCodeError = null; 
+      state.verifyCodeError = null;
     });
     builder.addCase(verifyCode.fulfilled, (state, action) => {
       state.verifyCodeLoading = false;
@@ -86,7 +99,7 @@ const authSlice = createSlice({
     });
     builder.addCase(verifyCode.rejected, (state, action) => {
       state.verifyCodeLoading = false;
-      state.error = action.payload;
+      state.error = action.error.message;
       state.verifyCodeError = 'Invalid code';
     });
 
@@ -101,13 +114,13 @@ const authSlice = createSlice({
     });
     builder.addCase(completeVerification.rejected, (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.error = action.error.message;
     });
   }
 });
 
 export default authSlice.reducer;
 
-export const authSelector = (state) => state.auth;
+export const authSelector = (state: { auth: AuthState }) => state.auth;
 
 export const { login: loginAction, register: registerAction, startVerification: startVerificationAction } = authSlice.actions;

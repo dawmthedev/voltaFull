@@ -7,6 +7,7 @@ import Iconify from '../components/iconify';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { completeVerification, register, startVerification, verifyCode } from '../redux/middleware/authentication';
 import { authSelector, startVerificationAction } from '../redux/slice/authSlice';
+import { setAlert } from '../redux/slice/alertSlice';
 
 const initialState = {
   email: '',
@@ -18,19 +19,69 @@ const initialState = {
 
 const CompleteRegistration = () => {
   const dispatch = useAppDispatch();
-  const { isStartVerification, verifyCodeLoading, verifyCodeError } = useAppSelector(authSelector);
+  const { isStartVerification, verifyCodeLoading, verifyCodeError, loading } = useAppSelector(authSelector);
+
   const navigate = useNavigate();
   const [registerData, setRegisterData] = useState(initialState);
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [code, setCode] = useState<string>('');
 
   const submitRegister = async () => {
-    await dispatch(startVerification({ email: registerData.email, type: 'email' }));
+    const response: any = await dispatch(startVerification({ email: registerData.email, type: 'email' }));
+
+    if (response && response.error && response.error.message) {
+      dispatch(
+        setAlert({
+          message: response.error.message,
+          type: 'error'
+        })
+      );
+      return;
+    }
+    if (response && response.payload) {
+      dispatch(
+        setAlert({
+          message: 'Verification code sent to your email',
+          type: 'success'
+        })
+      );
+    }
   };
 
   const handleCompleteVerification = async () => {
-    await dispatch(register({ email: registerData.email, name: registerData.name, password: registerData.password }));
-    await dispatch(completeVerification({ email: registerData.email, code: code }));
+    const registerResponse: any = await dispatch(
+      register({ email: registerData.email, name: registerData.name, password: registerData.password })
+    );
+    const completeRegResponse: any = await dispatch(completeVerification({ email: registerData.email, code: code }));
+
+    if (registerResponse && registerResponse.error && registerResponse.error.message) {
+      dispatch(
+        setAlert({
+          message: registerResponse.error.message,
+          type: 'error'
+        })
+      );
+      return;
+    }
+    if (completeRegResponse && completeRegResponse.error && completeRegResponse.error.message) {
+      dispatch(
+        setAlert({
+          message: completeRegResponse.error.message,
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    if (registerResponse && registerResponse.payload && completeRegResponse && completeRegResponse.payload) {
+      dispatch(
+        setAlert({
+          message: 'Registration successfully',
+          type: 'success'
+        })
+      );
+    }
+
     dispatch(startVerificationAction(false));
     navigate('/login', { replace: true });
   };
@@ -102,9 +153,25 @@ const CompleteRegistration = () => {
               variant="text"
               sx={{ position: 'absolute', bottom: '10px', right: '10px' }}
               onClick={async () => {
-                debugger;
                 if (!registerData.email) alert('Please enter your email');
-                dispatch(await dispatch(startVerification({ email: registerData.email, type: 'email' })));
+                const response: any = dispatch(await dispatch(startVerification({ email: registerData.email, type: 'email' })));
+                if (response && response.error && response.error.message) {
+                  dispatch(
+                    setAlert({
+                      message: response.error.message,
+                      type: 'error'
+                    })
+                  );
+                  return;
+                }
+                if (response && response.payload) {
+                  dispatch(
+                    setAlert({
+                      message: 'Successfully verified',
+                      type: 'success'
+                    })
+                  );
+                }
               }}
             >
               Resend
@@ -124,11 +191,11 @@ const CompleteRegistration = () => {
         <Link to="#">I agree to the terms and conditions</Link>
       </Stack>
       {!isStartVerification ? (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={submitRegister}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={submitRegister} loading={loading}>
           Registration
         </LoadingButton>
       ) : (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleCompleteVerification}>
+        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleCompleteVerification} loading={loading}>
           Complete Registration
         </LoadingButton>
       )}

@@ -1,28 +1,30 @@
-import * as React from 'react';
-import Alert from '@mui/material/Alert';
-import Stack from '@mui/material/Stack';
+import { Alert, Snackbar } from '@mui/material';
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useAppSelector } from '../../hooks/hooks';
+import { closeAlert, selectAlert, setAlert } from '../../redux/slice/alertSlice';
 
-interface Props {
-  error: string;
-  success: string;
-}
-
-export default function ErrorAlert({ error, success }: Props) {
+export const Alerts = () => {
+  const dispatch = useDispatch();
+  const { open, type, message } = useAppSelector(selectAlert);
   return (
-    <Stack sx={{ width: '100%' }} spacing={2}>
-      {(error && (
-        <Alert variant="filled" severity="error">
-          {error}
-        </Alert>
-      )) ||
-        ''}
-
-      {(success && (
-        <Alert variant="filled" severity="success">
-          {success}
-        </Alert>
-      )) ||
-        ''}
-    </Stack>
+    <Snackbar
+      open={open}
+      onClose={() => {
+        dispatch(closeAlert());
+      }}
+      autoHideDuration={3000}
+      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    >
+      <Alert
+        severity={type}
+        variant="filled"
+        onClose={() => {
+          dispatch(closeAlert());
+        }}
+      >
+        {message}
+      </Alert>
+    </Snackbar>
   );
-}
+};
