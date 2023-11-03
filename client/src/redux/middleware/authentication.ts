@@ -1,12 +1,15 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { get, post, put, destroy } from '../../libs/client/apiClient';
+import { AxiosError } from 'axios';
+import { get, post, put } from '../../libs/client/apiClient';
+
+const SOMETHING_WENT_WRONG = 'Something went wrong!';
 
 const getOrganization = createAsyncThunk('organization/get', async ({ id }: { id: string }) => {
   try {
     const { data } = await get(`/org/id`);
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -17,7 +20,10 @@ const startVerification = createAsyncThunk(
       const { data } = await post('/auth/start-verification', { email, type });
       return data.data;
     } catch (error) {
-      throw error;
+      debugger;
+      const a = (error as AxiosError<any>).response?.data.message;
+      console.log(a);
+      throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
     }
   }
 );
@@ -27,7 +33,7 @@ const login = createAsyncThunk('aut/login', async ({ email, password }: { email:
     const { data } = await post('/auth/login', { email, password });
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -36,7 +42,7 @@ const register = createAsyncThunk('auth/register', async ({ name, email, passwor
     const { data } = await post('/auth/register', { name, email, password });
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -57,7 +63,7 @@ const logout = createAsyncThunk('auth/logout', async () => {
     const { data } = await post('/auth/logout');
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -66,7 +72,7 @@ const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ code, em
     const { data } = await post('/auth/reset-password', { code, email });
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -75,7 +81,7 @@ const verifyCode = createAsyncThunk('auth/verifyCode', async ({ code, email }: {
     const { data } = await post('/auth/verify', { code, email });
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
@@ -84,7 +90,7 @@ const completeVerification = createAsyncThunk('auth/completeVerification', async
     const { data } = await put('/auth/complete-verification', { code, email });
     return data.data;
   } catch (error) {
-    throw error;
+    throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
   }
 });
 
