@@ -1,15 +1,17 @@
-import { Button, Container } from '@mui/material';
+import { Button, Container, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddCategory from '../components/add-category/AddCategory';
 import AddLead from '../components/add-lead/AddLead';
+import CustomInput from '../components/input/CustomInput';
 import LeadsTable from '../components/leads-table/LeadsTable';
 import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { createCategory, getCategories, getCategory } from '../redux/middleware/category';
 import { createBulkLead, createLead, getLeads } from '../redux/middleware/lead';
+import { setAlert } from '../redux/slice/alertSlice';
 import { categoryByIdSelector, categorySelector } from '../redux/slice/categorySlice';
 import { leadState, openModal } from '../redux/slice/leadSlice';
 import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
@@ -41,6 +43,7 @@ const DynamicLead = () => {
   const [fields, setFields] = useState<FieldTypes[]>([initialFieldState]);
   const [addLeads, setAddLeads] = useState<any>(categoryData?.fields);
   const [leadValues, setLeadValues] = useState({});
+  const [categoryName, setCategoryName] = useState<string>('');
 
   useEffect(() => {
     if (!categoryData) return;
@@ -77,9 +80,18 @@ const DynamicLead = () => {
   };
 
   const submitBulkLeads = async () => {
+    if (!categoryName) {
+      dispatch(setAlert({ message: 'Please add category name', type: 'error' }));
+      return;
+    }
+    if (!uploadedLeads.length) {
+      dispatch(setAlert({ message: 'Please upload leads', type: 'error' }));
+      return;
+    }
+
     const leadsFormattedData = {
-      tableName: 'dynamicleadtests',
-      columns: getColumns(uploadedLeads),
+      tableName: categoryName,
+      fields: getColumns(uploadedLeads),
       data: uploadedLeads
     };
     await dispatch(createBulkLead({ leads: leadsFormattedData, signal }));
@@ -199,6 +211,9 @@ const DynamicLead = () => {
             size="lg"
           >
             <CsvUpload handleCsvData={handleCsvData} />
+            <Grid sx={{ mt: 2, width: '30%' }}>
+              <CustomInput label="Name" name="categoryName" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+            </Grid>
             {(uploadedLeads.length && (
               <LeadsTable
                 data={uploadedLeads}
@@ -241,6 +256,7 @@ const DynamicLead = () => {
               addNewField={addNewField}
               category={category}
               setCategory={setCategory}
+              removeField={removeField}
             />
           </CustomModal>
         </Box>
