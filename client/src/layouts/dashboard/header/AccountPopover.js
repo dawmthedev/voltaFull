@@ -114,9 +114,14 @@ export default function AccountPopover() {
         <MenuItem
           sx={{ m: 1 }}
           onClick={async () => {
-            await dispatch(logout());
+            const response = await dispatch(logout());
+            if (response.error) {
+              dispatch(setAlert({ message: response.error.message, type: 'error', open: true }));
+              return;
+            }
             dispatch(setAlert({ message: 'Logout successful', type: 'success', open: true }));
             handleClose();
+            localStorage.removeItem('persist:root')
             navigate('/login', { replace: true });
           }}
         >
