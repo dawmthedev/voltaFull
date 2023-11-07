@@ -306,7 +306,7 @@ const leadsRows = data || [];
     
       {/* filter lead modal */}
 
-      <div style={{  height: 350, width: '90%', overflow: 'auto',
+      <div style={{  height: 350, width: '80%', overflow: 'auto',
   }}>
 
       <Box sx={{
