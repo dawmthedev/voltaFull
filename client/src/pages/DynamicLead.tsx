@@ -16,6 +16,7 @@ import { categoryByIdSelector, categorySelector } from '../redux/slice/categoryS
 import { leadState, openModal } from '../redux/slice/leadSlice';
 import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
+import CustomTable from '../components/custom-table/CustomTable';
 
 const initialCategoryState = {
   name: '',
@@ -33,8 +34,6 @@ const DynamicLead = () => {
   const dispatch = useAppDispatch();
   const { signal, abort } = createAbortController();
 
-  const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
   const [uploadedLeads, setUploadedLeads] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState(categories[0]?.id);
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
@@ -54,7 +53,7 @@ const DynamicLead = () => {
       };
     });
     setAddLeads(updatedFields);
-  }, [categoryData, selectedCategory]);
+  }, [categoryData, selectedCategory, categories]);
 
   useEffect(() => {
     (async () => {
@@ -73,7 +72,7 @@ const DynamicLead = () => {
     return () => {
       abort();
     };
-  }, []);
+  }, [categories]);
 
   const handleCsvData = (csvData) => {
     setUploadedLeads(csvData);
@@ -221,10 +220,10 @@ const DynamicLead = () => {
                 order="asc"
                 orderBy={getColumns(uploadedLeads).length && getColumns(uploadedLeads)[0].name}
                 rowCount={10}
-                selected={selected}
+                selected={[]}
                 emptyRows={0}
                 isNotFound={false}
-                filterName={filterName}
+                filterName={''}
                 onRequestSort={() => {}}
                 onSelectAllClick={() => {}}
                 handleClick={() => {}}
@@ -268,16 +267,19 @@ const DynamicLead = () => {
               order="asc"
               orderBy={categoryData.fields[0].name}
               rowCount={10}
-              selected={selected}
+              selected={[]}
               emptyRows={0}
               isNotFound={false}
-              filterName={filterName}
+              filterName={''}
               onRequestSort={() => {}}
               onSelectAllClick={() => {}}
               handleClick={() => {}}
             />
           </Box>
         )}
+        <Box mt={4}>
+          <CustomTable />
+        </Box>
       </Container>
     </Fragment>
   );
