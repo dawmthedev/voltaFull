@@ -340,7 +340,7 @@ function formatDollar(amount) {
       flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden', justifyContent: 'center' }}>
   
   
-      <div style={{  height: 350, width: '90%', overflow: 'auto' }}>
+      <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
              <Box sx={{ 
             
                  
