@@ -5,7 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import AddCategory from '../components/add-category/AddCategory';
 import AddLead from '../components/add-lead/AddLead';
 import CustomInput from '../components/input/CustomInput';
-import LeadsTable from '../components/leads-table/LeadsTable';
+import LeadsTable from '../components/csv-table/CsvTable';
 import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
@@ -213,23 +213,7 @@ const DynamicLead = () => {
             <Grid sx={{ mt: 2, width: '30%' }}>
               <CustomInput label="Name" name="categoryName" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
             </Grid>
-            {(uploadedLeads.length && (
-              <LeadsTable
-                data={uploadedLeads}
-                headLabel={getColumns(uploadedLeads)}
-                order="asc"
-                orderBy={getColumns(uploadedLeads).length && getColumns(uploadedLeads)[0].name}
-                rowCount={10}
-                selected={[]}
-                emptyRows={0}
-                isNotFound={false}
-                filterName={''}
-                onRequestSort={() => {}}
-                onSelectAllClick={() => {}}
-                handleClick={() => {}}
-              />
-            )) ||
-              ''}
+            {(uploadedLeads.length && <LeadsTable data={uploadedLeads} headLabel={getColumns(uploadedLeads)} />) || ''}
           </CustomModal>
         </Box>
         <Box>
@@ -259,24 +243,7 @@ const DynamicLead = () => {
             />
           </CustomModal>
         </Box>
-        {categoryData && categoryData.fields && categoryData.fields.length && (
-          <Box>
-            <LeadsTable
-              data={data}
-              headLabel={categoryData.fields}
-              order="asc"
-              orderBy={categoryData.fields[0].name}
-              rowCount={10}
-              selected={[]}
-              emptyRows={0}
-              isNotFound={false}
-              filterName={''}
-              onRequestSort={() => {}}
-              onSelectAllClick={() => {}}
-              handleClick={() => {}}
-            />
-          </Box>
-        )}
+        {categoryData && categoryData.fields && categoryData.fields.length && <Box></Box>}
         <Box mt={4}>
           <CustomTable />
         </Box>
