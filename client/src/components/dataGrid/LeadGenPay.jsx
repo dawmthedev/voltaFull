@@ -232,7 +232,7 @@ export default function LeadGenPay(props) {
               clawbackNotes: payrollItem.clawbackNotes,
               leadgenRedlineOverrride: payrollItem.leadgenRedlineOverrride,
               salesRep: payrollItem.salesRep,
-              ppwFinal: payrollItem.ppwFinal,
+              ppwFinal: truncateDecimals(payrollItem.ppwFinal, 1),
               // status: payrollItem.status,
               milestone: payrollItem.milestone,
               datePaid: formatSaleDate(payrollItem.datePaid),
