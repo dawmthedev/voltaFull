@@ -41,9 +41,9 @@ const createBulkLead = createAsyncThunk(
   }
 );
 
-const updateLead = createAsyncThunk('lead/update', async ({ lead, signal }: { lead: LeadsTypes; signal: AbortSignal }) => {
+const updateLead = createAsyncThunk('lead/update', async ({ lead, signal }: { lead: any; signal: AbortSignal }) => {
   try {
-    const { data } = await put('/lead', lead);
+    const { data } = await put('/dynamic/update', lead);
     return data.data;
   } catch (error) {
     throw error;

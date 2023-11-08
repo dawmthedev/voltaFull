@@ -14,10 +14,11 @@ interface CustomTableProps {
   onDeleteClick?: (e: any, row: any) => void;
 }
 
-export default function CustomTable({ data, headLabel }: CustomTableProps) {
+export default function CustomTable({ data, headLabel, onEditClick }: CustomTableProps) {
   const [clickedRow, setClickedRow] = React.useState();
 
   const onButtonClick = (e, row) => {
+    debugger;
     e.stopPropagation();
     setClickedRow(row);
   };
@@ -50,7 +51,7 @@ export default function CustomTable({ data, headLabel }: CustomTableProps) {
             <Button onClick={(e) => onButtonClick(e, params.row)} variant="contained">
               Delete
             </Button>
-            <Button onClick={(e) => onButtonClick(e, params.row)} variant="contained">
+            <Button onClick={(e) => onEditClick(e, params.row)} variant="contained">
               Edit
             </Button>
           </Box>
@@ -65,7 +66,7 @@ export default function CustomTable({ data, headLabel }: CustomTableProps) {
     editable: column.field === 'actions' ? false : true
   }));
 
-  const rows = data.map((row) => ({
+  const rows = data?.map((row) => ({
     id: row._id,
     ...row
   }));

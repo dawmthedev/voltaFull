@@ -65,12 +65,12 @@ export class DynamicController {
   @Put("/update")
   @Returns(200, SuccessResult).Of(Object)
   async updateDynamicModel(@BodyParams() modelData: any, @Context() context: Context) {
-    const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
-    const { tableId, data, id } = modelData;
+    await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    const { tableId, data } = modelData;
     const category = await this.categoryServices.findCategoryById(tableId);
     if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
     const dynamicModel = createSchema({ tableName: category.name, columns: category.fields });
-    const result = await dynamicModel.updateOne({ _id: id }, { $set: { ...data, updatedAt: new Date() } });
+    const result = await dynamicModel.updateOne({ _id: data.id }, { $set: { ...data, updatedAt: new Date() } });
     return new SuccessResult(result, Object);
   }
 

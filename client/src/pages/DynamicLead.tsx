@@ -10,7 +10,7 @@ import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { createCategory, getCategories } from '../redux/middleware/category';
-import { createBulkLead, createLead, getLeads } from '../redux/middleware/lead';
+import { createBulkLead, createLead, getLeads, updateLead } from '../redux/middleware/lead';
 import { setAlert } from '../redux/slice/alertSlice';
 import { categorySelector } from '../redux/slice/categorySlice';
 import { leadState, openModal } from '../redux/slice/leadSlice';
@@ -43,6 +43,7 @@ const DynamicLead = () => {
   const [leadValues, setLeadValues] = useState({});
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryData, setCategoryData] = useState<CategoryResponseTypes>();
+  const [isLeadEdit, setIsLeadEdit] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -156,12 +157,27 @@ const DynamicLead = () => {
     setFields(updatedField);
   };
 
+  //! Edit lead
+  const editLead = (e, lead) => {
+    e.stopPropagation();
+    const updatedData = [...columnFields];
+    updatedData.forEach((data) => {
+      data.value = lead[data.name];
+    });
+    setColumnFields(updatedData);
+    setLeadValues(lead);
+    setIsAddLeadModalOpen(true);
+    setIsLeadEdit(true);
+  };
+
   const submitAddNewLead = async () => {
     const data = {
       tableId: selectedCategoryId,
       data: leadValues
     };
-    await dispatch(createLead({ lead: data, signal }));
+    debugger;
+    if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
+    else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
   };
 
@@ -257,7 +273,8 @@ const DynamicLead = () => {
             />
           </CustomModal>
         </Box>
-        {(categories.length && <CustomTable data={leadsData} headLabel={columnFields} />) || 'Loading'}
+        {(categories.length && leadsData.length && <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} />) ||
+          'Loading'}
       </Container>
     </Fragment>
   );
