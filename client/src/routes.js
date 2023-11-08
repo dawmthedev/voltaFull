@@ -19,6 +19,7 @@ import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
 import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
+import LeadDetailPage from './pages/LeadDetailPage';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -43,10 +44,11 @@ export default function Router() {
           element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
-        // { path: 'lead/:id', element: <LeadDetailPage /> },
+        { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
+        { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'pay', element: <PayPage /> },
         { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> }

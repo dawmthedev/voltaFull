@@ -37,7 +37,7 @@ const LoginPage = () => {
       if (response && response.payload) {
         dispatch(
           setAlert({
-            message: 'Login successfully',
+            message: 'Login successful',
             type: 'success'
           })
         );

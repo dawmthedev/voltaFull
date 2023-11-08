@@ -342,8 +342,6 @@ function formatDollar(amount) {
   
       <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
              <Box sx={{ 
-            
-                 
                       height: 'fit-content', maxWidth: '100%', overflow: 'hidden' }}>
                <Box
             sx={{

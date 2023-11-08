@@ -77,11 +77,11 @@ export default function DealsData(props) {
       //         variant="outlined"
       //         onClick={() => {
       //          //Open up user modal
-      //            navigate(`/lead/${params?.row?.id}`);
+      //            navigate(`/dashboard/lead/${params?.row?.id}`);
     
       //         }}
       //       >
-      //         Pipeline
+      //         Details
       //       </Button>
       //     );
       //   },
