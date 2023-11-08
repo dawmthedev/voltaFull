@@ -5,6 +5,8 @@ import { Box } from '@mui/material';
 import DealsData from '../components/dataGrid/DealsData';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
+
+
 import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
 
 export default function DealsPage() {

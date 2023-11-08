@@ -77,11 +77,11 @@ export default function DealsData(props) {
       //         variant="outlined"
       //         onClick={() => {
       //          //Open up user modal
-      //            navigate(`/lead/${params?.row?.id}`);
+      //            navigate(`/dashboard/lead/${params?.row?.id}`);
     
       //         }}
       //       >
-      //         Pipeline
+      //         Details
       //       </Button>
       //     );
       //   },
@@ -306,7 +306,7 @@ const leadsRows = data || [];
     
       {/* filter lead modal */}
 
-      <div style={{  height: 350, width: '90%', overflow: 'auto',
+      <div style={{  height: 350, width: '80%', overflow: 'auto',
   }}>
 
       <Box sx={{
