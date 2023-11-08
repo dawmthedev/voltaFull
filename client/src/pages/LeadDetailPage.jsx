@@ -109,6 +109,7 @@ const LeadDetailPage = () => {
   
           const messagesArray = messageInfo.map((message) => ({
             id: message.id,
+            from: message.from,
             type: 'message',
             text: message.text,
             createdAt: new Date(message.createdAt).toString(),
@@ -240,7 +241,7 @@ function truncateDecimals(number, decimalPlaces) {
   {/* Check if messageData is not null before mapping */}
   {messageData !== null ? (
     messageData.map((msg) => (
-      <Card key={msg.id} data={msg} text={msg.text} getItem={getSelected} type={msg.type} />
+      <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
     ))
   ) : (
     <p>Loading...</p>
@@ -258,7 +259,7 @@ export default LeadDetailPage;
 
 
 
-const Card = ({ data, getItem, type, leadName }) => {
+const Card = ({ data, getItem, type, leadName, from }) => {
   return (
     <Box
       sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
@@ -287,6 +288,12 @@ const Card = ({ data, getItem, type, leadName }) => {
         <Box>
           <Typography variant="subtitle2">{data?.FirstName || leadName}</Typography>
           <Box display="flex" flexDirection="column">
+
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.from && data.from.length > 500 ? data.from.slice(0, 40) + '...' : data.from}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {/* {data?.note || data?.message || data?.text || data?.description} */}
               {data?.text && data.text.length > 500 ? data.text.slice(0, 40) + '...' : data.text}
