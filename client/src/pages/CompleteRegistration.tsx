@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { Box, Button, Checkbox, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
@@ -209,15 +209,23 @@ const CompleteRegistration = () => {
               name="code"
               label="Code"
               value={code}
-              onChange={(e) => {
+              onChange={async (e) => {
                 setCode(e.target.value);
                 if (e.target.value.length === 6) {
-                  dispatch(
+                  const response = await dispatch(
                     verifyCode({
                       email: registerData.email,
                       code: e.target.value
                     })
                   );
+                  if (response.payload) {
+                    dispatch(
+                      setAlert({
+                        message: 'Successfully verified',
+                        type: 'success'
+                      })
+                    );
+                  }
                 }
               }}
             />
@@ -257,8 +265,8 @@ const CompleteRegistration = () => {
               Resend
             </Button>
           </Stack>
-          {verifyCodeLoading ? 'Loading...' : ''}
-          {verifyCodeError ? verifyCodeError : ''}
+          {verifyCodeLoading ? <b style={{ color: '#0c71edd8', fontSize: '14px' }}>Loading...</b> : ''}
+          {verifyCodeError ? <b style={{ color: 'red', fontSize: '14px' }}>{verifyCodeError}</b> : ''}
         </Box>
       )}
 

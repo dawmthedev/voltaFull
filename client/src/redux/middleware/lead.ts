@@ -29,18 +29,21 @@ const createLead = createAsyncThunk('dynamic/insert', async ({ lead, signal }: {
   }
 });
 
-const createBulkLead = createAsyncThunk('dynamic/createBulk', async ({ leads, signal }: { leads: any; signal: AbortSignal }) => {
-  try {
-    const { data } = await post('/dynamic/createBulk', leads);
-    return data.data;
-  } catch (error) {
-    throw error;
+const createBulkLead = createAsyncThunk(
+  'dynamic/createBulk',
+  async ({ leads, signal }: { leads: CreateBulkLeadsType; signal: AbortSignal }) => {
+    try {
+      const { data } = await post('/dynamic/createBulk', { ...leads });
+      return data.data;
+    } catch (error) {
+      throw error;
+    }
   }
-});
+);
 
-const updateLead = createAsyncThunk('lead/update', async ({ lead, signal }: { lead: LeadsTypes; signal: AbortSignal }) => {
+const updateLead = createAsyncThunk('lead/update', async ({ lead, signal }: { lead: any; signal: AbortSignal }) => {
   try {
-    const { data } = await put('/lead', lead);
+    const { data } = await put('/dynamic/update', lead);
     return data.data;
   } catch (error) {
     throw error;
@@ -57,3 +60,14 @@ const deleteLead = createAsyncThunk('lead/delete', async ({ id }: { id: string }
 });
 
 export { getLeads, getLead, createLead, createBulkLead, updateLead, deleteLead };
+
+type FieldTypes = {
+  name: string;
+  type: 'string' | 'number' | 'boolean' | 'date';
+};
+
+type CreateBulkLeadsType = {
+  tableName: string;
+  fields: FieldTypes[];
+  data: any;
+};

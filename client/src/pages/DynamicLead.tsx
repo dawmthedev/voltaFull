@@ -1,19 +1,22 @@
-import { Button, Container } from '@mui/material';
+import { Button, Container, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddCategory from '../components/add-category/AddCategory';
 import AddLead from '../components/add-lead/AddLead';
-import LeadsTable from '../components/leads-table/LeadsTable';
+import CustomInput from '../components/input/CustomInput';
+import LeadsTable from '../components/csv-table/CsvTable';
 import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { createCategory, getCategories, getCategory } from '../redux/middleware/category';
-import { createBulkLead, createLead, getLeads } from '../redux/middleware/lead';
-import { categoryByIdSelector, categorySelector } from '../redux/slice/categorySlice';
+import { createCategory, getCategories } from '../redux/middleware/category';
+import { createBulkLead, createLead, getLeads, updateLead } from '../redux/middleware/lead';
+import { setAlert } from '../redux/slice/alertSlice';
+import { categorySelector } from '../redux/slice/categorySlice';
 import { leadState, openModal } from '../redux/slice/leadSlice';
 import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
+import CustomTable from '../components/custom-table/CustomTable';
 
 const initialCategoryState = {
   name: '',
@@ -26,32 +29,21 @@ const initialFieldState = {
 
 const DynamicLead = () => {
   const categories: CategoryResponseTypes[] = useAppSelector(categorySelector);
-  const categoryData: CategoryResponseTypes = useAppSelector(categoryByIdSelector);
-  const { data, isModalOpen } = useAppSelector(leadState);
+  const { data: leadsData, isModalOpen } = useAppSelector(leadState);
   const dispatch = useAppDispatch();
   const { signal, abort } = createAbortController();
 
-  const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
   const [uploadedLeads, setUploadedLeads] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]?.id);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(categories[0]?.id);
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
-  const [category, setCategory] = useState<CategoryTypes>(initialCategoryState);
+  const [addCategory, setAddCategory] = useState<CategoryTypes>(initialCategoryState);
   const [fields, setFields] = useState<FieldTypes[]>([initialFieldState]);
-  const [addLeads, setAddLeads] = useState<any>(categoryData?.fields);
+  const [columnFields, setColumnFields] = useState<any>([]);
   const [leadValues, setLeadValues] = useState({});
-
-  useEffect(() => {
-    if (!categoryData) return;
-    const updatedFields = categoryData.fields.map((field) => {
-      return {
-        ...field,
-        value: ''
-      };
-    });
-    setAddLeads(updatedFields);
-  }, [categoryData, selectedCategory]);
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [categoryData, setCategoryData] = useState<CategoryResponseTypes>();
+  const [isLeadEdit, setIsLeadEdit] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -64,22 +56,58 @@ const DynamicLead = () => {
 
   useEffect(() => {
     if (!categories.length) return;
+    setSelectedCategoryId(categories[0].id);
     (async () => {
       await dispatch(getLeads({ categoryId: categories[0].id, signal }));
     })();
+    const updatedFields = categories[0].fields.map((field) => {
+      return {
+        ...field,
+        value: ''
+      };
+    });
+    setColumnFields(updatedFields);
     return () => {
       abort();
     };
-  }, []);
+  }, [categories]);
+
+  //! get selected category data
+  const getSelectedCategoryData = (id) => {
+    const categoryData = categories.find((category) => category.id === id);
+    const updatedFields = categoryData.fields.map((field) => {
+      return {
+        ...field,
+        value: ''
+      };
+    });
+    setSelectedCategoryId(categoryData.id);
+    setColumnFields(updatedFields);
+    setCategoryData(categoryData);
+    if (categoryData.id === id) {
+      (async () => {
+        await dispatch(getLeads({ categoryId: id, signal }));
+      })();
+    }
+  };
 
   const handleCsvData = (csvData) => {
     setUploadedLeads(csvData);
   };
 
   const submitBulkLeads = async () => {
+    if (!categoryName) {
+      dispatch(setAlert({ message: 'Please add category name', type: 'error' }));
+      return;
+    }
+    if (!uploadedLeads.length) {
+      dispatch(setAlert({ message: 'Please upload leads', type: 'error' }));
+      return;
+    }
+
     const leadsFormattedData = {
-      tableName: 'dynamicleadtests',
-      columns: getColumns(uploadedLeads),
+      tableName: categoryName,
+      fields: getColumns(uploadedLeads),
       data: uploadedLeads
     };
     await dispatch(createBulkLead({ leads: leadsFormattedData, signal }));
@@ -113,9 +141,9 @@ const DynamicLead = () => {
   };
 
   const getAddLeadData = (value, name, index) => {
-    const updatedData = [...addLeads];
+    const updatedData = [...columnFields];
     updatedData[index]['value'] = value;
-    setAddLeads(updatedData);
+    setColumnFields(updatedData);
     const data = {
       ...leadValues,
       [updatedData[index]['name']]: value
@@ -129,25 +157,40 @@ const DynamicLead = () => {
     setFields(updatedField);
   };
 
+  //! Edit lead
+  const editLead = (e, lead) => {
+    e.stopPropagation();
+    const updatedData = [...columnFields];
+    updatedData.forEach((data) => {
+      data.value = lead[data.name];
+    });
+    setColumnFields(updatedData);
+    setLeadValues(lead);
+    setIsAddLeadModalOpen(true);
+    setIsLeadEdit(true);
+  };
+
   const submitAddNewLead = async () => {
     const data = {
-      tableId: selectedCategory,
+      tableId: selectedCategoryId,
       data: leadValues
     };
-    await dispatch(createLead({ lead: data, signal }));
+    debugger;
+    if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
+    else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
   };
 
   const submitCategory = async () => {
     try {
       const formattedData = {
-        name: category.name,
-        description: category.description || '',
+        name: addCategory.name,
+        description: addCategory.description || '',
         fields: fields
       };
       await dispatch(createCategory({ category: formattedData }));
       setIsCategoryModalOpen(false);
-      setCategory(initialCategoryState);
+      setAddCategory(initialCategoryState);
       setFields([initialFieldState]);
     } catch (error) {
       console.log('Error:(', error);
@@ -166,12 +209,10 @@ const DynamicLead = () => {
             categories.map((category: CategoryResponseTypes) => (
               <Button
                 key={category.name}
-                variant={selectedCategory === category.id ? 'contained' : 'outlined'}
+                variant={selectedCategoryId === category.id ? 'contained' : 'outlined'}
                 sx={{ minWidth: 'auto' }}
-                onClick={async () => {
-                  await dispatch(getCategory({ id: category.id }));
-                  await dispatch(getLeads({ categoryId: category.id, signal }));
-                  setSelectedCategory(category.id);
+                onClick={() => {
+                  getSelectedCategoryData(category.id);
                 }}
               >
                 {category.name}
@@ -199,23 +240,10 @@ const DynamicLead = () => {
             size="lg"
           >
             <CsvUpload handleCsvData={handleCsvData} />
-            {(uploadedLeads.length && (
-              <LeadsTable
-                data={uploadedLeads}
-                headLabel={getColumns(uploadedLeads)}
-                order="asc"
-                orderBy={getColumns(uploadedLeads).length && getColumns(uploadedLeads)[0].name}
-                rowCount={10}
-                selected={selected}
-                emptyRows={0}
-                isNotFound={false}
-                filterName={filterName}
-                onRequestSort={() => {}}
-                onSelectAllClick={() => {}}
-                handleClick={() => {}}
-              />
-            )) ||
-              ''}
+            <Grid sx={{ mt: 2, width: '30%' }}>
+              <CustomInput label="Name" name="categoryName" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+            </Grid>
+            {(uploadedLeads.length && <LeadsTable data={uploadedLeads} headLabel={getColumns(uploadedLeads)} />) || ''}
           </CustomModal>
         </Box>
         <Box>
@@ -225,7 +253,7 @@ const DynamicLead = () => {
             setOpen={() => setIsAddLeadModalOpen(false)}
             handleSubmit={submitAddNewLead}
           >
-            <AddLead leadValue={addLeads} getAddLeadData={getAddLeadData} />
+            <AddLead leadValue={columnFields} getAddLeadData={getAddLeadData} />
           </CustomModal>
         </Box>
         <Box>
@@ -239,29 +267,14 @@ const DynamicLead = () => {
               fields={fields}
               getFieldsData={getFieldsData}
               addNewField={addNewField}
-              category={category}
-              setCategory={setCategory}
+              category={addCategory}
+              setCategory={setAddCategory}
+              removeField={removeField}
             />
           </CustomModal>
         </Box>
-        {categoryData && categoryData.fields && categoryData.fields.length && (
-          <Box>
-            <LeadsTable
-              data={data}
-              headLabel={categoryData.fields}
-              order="asc"
-              orderBy={categoryData.fields[0].name}
-              rowCount={10}
-              selected={selected}
-              emptyRows={0}
-              isNotFound={false}
-              filterName={filterName}
-              onRequestSort={() => {}}
-              onSelectAllClick={() => {}}
-              handleClick={() => {}}
-            />
-          </Box>
-        )}
+        {(categories.length && leadsData.length && <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} />) ||
+          'Loading'}
       </Container>
     </Fragment>
   );

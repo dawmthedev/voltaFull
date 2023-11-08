@@ -13,9 +13,7 @@ export class Application {
   public async initializeServer() {
     await Secrets.initialize();
     // establish database connection with mongoose.connect()
-    this.databaseConnection = await mongoose.connect(
-      "mongodb+srv://dawmthedev:Voltaic123@voltaiccrm.pvqe22d.mongodb.net/?retryWrites=true&w=majority"
-    );
+    this.databaseConnection = await mongoose.connect(process.env.DATABASE_URL || "");
 
     try {
       this.app = express();
