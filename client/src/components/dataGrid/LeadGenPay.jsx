@@ -1,11 +1,11 @@
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
 import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
-import { useNavigate } from 'react-router-dom';
+
 import { DataGridPro, GridToolbar, GroupingPanel  } from '@mui/x-data-grid-pro';
 
 import { useAppSelector } from '../../hooks/hooks';
@@ -19,7 +19,7 @@ export default function LeadGenPay(props) {
 
   //USER OBJECT
 
-
+  const navigate = useNavigate();
   const {recordUserId} = props;
  
 
@@ -52,7 +52,26 @@ export default function LeadGenPay(props) {
  //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
  const columns = useMemo(
   () => [
-
+    // {
+    //   field: 'Profile',
+    //   headerName: 'Profile',
+    //   width: 150,
+    //   editable: true,
+    //   renderCell: (params) => {
+    //     return (
+    //       <Button
+    //         variant="outlined"
+    //         onClick={() => {
+    //          //Open up user modal
+    //            navigate(`/dashboard/lead/${params?.row?.id}`);
+  
+    //         }}
+    //       >
+    //      Details
+    //       </Button>
+    //     );
+    //   },
+    // },
 
     {
       field: 'lead',

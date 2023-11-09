@@ -18,6 +18,8 @@ import { disableCache } from '@iconify/react';
 
 export default function PayrollData(props) {
 
+
+  const navigate = useNavigate();
   //USER OBJECT 
    const {recordUserId} = props;
    const gridContainerStyles = {
@@ -59,7 +61,26 @@ export default function PayrollData(props) {
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-
+      // {
+      //   field: 'Profile',
+      //   headerName: 'Profile',
+      //   width: 150,
+      //   editable: true,
+      //   renderCell: (params) => {
+      //     return (
+      //       <Button
+      //         variant="outlined"
+      //         onClick={() => {
+      //          //Open up user modal
+      //            navigate(`/dashboard/lead/${params?.row?.id}`);
+    
+      //         }}
+      //       >
+      //      Details
+      //       </Button>
+      //     );
+      //   },
+      // },
   
       {
         field: 'lead',
