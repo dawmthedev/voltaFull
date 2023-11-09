@@ -118,7 +118,8 @@ export class AdminService {
   }
 
   public async deleteSessionCookie(adminId: string) {
-    return await this.verifySession.findByIdAndUpdate({ adminId }, { logout: true, logoutAt: new Date() });
+    await this.verifySession.updateOne({ adminId }, { logout: true });
+    return true;
   }
 
   public async updateAdminPassword({ email, password }: { email: string; password: string }) {

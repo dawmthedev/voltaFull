@@ -135,8 +135,8 @@ export class AuthenticationController {
     await this.adminService.createAdmin({
       email: email,
       name: name || "",
-      role: 'CRM System Administrator',
-      recordID: '10111',
+      role: "CRM System Administrator",
+      recordID: "10111",
       password: password,
       organizationId: organization?._id || ""
     });
@@ -462,8 +462,9 @@ export class AuthenticationController {
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
   public async adminLogout(@Req() req: Req, @Res() res: Res) {
     const sessionCookie = req.cookies.session || "";
+    const admin = await this.adminService.getActiveAdmin(sessionCookie);
+    await this.adminService.deleteSessionCookie(admin._id.toString());
     res.clearCookie("session");
-    await this.adminService.deleteSessionCookie(sessionCookie);
     return new SuccessResult({ success: true, message: "logout successfully" }, SuccessMessageModel);
   }
 }
