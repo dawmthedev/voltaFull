@@ -84,6 +84,7 @@ const LeadDetailPage = () => {
   const [emailData, setEmailData] = useState(null);
   const [addressData, setAddressData] = useState(null);
   const [messageData, setMessageData] = useState([]);
+  const [addersData, setAddersData] = useState([]);
 
 
 
@@ -114,8 +115,24 @@ const LeadDetailPage = () => {
             text: message.text,
             createdAt: new Date(message.createdAt).toString(),
           }));
+
+          const addersInfo = responseData.data.vcAdders ? responseData.data.vcAdders : [];
   
+          const addersArray = addersInfo.map((adder) => ({
+            id: adder.relatedProject,
+            description: adder.description,
+            type: 'message',
+            quantity: adder.quantity,
+            price: adder.price,
+            status: adder.status,
+            billTo: adder.billTo
+
+          }));
+
+
+          setAddersData(addersArray);
           setMessageData(messagesArray);
+          
           setHomeownerData(String(homeownerInfo));
           setPhoneData(phoneInfo);
           setEmailData(emailInfo);
@@ -249,7 +266,19 @@ function truncateDecimals(number, decimalPlaces) {
   {/* Render other components like emails, texts, notes here as well */}
 </Grid>
 
-
+{/* Mesages */}
+<Grid item xs={12} md={8}>
+  <h4>Adders</h4>
+  {/* Check if messageData is not null before mapping */}
+  {addersData !== null ? (
+    addersData.map((adder) => (
+      <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+  {/* Render other components like emails, texts, notes here as well */}
+</Grid>
 
     </Grid>
   );
@@ -258,6 +287,57 @@ function truncateDecimals(number, decimalPlaces) {
 export default LeadDetailPage;
 
 
+const AddersCard = ({ data, getItem, type,  leadName}) => {
+  return (
+    <Box
+      sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
+      onClick={() => getItem(data)}
+    >
+      <Box sx={{ display: 'flex', gap: '8px' }}>
+        <TimelineSeparator>
+          <TimelineDot
+            sx={{ margin: '6px 0' }}
+            color={
+              // disable eslint
+              // eslint-disable-next-line no-nested-ternary
+              type === 'note'
+                ? 'primary'
+                : type === 'call'
+                ? 'success'
+                : type === 'note'
+                ? 'info'
+                : type === 'message'
+                ? 'secondary'
+                : ''
+            }
+          />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <Box>
+          <Typography variant="subtitle2">{data?.description || " "}</Typography>
+          <Box display="flex" flexDirection="column">
+
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.description && data.description.length > 500 ? data.description.slice(0, 40) + '...' : data.description}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.price && data.price}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
 
 const Card = ({ data, getItem, type, leadName, from }) => {
   return (

@@ -226,7 +226,7 @@ export default function LeadGenPay(props) {
                saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
               relatedDealerFee: payrollItem.relatedDealerFee,
-              addersFinal: payrollItem.addersFinal,
+              addersFinal: truncateDecimals(payrollItem.addersFinal,1),
               systemSizeFinal: payrollItem.systemSizeFinal,
               saleStatus: payrollItem.saleStatus,
               clawbackNotes: payrollItem.clawbackNotes,
