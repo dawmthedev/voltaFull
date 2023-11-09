@@ -20,6 +20,7 @@ import DealsPage from './pages/DealsPage';
 import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
 import LeadDetailPage from './pages/LeadDetailPage';
+import DealerRates from './pages/DealerRates';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -49,6 +50,7 @@ export default function Router() {
         { path: 'leads', element: <Leads /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
+        { path: 'rates', element: <DealerRates /> },
         { path: 'pay', element: <PayPage /> },
         { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> }

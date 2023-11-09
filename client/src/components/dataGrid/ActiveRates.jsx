@@ -1,11 +1,11 @@
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
 import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
-
+import { useNavigate } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
-import { useNavigate } from 'react-router-dom';
+
 import { DataGridPro, GridToolbar, GroupingPanel  } from '@mui/x-data-grid-pro';
 
 import { useAppSelector } from '../../hooks/hooks';
@@ -13,22 +13,15 @@ import { authSelector } from '../../redux/slice/authSlice';
 import { gridStyles } from '../../constants/styles';
 
 import { styled, darken, lighten } from '@mui/material/styles';
-import { disableCache } from '@iconify/react';
 
 
-export default function PayrollData(props) {
+export default function ActiveRates(props) {
 
+  //USER OBJECT
 
   const navigate = useNavigate();
-  //USER OBJECT 
-   const {recordUserId} = props;
-   const gridContainerStyles = {
-    flexDirection: 'column',
-    alignItems: 'center',
-    width: '100%', // ensure the container takes the full width of its parent
-    overflow: 'auto', // hide the overflow
-    justifyContent: 'center',
-  };
+  const {recordUserId} = props;
+ 
 
   // Grid style
   const gridStyles = {
@@ -36,8 +29,6 @@ export default function PayrollData(props) {
     maxWidth: '100%', // ensure the grid does not exceed the width of its container
     overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
   };
-
-
 
   const [gridRef] = useState({});
  
@@ -58,251 +49,144 @@ export default function PayrollData(props) {
 
  
 
-  //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
-  const columns = useMemo(
-    () => [
-      // {
-      //   field: 'Profile',
-      //   headerName: 'Profile',
-      //   width: 150,
-      //   editable: true,
-      //   renderCell: (params) => {
-      //     return (
-      //       <Button
-      //         variant="outlined"
-      //         onClick={() => {
-      //          //Open up user modal
-      //            navigate(`/dashboard/lead/${params?.row?.id}`);
-    
-      //         }}
-      //       >
-      //      Details
-      //       </Button>
-      //     );
-      //   },
-      // },
+ //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
+ const columns = useMemo(
+  () => [
+    // {
+    //   field: 'Profile',
+    //   headerName: 'Profile',
+    //   width: 150,
+    //   editable: true,
+    //   renderCell: (params) => {
+    //     return (
+    //       <Button
+    //         variant="outlined"
+    //         onClick={() => {
+    //          //Open up user modal
+    //            navigate(`/dashboard/lead/${params?.row?.id}`);
   
-      {
-        field: 'lead',
-        headerName: 'Homeowner Name',
-        width: 150,
-        editable: false,
-      },
-      {
-        field: 'itemType',
-        headerName: 'Payroll Item Type',
-        width: 180,
-        editable: false,
-        hide: false,
-      },
-        
-      {
-        field: 'saleDate',
-        headerName: 'SaleDate',
-        width: 180,
-        editable: false,
-        hide: false,
-        type:'date'
-      },
-      {
-        field: 'userStatus',
-        headerName: 'Project Status',
-        width: 180,
-        editable: false,
-        type: 'text',
-        
-      },
-   
+    //         }}
+    //       >
+    //      Details
+    //       </Button>
+    //     );
+    //   },
+    // },
 
-      {
-        field: 'relatedContractAmount',
-        headerName: 'Related Contract Amount',
-        width: 200,
-        editable: false,
+    {
+      field: 'partner',
+      headerName: 'Fulfilment Partner',
+      width: 180,
+      editable: false,
+    },
+    {
+      field: 'years',
+      headerName: 'Years',
+      width: 180,
+      editable: false,
+      hide: false,
+    },
+      
 
-        hide: false,
-      },
+    {
+      field: 'financing',
+      headerName: 'Financing',
+      width: 180,
+      editable: false,
+      type: 'text',
+      
+    },
+ 
 
-      {
-        field: 'relatedDealerFee',
-        headerName: 'Dealer Fee',
-        width: 180,
-        editable: false,
+    {
+      field: 'apr',
+      headerName: 'APR',
+      width: 200,
+      editable: false,
 
-        hide: false,
-      },
+      hide: false,
+    },
 
-      {
-        field: 'addersFinal',
-        headerName: 'Adders Total',
-        width: 180,
-        editable: false,
+    {
+      field: 'feerate',
+      headerName: 'Fee Rate',
+      width: 180,
+      editable: false,
 
-        hide: false,
-      },
+      hide: false,
+    },
 
-      {
-        field: 'systemSizeFinal',
-        headerName: 'System Size',
-        width: 180,
-        editable: false,
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 180,
+      editable: false,
 
-        hide: false,
-      },
-      {
-        field: 'saleStatus',
-        headerName: 'Sale Status',
-        width: 180,
-        editable: false,
+      hide: false,
+      cellClassName: (params) => {
+        if (params.value === 'Active') {
+            return 'active-cell';
+        } else if (params.value === 'Inactive') {
+            return 'inactive-cell';
+        }
+        return '';
+    }
+},
+{
+    field: 'id',
+    headerName: 'id',
+    width: 500,
+    editable: false,
+    hide: true,
+  },
 
-        hide: false,
-        cellClassName: (params) => {
-          if (params.value === 'active') {
-              return 'active-cell';
-          } else if (params.value === 'inactive') {
-              return 'inactive-cell';
-          }
-          return '';
-      }
-      },
-      {
-        field: 'ppwFinal',
-        headerName: 'PPW',
-        width: 180,
-        editable: false,
+  
+ 
 
-        hide: false,
-      },
-      {
-        field: 'milestone',
-        headerName: 'Milestone',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-     
-      {
-        field: 'clawbackNotes',
-        headerName: 'Clawback Notes',
-        width: 380,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'amount',
-        headerName: 'Amount',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'datePaid',
-        headerName: 'Date Paid',
-        width: 180,
-        editable: false,
-        type: 'date',
-        hide: false,
-      },
-      {
-        field: 'repRedline',
-        headerName: 'Rep Redline',
-        width: 180,
-        editable: false,
-
-        hide: true,
-      },
-      {
-        field: 'repRedlineOverrride',
-        headerName: 'Rep Redline Override',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-      {
-        field: 'leadgenRedlineOverrride',
-        headerName: 'Leadgen Redline Override',
-        width: 180,
-        editable: false,
-
-        hide: false,
-      },
-   
-
-    
-   
-
-    ],
-    [data]
-  );
-
+  ],
+  [data]
+);
 
 
   useEffect(() => {
    
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmPayroll`, {
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesActive`, {
+    //fetch(`http://localhost:4000/rest/auth/crmRatesActive`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ recordId: recordUserId })
+  
     })
     .then(response => response.json())
     .then(responseData => {
 
 
-        console.log(responseData.data.payrollData)
+        console.log(responseData.data.rates)
 
-        console.log("responseData.data.payrollData:", responseData.data.payrollData);
+        console.log("responseData.data.payrollData:", responseData.data.rates);
 
-        if (responseData.success && responseData.data.payrollData) {
+        if (responseData.success && responseData.data.rates) {
 
 
 
-          const payData = responseData.data.payrollData.map((payrollItem) => {
+          const RateData = responseData.data.rates.map((feeRateItem, index) => {
             return {
-              lead: payrollItem.lead,
-              userStatus: payrollItem.userStatus,
-              itemType: payrollItem.itemType,
-              saleDate: formatSaleDate(payrollItem.saleDate),
-              relatedContractAmount: payrollItem.relatedContractAmount,
-              relatedDealerFee: payrollItem.relatedDealerFee,
-              addersFinal: truncateDecimals(payrollItem.addersFinal,1),
-              systemSizeFinal: payrollItem.systemSizeFinal,
-              saleStatus: payrollItem.saleStatus,
-              clawbackNotes: payrollItem.clawbackNotes,
-              repRedline: payrollItem.repRedline,
-              repRedlineOverrride: payrollItem.repRedlineOverrride,
-              leadgenRedlineOverrride: payrollItem.leadgenRedlineOverrride,
-              salesRep: payrollItem.salesRep,
-              ppwFinal: truncateDecimals(payrollItem.ppwFinal, 1),
-              // status: payrollItem.status,
-              milestone: payrollItem.milestone,
-              datePaid: formatSaleDate(payrollItem.datePaid),
-              amount: payrollItem.amount,
-              id: Math.random()
+              partner: feeRateItem.partner.replace(/"/g, ''),
+              years: feeRateItem.years,
+              status: feeRateItem.status.replace(/"/g, ''),
+              financing: feeRateItem.financing.replace(/"/g, ''),
+              apr: feeRateItem.apr.replace(/"/g, ''),
+              feerate: feeRateItem.feerate.replace(/"/g, ''),
+              id: index
+          
             };
           });
           
 
-            // const payData = responseData.data.payrollData.map((payrollItem) => {
-            //     return {
-            //         lead: payrollItem.lead,
-            //         userStatus: payrollItem.userStatus,
-            //         ppwFinal: payrollItem.ppwFinal,
-            //         milestone: payrollItem.milestone,
-              
-            //         datePaid:  formatSaleDate(payrollItem.datePaid.slice(1, -1)),
-            //         amount: payrollItem.amount,
-            //         id: Math.random()
-            //     };
-            // });
-            
+
  
-            setData(payData);
+            setData(RateData);
             
         }
 
@@ -332,6 +216,9 @@ export default function PayrollData(props) {
 function formatSaleDate(dateStr) {
   const [year, month, day] = dateStr.split('-');
   const dateString =  `${month}/${day}/${year}`;
+
+
+
   return new Date(dateString); // Convert string to Date object
   
 }
@@ -378,32 +265,32 @@ function formatDollar(amount) {
 
   return (
     //<div style={{ height: 700, width: '100%' }}>
-    <div style={{ 
+    <div style={{
     
-      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
-    
-    <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
-              <Box sx={{
-                   
-                      height: '100%', maxWidth: '100%', overflow: 'hidden' }}>
+      flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'hidden', justifyContent: 'center' }}>
+  
+  
+      <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
+             <Box sx={{ 
+                      height: 'fit-content', maxWidth: '100%', overflow: 'hidden' }}>
                <Box
             sx={{
-         
-            
+              marginBottom: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
               position: 'relative',
-             
+              top: '60px',
               right: '16px',
               zIndex: '2',
               width: '60%',
+         
               // maxWidth: '330px',
               marginLeft: 'auto',
             }}
           >
          
-            {/* <TextField
+            <TextField
               size="small"
               variant="outlined"
               type={'search'}
@@ -411,7 +298,7 @@ function formatDollar(amount) {
               value={searchQuery}
            
    
-            /> */}
+            />
           </Box>
 
           {isLoading ? (

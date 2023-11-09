@@ -90,6 +90,7 @@ const LeadDetailPage = () => {
 
   useEffect(() => {
     fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`, {
+     // fetch(`http://localhost:4000/rest/auth/crmDeal`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -116,12 +117,12 @@ const LeadDetailPage = () => {
             createdAt: new Date(message.createdAt).toString(),
           }));
 
-          const addersInfo = responseData.data.vcAdders ? responseData.data.vcAdders : [];
+          const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
   
           const addersArray = addersInfo.map((adder) => ({
             id: adder.relatedProject,
             description: adder.description,
-            type: 'message',
+            type: 'call',
             quantity: adder.quantity,
             price: adder.price,
             status: adder.status,
@@ -221,7 +222,7 @@ function truncateDecimals(number, decimalPlaces) {
       {/* ... */}
 
      {/* Profile and general project details */}
-     <Grid item xs={12} md={4}>
+     <Grid item xs={11} md={4}>
         <Paper elevation={3} sx={{ p: 2 }}>
           <Typography variant="h6" gutterBottom>
             Homeowner Details
@@ -248,39 +249,41 @@ function truncateDecimals(number, decimalPlaces) {
             </ListItem> */}
           </List>
         </Paper>
+
+        {/* Adders */}
+      <Grid item xs={10} md={10}>
+        <h4>Adders</h4>
+        {/* Check if messageData is not null before mapping */}
+        {addersData !== null ? (
+          addersData.map((adder) => (
+            <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+        {/* Render other components like emails, texts, notes here as well */}
+      </Grid>
+
       </Grid>
 
 
 
-{/* Mesages */}
-<Grid item xs={12} md={8}>
-  <h4>Messages</h4>
-  {/* Check if messageData is not null before mapping */}
-  {messageData !== null ? (
-    messageData.map((msg) => (
-      <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
-    ))
-  ) : (
-    <p>Loading...</p>
-  )}
-  {/* Render other components like emails, texts, notes here as well */}
-</Grid>
+      {/* Mesages */}
+      <Grid item xs={10} md={6}>
+        <h4>Messages</h4>
+        {/* Check if messageData is not null before mapping */}
+        {messageData !== null ? (
+          messageData.map((msg) => (
+            <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+        {/* Render other components like emails, texts, notes here as well */}
+      </Grid>
 
-{/* Mesages */}
-<Grid item xs={12} md={8}>
-  <h4>Adders</h4>
-  {/* Check if messageData is not null before mapping */}
-  {addersData !== null ? (
-    addersData.map((adder) => (
-      <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
-    ))
-  ) : (
-    <p>Loading...</p>
-  )}
-  {/* Render other components like emails, texts, notes here as well */}
-</Grid>
 
-    </Grid>
+          </Grid>
   );
 };
 
