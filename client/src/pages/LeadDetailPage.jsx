@@ -34,7 +34,7 @@ const LeadDetailPage = () => {
   const { Projectdata } = useAppSelector(authSelector);
   const recordId = Projectdata?.recordID;
 
-  const { ProjectId } = useParams();
+  const { id } = useParams();
 
 
   const [data, setData] = useState(null);
@@ -79,50 +79,78 @@ const LeadDetailPage = () => {
     taskTypes: [], // Add actual task type data here
   };
 
-  const id = '1';
+  const [homeownerData, setHomeownerData] = useState(null);
+  const [phoneData, setPhoneData] = useState(null);
+  const [emailData, setEmailData] = useState(null);
+  const [addressData, setAddressData] = useState(null);
+  const [messageData, setMessageData] = useState([]);
+  const [addersData, setAddersData] = useState([]);
+
+
 
   useEffect(() => {
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ recordId: id ? id : "3613" }),
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("API Response:", responseData); // Log the API response
+        if (responseData.success && responseData.data) {
+          // Assuming homeowner data is present in the response
+          const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
+          const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate : 'Loading...';
+          const emailInfo = responseData.data.email ? responseData.data.email : 'Loading...';
+          const addressInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
+  
+          const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+  
+          const messagesArray = messageInfo.map((message) => ({
+            id: message.id,
+            from: message.from,
+            type: 'message',
+            text: message.text,
+            createdAt: new Date(message.createdAt).toString(),
+          }));
 
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ recordId: ProjectId ? ProjectId : "3613" })
-    })
-    .then(response => response.json())
-    .then(responseData => {
-        if (responseData.success && responseData.data.deals) {
-            const dealsData = responseData.data.deals.map((deal) => {
-                return {
-                    stage: deal.stage.replace(/^"|"$/g, ''), 
-                    status: deal.status.replace(/^"|"$/g, ''),
-                    milestone: deal.milestone.replace(/^"|"$/g, ''),
-                    datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
-                    email: deal.email.replace(/^"|"$/g, ''), 
-                    saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
-                    plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
-                    installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
-                    ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
-                    ppwFinal: truncateDecimals(deal.ppwFinal, 1),
-                    homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
-                    profile: 'hello',
-                    id: deal.projectID 
-                };
-            });
-            setData(dealsData);
-            
+          const addersInfo = responseData.data.vcAdders ? responseData.data.vcAdders : [];
+  
+          const addersArray = addersInfo.map((adder) => ({
+            id: adder.relatedProject,
+            description: adder.description,
+            type: 'message',
+            quantity: adder.quantity,
+            price: adder.price,
+            status: adder.status,
+            billTo: adder.billTo
+
+          }));
+
+
+          setAddersData(addersArray);
+          setMessageData(messagesArray);
+          
+          setHomeownerData(String(homeownerInfo));
+          setPhoneData(phoneInfo);
+          setEmailData(emailInfo);
+          setAddressData(addressInfo);
+  
+          console.log("homeowner name", homeownerInfo);
         }
-       setLoading(false);
-    })
-    .catch(error => {
-      
+        setLoading(false);
+      })      
+      .catch((error) => {
+        console.error("API Error:", error); // Log API error
         setDealsError(error);
         setLoading(false);
-    });
-}, []);
-
-
+      });
+  }, [id]);
+  
+  
+  
 
 
 
@@ -201,48 +229,56 @@ function truncateDecimals(number, decimalPlaces) {
           <List>
             <ListItem>
               <PersonIcon color="primary" />
-              <ListItemText primary={hardcodedData.lead.homeownerName} secondary="Homeowner Name" />
-            </ListItem>
-            <ListItem>
+              <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" />
+</ListItem>
+            {/* <ListItem>
               <PhoneIcon color="primary" />
-              <ListItemText primary={hardcodedData.lead.phone} secondary="Phone" />
-            </ListItem>
+              <ListItemText primary={phoneData !== null ? phoneData : 'Loading...'} secondary="Sale Date" />
+
+            </ListItem> */}
             <ListItem>
               <EmailIcon color="primary" />
-              <ListItemText primary={hardcodedData.lead.email} secondary="Email" />
+              <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" />
+
             </ListItem>
-            <ListItem>
+
+            {/* <ListItem>
               <LocationOnIcon color="primary" />
-              <ListItemText primary={hardcodedData.lead.address} secondary="Address" />
-            </ListItem>
+              <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address" />
+            </ListItem> */}
           </List>
         </Paper>
       </Grid>
 
-{/* Notes */}
-      <Grid item xs={12} md={8}>
 
-        <h4>Notes</h4>
-        {/* Render sample call cards */}
-        {sampleNotes.map((note) => (
-          <Card key={note.id} data={note} text={note.text} getItem={getSelected} type={note.type} />
-        ))}
-        {/* Render other components like emails, texts, notes here as well */}
-      </Grid>
 
 {/* Mesages */}
-      <Grid item xs={12} md={8}>
+<Grid item xs={12} md={8}>
+  <h4>Messages</h4>
+  {/* Check if messageData is not null before mapping */}
+  {messageData !== null ? (
+    messageData.map((msg) => (
+      <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+  {/* Render other components like emails, texts, notes here as well */}
+</Grid>
 
-        <h4>Messages</h4>
-        {/* Render sample call cards */}
-        {sampleMessages.map((msg) => (
-          <Card key={msg.id} data={msg} text={msg.text} getItem={getSelected} type={msg.type} />
-        ))}
-        {/* Render other components like emails, texts, notes here as well */}
-      </Grid>
-
-
-
+{/* Mesages */}
+<Grid item xs={12} md={8}>
+  <h4>Adders</h4>
+  {/* Check if messageData is not null before mapping */}
+  {addersData !== null ? (
+    addersData.map((adder) => (
+      <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
+    ))
+  ) : (
+    <p>Loading...</p>
+  )}
+  {/* Render other components like emails, texts, notes here as well */}
+</Grid>
 
     </Grid>
   );
@@ -251,8 +287,59 @@ function truncateDecimals(number, decimalPlaces) {
 export default LeadDetailPage;
 
 
+const AddersCard = ({ data, getItem, type,  leadName}) => {
+  return (
+    <Box
+      sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
+      onClick={() => getItem(data)}
+    >
+      <Box sx={{ display: 'flex', gap: '8px' }}>
+        <TimelineSeparator>
+          <TimelineDot
+            sx={{ margin: '6px 0' }}
+            color={
+              // disable eslint
+              // eslint-disable-next-line no-nested-ternary
+              type === 'note'
+                ? 'primary'
+                : type === 'call'
+                ? 'success'
+                : type === 'note'
+                ? 'info'
+                : type === 'message'
+                ? 'secondary'
+                : ''
+            }
+          />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <Box>
+          <Typography variant="subtitle2">{data?.description || " "}</Typography>
+          <Box display="flex" flexDirection="column">
 
-const Card = ({ data, getItem, type, leadName }) => {
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.description && data.description.length > 500 ? data.description.slice(0, 40) + '...' : data.description}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.price && data.price}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+const Card = ({ data, getItem, type, leadName, from }) => {
   return (
     <Box
       sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
@@ -281,6 +368,12 @@ const Card = ({ data, getItem, type, leadName }) => {
         <Box>
           <Typography variant="subtitle2">{data?.FirstName || leadName}</Typography>
           <Box display="flex" flexDirection="column">
+
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.from && data.from.length > 500 ? data.from.slice(0, 40) + '...' : data.from}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {/* {data?.note || data?.message || data?.text || data?.description} */}
               {data?.text && data.text.length > 500 ? data.text.slice(0, 40) + '...' : data.text}
