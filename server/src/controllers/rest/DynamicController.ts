@@ -12,10 +12,6 @@ import { ADMIN_NOT_FOUND, CATEGORY_ALREADY_EXISTS, CATEGORY_NOT_FOUND, ORG_NOT_F
 import { SuccessResult } from "../../util/entities";
 
 // fields types
-type FieldTypes = {
-  name: string;
-  type: "string" | "number" | "boolean" | "date";
-};
 
 class InsertModelBodyParams {
   @Required() public tableName: string;

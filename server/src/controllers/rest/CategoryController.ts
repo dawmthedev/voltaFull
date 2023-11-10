@@ -6,9 +6,10 @@ import { CategoryService } from "../../services/CategoryService";
 import { AdminService } from "../../services/AdminService";
 import { ADMIN, MANAGER } from "../../util/constants";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
-import { ADMIN_NOT_FOUND, ORG_NOT_FOUND } from "../../util/errors";
+import { ADMIN_NOT_FOUND, CATEGORY_NOT_FOUND, ORG_NOT_FOUND } from "../../util/errors";
 import { BadRequest } from "@tsed/exceptions";
 import { CategoryFieldType } from "../../models/CategoryModel";
+import { FieldTypes } from "../../../types";
 
 class CategoryBodyParams {
   @Required() public name: string;
@@ -65,6 +66,17 @@ export class CategoryController {
     if (!admin) throw new BadRequest(ADMIN_NOT_FOUND);
     const category = await this.categoryService.createCategory({ ...body, orgId, adminId: admin.id });
     return new SuccessResult({ ...category.toObject(), id: category?._id }, CategoryResultModel);
+  }
+
+  @Post("/new-column")
+  async addNewColumn(@BodyParams() { tableId, fields }: { tableId: string; fields: FieldTypes[] }, @Context() context: Context) {
+    await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+
+    const category = await this.categoryService.findCategoryById(tableId);
+    if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
+    const updateFields = [...category.fields, ...fields];
+    const updatedCategory = await this.categoryService.updateCategory({ id: tableId, name: category.name, fields: updateFields });
+    return new SuccessResult({ ...updatedCategory?.toObject()!, id: updatedCategory?._id }, CategoryResultModel);
   }
 
   @Put()
