@@ -139,10 +139,6 @@ export default function InActiveRates(props) {
     editable: false,
     hide: true,
   },
-
-  
- 
-
   ],
   [data]
 );
@@ -150,8 +146,8 @@ export default function InActiveRates(props) {
 
   useEffect(() => {
    
-    //fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesInActive`, {
-    fetch(`http://localhost:4000/rest/auth/crmRatesInActive`, {
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesInActive`, {
+    //fetch(`http://localhost:4000/rest/auth/crmRatesInActive`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

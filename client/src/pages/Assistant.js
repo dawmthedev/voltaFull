@@ -20,8 +20,10 @@ function Assistant() {
         setIsProcessing(true); // Set processing to true
     
         try {
-          const response = await fetch(`http://localhost:4000/rest/auth/askOpenAI`, {
-            method: 'POST',
+        //  const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/askOpenAI`, {
+     const response = await fetch(`http://localhost:4000/rest/auth/askOpenAI`, {
+          
+          method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
@@ -53,7 +55,7 @@ function Assistant() {
           <Container maxWidth="sm">
             <Box sx={{ minHeight: '90vh', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <Typography variant="h4" gutterBottom align="center" sx={{ pt: 3 }}>
-                Chat with Assistant
+                Chat with Voltaic Assistant
               </Typography>
       
               <Paper elevation={3} sx={{ flexGrow: 1, overflowY: 'auto', p: 2, mb: 2 }}>
