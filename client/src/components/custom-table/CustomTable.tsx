@@ -14,11 +14,10 @@ interface CustomTableProps {
   onDeleteClick?: (e: any, row: any) => void;
 }
 
-export default function CustomTable({ data, headLabel, onEditClick }: CustomTableProps) {
+export default function CustomTable({ data, headLabel, onEditClick, onDeleteClick}: CustomTableProps) {
   const [clickedRow, setClickedRow] = React.useState();
 
   const onButtonClick = (e, row) => {
-    debugger;
     e.stopPropagation();
     setClickedRow(row);
   };
@@ -48,7 +47,7 @@ export default function CustomTable({ data, headLabel, onEditClick }: CustomTabl
       renderCell: (params) => {
         return (
           <Box display="flex" gap={1}>
-            <Button onClick={(e) => onButtonClick(e, params.row)} variant="contained">
+            <Button onClick={(e) => onDeleteClick(e, params.row)} variant="contained">
               Delete
             </Button>
             <Button onClick={(e) => onEditClick(e, params.row)} variant="contained">

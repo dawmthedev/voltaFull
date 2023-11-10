@@ -135,11 +135,13 @@ export class DynamicController {
     return result;
   }
 
-  @Delete("/delete")
-  async deleteDynamicModelById(@BodyParams() modelData: any) {
-    const { tableName, columns, id } = modelData;
-    const dynamicModel = createSchema({ tableName, columns });
+  @Post("/delete/:id")
+  async deleteDynamicModelById(@BodyParams() { tableId }: { tableId: string }, @PathParams("id") id: string, @Context() context: Context) {
+    await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    const category = await this.categoryServices.findCategoryById(tableId);
+    if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
+    const dynamicModel = createSchema({ tableName: category.name, columns: category.fields });
     const result = await dynamicModel.findByIdAndDelete(id);
-    return result;
+    return new SuccessResult(result, Object);
   }
 }

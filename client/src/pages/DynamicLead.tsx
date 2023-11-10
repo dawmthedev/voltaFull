@@ -10,7 +10,7 @@ import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { createCategory, getCategories } from '../redux/middleware/category';
-import { createBulkLead, createLead, getLeads, updateLead } from '../redux/middleware/lead';
+import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '../redux/middleware/lead';
 import { setAlert } from '../redux/slice/alertSlice';
 import { categorySelector } from '../redux/slice/categorySlice';
 import { leadState, openModal } from '../redux/slice/leadSlice';
@@ -170,12 +170,18 @@ const DynamicLead = () => {
     setIsLeadEdit(true);
   };
 
+  //! Delete lead
+  const deleteDynamicLead = async (e, lead) => {
+    e.stopPropagation();
+    await dispatch(deleteLead({ id: lead.id, tableId: selectedCategoryId }));
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
+  };
+
   const submitAddNewLead = async () => {
     const data = {
       tableId: selectedCategoryId,
       data: leadValues
     };
-    debugger;
     if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
     else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
@@ -273,7 +279,9 @@ const DynamicLead = () => {
             />
           </CustomModal>
         </Box>
-        {(categories.length && leadsData.length && <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} />) ||
+        {(categories && categories.length && leadsData && leadsData.length && (
+          <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
+        )) ||
           'Loading'}
       </Container>
     </Fragment>
