@@ -15,15 +15,23 @@ import { setAlert } from '../../../redux/slice/alertSlice';
 const MENU_OPTIONS = [
   {
     label: 'Home',
-    icon: 'eva:home-fill'
+    icon: 'eva:home-fill',
+    actionLink: 'eva:home'
   },
   {
     label: 'Profile',
-    icon: 'eva:person-fill'
+    icon: 'eva:person-fill',
+    actionLink: 'eva:home'
   },
   {
     label: 'Settings',
-    icon: 'eva:settings-2-fill'
+    icon: 'eva:settings-2-fill',
+    actionLink: 'eva:home'
+  },
+  {
+    label: 'VC Assistant',
+    icon: 'eva:settings-2-fill',
+    actionLink: 'https://vccrm.vercel.app/dashboard/assistant'
   }
 ];
 
@@ -31,6 +39,15 @@ const MENU_OPTIONS = [
 
 export default function AccountPopover() {
   const navigate = useNavigate();
+
+
+  
+
+  // Function to handle navigation
+  const handleNavigation = (path) => {
+    handleClose(); // Close the popover
+    navigate(path); // Navigate to the specified path
+  };
   const dispatch = useAppDispatch();
   const { data } = useAppSelector(authSelector);
   const [open, setOpen] = useState(null);
@@ -85,10 +102,10 @@ export default function AccountPopover() {
         }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap sx={{ textTransform: 'uppercase' }}>
+          <Typography  variant="subtitle2" noWrap sx={{ textTransform: 'uppercase' }}>
             {data?.name}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
+          <Typography  variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {data?.email}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
@@ -103,7 +120,7 @@ export default function AccountPopover() {
 
         <Stack sx={{ p: 1 }}>
           {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} onClick={handleClose}>
+            <MenuItem  key={option.label} onClick={() => handleNavigation(option.actionLink)} >
               {option.label}
             </MenuItem>
           ))}
@@ -111,6 +128,8 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
+
+        {/* Logout Button */}
         <MenuItem
           sx={{ m: 1 }}
           onClick={async () => {
