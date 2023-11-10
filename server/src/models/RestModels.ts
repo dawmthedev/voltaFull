@@ -33,6 +33,7 @@ export class AdminProfileResultModel {
   @Property() public readonly verifyStatus: string;
 }
 export class AdminResultModel {
+  @Property() public readonly id: string;
   @Property() public readonly name: string;
   @Property() public readonly role: string;
   @Property() public readonly company: string;

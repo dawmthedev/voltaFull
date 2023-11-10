@@ -21,6 +21,7 @@ export class AdminController {
     const response = {
       admins: admins.map((admin) => {
         return {
+          id: admin._id,
           name: admin.name,
           email: admin.email,
           role: admin.role || "",

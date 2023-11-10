@@ -176,6 +176,7 @@ export class AuthenticationController {
     // res.cookie("session", sessionCookie, options);
     return new SuccessResult(
       {
+        id: admin._id,
         name: admin.name,
         email: admin.email,
         role: admin.role || "",
