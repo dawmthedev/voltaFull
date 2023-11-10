@@ -150,8 +150,8 @@ export default function ActiveRates(props) {
 
   useEffect(() => {
    
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesActive`, {
-    //fetch(`http://localhost:4000/rest/auth/crmRatesActive`, {
+    //fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesActive`, {
+    fetch(`http://localhost:4000/rest/auth/crmRatesActive`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

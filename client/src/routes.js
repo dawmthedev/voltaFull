@@ -21,6 +21,7 @@ import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
 import LeadDetailPage from './pages/LeadDetailPage';
 import DealerRates from './pages/DealerRates';
+import Assistant from './pages/Assistant';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -45,6 +46,7 @@ export default function Router() {
           element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'assistant', element: <Assistant/> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
