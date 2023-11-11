@@ -58,4 +58,16 @@ const deleteCategory = createAsyncThunk('category/delete', async ({ id }: { id: 
   }
 });
 
-export { getCategories, getCategory, createCategory, updateCategory, deleteCategory };
+const addNewColumn = createAsyncThunk('category/addNewColumn', async ({ tableId, fields }: { tableId: string; fields: FieldTypes[] }) => {
+  try {
+    const { data } = await post(`/category/new-column`, {
+      tableId,
+      fields
+    });
+    return data.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export { getCategories, getCategory, createCategory, updateCategory, deleteCategory, addNewColumn };

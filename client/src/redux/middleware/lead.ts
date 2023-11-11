@@ -50,9 +50,9 @@ const updateLead = createAsyncThunk('lead/update', async ({ lead, signal }: { le
   }
 });
 
-const deleteLead = createAsyncThunk('lead/delete', async ({ id }: { id: string }) => {
+const deleteLead = createAsyncThunk('lead/delete', async ({ id, tableId }: { id: string; tableId: string }) => {
   try {
-    const { data } = await destroy(`/lead/${id}`);
+    const { data } = await post(`/dynamic/delete/${id}`, {tableId});
     return data.data;
   } catch (error) {
     throw error;

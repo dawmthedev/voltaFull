@@ -51,3 +51,8 @@ export type LeadTypes = {
   categoryId: string;
   orgId?: string;
 };
+
+export type FieldTypes = {
+  name: string;
+  type: "string" | "number" | "boolean" | "date";
+};

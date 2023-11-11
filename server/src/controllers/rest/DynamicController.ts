@@ -12,10 +12,6 @@ import { ADMIN_NOT_FOUND, CATEGORY_ALREADY_EXISTS, CATEGORY_NOT_FOUND, ORG_NOT_F
 import { SuccessResult } from "../../util/entities";
 
 // fields types
-type FieldTypes = {
-  name: string;
-  type: "string" | "number" | "boolean" | "date";
-};
 
 class InsertModelBodyParams {
   @Required() public tableName: string;
@@ -135,11 +131,13 @@ export class DynamicController {
     return result;
   }
 
-  @Delete("/delete")
-  async deleteDynamicModelById(@BodyParams() modelData: any) {
-    const { tableName, columns, id } = modelData;
-    const dynamicModel = createSchema({ tableName, columns });
+  @Post("/delete/:id")
+  async deleteDynamicModelById(@BodyParams() { tableId }: { tableId: string }, @PathParams("id") id: string, @Context() context: Context) {
+    await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    const category = await this.categoryServices.findCategoryById(tableId);
+    if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
+    const dynamicModel = createSchema({ tableName: category.name, columns: category.fields });
     const result = await dynamicModel.findByIdAndDelete(id);
-    return result;
+    return new SuccessResult(result, Object);
   }
 }

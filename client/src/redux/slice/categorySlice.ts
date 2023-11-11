@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { CategoryResponseTypes, CategoryTypes } from '../../types';
-import { getCategories, getCategory } from '../middleware/category';
+import { getCategories, getCategory, addNewColumn } from '../middleware/category';
 
 const initialState: { data: CategoryResponseTypes[]; loading: boolean; error: any; category: CategoryResponseTypes } = {
   loading: false,
@@ -34,6 +34,18 @@ const categorySlice = createSlice({
       state.category = action.payload;
     });
     builder.addCase(getCategory.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    });
+    // add new column
+    builder.addCase(addNewColumn.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(addNewColumn.fulfilled, (state, action) => {
+      state.loading = false;
+      state.category = action.payload;
+    });
+    builder.addCase(addNewColumn.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
     });

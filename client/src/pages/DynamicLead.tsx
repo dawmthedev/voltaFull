@@ -1,4 +1,4 @@
-import { Button, Container, Grid } from '@mui/material';
+import { Button, Card, Container, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -9,8 +9,8 @@ import LeadsTable from '../components/csv-table/CsvTable';
 import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { createCategory, getCategories } from '../redux/middleware/category';
-import { createBulkLead, createLead, getLeads, updateLead } from '../redux/middleware/lead';
+import { addNewColumn, createCategory, getCategories } from '../redux/middleware/category';
+import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '../redux/middleware/lead';
 import { setAlert } from '../redux/slice/alertSlice';
 import { categorySelector } from '../redux/slice/categorySlice';
 import { leadState, openModal } from '../redux/slice/leadSlice';
@@ -170,12 +170,26 @@ const DynamicLead = () => {
     setIsLeadEdit(true);
   };
 
+  //! Delete lead
+  const deleteDynamicLead = async (e, lead) => {
+    e.stopPropagation();
+    await dispatch(deleteLead({ id: lead.id, tableId: selectedCategoryId }));
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
+  };
+
+  //! Add new column into category
+  const addNewCategoryCol = async () => {
+    if (!categoryData) return;
+
+    await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
+    await dispatch(getCategories({ signal }));
+  };
+
   const submitAddNewLead = async () => {
     const data = {
       tableId: selectedCategoryId,
       data: leadValues
     };
-    debugger;
     if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
     else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
@@ -273,8 +287,17 @@ const DynamicLead = () => {
             />
           </CustomModal>
         </Box>
-        {(categories.length && leadsData.length && <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} />) ||
-          'Loading'}
+        <Card sx={{ mt: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: 1 }}>
+            <Button variant="contained" onClick={() => setIsCategoryModalOpen(true)}>
+              Add New Column
+            </Button>
+          </Box>
+          {(categories && categories.length && leadsData && leadsData.length && (
+            <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
+          )) ||
+            'Loading'}
+        </Card>
       </Container>
     </Fragment>
   );
