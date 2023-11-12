@@ -56,6 +56,11 @@ const navConfig = [
     path: '/dashboard/dynamic-leads',
     icon: icon('ic_analytics')
   },
+  {
+    title: 'Task',
+    path: '/dashboard/task',
+    icon: icon('ic_analytics')
+  },
   // {
   //   title: 'Not found',
   //   path: '/404',
