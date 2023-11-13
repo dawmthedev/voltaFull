@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { getUsers } from '../middleware/admin';
+import { getUsers, updateAdmin } from '../middleware/admin';
 
 const initialState = {
   loading: false,
@@ -26,6 +26,16 @@ const adminSlice = createSlice({
     builder.addCase(getUsers.rejected, (state, action) => {
       state.loading = false;
       state.error = action.payload;
+    });
+    //update user
+    builder.addCase(updateAdmin.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(updateAdmin.fulfilled, (state, action) => {
+      state.loading = false;
+    });
+    builder.addCase(updateAdmin.rejected, (state, action) => {
+      state.loading = false;
     });
   }
 });

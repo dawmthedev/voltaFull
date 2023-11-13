@@ -21,11 +21,11 @@ const navConfig = [
     path: '/dashboard/pay',
     icon: icon('ic_user')
   },
-  // {
-  //   title: 'Users',
-  //   path: '/dashboard/user',
-  //   icon: icon('ic_user')
-  // },
+  {
+    title: 'Users',
+    path: '/dashboard/user',
+    icon: icon('ic_user')
+  },
   {
     title: 'Resources',
     path: '/dashboard/blog',
@@ -55,7 +55,7 @@ const navConfig = [
     title: 'Dynamic-Leads',
     path: '/dashboard/dynamic-leads',
     icon: icon('ic_analytics')
-  },
+  }
   // {
   //   title: 'Not found',
   //   path: '/404',

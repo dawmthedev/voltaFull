@@ -30,9 +30,9 @@ export enum VerificationEnum {
 }
 
 export enum RoleEnum {
-  MANAGER = 'Manager',
-  SALESMAN = 'Salesman',
-  ADMINISTRATOR = "Administrator"
+  MANAGER = "manager",
+  SALESREP = "salesrep",
+  ADMIN = "CRM System Administrator"
 }
 
 export type CategoryBodyTypes = {

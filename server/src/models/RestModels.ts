@@ -12,6 +12,11 @@ export class AdminModel {
   @Property() public readonly email: string;
   @Property() public readonly twoFactorEnabled: boolean;
 }
+export class AdminRoleModel {
+  @Property() public readonly id: string;
+  @Property() public readonly role: string;
+  @Property() public readonly email: string;
+}
 export class VerificationSuccessModel {
   @Required() public readonly email: string;
   @Required() public readonly code: string;

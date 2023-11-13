@@ -4,7 +4,7 @@ import CustomInput from '../input/CustomInput';
 
 interface AddNewUserProps {
   user: {
-    email: string;
+    name: string;
     role: string;
   };
   getUsersData: (value: string, name: string) => void;
@@ -13,7 +13,7 @@ interface AddNewUserProps {
 const AddUserForm = ({ user, getUsersData }: AddNewUserProps) => {
   return (
     <div>
-      <CustomInput value={user.email} onChange={(e) => getUsersData(e.target.value, e.target.name)} name="email" label="Email address" />
+      <CustomInput value={user.name} onChange={(e) => getUsersData(e.target.value, e.target.name)} name="name" label="Name" />
       <FormControl fullWidth sx={{ mt: '.8rem' }}>
         <InputLabel id="demo-simple-select-label">Select Role</InputLabel>
         <Select
@@ -24,9 +24,9 @@ const AddUserForm = ({ user, getUsersData }: AddNewUserProps) => {
             getUsersData(e.target.value, e.target.name);
           }}
         >
-          {roles?.map((role: string) => (
-            <MenuItem key={role} value={role}>
-              {role}
+          {roles?.map(({ name, value }: { name: string; value: string }) => (
+            <MenuItem key={name} value={value}>
+              {name}
             </MenuItem>
           ))}
         </Select>
@@ -37,4 +37,19 @@ const AddUserForm = ({ user, getUsersData }: AddNewUserProps) => {
 
 export default AddUserForm;
 
-const roles = ['Admin', 'Sales Rep'];
+// const roles = ['CRM System Administrator', 'Sales Rep'];
+
+const roles = [
+  {
+    name: 'CRM System Administrator',
+    value: 'CRM System Administrator'
+  },
+  {
+    name: 'Sales Rep',
+    value: 'salesrep'
+  },
+  {
+    name: 'Manager',
+    value: 'manager'
+  }
+];
