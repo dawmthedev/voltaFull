@@ -1,4 +1,5 @@
-import { ArrayOf, Property, Required } from "@tsed/schema";
+import { ArrayOf, Enum, Property, Required } from "@tsed/schema";
+import { SocialAction } from "../../types";
 import { CategoryFieldType } from "./CategoryModel";
 
 export class IdModel {
@@ -110,14 +111,11 @@ export class CrmPayrollResultModel {
 
   @Property() public readonly addersFinal: string;
   @Property() public readonly systemSizeFinal: string;
- 
+
   @Property() public readonly recordID: string;
   @Property() public readonly saleStatus: string;
 
-  
-
   @Property() public readonly clawbackNotes: string;
-
 
   @Property() public readonly repRedline: string;
 
@@ -130,4 +128,14 @@ export class CrmPayrollResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string; // Change to match the type you need
+}
+
+export class PlannerResultModel {
+  @Property() public readonly _id: string;
+  @Property() public readonly title: string;
+  @Property() @Enum(SocialAction) public readonly action: SocialAction;
+  @Property() public readonly description: string;
+  @Property() public readonly startDate: string;
+  @Property() public readonly timeOfExecution: string;
+  @Property() public readonly adminId: string;
 }

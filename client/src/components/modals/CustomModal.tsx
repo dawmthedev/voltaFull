@@ -12,10 +12,12 @@ interface CustomModalProps {
   handleSubmit: () => void;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CustomModal = ({ title, open, setOpen, handleSubmit, size = 'sm', children }: CustomModalProps) => {
+const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm', children }: CustomModalProps) => {
   const handleClose = () => {
     setOpen(false);
+    setIsEdit(false);
   };
 
   return (

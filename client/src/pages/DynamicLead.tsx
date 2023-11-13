@@ -44,6 +44,7 @@ const DynamicLead = () => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [categoryData, setCategoryData] = useState<CategoryResponseTypes>();
   const [isLeadEdit, setIsLeadEdit] = useState<boolean>(false);
+  const [isCategoryEdit, setIsCategoryEdit] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -178,11 +179,12 @@ const DynamicLead = () => {
   };
 
   //! Add new column into category
-  const addNewCategoryCol = async () => {
-    if (!categoryData) return;
+  const updateCategory = async () => {
+    if (!selectedCategoryId) return;
 
     await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
     await dispatch(getCategories({ signal }));
+    setFields([initialFieldState]);
   };
 
   const submitAddNewLead = async () => {
@@ -272,10 +274,11 @@ const DynamicLead = () => {
         </Box>
         <Box>
           <CustomModal
-            title="Add Category"
+            title={`${isCategoryEdit ? 'Edit' : 'Add'} Category`}
             open={isCategoryModalOpen}
             setOpen={() => setIsCategoryModalOpen(false)}
-            handleSubmit={submitCategory}
+            handleSubmit={isCategoryEdit ? updateCategory : submitCategory}
+            setIsEdit={setIsCategoryEdit}
           >
             <AddCategory
               fields={fields}
@@ -284,12 +287,19 @@ const DynamicLead = () => {
               category={addCategory}
               setCategory={setAddCategory}
               removeField={removeField}
+              isEdit={isCategoryEdit}
             />
           </CustomModal>
         </Box>
         <Card sx={{ mt: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: 1 }}>
-            <Button variant="contained" onClick={() => setIsCategoryModalOpen(true)}>
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsCategoryModalOpen(true);
+                setIsCategoryEdit(true);
+              }}
+            >
               Add New Column
             </Button>
           </Box>

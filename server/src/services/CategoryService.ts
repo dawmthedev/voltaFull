@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@tsed/di";
 import { CategoryModel } from "../models/CategoryModel";
-import { CategoryBodyTypes } from "types";
+import { CategoryBodyTypes, FieldTypes } from "types";
 import { LeadService } from "./LeadService";
 import { MongooseModel } from "@tsed/mongoose";
 
@@ -42,5 +42,9 @@ export class CategoryService {
 
   public async findCategoryByNameAndOrgId({ name, orgId }: { name: string; orgId: string }) {
     return await this.category.findOne({ name, orgId });
+  }
+
+  public async addFieldsToCategory({ id, fields }: { id: string; fields: FieldTypes[] }) {
+    return await this.category.findByIdAndUpdate(id, { $push: { fields: { $each: fields } } });
   }
 }

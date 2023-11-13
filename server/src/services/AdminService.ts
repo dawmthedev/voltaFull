@@ -33,13 +33,13 @@ export class AdminService {
    * @returns the user's role, company and orgId
    */
   public async checkPermissions(opts: { hasRole?: string[]; restrictCompany?: string }, admin: JWTPayload) {
-    const { role, company, email } = admin;
+    const { role, company, email, id } = admin;
     if (company) {
       if (opts.hasRole && (!role || !opts.hasRole.includes(role))) throw new Forbidden("Forbidden");
       if (opts.restrictCompany && company !== opts.restrictCompany) throw new Forbidden("Forbidden");
       if (role === "manager" && !company) throw new Forbidden("Forbidden, company not specified");
       const org = await this.organizationService.findOne({ name: company });
-      return { role, company, orgId: org?.id, email };
+      return { role, company, orgId: org?.id, email, adminId: id };
     }
     return {};
   }

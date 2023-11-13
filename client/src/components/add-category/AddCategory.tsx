@@ -12,23 +12,26 @@ interface AddLeadProps {
   category: CategoryTypes;
   setCategory: React.Dispatch<React.SetStateAction<CategoryTypes>>;
   removeField: (index: number) => void;
+  isEdit: boolean;
 }
 
-const AddCategory = ({ category, setCategory, fields, getFieldsData, addNewField, removeField }: AddLeadProps) => {
+const AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewField, removeField }: AddLeadProps) => {
   const DataTypes = ['string', 'number', 'boolean', 'date'];
   return (
     <Grid>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: 1, mb: 1 }}>
         <Box width="75%">
-          <CustomInput
-            label="Name"
-            size="small"
-            name={category.name}
-            value={category.name}
-            onChange={(e) => {
-              setCategory({ ...category, name: e.target.value });
-            }}
-          />
+          {!isEdit && (
+            <CustomInput
+              label="Name"
+              size="small"
+              name={category.name}
+              value={category.name}
+              onChange={(e) => {
+                setCategory({ ...category, name: e.target.value });
+              }}
+            />
+          )}
         </Box>
         <Button
           variant="contained"

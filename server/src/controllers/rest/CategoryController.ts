@@ -70,12 +70,10 @@ export class CategoryController {
 
   @Post("/new-column")
   async addNewColumn(@BodyParams() { tableId, fields }: { tableId: string; fields: FieldTypes[] }, @Context() context: Context) {
-    await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
-
+    await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const category = await this.categoryService.findCategoryById(tableId);
     if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
-    const updateFields = [...category.fields, ...fields];
-    const updatedCategory = await this.categoryService.updateCategory({ id: tableId, name: category.name, fields: updateFields });
+    const updatedCategory = await this.categoryService.addFieldsToCategory({ id: category._id, fields });
     return new SuccessResult({ ...updatedCategory?.toObject()!, id: updatedCategory?._id }, CategoryResultModel);
   }
 
