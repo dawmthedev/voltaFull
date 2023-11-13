@@ -28,6 +28,10 @@ export class AdminModel {
 
   @Property()
   @Default(false)
+  isSuperAdmin: boolean;
+
+  @Property()
+  @Default(false)
   twoFactorEnabled: boolean;
 
   @Property()

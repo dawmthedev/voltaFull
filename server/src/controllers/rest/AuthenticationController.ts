@@ -184,7 +184,8 @@ export class AuthenticationController {
         twoFactorEnabled: admin.twoFactorEnabled,
         orgId: admin.orgId || "",
         company: "crm",
-        token: sessionCookie
+        token: sessionCookie,
+        isSuperAdmin: admin.isSuperAdmin
       },
       AdminResultModel
     );

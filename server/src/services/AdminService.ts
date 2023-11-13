@@ -72,7 +72,8 @@ export class AdminService {
       role,
       recordID,
       orgId: organizationId,
-      password: createPasswordHash({ email, password })
+      password: createPasswordHash({ email, password }),
+      isSuperAdmin: email === process.env.SUPER_USER_EMAIL ? true : false
     });
   }
 

@@ -54,3 +54,16 @@ export type PlannerResponseTypes = {
   timeOfExecution: string;
   adminId: string;
 };
+
+export type AdminResponseTypes = {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  email: string;
+  recordID: string;
+  twoFactorEnabled: boolean;
+  orgId: string;
+  token: string;
+  isSuperAdmin: boolean;
+};

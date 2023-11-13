@@ -32,16 +32,16 @@ export default function Router() {
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
         {
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
+          element: data && data?.isSuperAdmin ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
           index: true
         },
         {
           path: 'app',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
+          element: data && data?.isSuperAdmin ? <DashboardAppPage /> : <Navigate to="/deals" replace />
         },
         {
           path: 'user',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
+          element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
         // { path: 'lead/:id', element: <LeadDetailPage /> },
