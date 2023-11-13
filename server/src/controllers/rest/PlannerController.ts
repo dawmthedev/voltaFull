@@ -2,7 +2,7 @@ import { Controller, Inject } from "@tsed/di";
 import { Enum, Get, Post, Property, Required, Returns } from "@tsed/schema";
 import { AdminService } from "../../services/AdminService";
 import { PlannerResultModel } from "../../models/RestModels";
-import { SuccessResult } from "../../util/entities";
+import { Pagination, SuccessArrayResult, SuccessResult } from "../../util/entities";
 import { ADMIN } from "../../util/constants";
 import { BodyParams, Context } from "@tsed/platform-params";
 import { Unauthorized } from "@tsed/exceptions";
@@ -16,7 +16,6 @@ class PlannerBodyTypes {
   @Required() @Enum(SocialAction) public readonly action: SocialAction;
   @Property() public readonly description: string;
   @Property() public readonly startDate: Date;
-  @Required() public readonly endDate: Date;
   @Required() public readonly timeOfExecution: Date;
 }
 
@@ -26,11 +25,12 @@ export class PlannerController {
   @Inject() private plannerService: PlannerService;
 
   @Get()
-  @Returns(200, SuccessResult).Of(PlannerResultModel)
+  @Returns(200, SuccessArrayResult).Of(Pagination).Nested(PlannerResultModel)
   public async getPlanners(@Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const planner = await this.plannerService.findPlanner();
-    return new SuccessResult(normalizeData(planner), PlannerResultModel);
+    const plannerData = normalizeData(planner);
+    return new SuccessResult(new Pagination(plannerData, planner.length, PlannerResultModel), Pagination);
   }
 
   @Post()
@@ -39,18 +39,25 @@ export class PlannerController {
     const { orgId, adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!orgId) throw new Unauthorized(ORG_NOT_FOUND);
     if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
-    const { title, action, description, startDate, endDate, timeOfExecution } = body;
+    const { title, action, description, startDate, timeOfExecution } = body;
     const response = await this.plannerService.createPlanner({
       title,
       action,
       description,
       startDate,
-      endDate,
       timeOfExecution,
       orgId,
       adminId
     });
-    const result = { ...response.toObject(), id: response._id };
-    return new SuccessResult(result.toObject(), PlannerResultModel);
+    const result = {
+      _id: response._id,
+      title: response.title,
+      action: response.action,
+      description: response.description,
+      startDate: response.startDate.toString(),
+      timeOfExecution: response.timeOfExecution.toString(),
+      adminId: response.adminId
+    };
+    return new SuccessResult(result, PlannerResultModel);
   }
 }

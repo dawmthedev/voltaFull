@@ -1,4 +1,5 @@
-import { ArrayOf, Property, Required } from "@tsed/schema";
+import { ArrayOf, Enum, Property, Required } from "@tsed/schema";
+import { SocialAction } from "../../types";
 import { CategoryFieldType } from "./CategoryModel";
 
 export class IdModel {
@@ -124,13 +125,11 @@ export class CrmPayrollResultModel {
 }
 
 export class PlannerResultModel {
-  @Property() public readonly id: string;
+  @Property() public readonly _id: string;
   @Property() public readonly title: string;
-  @Property() public readonly action: string;
+  @Property() @Enum(SocialAction) public readonly action: SocialAction;
   @Property() public readonly description: string;
   @Property() public readonly startDate: string;
-  @Property() public readonly endDate: string;
   @Property() public readonly timeOfExecution: string;
-  @Property() public readonly orgId: string;
   @Property() public readonly adminId: string;
 }

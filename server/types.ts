@@ -64,7 +64,6 @@ export type PlannerDataTypes = {
   description?: string;
   timeOfExecution: Date;
   startDate?: Date;
-  endDate: Date;
   orgId?: string;
   adminId?: string;
 };
