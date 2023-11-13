@@ -29,13 +29,16 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 import USERLIST from '../_mock/user';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { getUsers } from '../redux/middleware/admin';
+import { getUsers, updateAdmin } from '../redux/middleware/admin';
 import createAbortController from '../utils/createAbortController';
 import { adminSelector } from '../redux/slice/adminSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUserForm';
 import { register } from '../redux/middleware/authentication';
 import { authSelector } from '../redux/slice/authSlice';
+import CustomInput from '../components/input/CustomInput';
+import axios from 'axios';
+import { setAlert } from '../redux/slice/alertSlice';
 
 // ----------------------------------------------------------------------
 
@@ -77,14 +80,14 @@ function applySortFilter(array, comparator, query) {
 }
 
 const initialState = {
-  email: '',
+  id: '',
+  name: '',
   role: ''
 };
 
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
-
   const { signal, abort } = createAbortController();
 
   const [open, setOpen] = useState(null);
@@ -111,8 +114,45 @@ export default function UserPage() {
     setOpen(event.currentTarget);
   };
 
+  const getSelectedUser = (userData) => {
+    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role });
+  };
+
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+
+  const updateUser = async () => {
+    try {
+      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role }));
+      if (response && response.error && response.error.message) {
+        dispatch(
+          setAlert({
+            message: response.error.message,
+            type: 'error'
+          })
+        );
+        return;
+      }
+      if (response && response.payload) {
+        dispatch(
+          setAlert({
+            message: 'User updated successfully',
+            type: 'success'
+          })
+        );
+        await dispatch(getUsers({ signal }));
+      }
+      setIsModalOpen(false);
+      handleCloseMenu();
+    } catch (error) {
+      dispatch(
+        setAlert({
+          message: error.message,
+          type: 'error'
+        })
+      );
+    }
   };
 
   const handleRequestSort = (event, property) => {
@@ -177,12 +217,12 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
             New User
-          </Button> */}
+          </Button>
         </Stack>
 
-        <CustomModal title="Add New User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
+        <CustomModal title="Add New User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser}>
           <AddUserForm
             user={user}
             getUsersData={(value, name) => {
@@ -228,7 +268,9 @@ export default function UserPage() {
                         <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{company}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                          {role}
+                        </TableCell>
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 
@@ -237,7 +279,14 @@ export default function UserPage() {
                         </TableCell> */}
 
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton
+                            size="large"
+                            color="inherit"
+                            onClick={(event) => {
+                              handleOpenMenu(event);
+                              getSelectedUser(row);
+                            }}
+                          >
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -308,7 +357,7 @@ export default function UserPage() {
           }
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => setIsModalOpen(true)}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
         </MenuItem>

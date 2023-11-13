@@ -21,11 +21,11 @@ const navConfig = [
     path: '/dashboard/pay',
     icon: icon('ic_user')
   },
-  // {
-  //   title: 'Users',
-  //   path: '/dashboard/user',
-  //   icon: icon('ic_user')
-  // },
+  {
+    title: 'Users',
+    path: '/dashboard/user',
+    icon: icon('ic_user')
+  },
   {
     title: 'Resources',
     path: '/dashboard/blog',

@@ -10,4 +10,13 @@ const getUsers = createAsyncThunk('users/get', async ({ signal }: { signal: Abor
   }
 });
 
-export { getUsers };
+const updateAdmin = createAsyncThunk('users/update', async ({ id,  name,  role }: { id: string; name: string; role: string;}) => {
+  try {
+    const { data } = await put('/admin' , { id,  name, role });
+    return data.data;
+  } catch (error) {
+    throw error;
+  }
+});
+
+export { getUsers, updateAdmin };

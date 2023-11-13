@@ -29,6 +29,12 @@ export enum VerificationEnum {
   PASSWORD = "password"
 }
 
+export enum RoleEnum {
+  MANAGER = "manager",
+  SALESREP = "salesrep",
+  ADMIN = "CRM System Administrator"
+}
+
 export type CategoryBodyTypes = {
   name: string;
   description?: string;
