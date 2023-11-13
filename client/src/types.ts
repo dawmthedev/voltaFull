@@ -36,3 +36,21 @@ export type FieldTypes = {
   name: string;
   type: string;
 };
+
+export type PlannerDataTypes = {
+  title: string;
+  action: string;
+  description: string;
+  startDate: Date;
+  timeOfExecution: Date;
+};
+
+export type PlannerResponseTypes = {
+  _id: string;
+  title: string;
+  action: string;
+  description: string;
+  startDate: string;
+  timeOfExecution: string;
+  adminId: string;
+};
