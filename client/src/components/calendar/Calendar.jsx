@@ -14,10 +14,26 @@ const events = [
   // Add more events as needed
 ];
 
-const MyCalendar = (props) => (
-  <div>
-    <Calendar localizer={localizer} events={events} startAccessor="start" endAccessor="end" style={{ height: 500 }} />
-  </div>
-);
+const MyCalendar = (props) => {
+  const handleSelectSlot = ({ start, end }) => {
+    debugger;
+    // Handle click on a date slot
+    console.log('Selected Slot: ', start, end);
+  };
+
+  return (
+    <div>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 500 }}
+        selectable={true}
+        onSelectSlot={handleSelectSlot}
+      />
+    </div>
+  );
+};
 
 export default MyCalendar;

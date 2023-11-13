@@ -104,14 +104,11 @@ export class CrmPayrollResultModel {
 
   @Property() public readonly addersFinal: string;
   @Property() public readonly systemSizeFinal: string;
- 
+
   @Property() public readonly recordID: string;
   @Property() public readonly saleStatus: string;
 
-  
-
   @Property() public readonly clawbackNotes: string;
-
 
   @Property() public readonly repRedline: string;
 
@@ -124,4 +121,16 @@ export class CrmPayrollResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string; // Change to match the type you need
+}
+
+export class PlannerResultModel {
+  @Property() public readonly id: string;
+  @Property() public readonly title: string;
+  @Property() public readonly action: string;
+  @Property() public readonly description: string;
+  @Property() public readonly startDate: string;
+  @Property() public readonly endDate: string;
+  @Property() public readonly timeOfExecution: string;
+  @Property() public readonly orgId: string;
+  @Property() public readonly adminId: string;
 }

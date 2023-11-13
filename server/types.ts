@@ -50,3 +50,21 @@ export type FieldTypes = {
   name: string;
   type: "string" | "number" | "boolean" | "date";
 };
+
+export enum SocialAction {
+  email = "email",
+  instagram = "instagram",
+  facebook = "facebook",
+  youtube = "youtube"
+}
+
+export type PlannerDataTypes = {
+  title: string;
+  action: SocialAction;
+  description?: string;
+  timeOfExecution: Date;
+  startDate?: Date;
+  endDate: Date;
+  orgId?: string;
+  adminId?: string;
+};

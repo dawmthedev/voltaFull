@@ -1,13 +1,13 @@
 import React from 'react';
 import MyCalendar from '../components/calendar/Calendar';
 
-const Task = () => {
+const Planner = () => {
   return (
     <div>
-      <h1>Task</h1>
+      <h1>Planner</h1>
       <MyCalendar />
     </div>
   );
 };
 
-export default Task;
+export default Planner;

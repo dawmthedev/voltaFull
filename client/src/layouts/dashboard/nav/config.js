@@ -57,8 +57,8 @@ const navConfig = [
     icon: icon('ic_analytics')
   },
   {
-    title: 'Task',
-    path: '/dashboard/task',
+    title: 'Planner',
+    path: '/dashboard/planner',
     icon: icon('ic_analytics')
   },
   // {

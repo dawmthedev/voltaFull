@@ -19,7 +19,7 @@ import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
 import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
-import Task from './pages/Task';
+import Planner from './pages/Planner';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -51,7 +51,7 @@ export default function Router() {
         { path: 'pay', element: <PayPage /> },
         { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
-        { path: 'task', element: <Task /> }
+        { path: 'planner', element: <Planner /> }
       ]
     },
     {
