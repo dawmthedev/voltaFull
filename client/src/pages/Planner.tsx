@@ -5,7 +5,7 @@ const Planner = () => {
   return (
     <div>
       <h1>Planner</h1>
-      <MyCalendar />
+      <MyCalendar value={'email'} getActionData={() => {}} />
     </div>
   );
 };
