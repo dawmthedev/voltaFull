@@ -17,7 +17,7 @@ interface CustomModalProps {
 const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm', children }: CustomModalProps) => {
   const handleClose = () => {
     setOpen(false);
-    setIsEdit(false);
+    setIsEdit && setIsEdit(false);
   };
 
   return (

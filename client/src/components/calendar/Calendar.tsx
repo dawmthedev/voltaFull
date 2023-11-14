@@ -8,6 +8,8 @@ import EmailIcon from '@mui/icons-material/Email';
 import SmsIcon from '@mui/icons-material/Sms';
 import HistoryIcon from '@mui/icons-material/History';
 import CampaignIcon from '@mui/icons-material/Campaign';
+import CustomModal from '../modals/CustomModal';
+import PlannerForm from '../planner-form/PlannerForm';
 
 interface CalendarProps {
   value: string;
@@ -25,9 +27,10 @@ const events = [
 ];
 
 const MyCalendar = ({ value, getActionData }: CalendarProps) => {
-  const [dropdownVisible, setDropdownVisible] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [myEvents, setEvents] = useState(events);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { defaultDate, scrollToTime } = useMemo(
     () => ({
@@ -53,6 +56,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     // Handle the action when an item in the dropdown is selected
     // For example, you can perform some action and then close the dropdown
     console.log('Dropdown action performed', value);
+    setIsModalOpen(true);
     closeDropdown();
   };
 
@@ -139,6 +143,9 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
         scrollToTime={scrollToTime}
       />
       {dropdownVisible && renderDropdown()}
+      <CustomModal title="Add Event" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
+        <PlannerForm />
+      </CustomModal>
     </Box>
   );
 };
