@@ -39,6 +39,7 @@ export class AdminController {
     };
     return new SuccessArrayResult(response.admins, AdminResultModel);
   }
+
   @Put()
   @Returns(200, SuccessResult).Of(AdminResultModel)
   public async updateAdmin(@BodyParams() body: UpdateAdminParams, @Context() context: Context) {
