@@ -13,6 +13,7 @@ class UpdateAdminParams {
   @Required() public readonly id: string;
   @Property() @Enum(RoleEnum) public readonly role: RoleEnum | undefined;
   @Property() public readonly name: string;
+  @Property() public readonly isSuperAdmin: boolean;
 }
 @Controller("/admin")
 export class AdminController {

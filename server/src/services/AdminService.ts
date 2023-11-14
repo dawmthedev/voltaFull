@@ -52,9 +52,9 @@ export class AdminService {
     return await this.admin.findByIdAndUpdate({ _id: adminId }, { twoFactorEnabled });
   }
 
-  public async updateAdmin(data: { id: string; name?: string; role?: string }) {
-    const { id, name, role } = data;
-    return await this.admin.findByIdAndUpdate({ _id: id }, { name, role });
+  public async updateAdmin(data: { id: string; name?: string; role?: string; isSuperAdmin: boolean; }) {
+    const { id, name, role, isSuperAdmin } = data;
+    return await this.admin.findByIdAndUpdate({ _id: id }, { name, role, isSuperAdmin });
   }
 
   public async createAdmin(params: {

@@ -47,6 +47,7 @@ const TABLE_HEAD = [
   { id: 'email', name: 'Email', alignRight: false },
   { id: 'company', name: 'Company', alignRight: false },
   { id: 'role', name: 'Role', alignRight: false },
+  { id: 'isSuperAdmin', name: 'Super Admin', alignRight: false },
   // { id: 'isVerified', name: 'Verified', alignRight: false },
   // { id: 'status', name: 'Status', alignRight: false },
   { id: '' }
@@ -82,14 +83,14 @@ function applySortFilter(array, comparator, query) {
 const initialState = {
   id: '',
   name: '',
-  role: ''
+  role: '',
+  isSuperAdmin: false
 };
 
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
   const { signal, abort } = createAbortController();
-
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -115,7 +116,7 @@ export default function UserPage() {
   };
 
   const getSelectedUser = (userData) => {
-    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role });
+    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role , isSuperAdmin: userData.isSuperAdmin});
   };
 
   const handleCloseMenu = () => {
@@ -124,7 +125,7 @@ export default function UserPage() {
 
   const updateUser = async () => {
     try {
-      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role }));
+      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin}));
       if (response && response.error && response.error.message) {
         dispatch(
           setAlert({
@@ -205,7 +206,6 @@ export default function UserPage() {
   const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
-
   return (
     <>
       <Helmet>
@@ -247,7 +247,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { name, email, role, company, avatarUrl } = row;
+                    const { name, email, role, company, avatarUrl, isSuperAdmin } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -271,6 +271,11 @@ export default function UserPage() {
                         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
                           {role}
                         </TableCell>
+                        {isSuperAdmin ? (<TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                          True
+                        </TableCell>) : (<TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                          False
+                        </TableCell>)}
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 
