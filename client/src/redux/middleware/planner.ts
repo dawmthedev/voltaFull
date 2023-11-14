@@ -13,7 +13,7 @@ const getPlanners = createAsyncThunk('planner/get', async () => {
 
 const createPlanner = createAsyncThunk('planner/create', async ({ planner }: { planner: PlannerDataTypes }) => {
   try {
-    const { data } = await post('/planner/create', planner);
+    const { data } = await post('/planner', planner);
     return data.data;
   } catch (error) {
     throw error;

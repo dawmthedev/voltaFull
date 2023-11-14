@@ -41,8 +41,9 @@ export type PlannerDataTypes = {
   title: string;
   action: string;
   description: string;
-  startDate: Date;
-  timeOfExecution: Date;
+  startDate: string;
+  endDate: string;
+  timeOfExecution: string;
 };
 
 export type PlannerResponseTypes = {

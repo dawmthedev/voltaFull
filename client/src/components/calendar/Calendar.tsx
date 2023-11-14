@@ -10,11 +10,33 @@ import HistoryIcon from '@mui/icons-material/History';
 import CampaignIcon from '@mui/icons-material/Campaign';
 import CustomModal from '../modals/CustomModal';
 import PlannerForm from '../planner-form/PlannerForm';
+import dayjs, { Dayjs } from 'dayjs';
+import { useAppDispatch } from '../../hooks/hooks';
+import { createPlanner, getPlanners } from '../../redux/middleware/planner';
+import { setAlert } from '../../redux/slice/alertSlice';
 
 interface CalendarProps {
   value: string;
   getActionData: (value: string, name: string) => void;
 }
+
+export type PlannerState = {
+  title: string;
+  description: string;
+  action: string;
+  startDate: Dayjs | null;
+  endDate: Dayjs | null;
+  timeOfExecution: Dayjs | null;
+};
+
+const initialState: PlannerState = {
+  title: '',
+  description: '',
+  action: 'email',
+  startDate: dayjs(new Date()),
+  endDate: dayjs(new Date()),
+  timeOfExecution: dayjs(new Date())
+};
 
 const localizer = momentLocalizer(moment);
 
@@ -27,10 +49,12 @@ const events = [
 ];
 
 const MyCalendar = ({ value, getActionData }: CalendarProps) => {
+  const dispatch = useAppDispatch();
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [myEvents, setEvents] = useState(events);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [addFormValues, setAddFormValues] = React.useState<PlannerState>(initialState);
 
   const { defaultDate, scrollToTime } = useMemo(
     () => ({
@@ -58,6 +82,29 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     console.log('Dropdown action performed', value);
     setIsModalOpen(true);
     closeDropdown();
+  };
+
+  //! submit planner form
+  const submitPlan = async () => {
+    debugger
+    const data = {
+      title: addFormValues.title,
+      description: addFormValues.description,
+      action: addFormValues.action,
+      startDate: addFormValues.startDate.toString(),
+      endDate: addFormValues.endDate.toString(),
+      timeOfExecution: addFormValues.timeOfExecution.toString()
+    };
+    const response: any = await dispatch(createPlanner({ planner: data }));
+    if (response && response.error && response.error.message) {
+      dispatch(setAlert({ message: response.error.message, type: 'error' }));
+      return;
+    }
+    if (response && response.payload) {
+      dispatch(setAlert({ message: 'Planner created successfully', type: 'success' }));
+      dispatch(getPlanners());
+      setIsModalOpen(false);
+    }
   };
 
   //! Dropdown
@@ -143,8 +190,8 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
         scrollToTime={scrollToTime}
       />
       {dropdownVisible && renderDropdown()}
-      <CustomModal title="Add Event" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
-        <PlannerForm />
+      <CustomModal title="Add Event" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={submitPlan}>
+        <PlannerForm state={addFormValues} getFormData={({ name, value }) => setAddFormValues({ ...addFormValues, [name]: value })} />
       </CustomModal>
     </Box>
   );

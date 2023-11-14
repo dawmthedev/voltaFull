@@ -15,8 +15,9 @@ class PlannerBodyTypes {
   @Required() public readonly title: string;
   @Required() @Enum(SocialAction) public readonly action: SocialAction;
   @Property() public readonly description: string;
-  @Property() public readonly startDate: Date;
-  @Required() public readonly timeOfExecution: Date;
+  @Property() public readonly startDate: string;
+  @Property() public readonly endDate: string;
+  @Required() public readonly timeOfExecution: string;
 }
 
 @Controller("/planner")
@@ -39,12 +40,13 @@ export class PlannerController {
     const { orgId, adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!orgId) throw new Unauthorized(ORG_NOT_FOUND);
     if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
-    const { title, action, description, startDate, timeOfExecution } = body;
+    const { title, action, description, startDate, endDate, timeOfExecution } = body;
     const response = await this.plannerService.createPlanner({
       title,
       action,
       description,
       startDate,
+      endDate,
       timeOfExecution,
       orgId,
       adminId

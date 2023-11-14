@@ -68,8 +68,9 @@ export type PlannerDataTypes = {
   title: string;
   action: SocialAction;
   description?: string;
-  timeOfExecution: Date;
-  startDate?: Date;
+  timeOfExecution: string;
+  startDate: string;
+  endDate: string;
   orgId?: string;
   adminId?: string;
 };

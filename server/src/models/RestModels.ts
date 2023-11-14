@@ -137,6 +137,7 @@ export class PlannerResultModel {
   @Property() @Enum(SocialAction) public readonly action: SocialAction;
   @Property() public readonly description: string;
   @Property() public readonly startDate: string;
+  @Property() public readonly endDate: string;
   @Property() public readonly timeOfExecution: string;
   @Property() public readonly adminId: string;
 }
