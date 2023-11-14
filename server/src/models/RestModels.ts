@@ -48,6 +48,7 @@ export class AdminResultModel {
   @Property() public readonly twoFactorEnabled: boolean;
   @Property() public readonly orgId: string;
   @Property() public token: string;
+  @Property() public readonly isSuperAdmin: boolean;
 }
 
 export class OrganizationResultModel {

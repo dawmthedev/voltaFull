@@ -36,3 +36,34 @@ export type FieldTypes = {
   name: string;
   type: string;
 };
+
+export type PlannerDataTypes = {
+  title: string;
+  action: string;
+  description: string;
+  startDate: Date;
+  timeOfExecution: Date;
+};
+
+export type PlannerResponseTypes = {
+  _id: string;
+  title: string;
+  action: string;
+  description: string;
+  startDate: string;
+  timeOfExecution: string;
+  adminId: string;
+};
+
+export type AdminResponseTypes = {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  email: string;
+  recordID: string;
+  twoFactorEnabled: boolean;
+  orgId: string;
+  token: string;
+  isSuperAdmin: boolean;
+};
