@@ -3,8 +3,13 @@ import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.scss';
 import React, { useCallback, useMemo, useState } from 'react';
-import { Box, MenuItem, Select, SelectChangeEvent } from '@mui/material';
-import ClickAway from '../click-away/ClickAway';
+import { Box } from '@mui/material';
+import EmailIcon from '@mui/icons-material/Email';
+import SmsIcon from '@mui/icons-material/Sms';
+import HistoryIcon from '@mui/icons-material/History';
+import CampaignIcon from '@mui/icons-material/Campaign';
+import CustomModal from '../modals/CustomModal';
+import PlannerForm from '../planner-form/PlannerForm';
 
 interface CalendarProps {
   value: string;
@@ -22,8 +27,10 @@ const events = [
 ];
 
 const MyCalendar = ({ value, getActionData }: CalendarProps) => {
-  const [isDropDownOpen, setIsDropDownOpen] = useState(false);
+  const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
+  const [selectedSlot, setSelectedSlot] = useState(null);
   const [myEvents, setEvents] = useState(events);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const { defaultDate, scrollToTime } = useMemo(
     () => ({
@@ -32,17 +39,93 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     }),
     []
   );
-  const handleSelectSlot = useCallback(
-    ({ start, end }) => {
-      const title = window.prompt('New Event name');
-      if (title) {
-        setEvents((prev) => [...prev, { start, end, title }]);
-      }
-    },
-    [setEvents]
-  );
+  const handleSelectSlot = useCallback(({ start, end, box, nativeEvent }) => {
+    const boundingBox = box || nativeEvent.target.getBoundingClientRect();
+    setSelectedSlot({ start, end, boundingBox });
+    setDropdownVisible(true);
+  }, []);
 
   const handleSelectEvent = useCallback((event) => window.alert(event.title), []);
+
+  const closeDropdown = () => {
+    // Close the dropdown
+    setDropdownVisible(false);
+  };
+
+  const handleDropdownAction = (value) => {
+    // Handle the action when an item in the dropdown is selected
+    // For example, you can perform some action and then close the dropdown
+    console.log('Dropdown action performed', value);
+    setIsModalOpen(true);
+    closeDropdown();
+  };
+
+  //! Dropdown
+  const renderDropdown = () => {
+    if (!selectedSlot || !selectedSlot.boundingBox) {
+      return null;
+    }
+
+    const { x, y } = selectedSlot.boundingBox;
+    const dropdownStyle: React.CSSProperties = {
+      position: 'absolute',
+      top: y,
+      left: x,
+      backgroundColor: 'white',
+      boxShadow: '0 0 5px 0 rgba(0, 0, 0, 0.2)',
+      padding: '10px',
+      borderRadius: '5px',
+      zIndex: 4
+    };
+    const itemStyle: React.CSSProperties = {
+      fontWeight: 700,
+      fontSize: '14px',
+      fontFamily: 'math'
+    };
+    const getIcon = (value) => {
+      switch (value) {
+        case 'email':
+          return <EmailIcon fontSize={'small'} htmlColor="#676666" />;
+        case 'post':
+          return <SmsIcon fontSize={'small'} htmlColor="#bdbdbd" />;
+        case 'story':
+          return <HistoryIcon fontSize={'small'} htmlColor="#bdbdbd" />;
+        case 'ad':
+          return <CampaignIcon fontSize={'small'} htmlColor="#bdbdbd" />;
+        default:
+          return null;
+      }
+    };
+    return (
+      <div style={dropdownStyle}>
+        {ACTIONS.map((action: ActionTypes) => (
+          <div
+            style={{
+              display: 'flex',
+              gap: '8px',
+              alignItems: 'center',
+              padding: '4px 0',
+              cursor: action.value === 'email' ? 'pointer' : 'no-drop'
+            }}
+            onClick={() => {
+              action.value === 'email' && handleDropdownAction(action.value);
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center' }}>{getIcon(action.value)}</div>
+            <div
+              style={{
+                ...itemStyle,
+                color: action.value === 'email' ? '#676666' : '#bdbdbd',
+                marginTop: '2px'
+              }}
+            >
+              {action.name}
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <Box>
@@ -59,38 +142,10 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
         onSelectSlot={handleSelectSlot}
         scrollToTime={scrollToTime}
       />
-      {/* <ClickAway open={isDropDownOpen} setOpen={setIsDropDownOpen}>
-        <Select
-          value={value}
-          name="type"
-          label="Select Type"
-          onChange={(e: SelectChangeEvent) => {
-            getActionData(e.target.value, e.target.name);
-          }}
-          sx={{
-            '& .MuiSelect-select': {
-              textTransform: 'capitalize',
-              color: '#0c71edd8'
-            }
-          }}
-        >
-          {ACTIONS.map((action: ActionTypes) => (
-            <MenuItem
-              key={action.id}
-              value={action.value}
-              sx={{
-                textTransform: 'capitalize',
-                '&:hover': {
-                  backgroundColor: 'rgba(0, 0, 0, 0.04)',
-                  color: '#0c71edd8'
-                }
-              }}
-            >
-              {action.name}
-            </MenuItem>
-          ))}
-        </Select>
-      </ClickAway> */}
+      {dropdownVisible && renderDropdown()}
+      <CustomModal title="Add Event" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
+        <PlannerForm />
+      </CustomModal>
     </Box>
   );
 };
@@ -101,32 +156,27 @@ type ActionTypes = {
   id: number;
   name: string;
   value: string;
-  icon: string;
 };
 
 const ACTIONS: ActionTypes[] = [
   {
     id: 1,
     name: 'Schedule Email',
-    value: 'email',
-    icon: 'email'
+    value: 'email'
   },
   {
     id: 2,
     name: 'Schedule Post',
-    value: 'post',
-    icon: 'post'
+    value: 'post'
   },
   {
     id: 3,
     name: 'Schedule Story',
-    value: 'story',
-    icon: 'story'
+    value: 'story'
   },
   {
     id: 4,
     name: 'Schedule Ad',
-    value: 'ad',
-    icon: 'ad'
+    value: 'ad'
   }
 ];
