@@ -1,13 +1,9 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-// @mui
 import { Box, List, ListItemText } from '@mui/material';
-//
 import { StyledNavItem, StyledNavItemIcon } from './styles';
 import { authSelector } from '../../redux/slice/authSlice';
 import { useAppSelector } from '../../hooks/hooks';
-
-// ----------------------------------------------------------------------
 
 NavSection.propTypes = {
   data: PropTypes.array
@@ -26,8 +22,6 @@ export default function NavSection({ data = [], ...other }) {
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
 
 NavItem.propTypes = {
   item: PropTypes.object
