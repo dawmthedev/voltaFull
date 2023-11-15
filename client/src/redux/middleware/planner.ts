@@ -4,7 +4,7 @@ import { PlannerDataTypes } from '../../types';
 
 const getPlanners = createAsyncThunk('planner/get', async ({ signal }: { signal: AbortSignal }) => {
   try {
-    const { data } = await get('/planner');
+    const { data } = await get('/planner', { signal });
     return data.data;
   } catch (error) {
     throw error;

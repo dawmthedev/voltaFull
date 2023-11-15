@@ -42,14 +42,6 @@ const initialState: PlannerState = {
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-  {
-    title: 'Event 1',
-    start: new Date(2023, 10, 15, 10, 0), // Year, Month (0-indexed), Day, Hour, Minute
-    end: new Date(2023, 10, 15, 12, 0)
-  }
-];
-
 const MyCalendar = ({ value, getActionData }: CalendarProps) => {
   const dispatch = useAppDispatch();
   const { data: plannerData, events } = useAppSelector(plannerSelector);
@@ -57,7 +49,6 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
 
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  // const [myEvents, setEvents] = useState(events);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [addFormValues, setAddFormValues] = React.useState<PlannerState>(initialState);
   const [error, setError] = React.useState<{ title: string; description: string }>({
@@ -74,8 +65,6 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       abort();
     };
   }, []);
-
-  console.log('plannerData----------------------', plannerData ,events);
 
   const { defaultDate, scrollToTime } = useMemo(
     () => ({
