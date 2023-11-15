@@ -2,9 +2,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import { PlannerResponseTypes } from '../../types';
 import { createPlanner, getPlanners } from '../middleware/planner';
 
-const initialState: { data: PlannerResponseTypes[]; loading: boolean; error: any } = {
+const initialState: { data: PlannerResponseTypes[]; events: { title: string; start: Date; end: Date }[]; loading: boolean; error: any } = {
   loading: false,
   data: [],
+  events: [],
   error: null
 };
 
@@ -19,6 +20,13 @@ const plannerSlice = createSlice({
     });
     builder.addCase(getPlanners.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.events = action.payload.items.map((planner) => {
+        return {
+          title: planner.title,
+          start: new Date(planner.startDate),
+          end: new Date(planner.endDate)
+        };
+      });
     });
     builder.addCase(getPlanners.rejected, (state, action) => {
       state.error = action.error;
@@ -38,4 +46,4 @@ const plannerSlice = createSlice({
 });
 
 export default plannerSlice.reducer;
-export const plannerSelector = (state) => state.planner.data;
+export const plannerSelector = (state) => state.planner;

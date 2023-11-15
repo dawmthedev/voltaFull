@@ -2,7 +2,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { get, post } from '../../libs/client/apiClient';
 import { PlannerDataTypes } from '../../types';
 
-const getPlanners = createAsyncThunk('planner/get', async () => {
+const getPlanners = createAsyncThunk('planner/get', async ({ signal }: { signal: AbortSignal }) => {
   try {
     const { data } = await get('/planner');
     return data.data;

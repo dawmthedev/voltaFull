@@ -2,8 +2,8 @@ import { Calendar, momentLocalizer, Views } from 'react-big-calendar';
 import moment from 'moment';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import './calendar.scss';
-import React, { useCallback, useMemo, useState } from 'react';
-import { Box } from '@mui/material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Box, Button } from '@mui/material';
 import EmailIcon from '@mui/icons-material/Email';
 import SmsIcon from '@mui/icons-material/Sms';
 import HistoryIcon from '@mui/icons-material/History';
@@ -11,9 +11,11 @@ import CampaignIcon from '@mui/icons-material/Campaign';
 import CustomModal from '../modals/CustomModal';
 import PlannerForm from '../planner-form/PlannerForm';
 import dayjs, { Dayjs } from 'dayjs';
-import { useAppDispatch } from '../../hooks/hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { createPlanner, getPlanners } from '../../redux/middleware/planner';
 import { setAlert } from '../../redux/slice/alertSlice';
+import { plannerSelector } from '../../redux/slice/plannerSlice';
+import createAbortController from '../../utils/createAbortController';
 
 interface CalendarProps {
   value: string;
@@ -50,11 +52,30 @@ const events = [
 
 const MyCalendar = ({ value, getActionData }: CalendarProps) => {
   const dispatch = useAppDispatch();
+  const { data: plannerData, events } = useAppSelector(plannerSelector);
+  const { signal, abort } = createAbortController();
+
   const [dropdownVisible, setDropdownVisible] = useState<boolean>(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [myEvents, setEvents] = useState(events);
+  // const [myEvents, setEvents] = useState(events);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [addFormValues, setAddFormValues] = React.useState<PlannerState>(initialState);
+  const [error, setError] = React.useState<{ title: string; description: string }>({
+    title: '',
+    description: ''
+  });
+
+  useEffect(() => {
+    (async () => {
+      await dispatch(getPlanners({ signal }));
+    })();
+
+    return () => {
+      abort();
+    };
+  }, []);
+
+  console.log('plannerData----------------------', plannerData ,events);
 
   const { defaultDate, scrollToTime } = useMemo(
     () => ({
@@ -67,6 +88,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     const boundingBox = box || nativeEvent.target.getBoundingClientRect();
     setSelectedSlot({ start, end, boundingBox });
     setDropdownVisible(true);
+    setAddFormValues({ ...addFormValues, startDate: dayjs(start), endDate: dayjs(end) });
   }, []);
 
   const handleSelectEvent = useCallback((event) => window.alert(event.title), []);
@@ -86,7 +108,10 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
 
   //! submit planner form
   const submitPlan = async () => {
-    debugger
+    if (!addFormValues.title || !addFormValues.description) {
+      setError({ title: 'Please enter title', description: 'Please enter description' });
+      return;
+    }
     const data = {
       title: addFormValues.title,
       description: addFormValues.description,
@@ -102,8 +127,8 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     }
     if (response && response.payload) {
       dispatch(setAlert({ message: 'Planner created successfully', type: 'success' }));
-      dispatch(getPlanners());
       setIsModalOpen(false);
+      await dispatch(getPlanners({ signal }));
     }
   };
 
@@ -129,6 +154,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       fontSize: '14px',
       fontFamily: 'math'
     };
+
     const getIcon = (value) => {
       switch (value) {
         case 'email':
@@ -143,6 +169,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
           return null;
       }
     };
+
     return (
       <div style={dropdownStyle}>
         {ACTIONS.map((action: ActionTypes) => (
@@ -176,9 +203,14 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
 
   return (
     <Box>
+      <Box display="flex" justifyContent="flex-end" mb={2}>
+        <Button variant="contained" onClick={() => setIsModalOpen(true)}>
+          Add Event
+        </Button>
+      </Box>
       <Calendar
         localizer={localizer}
-        events={myEvents}
+        events={events}
         startAccessor="start"
         endAccessor="end"
         defaultDate={defaultDate}
@@ -191,7 +223,15 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       />
       {dropdownVisible && renderDropdown()}
       <CustomModal title="Add Event" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={submitPlan}>
-        <PlannerForm state={addFormValues} getFormData={({ name, value }) => setAddFormValues({ ...addFormValues, [name]: value })} />
+        <PlannerForm
+          state={addFormValues}
+          getFormData={({ name, value }) => {
+            setAddFormValues({ ...addFormValues, [name]: value });
+            if (name === 'title' && value) setError({ ...error, title: '' });
+            if (name === 'description' && value) setError({ ...error, description: '' });
+          }}
+          error={error}
+        />
       </CustomModal>
     </Box>
   );
