@@ -10,7 +10,7 @@ import { NodemailerClient } from "./clients/nodemailer";
 import { runJob } from "./cron/reminder";
 
 // Schedule the cron job to run every 5 minutes
-cron.schedule("*/1 * * * *", async () => {
+cron.schedule("*/15 * * * *", async () => {
   console.log("Running cron job");
   const planners = await runJob();
   for (let i = 0; i < planners.length; i++) {

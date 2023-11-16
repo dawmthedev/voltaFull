@@ -159,7 +159,7 @@ const DynamicLead = () => {
   };
 
   //! Edit lead
-  const editLead = (e, lead) => {
+  const editLead = async (e, lead) => {
     e.stopPropagation();
     const updatedData = [...columnFields];
     updatedData.forEach((data) => {
@@ -169,6 +169,7 @@ const DynamicLead = () => {
     setLeadValues(lead);
     setIsAddLeadModalOpen(true);
     setIsLeadEdit(true);
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
   };
 
   //! Delete lead
@@ -185,6 +186,7 @@ const DynamicLead = () => {
     await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
     await dispatch(getCategories({ signal }));
     setFields([initialFieldState]);
+    await dispatch(getCategories({ signal }));
   };
 
   const submitAddNewLead = async () => {
@@ -195,6 +197,7 @@ const DynamicLead = () => {
     if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
     else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
   };
 
   const submitCategory = async () => {
@@ -208,6 +211,7 @@ const DynamicLead = () => {
       setIsCategoryModalOpen(false);
       setAddCategory(initialCategoryState);
       setFields([initialFieldState]);
+      await dispatch(getCategories({ signal }));
     } catch (error) {
       console.log('Error:(', error);
     }
@@ -303,7 +307,7 @@ const DynamicLead = () => {
               Add New Column
             </Button>
           </Box>
-          {(categories && categories.length && leadsData && leadsData.length && (
+          {(categories && categories.length && (
             <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
           )) ||
             'Loading'}

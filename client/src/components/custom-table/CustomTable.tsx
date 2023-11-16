@@ -4,7 +4,7 @@ import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { Button } from '@mui/material';
 
 interface CustomTableProps {
-  data: any;
+  data: any[];
   headLabel: {
     name: string;
     type?: string;
@@ -14,7 +14,7 @@ interface CustomTableProps {
   onDeleteClick?: (e: any, row: any) => void;
 }
 
-export default function CustomTable({ data, headLabel, onEditClick, onDeleteClick}: CustomTableProps) {
+export default function CustomTable({ data, headLabel, onEditClick, onDeleteClick }: CustomTableProps) {
   const [clickedRow, setClickedRow] = React.useState();
 
   const onButtonClick = (e, row) => {
@@ -73,7 +73,7 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
   return (
     <Box sx={{ height: '60vh', width: '100%' }}>
       <DataGridPro
-        rows={rows}
+        rows={data && data.length ? rows : []}
         columns={columns}
         components={{
           Toolbar: GridToolbar
