@@ -7,6 +7,7 @@ import authSlice from './slice/authSlice';
 import adminSlice from './slice/adminSlice';
 import alertSlice from './slice/alertSlice';
 import plannerSlice from './slice/plannerSlice';
+import roleSlice from './slice/roleSlice';
 
 const rootReducer = combineReducers({
   auth: authSlice,
@@ -14,7 +15,8 @@ const rootReducer = combineReducers({
   lead: leadSlice,
   category: categorySlice,
   alert: alertSlice,
-  planner: plannerSlice
+  planner: plannerSlice,
+  role: roleSlice
 });
 
 const persistConfig = {
@@ -22,7 +24,7 @@ const persistConfig = {
   storage,
   // Optionally, you can specify which reducers to persist or blacklist specific reducers
   whitelist: ['auth'],
-  blacklist: ['lead', 'category', 'admin', 'error', 'alert', 'planner']
+  blacklist: ['lead', 'category', 'admin', 'error', 'alert', 'planner', 'role']
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

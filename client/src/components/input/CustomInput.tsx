@@ -2,7 +2,7 @@ import { Box, TextField, Typography } from '@mui/material';
 import React from 'react';
 
 interface CustomInputProps {
-  value: string;
+  value?: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   name: string;
   label: string;

@@ -46,6 +46,10 @@ export type PlannerDataTypes = {
   timeOfExecution: string;
 };
 
+export type RoleDataTypes = {
+  name: string;
+};
+
 export type PlannerResponseTypes = {
   _id: string;
   title: string;

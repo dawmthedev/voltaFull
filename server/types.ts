@@ -43,6 +43,10 @@ export type CategoryBodyTypes = {
   fields: CategoryFieldType[];
 };
 
+export type RoleBodyTypes = {
+  name: string;
+};
+
 export type LeadTypes = {
   firstName: string;
   lastName?: string;
