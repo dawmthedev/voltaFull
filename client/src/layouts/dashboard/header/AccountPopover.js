@@ -49,6 +49,8 @@ export default function AccountPopover() {
     navigate(path); // Navigate to the specified path
   };
   const dispatch = useAppDispatch();
+
+
   const { data } = useAppSelector(authSelector);
   const [open, setOpen] = useState(null);
 

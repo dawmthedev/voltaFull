@@ -52,26 +52,26 @@ export default function LeadGenPay(props) {
  //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
  const columns = useMemo(
   () => [
-    // {
-    //   field: 'Profile',
-    //   headerName: 'Profile',
-    //   width: 150,
-    //   editable: true,
-    //   renderCell: (params) => {
-    //     return (
-    //       <Button
-    //         variant="outlined"
-    //         onClick={() => {
-    //          //Open up user modal
-    //            navigate(`/dashboard/lead/${params?.row?.id}`);
+    {
+      field: 'relatedProject',
+      headerName: 'Pay Details',
+      width: 150,
+      editable: true,
+      renderCell: (params) => {
+        return (
+          <Button
+            variant="outlined"
+            onClick={() => {
+             //Open up user modal
+               navigate(`/dashboard/lead/${params?.row?.relatedProject}`);
   
-    //         }}
-    //       >
-    //      Details
-    //       </Button>
-    //     );
-    //   },
-    // },
+            }}
+          >
+         Pay Details
+          </Button>
+        );
+      },
+    },
 
     {
       field: 'lead',
@@ -242,7 +242,8 @@ export default function LeadGenPay(props) {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
               itemType: payrollItem.itemType,
-               saleDate: formatSaleDate(payrollItem.saleDate),
+              saleDate: formatSaleDate(payrollItem.saleDate),
+              relatedProject: payrollItem.relatedProject.substring(0, payrollItem.relatedProject.indexOf('.')),
               relatedContractAmount: payrollItem.relatedContractAmount,
               relatedDealerFee: payrollItem.relatedDealerFee,
               addersFinal: truncateDecimals(payrollItem.addersFinal,1),
