@@ -54,7 +54,7 @@ export default function LeadGenPay(props) {
   () => [
     {
       field: 'relatedProject',
-      headerName: 'Details',
+      headerName: 'Pay Details',
       width: 150,
       editable: true,
       renderCell: (params) => {
@@ -67,7 +67,7 @@ export default function LeadGenPay(props) {
   
             }}
           >
-         Details
+         Pay Details
           </Button>
         );
       },

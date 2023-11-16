@@ -63,7 +63,7 @@ export default function PayrollData(props) {
     () => [
       {
         field: 'relatedProject',
-        headerName: 'Details',
+        headerName: 'Pay Details',
         width: 150,
         editable: true,
         renderCell: (params) => {
@@ -76,7 +76,7 @@ export default function PayrollData(props) {
     
               }}
             >
-           Details
+           Pay Details
             </Button>
           );
         },
@@ -266,7 +266,7 @@ export default function PayrollData(props) {
             return {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
-              relatedProject: typeof(payrollItem.relatedProject),
+              relatedProject: payrollItem.relatedProject.substring(0, payrollItem.relatedProject.indexOf('.')),
               itemType: payrollItem.itemType,
               saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
