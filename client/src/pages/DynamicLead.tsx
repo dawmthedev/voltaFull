@@ -57,7 +57,7 @@ const DynamicLead = () => {
 
   useEffect(() => {
     if (!categories.length) return;
-    setSelectedCategoryId(categories[0].id);
+    setSelectedCategoryId(selectedCategoryId || categories[0].id);
     (async () => {
       await dispatch(getLeads({ categoryId: categories[0].id, signal }));
     })();
@@ -198,6 +198,10 @@ const DynamicLead = () => {
     else await dispatch(createLead({ lead: data, signal }));
     setIsAddLeadModalOpen(false);
     await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
+    setIsLeadEdit(false);
+    columnFields.forEach((field) => {
+      field.value = '';
+    });
   };
 
   const submitCategory = async () => {
