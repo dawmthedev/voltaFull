@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { Button } from '@mui/material';
@@ -16,6 +16,17 @@ interface CustomTableProps {
 
 export default function CustomTable({ data, headLabel, onEditClick, onDeleteClick }: CustomTableProps) {
   const [clickedRow, setClickedRow] = React.useState();
+  const [rows, setRows] = React.useState([]);
+
+  useEffect(() => {
+    if (data && data.length) {
+      const rows = data?.map((row) => ({
+        id: row._id,
+        ...row
+      }));
+      setRows(rows);
+    }
+  }, [data]);
 
   const onButtonClick = (e, row) => {
     e.stopPropagation();
@@ -65,15 +76,10 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
     editable: column.field === 'actions' ? false : true
   }));
 
-  const rows = data?.map((row) => ({
-    id: row._id,
-    ...row
-  }));
-
   return (
     <Box sx={{ height: '60vh', width: '100%' }}>
       <DataGridPro
-        rows={data && data.length ? rows : []}
+        rows={rows || []}
         columns={columns}
         components={{
           Toolbar: GridToolbar
@@ -85,7 +91,7 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
         // paginationMode="server"
         // onPageChange={(value) => handlePageChange(value)} // handle page changes
         // onPageSizeChange={(value) => handlePageSizeChange(value)} // handle page size changes
-        rowCount={data.length}
+        rowCount={data?.length || 0}
         pageSizeOptions={[10, 25, 50, 100, 200]}
       />
     </Box>
