@@ -130,6 +130,13 @@ export default function RookieData(props) {
         },
       },
       {
+        field: 'repName',
+        headerName: 'Sales Rep',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+      {
         field: 'plansReceived',
         headerName: 'Plans Received Date',
         width: 180,
@@ -227,7 +234,8 @@ export default function RookieData(props) {
                     ppwFinal: truncateDecimals(deal.ppwFinal, 1),
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',
-                    id: deal.projectID 
+                    id: deal.projectID ,
+                    repName: deal.repName.replace(/^"|"$/g, '') 
                 };
             });
             setData(dealsData);
