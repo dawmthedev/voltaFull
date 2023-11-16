@@ -59,14 +59,26 @@ const DynamicLead = () => {
     if (!categories.length) return;
     setSelectedCategoryId(selectedCategoryId || categories[0].id);
     (async () => {
-      await dispatch(getLeads({ categoryId: categories[0].id, signal }));
+      await dispatch(getLeads({ categoryId: selectedCategoryId || categories[0].id, signal }));
     })();
-    const updatedFields = categories[0].fields.map((field) => {
-      return {
-        ...field,
-        value: ''
-      };
-    });
+    // find selected category data
+    let updatedFields;
+    const categoryData = categories.find((category) => category.id === selectedCategoryId);
+    if (categoryData) {
+      updatedFields = categoryData.fields.map((field) => {
+        return {
+          ...field,
+          value: ''
+        };
+      });
+    } else {
+      updatedFields = categories[0].fields.map((field) => {
+        return {
+          ...field,
+          value: ''
+        };
+      });
+    }
     setColumnFields(updatedFields);
     return () => {
       abort();
@@ -182,11 +194,17 @@ const DynamicLead = () => {
   //! Add new column into category
   const updateCategory = async () => {
     if (!selectedCategoryId) return;
-
-    await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
-    await dispatch(getCategories({ signal }));
-    setFields([initialFieldState]);
-    await dispatch(getCategories({ signal }));
+    const response: any = await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
+    if (response.error && response.error.message) {
+      dispatch(setAlert({ message: response.error.message, type: 'error' }));
+      return;
+    }
+    if (response.payload) {
+      dispatch(setAlert({ message: 'Column added successfully', type: 'success' }));
+      await dispatch(getCategories({ signal }));
+      setFields([initialFieldState]);
+      setIsCategoryModalOpen(false);
+    }
   };
 
   const submitAddNewLead = async () => {
@@ -194,8 +212,11 @@ const DynamicLead = () => {
       tableId: selectedCategoryId,
       data: leadValues
     };
-    if (isLeadEdit) await dispatch(updateLead({ lead: data, signal }));
-    else await dispatch(createLead({ lead: data, signal }));
+    if (isLeadEdit) {
+      await dispatch(updateLead({ lead: data, signal }));
+    } else {
+      await dispatch(createLead({ lead: data, signal }));
+    }
     setIsAddLeadModalOpen(false);
     await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
     setIsLeadEdit(false);
