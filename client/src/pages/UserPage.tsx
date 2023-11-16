@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 // @mui
 import {
@@ -26,20 +25,17 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-import USERLIST from '../_mock/user';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { getUsers, updateAdmin } from '../redux/middleware/admin';
 import createAbortController from '../utils/createAbortController';
 import { adminSelector } from '../redux/slice/adminSlice';
+import { roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUserForm';
-import { register } from '../redux/middleware/authentication';
-import { authSelector } from '../redux/slice/authSlice';
-import CustomInput from '../components/input/CustomInput';
-import axios from 'axios';
 import { setAlert } from '../redux/slice/alertSlice';
-
+import { createRole, getRoles } from '../redux/middleware/role';
+import CustomInput from '../components/input/CustomInput';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -90,6 +86,7 @@ const initialState = {
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
+  const roles = useAppSelector(roleList);
   const { signal, abort } = createAbortController();
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
@@ -100,12 +97,20 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState(initialState);
+  const [newRole, setNewRole] = useState<string>('');
 
   useEffect(() => {
     (async () => {
-      await dispatch(getUsers({ signal }));
+      try {
+        await dispatch(getUsers({ signal }));
+        await dispatch(getRoles({ signal }));
+      } catch (error) {
+        console.log('Error:(', error);
+      }
     })();
+
     return () => {
       abort();
     };
@@ -116,7 +121,7 @@ export default function UserPage() {
   };
 
   const getSelectedUser = (userData) => {
-    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role , isSuperAdmin: userData.isSuperAdmin});
+    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role, isSuperAdmin: userData.isSuperAdmin });
   };
 
   const handleCloseMenu = () => {
@@ -125,7 +130,7 @@ export default function UserPage() {
 
   const updateUser = async () => {
     try {
-      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin}));
+      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
       if (response && response.error && response.error.message) {
         dispatch(
           setAlert({
@@ -145,6 +150,43 @@ export default function UserPage() {
         await dispatch(getUsers({ signal }));
       }
       setIsModalOpen(false);
+      handleCloseMenu();
+    } catch (error) {
+      dispatch(
+        setAlert({
+          message: error.message,
+          type: 'error'
+        })
+      );
+    }
+  };
+
+  const submitRole = async () => {
+    try {
+      if (!newRole) {
+        dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
+        return;
+      }
+      const response: any = await dispatch(createRole({ role: newRole }));
+      if (response && response.error && response.error.message) {
+        dispatch(
+          setAlert({
+            message: response.error.message,
+            type: 'error'
+          })
+        );
+        return;
+      }
+      if (response && response.payload) {
+        dispatch(
+          setAlert({
+            message: 'Role added successfully',
+            type: 'success'
+          })
+        );
+        await dispatch(getRoles({ signal }));
+      }
+      setIsRoleModalOpen(false);
       handleCloseMenu();
     } catch (error) {
       dispatch(
@@ -217,14 +259,18 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
-            New User
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
+            Add New Role
           </Button>
         </Stack>
 
-        <CustomModal title="Add New User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser}>
+        <CustomModal title="Add New Role" open={isRoleModalOpen} setOpen={setIsRoleModalOpen} handleSubmit={submitRole}>
+          <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
+        </CustomModal>
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser}>
           <AddUserForm
             user={user}
+            roles={roles}
             getUsersData={(value, name) => {
               setUser({ ...user, [name]: value });
             }}
@@ -271,11 +317,15 @@ export default function UserPage() {
                         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
                           {role}
                         </TableCell>
-                        {isSuperAdmin ? (<TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-                          True
-                        </TableCell>) : (<TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-                          False
-                        </TableCell>)}
+                        {isSuperAdmin ? (
+                          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                            True
+                          </TableCell>
+                        ) : (
+                          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                            False
+                          </TableCell>
+                        )}
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 

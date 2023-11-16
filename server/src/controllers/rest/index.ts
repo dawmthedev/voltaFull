@@ -9,3 +9,4 @@ export * from "./CategoryController";
 export * from "./LeadController";
 export * from "./AdminController";
 export * from "./PlannerController";
+export * from "./RoleController";

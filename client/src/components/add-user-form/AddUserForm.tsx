@@ -9,17 +9,20 @@ interface AddNewUserProps {
     isSuperAdmin: boolean;
   };
   getUsersData: (value: string, name: string) => void;
+  roles: [
+    {
+      id: string;
+      name: string;
+    }
+  ];
 }
 
-
-const AddUserForm = ({ user, getUsersData }: AddNewUserProps) => {
-  const [isChecked, setIsChecked] = useState(user.isSuperAdmin)
+const AddUserForm = ({ user, getUsersData, roles }: AddNewUserProps) => {
+  const [isChecked, setIsChecked] = useState(user.isSuperAdmin);
   const handleOnChange = (e) => {
-    setIsChecked(!isChecked)
-    getUsersData(e.target.checked ,'isSuperAdmin')
-
-   }; 
-  
+    setIsChecked(!isChecked);
+    getUsersData(e.target.checked, 'isSuperAdmin');
+  };
   return (
     <div>
       <CustomInput value={user.name} onChange={(e) => getUsersData(e.target.value, e.target.name)} name="name" label="Name" />
@@ -33,36 +36,16 @@ const AddUserForm = ({ user, getUsersData }: AddNewUserProps) => {
             getUsersData(e.target.value, e.target.name);
           }}
         >
-          {roles?.map(({ name, value }: { name: string; value: string }) => (
-            <MenuItem key={name} value={value}>
+          {roles?.map(({ id, name }: { name: string; id: string }) => (
+            <MenuItem key={id} value={name}>
               {name}
             </MenuItem>
           ))}
         </Select>
       </FormControl>
-      <FormControlLabel sx={{ mt: '.8rem' }}
-        control={<Checkbox checked= {isChecked} onChange={handleOnChange} />}
-        label="Super Admin"
-      />
+      <FormControlLabel sx={{ mt: '.8rem' }} control={<Checkbox checked={isChecked} onChange={handleOnChange} />} label="Super Admin" />
     </div>
   );
 };
 
 export default AddUserForm;
-
-// const roles = ['CRM System Administrator', 'Sales Rep'];
-
-const roles = [
-  {
-    name: 'CRM System Administrator',
-    value: 'CRM System Administrator'
-  },
-  {
-    name: 'Sales Rep',
-    value: 'salesrep'
-  },
-  {
-    name: 'Manager',
-    value: 'manager'
-  }
-];

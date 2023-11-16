@@ -141,3 +141,10 @@ export class PlannerResultModel {
   @Property() public readonly timeOfExecution: string;
   @Property() public readonly adminId: string;
 }
+
+export class RoleResultModel {
+  @Property() public readonly _id: string;
+  @Property() public readonly name: string;
+  @Property() public readonly createdAt: Date;
+  @Property() public readonly updatedAt: Date;
+}
