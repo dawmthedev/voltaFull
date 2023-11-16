@@ -1,24 +1,39 @@
 import { LoadingButton } from '@mui/lab';
 import { Stack } from '@mui/material';
-import axios from 'axios';
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import CustomInput from '../components/input/CustomInput';
+import { useAppDispatch } from '../hooks/hooks';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
+import { startVerification } from '../redux/middleware/authentication';
+import { setAlert } from '../redux/slice/alertSlice';
 
 const VerifyEmail = () => {
+  const navigate = useNavigate();
+  const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>('');
 
   const handleVerifyEmail = async () => {
-    try {
-      const response = await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/start-verification`, {
-        email: email,
-        type: 'password'
-      });
+    const response: any = dispatch(startVerification({ email, type: 'password' }));
+    navigate('/reset-password');
 
-      if (response?.status === 200) {
-      }
-    } catch (error) {
-      console.log(error);
+    if (response && response.error && response.error.message) {
+      dispatch(
+        setAlert({
+          message: response.error.message,
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    if (response && response.payload) {
+      dispatch(
+        setAlert({
+          message: 'User updated successfully',
+          type: 'success'
+        })
+      );
     }
   };
 

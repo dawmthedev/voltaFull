@@ -66,9 +66,9 @@ const logout = createAsyncThunk('auth/logout', async () => {
   }
 });
 
-const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ code, email }: { code: string; email: string }) => {
+const forgotPassword = createAsyncThunk('auth/forgotPassword', async ({ code, password }: { code: string; password: string }) => {
   try {
-    const { data } = await post('/auth/reset-password', { code, email });
+    const { data } = await put('/auth/reset-password', { code, password });
     return data.data;
   } catch (error) {
     throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);

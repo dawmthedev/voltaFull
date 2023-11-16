@@ -16,7 +16,7 @@ cron.schedule("*/15 * * * *", async () => {
   for (let i = 0; i < planners.length; i++) {
     const planner = planners[i];
     const { title, description, action } = planner;
-    await NodemailerClient.sendEmailToPlanner({ title, email: "raza8r@gmail.com", description, action });
+    // await NodemailerClient.sendEmailToPlanner({ title, email: "raza8r@gmail.com", description, action });
   }
 });
 

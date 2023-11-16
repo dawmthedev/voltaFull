@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AdminResponseTypes } from '../../types';
 
-import { login, startVerification, register, verifyCode, completeVerification } from '../middleware/authentication';
+import { login, startVerification, register, verifyCode, completeVerification, forgotPassword } from '../middleware/authentication';
 
 type AuthState = {
   loading: boolean;
@@ -111,6 +111,19 @@ const authSlice = createSlice({
       state.isStartVerification = false;
     });
     builder.addCase(completeVerification.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // forgot password
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
