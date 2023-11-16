@@ -98,7 +98,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
 
 {/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
-{data.role == "CSO" ? <AdminNavSection data={AdminConfig}  /> : <NavSection data={navConfig} />}
+{data.role == "Mentor" ? <AdminNavSection data={AdminConfig}  /> : <NavSection data={navConfig} />}
 
 
 
