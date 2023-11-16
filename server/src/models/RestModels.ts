@@ -222,6 +222,7 @@ export class CrmDealResultModel {
 
 export class CrmPayrollResultModel {
   @Property() public readonly lead: string;
+  @Property() public readonly relatedProject: string;
   @Property() public readonly userStatus: string;
   @Property() public readonly itemType: string;
   @Property() public readonly saleDate: string;

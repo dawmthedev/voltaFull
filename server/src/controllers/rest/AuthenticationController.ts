@@ -322,6 +322,7 @@ export class AuthenticationController {
       leadgenRedlineOverrride: record["leadgenRedlineOverrride"] ? record["leadgenRedlineOverrride"].replace(/"/g, "") : null,
       salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, "") : null,
       ppwFinal: record["ppwFinal"] ? record["ppwFinal"] : null,
+      relatedProject: record["relatedProject"] ? record["relatedProject"] : null,
       status: record["status"] ? record["status"] : null,
       milestone: record["milestone"] ? record["milestone"].replace(/"/g, "") : null,
       datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, "") : null,
