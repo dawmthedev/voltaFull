@@ -12,7 +12,7 @@ import { styled, darken, lighten } from '@mui/material/styles';
 
 
 
-export default function DealsData(props) {
+export default function RookieData(props) {
 
 
   const navigate = useNavigate();
@@ -130,6 +130,13 @@ export default function DealsData(props) {
         },
       },
       {
+        field: 'repName',
+        headerName: 'Sales Rep',
+        width: 180,
+        editable: false,
+        type: 'text',
+      },
+      {
         field: 'plansReceived',
         headerName: 'Plans Received Date',
         width: 180,
@@ -201,14 +208,14 @@ export default function DealsData(props) {
 
 
   useEffect(() => {
-
-
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals`,{
-        method: 'POST',
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsRookie`,{
+  //fetch(`http://localhost:4000/rest/auth/crmDealsRookie`,{
+    
+    method: 'POST',
         headers: {
             'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ recordId: recordUserId })
+        }
+      
     })
     .then(response => response.json())
     .then(responseData => {
@@ -227,7 +234,8 @@ export default function DealsData(props) {
                     ppwFinal: truncateDecimals(deal.ppwFinal, 1),
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',
-                    id: deal.projectID 
+                    id: deal.projectID ,
+                    repName: deal.repName.replace(/^"|"$/g, '') 
                 };
             });
             setData(dealsData);
@@ -240,7 +248,7 @@ export default function DealsData(props) {
         setDealsError(error);
         setLoading(false);
     });
-}, [recordUserId]);
+}, []);
 
 
 

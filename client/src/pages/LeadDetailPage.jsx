@@ -1,108 +1,179 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useMutation, useQuery } from '@apollo/client';
-import { useDispatch, useSelector } from 'react-redux';
-import {
-  Box,
-  Typography,
-  Avatar,
-  styled,
-  alpha,
-  Button,
-  Grid,
-  TextField,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogContentText,
-  DialogActions,
-  Autocomplete,
-  Tooltip,
-  IconButton,
-  Zoom,
+import React, { useState, useEffect } from 'react';
+import {  Grid, Dialog, Button, IconButton, TextField, Autocomplete, Box,
+  DialogTitle, DialogContent, DialogContentText, DialogActions, Avatar, Tooltip, Zoom,
+  Typography, Paper, List, ListItem, ListItemText
 } from '@mui/material';
+import { useParams } from 'react-router-dom';
+
+import PhoneIcon from '@mui/icons-material/Phone';
+import EmailIcon from '@mui/icons-material/Email';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import PersonIcon from '@mui/icons-material/Person';
+import { styled } from '@mui/material/styles';
+import { alpha } from '@mui/material/styles';
 
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import EditNoteIcon from '@mui/icons-material/EditNote';
-import AlternateEmailIcon from '@mui/icons-material/AlternateEmail';
-import { TimelineConnector, TimelineDot, TimelineSeparator } from '@mui/lab';
-import { setAlert } from '../redux/slice/alertSlice';
-import account from '../_mock/account';
-import Iconify from '../components/iconify';
-import styles from '../Styles/Messages.module.css';
-import SelectField from '../components/SelectField';
-import { GET_LEAD } from '../queries/leadQueries';
-import { GET_CALLS, GET_VOICE_CALLS } from '../queries/callQueries';
-import { NOTES } from '../queries/noteQueries';
-import { GET_SMS_TEXT } from '../queries/textQueries';
-import { GET_EALERTS } from '../queries/eAlertQueries';
-import { fDateTime } from '../utils/formatTime';
-import CustomDialog from '../components/modals/CustomDialog';
-import SelectTag from '../components/SelectTag';
-import { updateLeadMutation } from '../mutations/leadMutations';
-import ChatUI from '../components/modals/ChatUI';
-import { SEND_CALL } from '../mutations/sendCall';
-import { callContext } from '../hooks/useCall';
-import { ADD_TASK } from '../mutations/reminder';
-import { SEND_EMAIL } from '../mutations/bulkEmail';
-import { TASK_TYPES } from '../queries/reminder';
-import { ADD_SINGLE_NOTE } from '../mutations/noteMutations';
-import SendEmail from '../components/modals/SendEmail';
-import AddLeadModal from '../components/modals/AddLead';
+
+// Import Timeline components if they are from MUI
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+
+import { useAppSelector } from '../hooks/hooks';
+import { authSelector } from '../redux/slice/authSlice';
+
+
+// Import any other necessary local components like StyledAccount, Card, etc.
 
 const LeadDetailPage = () => {
-  const { user } = useSelector((state) => state.auth);
-  const dispatch = useDispatch();
-  const param = useParams();
-  const { id } = param;
-  const { setIsCall, setUserName, setLeadId } = useContext(callContext);
 
-  // call single lead query
-  const { data, loading, error } = useQuery(GET_LEAD, {
-    variables: { id },
-  });
-  const { data: calls, loading: callLoading } = useQuery(GET_CALLS, {
-    variables: { leadId: id },
-  });
-  const {
-    data: notes,
-    loading: noteLoading,
-    refetch: refetchNotes,
-  } = useQuery(NOTES, {
-    variables: { leadId: id },
-  });
-  const { data: texts, loading: textLoading } = useQuery(GET_SMS_TEXT, {
-    variables: { leadId: id },
-  });
-  const { data: emails, loading: emailLoading } = useQuery(GET_EALERTS, {
-    variables: { leadId: id },
-  });
-  const { data: voiceCalls } = useQuery(GET_VOICE_CALLS, {
-    variables: { leadId: id },
-  });
-  const [updateLead] = useMutation(updateLeadMutation);
-  const [sendCall] = useMutation(SEND_CALL);
 
-  // get task types
-  const { loading: typeLoading, data: types } = useQuery(TASK_TYPES, {
-    variables: { userId: '' },
-  });
-  const [addTask] = useMutation(ADD_TASK);
+  // User redux object
+  const { Projectdata } = useAppSelector(authSelector);
+  const recordId = Projectdata?.recordID;
 
-  // add single note mutation
-  const [addSingleNote] = useMutation(ADD_SINGLE_NOTE);
+  const { id } = useParams();
 
-  const [description, setDescription] = useState('');
+
+  const [data, setData] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const [dealsError, setDealsError] = useState(null);
+
+  // Sample hardcoded call data
+  const sampleCalls = [
+    { id: 1, type: 'call', body: 'Note', createdAt: new Date().toString() },
+    // ... (more sample calls)
+  ];
+  const sampleNotes = [
+    { id: 1, type: 'note', text: 'Note', createdAt: new Date().toString() },
+    // ... (more sample calls)
+  ];
+  const sampleMessages = [
+    { id: 1, type: 'message', text: 'Test Account needs to have John Symons set as leadgen. Thanks.', createdAt: new Date().toString() },
+    
+    { id: 2, type: 'message', text: 'Welcome call was a bit rough. Could not get a hold of the homeowner.', createdAt: new Date().toString() },
+    
+    { id: 3, type: 'message', text: 'Hello Team New Sunnova deal has been processed. Dom please add John Symons as the lead gen here. Thank you! NTP Submitted. Site Survey scheduled on Thursday, 11/9 at 12 Nn. Welcome Call was completed by Lisa. Welcome email was sent. VC Email Beryl Loughlin', createdAt: new Date().toString() },
+    // ... (more sample calls)
+
+  ];
+
+  const hardcodedData = {
+    lead: {
+      homeownerName: 'John',
+      lastName: 'Doe',
+      email: 'john.doe@example.com',
+      phone: '123-456-7890',
+      address: '123 Main st',
+      description: 'Description here...',
+      categoriesList: ['Category 1', 'Category 2'],
+      tagsList: ['Tag 1', 'Tag 2'],
+    },
+    calls: [], // Add actual call data here
+    emails: [], // Add actual email data here
+    texts: [], // Add actual text data here
+    notes: [], // Add actual notes data here
+    voiceCalls: [], // Add actual voice call data here
+    taskTypes: [], // Add actual task type data here
+  };
+
+  const [homeownerData, setHomeownerData] = useState(null);
+  const [phoneData, setPhoneData] = useState(null);
+  const [emailData, setEmailData] = useState(null);
+  const [addressData, setAddressData] = useState(null);
+  const [messageData, setMessageData] = useState([]);
+  const [addersData, setAddersData] = useState([]);
+
+
+
+  useEffect(() => {
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`, {
+     // fetch(`http://localhost:4000/rest/auth/crmDeal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ recordId: id ? id : "3613" }),
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        console.log("API Response:", responseData); // Log the API response
+        if (responseData.success && responseData.data) {
+          // Assuming homeowner data is present in the response
+          const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
+          const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate : 'Loading...';
+          const emailInfo = responseData.data.email ? responseData.data.email : 'Loading...';
+          const addressInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
+  
+          const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+  
+          const messagesArray = messageInfo.map((message) => ({
+            id: message.id,
+            from: message.from,
+            type: 'message',
+            text: message.text,
+            createdAt: new Date(message.createdAt).toString(),
+          }));
+
+          const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
+  
+          const addersArray = addersInfo.map((adder) => ({
+            id: adder.relatedProject,
+            description: adder.description,
+            type: 'call',
+            quantity: adder.quantity,
+            price: adder.price,
+            status: adder.status,
+            billTo: adder.billTo
+
+          }));
+
+
+          setAddersData(addersArray);
+          setMessageData(messagesArray);
+          
+          setHomeownerData(String(homeownerInfo));
+          setPhoneData(phoneInfo);
+          setEmailData(emailInfo);
+          setAddressData(addressInfo);
+  
+          console.log("homeowner name", homeownerInfo);
+        }
+        setLoading(false);
+      })      
+      .catch((error) => {
+        console.error("API Error:", error); // Log API error
+        setDealsError(error);
+        setLoading(false);
+      });
+  }, [id]);
+  
+  
+  
+
+
+
+
+function truncateDecimals(number, decimalPlaces) {
+  const multiplier = Math.pow(10, decimalPlaces);
+  return Math.floor(number * multiplier) / multiplier;
+}
+
+
+
+  // State for UI control
+  const [description, setDescription] = useState(hardcodedData.lead.description);
   const [open, setOpen] = useState(false);
   const [taskOpen, setTaskOpen] = useState(false);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isMessageModal, setIsMessageModal] = useState(false);
   const [confirmCall, setConfirmCall] = useState(false);
   const [singleNoteModal, setSingleNoteModal] = useState(false);
-  const [typeData, setTypeData] = useState([]);
-  const [addType, setAddType] = useState(false);
   const [emailOpen, setEmailOpen] = useState(false);
+  const [typeData, setTypeData] = useState(hardcodedData.taskTypes);
+  const [addType, setAddType] = useState(false);
   const [type, setType] = useState('');
   const [formData, setFormData] = useState({
     contactId: '',
@@ -118,603 +189,108 @@ const LeadDetailPage = () => {
     date: '',
   });
 
-  useEffect(() => {
-    if (data?.lead?.description) {
-      setDescription(data?.lead?.description);
-    }
-  }, [data]);
 
-  console.log(data?.lead);
-
-  // set types from api
-  useEffect(() => {
-    if (types) {
-      setTypeData(types.taskTypes.map((task) => task.name));
-    }
-  }, [types, type]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
+  
+  // Handlers for UI interactions
+  const handleClose = () => setOpen(false);
   const getSelected = (item) => {
     setSelectedItem(item);
     setOpen(true);
   };
-
-  const handleUpdate = async (values, id, type) => {
-    const entries = values?.map((x) => x.title);
-    if (type === 'categories') {
-      await updateLead({
-        variables: {
-          id,
-          categoriesList: entries,
-        },
-      });
-    }
-    if (type === 'tags') {
-      await updateLead({
-        variables: {
-          id,
-          tagsList: entries,
-        },
-      });
-    }
-  };
-
-  const handleCall = async () => {
-    try {
-      await sendCall({
-        variables: { toNumber: data?.lead?.phone, msg: 'Call', leadId: id },
-      });
-    } catch (error) {
-      console.log('Error-', error);
-    }
-  };
-
-  const handleInputChange = async (event) => {
-    const { value } = event.target;
-    setDescription(value);
-  };
-
-  const handleBlur = async () => {
-    await updateLead({
-      variables: {
-        id,
-        description,
-      },
-    });
-  };
-
-  // handle change
   const handleChange = (e) => {
-    if (singleNoteModal) {
-      setFormData({
-        ...formData,
-        [e.target.name]: e.target.value,
-      });
-    }
-    setValue({ ...value, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+    setValue({ ...value, [name]: value });
   };
 
-  // handle task submit with leadID
-  const handleSubmit = async () => {
-    if (singleNoteModal) {
-      try {
-        await addSingleNote({
-          variables: {
-            contactId: formData.contactId,
-            firstName: formData.firstName,
-            lastName: formData.lastName,
-            notes: formData.notes,
-            buyerAgent: formData.buyerAgent,
-            listingAgent: formData.listingAgent,
-            leadId: id,
-          },
-        });
-        setFormData({
-          contactId: '',
-          lastName: '',
-          firstName: '',
-          notes: '',
-          buyerAgent: '',
-          listingAgent: '',
-          leadId: '',
-        });
-
-        dispatch(setAlert({ type: 'success', message: 'Note added successfully' }));
-        await refetchNotes();
-      } catch (error) {
-        dispatch(setAlert({ type: 'error', payload: error.message }));
-      } finally {
-        setSingleNoteModal(false);
-      }
-    } else {
-      try {
-        await addTask({
-          variables: {
-            title: value.title,
-            note: value.note,
-            date: value.date,
-            type,
-            userId: user?.id || '',
-            leadId: id,
-          },
-        });
-        setValue({
-          title: '',
-          note: '',
-          date: '',
-        });
-        setAddType(false);
-        setType('');
-
-        dispatch(setAlert({ type: 'success', message: 'Task added successfully' }));
-        // await refetch();
-      } catch (error) {
-        dispatch(setAlert({ type: 'error', payload: error.message }));
-      } finally {
-        setOpen(false);
-      }
-    }
-  };
+  // Placeholder functions for actions
+  const handleCall = () => console.log("Simulate call action");
+  const handleInputChange = (e) => setDescription(e.target.value);
+  const handleSubmit = () => console.log("Simulate submit action");
 
   return (
-    <Grid sx={{ overflow: 'hidden' }}>
-      {isMessageModal && data?.lead && (
-        <Dialog
-          open={isMessageModal}
-          onClose={() => setIsMessageModal(false)}
-          aria-labelledby="alert-dialog-title"
-          aria-describedby="alert-dialog-description"
-          maxWidth="lg"
-          fullWidth
-        >
-          <ChatUI handleProfile={() => setIsMessageModal(false)} lead={data?.lead} setConfirmCall={setConfirmCall} />
-        </Dialog>
-      )}
-      {/* Call confirmation dialog */}
-      {confirmCall && (
-        <Dialog open={confirmCall} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-          <DialogContent sx={{ textAlign: 'center', padding: '18px 25px' }}>
-            <ErrorOutlineIcon sx={{ fontSize: 50, color: '#f8bb86' }} />
-            <DialogTitle id="alert-dialog-title" style={{ textAlign: 'center', padding: '4px' }}>
-              {'Are you sure?'}
-            </DialogTitle>
-            <DialogContentText id="alert-dialog-description">This will make a call if you press yes.</DialogContentText>
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: 'center', gap: '12px', padding: '6px 5px 18px 5px' }}>
-            <Button onClick={() => setConfirmCall(false)} variant="outlined" sx={{ padding: '6px 16px' }}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                setConfirmCall(false);
-                setIsCall(true);
-                setUserName(data?.lead?.firstName || '');
-                setLeadId(id || '');
-                window.localStorage.setItem('leadId', id || '');
-                window.localStorage.setItem('isCall', true);
-                window.localStorage.setItem('userName', data?.lead?.firstName || '');
-                handleCall();
-              }}
-              autoFocus
-              variant="contained"
-              sx={{ backgroundColor: '#00bfa5', color: 'white', padding: '6px 10px' }}
-            >
-              Yes, Call Now
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+    <Grid container spacing={2} sx={{ overflow: 'hidden',  padding: 2 }}>
+      {/* isMessageModal Dialog */}
+      {/* ... */}
+      {/* Confirm Call Dialog */}
+      {/* ... */}
+      {/* Task Dialog */}
+      {/* ... */}
+      {/* Single Note Dialog */}
+      {/* ... */}
+      {/* Email Dialog */}
+      {/* ... */}
 
-      {/* Add task dialog */}
-      {taskOpen && (
-        <Dialog open={taskOpen} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-          <DialogTitle
-            id="alert-dialog-title"
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            Add Task <EditNoteIcon />
-          </DialogTitle>
-          <DialogContent sx={{ overflowY: 'unset' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Title"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  name="title"
-                  sx={{ zIndex: '9999999' }}
-                  value={value.title}
-                  onChange={(e) => handleChange(e)}
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  label="Take a note"
-                  rows={4}
-                  multiline
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  name="note"
-                  value={value.note}
-                  onChange={(e) => handleChange(e)}
-                />
-              </Grid>
-              <Grid item xs={6}>
-                <TextField
-                  label="Date"
-                  type="datetime-local"
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
-                  name="date"
-                  value={value.date}
-                  onChange={(e) => handleChange(e)}
-                />
-              </Grid>
-              <Grid item xs={5}>
-                {addType ? (
-                  <TextField
-                    label="Add new type"
-                    variant="outlined"
-                    fullWidth
-                    size="small"
-                    value={type}
-                    onChange={(e) => setType(e.target.value)}
-                  />
-                ) : (
-                  <Autocomplete
-                    options={typeData}
-                    renderInput={(params) => (
-                      <TextField {...params} label="Type" variant="outlined" fullWidth size="small" />
-                    )}
-                    value={type}
-                    onChange={(_, value) => setType(value)}
-                  />
-                )}
-              </Grid>
-              <Grid item xs={1}>
-                <IconButton aria-label="add-type" onClick={() => setAddType(true)}>
-                  <AddCircleOutlineIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: 'right', gap: '5px' }}>
-            <Button
-              onClick={() => {
-                setTaskOpen(false);
-                setAddType(false);
-                setType('');
-              }}
-              variant="outlined"
-              sx={{ padding: '5px 16px' }}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" sx={{ padding: '6px 26px', color: '#fff' }} onClick={() => handleSubmit()}>
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+     {/* Profile and general project details */}
+     <Grid item xs={11} md={4}>
+        <Paper elevation={3} sx={{ p: 2 }}>
+          <Typography variant="h6" gutterBottom>
+            Homeowner Details
+          </Typography>
+          <List>
+            <ListItem>
+              <PersonIcon color="primary" />
+              <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" />
+</ListItem>
+            {/* <ListItem>
+              <PhoneIcon color="primary" />
+              <ListItemText primary={phoneData !== null ? phoneData : 'Loading...'} secondary="Sale Date" />
 
-      {/* Add single note dialog */}
-      {singleNoteModal && (
-        <Dialog open={singleNoteModal} aria-labelledby="alert-dialog-title" aria-describedby="alert-dialog-description">
-          <DialogTitle
-            id="alert-dialog-title"
-            sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}
-          >
-            Add Single Note <EditNoteIcon />
-          </DialogTitle>
-          <DialogContent sx={{ overflowY: 'unset' }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <TextField
-                  label="Notes"
-                  rows={4}
-                  multiline
-                  variant="outlined"
-                  fullWidth
-                  size="small"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                />
-              </Grid>
-            </Grid>
-          </DialogContent>
-          <DialogActions sx={{ justifyContent: 'right', gap: '5px' }}>
-            <Button
-              onClick={() => {
-                setSingleNoteModal(false);
-              }}
-              variant="outlined"
-              sx={{ padding: '5px 16px' }}
-            >
-              Cancel
-            </Button>
-            <Button variant="contained" sx={{ padding: '6px 26px', color: '#fff' }} onClick={handleSubmit}>
-              Save
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
+            </ListItem> */}
+            <ListItem>
+              <EmailIcon color="primary" />
+              <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" />
 
-      {/* send email dialaog */}
-      <SendEmail emailOpen={emailOpen} setEmailOpen={setEmailOpen} id={id} />
+            </ListItem>
 
-      <Grid container margin="24px">
-        {/* left columns */}
-        <Grid item xs={12} md={4}>
-          <Grid container spacing={2}>
-            {/* profile */}
-            <Grid item xs={12}>
-              <StyledAccount>
-                <Avatar sx={{ width: '100px', height: '100px' }} src={account.photoURL} alt="photoURL" />
-                <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                  <Typography variant="h6" sx={{ color: 'text.primary' }}>
-                    {data?.lead?.firstName} {data?.lead?.lastName}
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-                    {data?.lead?.email}
-                  </Typography>
-                  <Typography variant="subtitle1" sx={{ color: 'text.primary' }}>
-                    {data?.lead?.phone}
-                  </Typography>
-                </Box>
-                <Box display="flex">
-                  <Button
-                    href=""
-                    className={styles.callButtonV2}
-                    onClick={() => {
-                      setConfirmCall(true);
-                    }}
-                  >
-                    <Iconify icon="eva:phone-fill" color="#18712" width={24} height={24} />
-                  </Button>
-                  <Button href="" className={styles.callButtonV2} onClick={() => setIsMessageModal(true)}>
-                    <Iconify icon="eva:email-fill" color="#18712" width={24} height={24} />
-                  </Button>
-                  <Tooltip title="Add Task" arrow TransitionComponent={Zoom}>
-                    <Button href="" className={styles.callButtonV2} onClick={() => setTaskOpen(true)}>
-                      <AddCircleOutlineIcon />
-                    </Button>
-                  </Tooltip>
-                  <Tooltip title="Send Email" arrow TransitionComponent={Zoom}>
-                    <Button href="" className={styles.callButtonV2} onClick={() => setEmailOpen(true)}>
-                      <AlternateEmailIcon />
-                    </Button>
-                  </Tooltip>
-                </Box>
-              </StyledAccount>
-            </Grid>
-            {/* Description */}
-            <Grid item xs={11.7}>
-              <StyledTextArea>
-                <textarea
-                  // eslint-disable-next-line no-unneeded-ternary
-                  value={description}
-                  onChange={(e) => handleInputChange(e)}
-                  onBlur={() => handleBlur()}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    border: '1px solid #e3e3e3',
-                    resize: 'none',
-                    outline: 'none',
-                    fontSize: '16px',
-                    fontWeight: '600',
-                    padding: '10px',
-                    backgroundColor: '#edeff1',
-                    borderRadius: '9px',
-                  }}
-                  placeholder="project input here..."
-                />
-              </StyledTextArea>
-            </Grid>
-            {/* Categories  */}
-            <Grid item xs={11.7}>
-              <WrapSelectable>
-                <Typography fontWeight={'bold'}>Stage</Typography>
-                {(data && data.lead && (
-                  <SelectField
-                    data={data?.lead}
-                    defaultValues={data?.lead?.categoriesList?.map((x) => ({
-                      title: x,
-                    }))}
-                    type={'categories'}
-                    handleUpdate={(value, id, type) => handleUpdate(value, id, type)}
-                  />
-                )) ||
-                  ''}
-              </WrapSelectable>
-            </Grid>
-            {/* Tags */}
-            <Grid item xs={11.7}>
-              <WrapSelectable>
-                <Typography fontWeight={'bold'}>Notes</Typography>
-                {(data && data.lead && (
-                  <SelectTag
-                    data={data?.lead}
-                    defaultValues={data?.lead?.tagsList?.map((x) => ({
-                      title: x,
-                    }))}
-                    type={'tags'}
-                    handleUpdate={(value, id, type) => handleUpdate(value, id, type)}
-                  />
-                )) ||
-                  ''}
-              </WrapSelectable>
-            </Grid>
+            {/* <ListItem>
+              <LocationOnIcon color="primary" />
+              <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address" />
+            </ListItem> */}
+          </List>
+        </Paper>
+
+        {/* Adders */}
+      <Grid item xs={10} md={10}>
+        <h4>Adders</h4>
+        {/* Check if messageData is not null before mapping */}
+        {addersData !== null ? (
+          addersData.map((adder) => (
+            <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+        {/* Render other components like emails, texts, notes here as well */}
+      </Grid>
+
+      </Grid>
+
+
+
+      {/* Mesages */}
+      <Grid item xs={10} md={6}>
+        <h4>Messages</h4>
+        {/* Check if messageData is not null before mapping */}
+        {messageData !== null ? (
+          messageData.map((msg) => (
+            <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
+          ))
+        ) : (
+          <p>Loading...</p>
+        )}
+        {/* Render other components like emails, texts, notes here as well */}
+      </Grid>
+
+
           </Grid>
-        </Grid>
-        <Grid item xs={12} md={7.4} style={{ display: 'flex' }}>
-          <StyledInformation>
-   {/* <Button>
-    ?
-    </Button> */}
-          </StyledInformation>
-        </Grid>
-        <Grid container spacing={2} marginTop={'24px'} />
-      </Grid>
-      <Grid container>
-        <Grid xs={12}>
-          {/* <Grid container spacing={2} columnGap={2} margin="42px">
-            <Grid
-              item
-              xs={6}
-              md={4}
-              lg={2.7}
-              sx={{
-                boxShadow: '0 0 12px #e3e3e3',
-                borderRadius: '12px',
-                border: '1px solid #e3e3e3',
-                padding: '16px',
-                maxHeight: '500px',
-                overflowY: 'scroll',
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'text.primary', marginBottom: '10px' }}>
-                Calls
-              </Typography>
-              {(calls &&
-                calls?.calls?.length &&
-                calls?.calls?.map((call) => <Card data={call} getItem={(item) => getSelected(item)} type="call" />)) ||
-                'Call history is empty'}
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              md={4}
-              lg={2.6}
-              sx={{
-                boxShadow: '0 0 12px #e3e3e3',
-                borderRadius: '12px',
-                padding: '16px',
-                maxHeight: '500px',
-                overflowY: 'scroll',
-                border: '1px solid #e3e3e3',
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'text.primary', marginBottom: '10px' }}>
-                Email
-              </Typography>
-              {(emails &&
-                emails?.ealerts?.length &&
-                emails?.ealerts?.map((email) => (
-                  <Card data={email} getItem={(item) => getSelected(item)} type="email" />
-                ))) ||
-                'Email history is empty'}
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              md={4}
-              lg={2.6}
-              sx={{
-                boxShadow: '0 0 12px #e3e3e3',
-                borderRadius: '12px',
-                padding: '16px',
-                maxHeight: '500px',
-                overflowY: 'scroll',
-                border: '1px solid #e3e3e3',
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'text.primary', marginBottom: '10px' }}>
-                Texts
-              </Typography>
-              {(texts &&
-                texts.texts.length &&
-                texts?.texts.map((text) => <Card data={text} getItem={(item) => getSelected(item)} type="text" />)) ||
-                'Text history is empty'}
-            </Grid>
-
-            <Grid
-              item
-              xs={6}
-              md={4}
-              lg={2.6}
-              sx={{
-                boxShadow: '0 0 12px #e3e3e3',
-                borderRadius: '12px',
-                padding: '16px',
-                maxHeight: '500px',
-                overflowY: 'scroll',
-                border: '1px solid #e3e3e3',
-              }}
-            >
-              <Typography
-                variant="h5"
-                sx={{
-                  color: 'text.primary',
-                  marginBottom: '10px',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                }}
-              >
-                Notes{' '}
-                <IconButton aria-label="add-note" onClick={() => setSingleNoteModal(true)}>
-                  <AddCircleOutlineIcon />
-                </IconButton>
-              </Typography>
-              {(notes &&
-                notes.notes.length &&
-                notes?.notes.map((note) => (
-                  <Card
-                    data={note}
-                    leadName={`${data?.lead?.firstName} ${data?.lead?.lastName}`}
-                    getItem={(item) => getSelected(item)}
-                    type="note"
-                  />
-                ))) ||
-                'Note history is empty'}
-            </Grid>
-            <Grid
-              item
-              xs={6}
-              md={4}
-              lg={2.7}
-              sx={{
-                marginTop: '2rem',
-                boxShadow: '0 0 12px #e3e3e3',
-                borderRadius: '12px',
-                border: '1px solid #e3e3e3',
-                padding: '16px',
-                maxHeight: '500px',
-                overflowY: 'scroll',
-              }}
-            >
-              <Typography variant="h5" sx={{ color: 'text.primary', marginBottom: '10px' }}>
-                Call Logs
-              </Typography>
-              {(voiceCalls &&
-                voiceCalls?.voiceCallList?.length &&
-                voiceCalls?.voiceCallList?.map((call) => (
-                  <Card data={call} getItem={(item) => getSelected(item)} type="call" />
-                ))) ||
-                'Call log is empty'}
-            </Grid>
-          </Grid> */}
-        </Grid>
-      </Grid>
-      {selectedItem && <CustomDialog open={open} onClose={handleClose} details={selectedItem} />}
-    </Grid>
   );
 };
 
 export default LeadDetailPage;
 
-const Card = ({ data, getItem, type, leadName }) => {
+
+const AddersCard = ({ data, getItem, type,  leadName}) => {
   return (
     <Box
       sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
@@ -731,9 +307,61 @@ const Card = ({ data, getItem, type, leadName }) => {
                 ? 'primary'
                 : type === 'call'
                 ? 'success'
-                : type === 'email'
+                : type === 'note'
                 ? 'info'
-                : type === 'text'
+                : type === 'message'
+                ? 'secondary'
+                : ''
+            }
+          />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <Box>
+          <Typography variant="subtitle2">{data?.description || " "}</Typography>
+          <Box display="flex" flexDirection="column">
+
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.description && data.description.length > 500 ? data.description.slice(0, 40) + '...' : data.description}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              {data?.price && data.price}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+const Card = ({ data, getItem, type, leadName, from }) => {
+  return (
+    <Box
+      sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }}
+      onClick={() => getItem(data)}
+    >
+      <Box sx={{ display: 'flex', gap: '8px' }}>
+        <TimelineSeparator>
+          <TimelineDot
+            sx={{ margin: '6px 0' }}
+            color={
+              // disable eslint
+              // eslint-disable-next-line no-nested-ternary
+              type === 'note'
+                ? 'primary'
+                : type === 'call'
+                ? 'success'
+                : type === 'note'
+                ? 'info'
+                : type === 'message'
                 ? 'secondary'
                 : ''
             }
@@ -743,9 +371,15 @@ const Card = ({ data, getItem, type, leadName }) => {
         <Box>
           <Typography variant="subtitle2">{data?.FirstName || leadName}</Typography>
           <Box display="flex" flexDirection="column">
+
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              {/* {data?.note || data?.message || data?.text || data?.description} */}
+              From: {data?.from && data.from.length > 500 ? data.from.slice(0, 40) + '...' : data.from}
+              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
+            </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {/* {data?.note || data?.message || data?.text || data?.description} */}
-              {data?.body && data.body.length > 40 ? data.body.slice(0, 40) + '...' : data.body}
+              {data?.text && data.text.length > 500 ? data.text.slice(0, 40) + '...' : data.text}
               {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
             </Typography>
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>

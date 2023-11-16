@@ -4,16 +4,26 @@ import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { authSelector } from '../../../redux/slice/authSlice';
+
 // mock
 import account from '../../../_mock/account';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
+
 // components
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-//
+//import AdminNavSection from'../../../components/admin-navsection';
+//import AdminConfig from './AdminConfig';
 import navConfig from './config';
+import { AdminNavSection } from '../../../components/admin-navsection/AdminNavSection';
+import AdminConfig from './AdminConfig';
+
+
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +46,7 @@ Nav.propTypes = {
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
+  const { data } = useAppSelector(authSelector);
 
   const isDesktop = useResponsive('up', 'lg');
 
@@ -85,7 +96,11 @@ export default function Nav({ openNav, onCloseNav }) {
         </Link>
       </Box>
 
-      <NavSection data={navConfig} />
+
+{/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
+{data.role == "Mentor" ? <AdminNavSection data={AdminConfig}  /> : <NavSection data={navConfig} />}
+
+
 
       <Box sx={{ flexGrow: 1 }} />
 

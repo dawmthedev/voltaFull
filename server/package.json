@@ -65,6 +65,8 @@
     "mongoose": "^7.6.3",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
+    "openai": "^4.17.3",
+    "redline": "^1.0.1",
     "socket.io": "^4.7.2"
   },
   "devDependencies": {

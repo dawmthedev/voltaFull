@@ -2,14 +2,14 @@ import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Box } from '@mui/material';
 
-import DealsData from '../components/dataGrid/DealsData';
+import RookieData from '../components/dataGrid/RookiesData';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 
 
 import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
 
-export default function DealsPage() {
+export default function Rookies() {
  
   const { data } = useAppSelector(authSelector);
   const recordId = data?.recordID;
@@ -44,7 +44,7 @@ export default function DealsPage() {
       
           {/* <DataGridProCSV /> */}
           <h4>Sales Deals</h4>
-          <DealsData recordUserId={recordId}/>
+          <RookieData recordUserId={recordId}/>
 
 
           <h4>Leadgen Deals</h4>

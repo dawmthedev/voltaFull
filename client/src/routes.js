@@ -20,6 +20,10 @@ import DealsPage from './pages/DealsPage';
 import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
 import Planner from './pages/Planner';
+import LeadDetailPage from './pages/LeadDetailPage';
+import DealerRates from './pages/DealerRates';
+import Assistant from './pages/Assistant';
+import RookieData from './components/dataGrid/RookiesData';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -44,14 +48,18 @@ export default function Router() {
           element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
         },
         { path: 'products', element: <ProductsPage /> },
-        // { path: 'lead/:id', element: <LeadDetailPage /> },
+        { path: 'assistant', element: <Assistant /> },
+        { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
+        { path: 'rookies', element: <RookieData /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
+        { path: 'lead/:id', element: <LeadDetailPage /> },
+        { path: 'rates', element: <DealerRates /> },
         { path: 'pay', element: <PayPage /> },
-        { path: 'deals', element: <DealsPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
-        { path: 'planner', element: <Planner /> }
+        { path: 'planner', element: <Planner /> },
+        { path: 'deals', element: <DealsPage /> }
       ]
     },
     {

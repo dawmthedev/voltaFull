@@ -5,7 +5,7 @@ import SvgColor from '../../../components/svg-color';
 
 const icon = (name) => <SvgColor src={`/assets/icons/navbar/${name}.svg`} sx={{ width: 1, height: 1 }} />;
 
-const navConfig = [
+const AdminConfig = [
 
   {
     title: 'Deals',
@@ -18,23 +18,22 @@ const navConfig = [
     path: '/dashboard/pay',
     icon: icon('ic_user')
   },
-  {
-    title: 'Users',
-    path: '/dashboard/user',
-    icon: icon('ic_user'),
-    isSuperAdmin: true
-  },
+  // {
+  //   title: 'Users',
+  //   path: '/dashboard/user',
+  //   icon: icon('ic_user')
+  // },
   {
     title: 'Resources',
     path: '/dashboard/blog',
     icon: icon('ic_blog')
   },
 
-  // {
-  //   title: 'Rookies',
-  //   path: '/dashboard/rookies',
-  //   icon: icon('ic_cart')
-  // },
+  {
+    title: 'Rookies',
+    path: '/dashboard/rookies',
+    icon: icon('ic_cart')
+  },
   // {
   //   title: 'Listings',
   //   path: '/dashboard/products',
@@ -55,18 +54,11 @@ const navConfig = [
   //   path: '/dashboard/leads',
   //   icon: icon('ic_blog')
   // },
-  {
-    title: 'Dynamic-Leads',
-    path: '/dashboard/dynamic-leads',
-    icon: icon('ic_analytics'),
-    isSuperAdmin: true
-  },
-  {
-    title: 'Planner',
-    path: '/dashboard/planner',
-    icon: icon('ic_analytics'),
-    isSuperAdmin: true
-  }
+  // {
+  //   title: 'Dynamic-Leads',
+  //   path: '/dashboard/dynamic-leads',
+  //   icon: icon('ic_analytics')
+  // },
   // {
   //   title: 'Not found',
   //   path: '/404',
@@ -74,4 +66,4 @@ const navConfig = [
   // }
 ];
 
-export default navConfig;
+export default AdminConfig;

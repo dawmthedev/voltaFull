@@ -18,6 +18,8 @@ import { disableCache } from '@iconify/react';
 
 export default function PayrollData(props) {
 
+
+  const navigate = useNavigate();
   //USER OBJECT 
    const {recordUserId} = props;
    const gridContainerStyles = {
@@ -59,7 +61,26 @@ export default function PayrollData(props) {
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-
+      {
+        field: 'relatedProject',
+        headerName: 'Pay Details',
+        width: 150,
+        editable: true,
+        renderCell: (params) => {
+          return (
+            <Button
+              variant="outlined"
+              onClick={() => {
+               //Open up user modal
+                 navigate(`/dashboard/lead/${params?.row?.relatedProject}`);
+    
+              }}
+            >
+           Pay Details
+            </Button>
+          );
+        },
+      },
   
       {
         field: 'lead',
@@ -245,11 +266,12 @@ export default function PayrollData(props) {
             return {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
+              relatedProject: payrollItem.relatedProject.substring(0, payrollItem.relatedProject.indexOf('.')),
               itemType: payrollItem.itemType,
-               saleDate: formatSaleDate(payrollItem.saleDate),
+              saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
               relatedDealerFee: payrollItem.relatedDealerFee,
-              addersFinal: payrollItem.addersFinal,
+              addersFinal: truncateDecimals(payrollItem.addersFinal,1),
               systemSizeFinal: payrollItem.systemSizeFinal,
               saleStatus: payrollItem.saleStatus,
               clawbackNotes: payrollItem.clawbackNotes,
@@ -257,7 +279,7 @@ export default function PayrollData(props) {
               repRedlineOverrride: payrollItem.repRedlineOverrride,
               leadgenRedlineOverrride: payrollItem.leadgenRedlineOverrride,
               salesRep: payrollItem.salesRep,
-              ppwFinal: payrollItem.ppwFinal,
+              ppwFinal: truncateDecimals(payrollItem.ppwFinal, 1),
               // status: payrollItem.status,
               milestone: payrollItem.milestone,
               datePaid: formatSaleDate(payrollItem.datePaid),
@@ -361,7 +383,7 @@ function formatDollar(amount) {
     
       flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
     
-    <div style={{  height: 350, width: '90%', overflow: 'auto' }}>
+    <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
               <Box sx={{
                    
                       height: '100%', maxWidth: '100%', overflow: 'hidden' }}>

@@ -6,6 +6,7 @@ const POST_TITLES = [
   'Whiteboard Templates By Industry Leaders',
   'Voltaic university',
   'Voltaic Adder Sheet',
+  'Voltaic Dealer Rates',
   '✨What is Done is Done ✨',
   'Fresh Prince',
   'Six Socks Studio',
@@ -30,9 +31,10 @@ const POST_TITLES = [
 ];
 const links = [
   "https://www.youtube.com/channel/UCvWp2awdOyhd28f7FQOPGPw",
-"https://docs.google.com/spreadsheets/d/1TckEylF3qWgF8VjXzUjKm5KOsSokTVM9tJsySLpBA-w/edit#gid=0"];
+"https://docs.google.com/spreadsheets/d/1TckEylF3qWgF8VjXzUjKm5KOsSokTVM9tJsySLpBA-w/edit#gid=0",
+"https://vccrm.vercel.app/dashboard/rates"];
 
-const posts = [...Array(2)].map((_, index) => ({
+const posts = [...Array(3)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   link: links[index],

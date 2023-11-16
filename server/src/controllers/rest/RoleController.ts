@@ -6,7 +6,6 @@ import { RoleService } from "../../services/RoleService";
 import { AdminService } from "../../services/AdminService";
 import { ADMIN, MANAGER } from "../../util/constants";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
-import { RoleBodyTypes } from "types";
 
 class RoleParams {
   @Required() public readonly name: string;

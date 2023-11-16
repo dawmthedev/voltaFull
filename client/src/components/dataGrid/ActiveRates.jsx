@@ -15,7 +15,7 @@ import { gridStyles } from '../../constants/styles';
 import { styled, darken, lighten } from '@mui/material/styles';
 
 
-export default function LeadGenPay(props) {
+export default function ActiveRates(props) {
 
   //USER OBJECT
 
@@ -52,52 +52,45 @@ export default function LeadGenPay(props) {
  //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
  const columns = useMemo(
   () => [
-    {
-      field: 'relatedProject',
-      headerName: 'Pay Details',
-      width: 150,
-      editable: true,
-      renderCell: (params) => {
-        return (
-          <Button
-            variant="outlined"
-            onClick={() => {
-             //Open up user modal
-               navigate(`/dashboard/lead/${params?.row?.relatedProject}`);
+    // {
+    //   field: 'Profile',
+    //   headerName: 'Profile',
+    //   width: 150,
+    //   editable: true,
+    //   renderCell: (params) => {
+    //     return (
+    //       <Button
+    //         variant="outlined"
+    //         onClick={() => {
+    //          //Open up user modal
+    //            navigate(`/dashboard/lead/${params?.row?.id}`);
   
-            }}
-          >
-         Pay Details
-          </Button>
-        );
-      },
-    },
+    //         }}
+    //       >
+    //      Details
+    //       </Button>
+    //     );
+    //   },
+    // },
 
     {
-      field: 'lead',
-      headerName: 'Homeowner Name',
-      width: 150,
+      field: 'partner',
+      headerName: 'Fulfilment Partner',
+      width: 180,
       editable: false,
     },
     {
-      field: 'itemType',
-      headerName: 'Payroll Item Type',
+      field: 'years',
+      headerName: 'Years',
       width: 180,
       editable: false,
       hide: false,
     },
       
+
     {
-      field: 'saleDate',
-      headerName: 'SaleDate',
-      width: 180,
-      editable: false,
-      hide: false,
-      type:'date'
-    },
-    {
-      field: 'userStatus',
-      headerName: 'Project Status',
+      field: 'financing',
+      headerName: 'Financing',
       width: 180,
       editable: false,
       type: 'text',
@@ -106,8 +99,8 @@ export default function LeadGenPay(props) {
  
 
     {
-      field: 'relatedContractAmount',
-      headerName: 'Related Contract Amount',
+      field: 'apr',
+      headerName: 'APR',
       width: 200,
       editable: false,
 
@@ -115,8 +108,8 @@ export default function LeadGenPay(props) {
     },
 
     {
-      field: 'relatedDealerFee',
-      headerName: 'Dealer Fee',
+      field: 'feerate',
+      headerName: 'Fee Rate',
       width: 180,
       editable: false,
 
@@ -124,89 +117,28 @@ export default function LeadGenPay(props) {
     },
 
     {
-      field: 'addersFinal',
-      headerName: 'Adders Total',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
-
-    {
-      field: 'systemSizeFinal',
-      headerName: 'System Size',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
-    {
-      field: 'saleStatus',
-      headerName: 'Sale Status',
+      field: 'status',
+      headerName: 'Status',
       width: 180,
       editable: false,
 
       hide: false,
       cellClassName: (params) => {
-        if (params.value === 'active') {
+        if (params.value === 'Active') {
             return 'active-cell';
-        } else if (params.value === 'inactive') {
+        } else if (params.value === 'Inactive') {
             return 'inactive-cell';
         }
         return '';
     }
-    },
-    {
-      field: 'ppwFinal',
-      headerName: 'PPW',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
-    {
-      field: 'milestone',
-      headerName: 'Milestone',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
-   
-    {
-      field: 'clawbackNotes',
-      headerName: 'Clawback Notes',
-      width: 380,
-      editable: false,
-
-      hide: false,
-    },
-    {
-      field: 'amount',
-      headerName: 'Amount',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
-    {
-      field: 'datePaid',
-      headerName: 'Date Paid',
-      width: 180,
-      editable: false,
-      type: 'date',
-      hide: false,
-    },
-
-    {
-      field: 'leadgenRedlineOverrride',
-      headerName: 'Leadgen Redline Override',
-      width: 180,
-      editable: false,
-
-      hide: false,
-    },
- 
+},
+{
+    field: 'id',
+    headerName: 'id',
+    width: 500,
+    editable: false,
+    hide: true,
+  },
 
   
  
@@ -218,65 +150,43 @@ export default function LeadGenPay(props) {
 
   useEffect(() => {
    
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/CRMPayrollLeadGen`, {
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmRatesActive`, {
+    //fetch(`http://localhost:4000/rest/auth/crmRatesActive`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ recordId: recordUserId })
+  
     })
     .then(response => response.json())
     .then(responseData => {
 
 
-        console.log(responseData.data.payrollData)
+        console.log(responseData.data.rates)
 
-        console.log("responseData.data.payrollData:", responseData.data.payrollData);
+        console.log("responseData.data.payrollData:", responseData.data.rates);
 
-        if (responseData.success && responseData.data.payrollData) {
+        if (responseData.success && responseData.data.rates) {
 
 
 
-          const payData = responseData.data.payrollData.map((payrollItem) => {
+          const RateData = responseData.data.rates.map((feeRateItem, index) => {
             return {
-              lead: payrollItem.lead,
-              userStatus: payrollItem.userStatus,
-              itemType: payrollItem.itemType,
-              saleDate: formatSaleDate(payrollItem.saleDate),
-              relatedProject: payrollItem.relatedProject.substring(0, payrollItem.relatedProject.indexOf('.')),
-              relatedContractAmount: payrollItem.relatedContractAmount,
-              relatedDealerFee: payrollItem.relatedDealerFee,
-              addersFinal: truncateDecimals(payrollItem.addersFinal,1),
-              systemSizeFinal: payrollItem.systemSizeFinal,
-              saleStatus: payrollItem.saleStatus,
-              clawbackNotes: payrollItem.clawbackNotes,
-              leadgenRedlineOverrride: payrollItem.leadgenRedlineOverrride,
-              salesRep: payrollItem.salesRep,
-              ppwFinal: truncateDecimals(payrollItem.ppwFinal, 1),
-              // status: payrollItem.status,
-              milestone: payrollItem.milestone,
-              datePaid: formatSaleDate(payrollItem.datePaid),
-              amount: payrollItem.amount,
-              id: Math.random()
+              partner: feeRateItem.partner.replace(/"/g, ''),
+              years: feeRateItem.years,
+              status: feeRateItem.status.replace(/"/g, ''),
+              financing: feeRateItem.financing.replace(/"/g, ''),
+              apr: feeRateItem.apr.replace(/"/g, ''),
+              feerate: feeRateItem.feerate.replace(/"/g, ''),
+              id: index
+          
             };
           });
           
 
-            // const payData = responseData.data.payrollData.map((payrollItem) => {
-            //     return {
-            //         lead: payrollItem.lead,
-            //         userStatus: payrollItem.userStatus,
-            //         ppwFinal: payrollItem.ppwFinal,
-            //         milestone: payrollItem.milestone,
-              
-            //         datePaid:  formatSaleDate(payrollItem.datePaid.slice(1, -1)),
-            //         amount: payrollItem.amount,
-            //         id: Math.random()
-            //     };
-            // });
-            
+
  
-            setData(payData);
+            setData(RateData);
             
         }
 
