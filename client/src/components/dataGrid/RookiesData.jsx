@@ -208,8 +208,8 @@ export default function RookieData(props) {
 
 
   useEffect(() => {
-   // fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeals`,{
-  fetch(`http://localhost:4000/rest/auth/crmDealsRookie`,{
+    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsRookie`,{
+  //fetch(`http://localhost:4000/rest/auth/crmDealsRookie`,{
     
     method: 'POST',
         headers: {

@@ -61,26 +61,26 @@ export default function PayrollData(props) {
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-      // {
-      //   field: 'Profile',
-      //   headerName: 'Profile',
-      //   width: 150,
-      //   editable: true,
-      //   renderCell: (params) => {
-      //     return (
-      //       <Button
-      //         variant="outlined"
-      //         onClick={() => {
-      //          //Open up user modal
-      //            navigate(`/dashboard/lead/${params?.row?.id}`);
+      {
+        field: 'relatedProject',
+        headerName: 'Details',
+        width: 150,
+        editable: true,
+        renderCell: (params) => {
+          return (
+            <Button
+              variant="outlined"
+              onClick={() => {
+               //Open up user modal
+                 navigate(`/dashboard/lead/${params?.row?.relatedProject}`);
     
-      //         }}
-      //       >
-      //      Details
-      //       </Button>
-      //     );
-      //   },
-      // },
+              }}
+            >
+           Details
+            </Button>
+          );
+        },
+      },
   
       {
         field: 'lead',
@@ -266,6 +266,7 @@ export default function PayrollData(props) {
             return {
               lead: payrollItem.lead,
               userStatus: payrollItem.userStatus,
+              relatedProject: typeof(payrollItem.relatedProject),
               itemType: payrollItem.itemType,
               saleDate: formatSaleDate(payrollItem.saleDate),
               relatedContractAmount: payrollItem.relatedContractAmount,
