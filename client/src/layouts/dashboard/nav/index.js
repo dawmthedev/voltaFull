@@ -20,6 +20,8 @@ import NavSection from '../../../components/nav-section';
 //import AdminNavSection from'../../../components/admin-navsection';
 //import AdminConfig from './AdminConfig';
 import navConfig from './config';
+import { AdminNavSection } from '../../../components/admin-navsection/AdminNavSection';
+import AdminConfig from './AdminConfig';
 
 
 
@@ -96,7 +98,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
 
 {/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
-{data.recordID == "1890" ? <NavSection data={navConfig}  /> : <NavSection data={navConfig} />}
+{data.role == "Mentor" ? <AdminNavSection data={AdminConfig}  /> : <NavSection data={navConfig} />}
 
 
 

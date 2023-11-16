@@ -29,11 +29,11 @@ const AdminConfig = [
     icon: icon('ic_blog')
   },
 
-  // {
-  //   title: 'Rookies',
-  //   path: '/dashboard/rookies',
-  //   icon: icon('ic_cart')
-  // },
+  {
+    title: 'Rookies',
+    path: '/dashboard/rookies',
+    icon: icon('ic_cart')
+  },
   // {
   //   title: 'Listings',
   //   path: '/dashboard/products',
