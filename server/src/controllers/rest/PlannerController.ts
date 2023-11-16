@@ -62,4 +62,12 @@ export class PlannerController {
     };
     return new SuccessResult(result, PlannerResultModel);
   }
+
+  // cron job to run every 5 minutes
+  @Post("/run-job")
+  @Returns(200, SuccessResult).Of(Object)
+  public async runJob() {
+    await this.plannerService.runJob();
+    return new SuccessResult("Job run successfully", Object);
+  }
 }
