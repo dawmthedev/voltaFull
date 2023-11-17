@@ -22,7 +22,7 @@ import { useAppSelector } from './hooks/hooks';
 import LeadDetailPage from './pages/LeadDetailPage';
 import DealerRates from './pages/DealerRates';
 import Assistant from './pages/Assistant';
-import RookieData from './components/dataGrid/RookiesData';
+import Rookies from './pages/Rookies'
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -51,7 +51,7 @@ export default function Router() {
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
-        { path: 'rookies', element: <RookieData /> },
+        { path: 'rookies', element: <Rookies /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'rates', element: <DealerRates /> },
