@@ -42,3 +42,4 @@ const adminSlice = createSlice({
 
 export default adminSlice.reducer;
 export const adminSelector = (state) => state.admin.data;
+export const adminLoading = (state) => state.admin.loading;

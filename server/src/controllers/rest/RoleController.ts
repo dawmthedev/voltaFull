@@ -6,6 +6,8 @@ import { RoleService } from "../../services/RoleService";
 import { AdminService } from "../../services/AdminService";
 import { ADMIN, MANAGER } from "../../util/constants";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
+import { BadRequest } from "@tsed/exceptions";
+import {  ROLE_EXISTS } from "../../util/errors";
 
 class RoleParams {
   @Required() public readonly name: string;
@@ -32,6 +34,8 @@ export class RoleController {
   public async createRole(@BodyParams() body: RoleParams, @Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const { name } = body;
+    let role = await this.roleService.findRoleById(name);
+    if (role) throw new BadRequest(ROLE_EXISTS);
     const response = await this.roleService.createRole({ name });
     const result = {
       _id: response._id,

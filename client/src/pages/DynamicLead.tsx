@@ -256,14 +256,14 @@ const DynamicLead = () => {
           alignItems="center"
           gap={2}
           mb={5}
-          pb={5}
+          pb={2}
           sx={{
             overflowX: 'scroll',
             scrollbarWidth: 'auto',
 
             '&::-webkit-scrollbar': {
               width: '2px',
-              maxHeight: '8px',
+              maxHeight: '5px',
               borderRadius: '20px'
             },
             '&::-webkit-scrollbar-track': {
@@ -271,12 +271,12 @@ const DynamicLead = () => {
               borderRadius: '20px'
             },
             '&::-webkit-scrollbar-thumb': {
-              backgroundColor: '#0F52BA',
+              backgroundColor: '#D3D3D3',
               scrollbarGutter: 'stable',
               borderRadius: '20px'
             },
             '&::-webkit-scrollbar-thumb:hover': {
-              background: '#4169E1',
+              background: '#D3D3D3',
               borderRadius: '20px'
             }
           }}

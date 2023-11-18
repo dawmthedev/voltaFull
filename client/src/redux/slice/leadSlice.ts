@@ -24,9 +24,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(getLeads.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(getLeads.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
 
     // Get Lead
@@ -35,9 +37,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(getLead.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(getLead.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
 
     // Create Lead
@@ -46,9 +50,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(createLead.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(createLead.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
 
     // Create Bulk Lead
@@ -58,10 +64,12 @@ const leadSlice = createSlice({
     builder.addCase(createBulkLead.fulfilled, (state, action) => {
       state.data = action.payload;
       state.isModalOpen = false;
+      state.loading = false;
     });
     builder.addCase(createBulkLead.rejected, (state, action) => {
       state.error = action.error;
       state.isModalOpen = false;
+      state.loading = false;
     });
 
     // Update Lead
@@ -70,9 +78,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(updateLead.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(updateLead.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
 
     // Delete Lead
@@ -81,9 +91,11 @@ const leadSlice = createSlice({
     });
     builder.addCase(deleteLead.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(deleteLead.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
   }
 });

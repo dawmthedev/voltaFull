@@ -30,7 +30,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { getUsers, updateAdmin } from '../redux/middleware/admin';
 import createAbortController from '../utils/createAbortController';
 import { adminSelector } from '../redux/slice/adminSlice';
-import { roleList } from '../redux/slice/roleSlice';
+import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUserForm';
 import { setAlert } from '../redux/slice/alertSlice';
@@ -86,6 +86,7 @@ const initialState = {
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
+  const roleLoading = useAppSelector(loadingRole);
   const roles = useAppSelector(roleList);
   const { signal, abort } = createAbortController();
   const [open, setOpen] = useState(null);
@@ -267,7 +268,7 @@ export default function UserPage() {
         <CustomModal title="Add New Role" open={isRoleModalOpen} setOpen={setIsRoleModalOpen} handleSubmit={submitRole}>
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
-        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser}>
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading = {roleLoading}>
           <AddUserForm
             user={user}
             roles={roles}

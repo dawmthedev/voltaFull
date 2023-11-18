@@ -27,6 +27,7 @@ export const ADMIN_ALREADY_EXISTS = "ADMIN_ALREADY_EXISTS";
 export const CATEGORY_ALREADY_EXISTS = "CATEGORY_ALREADY_EXISTS";
 export const CATEGORY_NOT_FOUND = "CATEGORY_NOT_FOUND";
 export const INVALID_RESPONSE_QUICKBASE = "INVALID_RESPONSE_QUICKBASE";
+export const ROLE_EXISTS = "ROLE_ALREADY_EXISTS";
 
 export const errorMap: { [key: string]: string } = {
   SOMETHING_WENT_WRONG: "Looks like something is wrong, we are working to fix it.",

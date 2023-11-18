@@ -14,8 +14,8 @@ export class RoleService {
     return await this.role.find();
   }
 
-  public async findRoleById(_id: string) {
-    return await this.role.findById(_id);
+  public async findRoleById(name: string) {
+    return await this.role.findOne({name});
   }
 
   public async createRole({name}: RoleBodyTypes) {
