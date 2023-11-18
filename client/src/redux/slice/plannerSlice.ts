@@ -47,3 +47,4 @@ const plannerSlice = createSlice({
 
 export default plannerSlice.reducer;
 export const plannerSelector = (state) => state.planner;
+export const plannerLoading = (state) => state.planner.loading;

@@ -92,3 +92,4 @@ export const leadsList = (state) => state.lead.data;
 export const leadState = (state: { lead: { data: LeadsTypes[]; loading: boolean; isModalOpen: boolean; error: any } }) => state.lead;
 export default leadSlice.reducer;
 export const { openModal } = leadSlice.actions;
+export const loadingLead = (state) => state.lead.loading;

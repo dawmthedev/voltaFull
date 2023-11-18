@@ -77,7 +77,12 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
   }));
 
   return (
-    <Box sx={{ height: '60vh', width: '100%' }}>
+    <Box
+      sx={{
+        height: '60vh',
+        width: '100%'
+      }}
+    >
       <DataGridPro
         rows={rows || []}
         columns={columns}

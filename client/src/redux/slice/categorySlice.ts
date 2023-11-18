@@ -55,3 +55,4 @@ const categorySlice = createSlice({
 export default categorySlice.reducer;
 export const categorySelector = (state) => state.category.data;
 export const categoryByIdSelector = (state) => state.category.category;
+export const loadingCategory = (state) => state.category.loading;

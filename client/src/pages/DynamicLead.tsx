@@ -12,11 +12,12 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { addNewColumn, createCategory, getCategories } from '../redux/middleware/category';
 import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '../redux/middleware/lead';
 import { setAlert } from '../redux/slice/alertSlice';
-import { categorySelector } from '../redux/slice/categorySlice';
-import { leadState, openModal } from '../redux/slice/leadSlice';
+import { categorySelector, loadingCategory } from '../redux/slice/categorySlice';
+import { leadState, loadingLead, openModal } from '../redux/slice/leadSlice';
 import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
 import CustomTable from '../components/custom-table/CustomTable';
+import { loadingRole } from '../redux/slice/roleSlice';
 
 const initialCategoryState = {
   name: '',
@@ -29,10 +30,11 @@ const initialFieldState = {
 
 const DynamicLead = () => {
   const categories: CategoryResponseTypes[] = useAppSelector(categorySelector);
+  const categoryLoading = useAppSelector(loadingCategory);
+  const leadLoading = useAppSelector(loadingLead);
   const { data: leadsData, isModalOpen } = useAppSelector(leadState);
   const dispatch = useAppDispatch();
   const { signal, abort } = createAbortController();
-
   const [uploadedLeads, setUploadedLeads] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState(categories[0]?.id);
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
@@ -249,7 +251,37 @@ const DynamicLead = () => {
       </Helmet>
       <Container>
         <h1>Dynamic Lead</h1>
-        <Stack direction="row" alignItems="center" gap={2} mb={5} overflow="scroll" width={'100%'}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={2}
+          mb={5}
+          pb={5}
+          sx={{
+            overflowX: 'scroll',
+            scrollbarWidth: 'auto',
+
+            '&::-webkit-scrollbar': {
+              width: '2px',
+              maxHeight: '8px',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'transparent',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#0F52BA',
+              scrollbarGutter: 'stable',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: '#4169E1',
+              borderRadius: '20px'
+            }
+          }}
+          width={'100%'}
+        >
           {(categories &&
             categories.map((category: CategoryResponseTypes) => (
               <Button
@@ -282,6 +314,7 @@ const DynamicLead = () => {
             open={isModalOpen}
             setOpen={() => dispatch(openModal(false))}
             handleSubmit={submitBulkLeads}
+            loading={leadLoading}
             size="lg"
           >
             <CsvUpload handleCsvData={handleCsvData} />
@@ -297,6 +330,7 @@ const DynamicLead = () => {
             open={isAddLeadModalOpen}
             setOpen={() => setIsAddLeadModalOpen(false)}
             handleSubmit={submitAddNewLead}
+            loading={leadLoading}
           >
             <AddLead leadValue={columnFields} getAddLeadData={getAddLeadData} />
           </CustomModal>
@@ -308,6 +342,7 @@ const DynamicLead = () => {
             setOpen={() => setIsCategoryModalOpen(false)}
             handleSubmit={isCategoryEdit ? updateCategory : submitCategory}
             setIsEdit={setIsCategoryEdit}
+            loading={categoryLoading}
           >
             <AddCategory
               fields={fields}
@@ -320,8 +355,18 @@ const DynamicLead = () => {
             />
           </CustomModal>
         </Box>
-        <Card sx={{ mt: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', margin: 1 }}>
+        <Card
+          sx={{
+            mt: 2
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              margin: 1
+            }}
+          >
             <Button
               variant="contained"
               onClick={() => {

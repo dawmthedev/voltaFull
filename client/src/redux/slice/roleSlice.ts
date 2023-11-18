@@ -47,3 +47,4 @@ const roleSlice = createSlice({
 
 export default roleSlice.reducer;
 export const roleList = (state) => state.role.data;
+export const loadingRole = (state) => state.role.loading;

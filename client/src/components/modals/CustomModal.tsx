@@ -4,6 +4,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import CircularProgress from '@mui/material/CircularProgress';
 
 interface CustomModalProps {
   title: string;
@@ -12,9 +13,10 @@ interface CustomModalProps {
   handleSubmit: () => void;
   children: React.ReactNode;
   size?: 'sm' | 'md' | 'lg';
+  loading?: boolean;
   setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm', children }: CustomModalProps) => {
+const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm', children, loading }: CustomModalProps) => {
   const handleClose = () => {
     setOpen(false);
     setIsEdit && setIsEdit(false);
@@ -36,7 +38,15 @@ const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm
           <Button onClick={handleClose} autoFocus>
             Cancel
           </Button>
-          <Button onClick={() => handleSubmit()}>Submit</Button>
+          {loading ? (
+            <Button onClick={handleSubmit} autoFocus>
+              <CircularProgress sx={{ color: '#ffffff', backgroundColor: '#0F52BA' }} />
+            </Button>
+          ) : (
+            <Button onClick={handleSubmit} autoFocus>
+              Submit
+            </Button>
+          )}
         </DialogActions>
       </Dialog>
     </div>
