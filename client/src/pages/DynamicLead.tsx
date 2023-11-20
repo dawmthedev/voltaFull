@@ -1,4 +1,4 @@
-import { Button, Card, Container, Grid } from '@mui/material';
+import { Button, Card, CircularProgress, Container, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -14,7 +14,7 @@ import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '..
 import { setAlert } from '../redux/slice/alertSlice';
 import { categorySelector, loadingCategory } from '../redux/slice/categorySlice';
 import { leadState, loadingLead, openModal } from '../redux/slice/leadSlice';
-import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
+import { CategoryResponseTypes, CategoryTypes, FieldTypes, LeadValueTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
 import CustomTable from '../components/custom-table/CustomTable';
 import { loadingRole } from '../redux/slice/roleSlice';
@@ -205,11 +205,22 @@ const DynamicLead = () => {
       dispatch(setAlert({ message: 'Column added successfully', type: 'success' }));
       await dispatch(getCategories({ signal }));
       setFields([initialFieldState]);
+      fields.forEach((field) => {
+        field.name = '';
+        field.type = '';
+      });
       setIsCategoryModalOpen(false);
     }
   };
 
   const submitAddNewLead = async () => {
+    const leadValues= columnFields;
+
+    for (const item of columnFields ){
+      if (!item.value) {
+        return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
+      }
+    }
     const data = {
       tableId: selectedCategoryId,
       data: leadValues
@@ -222,6 +233,7 @@ const DynamicLead = () => {
     setIsAddLeadModalOpen(false);
     await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
     setIsLeadEdit(false);
+
     columnFields.forEach((field) => {
       field.value = '';
     });
@@ -239,6 +251,10 @@ const DynamicLead = () => {
       setAddCategory(initialCategoryState);
       setFields([initialFieldState]);
       await dispatch(getCategories({ signal }));
+      fields.forEach((field) => {
+        field.name = '';
+        field.type = '';
+      });
     } catch (error) {
       console.log('Error:(', error);
     }
@@ -377,10 +393,23 @@ const DynamicLead = () => {
               Add New Column
             </Button>
           </Box>
-          {(categories && categories.length && (
-            <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
-          )) ||
-            'Loading'}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 1
+            }}
+          >
+            {!categoryLoading ? (
+              (categories && categories.length && (
+                <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
+              )) ||
+              'Record does not exist.'
+            ) : (
+              <CircularProgress size="30px" sx={{ color: '#0F52BA' }} />
+            )}
+          </Box>
         </Card>
       </Container>
     </Fragment>

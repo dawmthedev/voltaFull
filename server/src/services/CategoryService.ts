@@ -1,5 +1,5 @@
 import { Inject, Injectable } from "@tsed/di";
-import { CategoryModel } from "../models/CategoryModel";
+import { CategoryFieldType, CategoryModel } from "../models/CategoryModel";
 import { CategoryBodyTypes, FieldTypes } from "types";
 import { LeadService } from "./LeadService";
 import { MongooseModel } from "@tsed/mongoose";
@@ -38,6 +38,10 @@ export class CategoryService {
 
   public async findCategory() {
     return await this.category.findOne();
+  }
+
+  public async findCategoryByName(name: string) {
+    return await this.category.findOne({ name });
   }
 
   public async findCategoryByNameAndOrgId({ name, orgId }: { name: string; orgId: string }) {

@@ -25,7 +25,6 @@ export class RoleController {
   public async getRoles(@Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     const roles = await this.roleService.findRoles();
-    console.log(roles);
     return new SuccessArrayResult(roles, Object);
   }
 

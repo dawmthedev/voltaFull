@@ -72,3 +72,9 @@ export type AdminResponseTypes = {
   token: string;
   isSuperAdmin: boolean;
 };
+
+export type LeadValueTypes = {
+  name: string;
+  type: string;
+  value: string;
+};

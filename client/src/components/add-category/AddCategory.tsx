@@ -15,7 +15,8 @@ interface AddLeadProps {
   isEdit: boolean;
 }
 
-const AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewField, removeField }: AddLeadProps) => {
+const 
+AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewField, removeField }: AddLeadProps) => {
   const DataTypes = ['string', 'number', 'boolean', 'date'];
   return (
     <Grid>
@@ -42,7 +43,7 @@ const AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, add
           + New Field
         </Button>
       </Box>
-
+      
       {fields?.map((field, index) => {
         return (
           <Grid container spacing={2} key={index}>
