@@ -130,8 +130,8 @@ export default function RookieDataLead(props) {
         },
       },
       {
-        field: 'repName',
-        headerName: 'Sales Rep',
+        field: 'leadGen',
+        headerName: 'Lead Generator',
         width: 180,
         editable: false,
         type: 'text',
@@ -235,7 +235,7 @@ export default function RookieDataLead(props) {
                     homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
                     profile: 'hello',
                     id: deal.projectID ,
-                    repName: deal.repName.replace(/^"|"$/g, '') 
+                    leadGen: deal.leadGen.replace(/^"|"$/g, '') 
                 };
             });
             setData(dealsData);
