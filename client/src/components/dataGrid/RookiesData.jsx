@@ -86,7 +86,14 @@ export default function RookieData(props) {
           );
         },
       },
-  
+      {
+        field: 'saleDate',
+        headerName: 'SaleDate',
+        width: 180,
+        editable: false,
+        hide: false,
+        type:'date'
+      },
   
       {
         field: 'homeownerName',
@@ -150,6 +157,7 @@ export default function RookieData(props) {
         editable: false,
         type: 'text',
       },
+      
         {
         field: 'ptoApproved',
         headerName: 'PTO Approved Date',
@@ -227,7 +235,7 @@ export default function RookieData(props) {
                     milestone: deal.milestone.replace(/^"|"$/g, ''),
                     datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
                     email: deal.email.replace(/^"|"$/g, ''), 
-                    saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
+                    saleDate: formatSaleDate(deal.saleDate.replace(/^"|"$/g, '')), 
                     plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
                     installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
                     ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
@@ -251,7 +259,15 @@ export default function RookieData(props) {
 }, []);
 
 
+function formatSaleDate(dateStr) {
+  const [year, month, day] = dateStr.split('-');
+  const dateString =  `${month}/${day}/${year}`;
 
+
+
+  return new Date(dateString); // Convert string to Date object
+  
+}
 
 const leadsRows = data || [];
 
