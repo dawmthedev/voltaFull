@@ -8,6 +8,7 @@ export type LeadsTypes = {
 };
 
 export type CategoryTypes = {
+  [x: string]: any;
   name: string;
   description: string;
 };
