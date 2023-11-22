@@ -430,7 +430,7 @@ const DynamicLead = () => {
               margin: 1
             }}
           >
-            {!categoryLoading ? (
+            {!categoryLoading || !leadLoading ? (
               (categories && categories.length && (
                 <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
               )) ||

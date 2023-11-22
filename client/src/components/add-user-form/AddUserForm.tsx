@@ -1,6 +1,7 @@
 import { FormControl, InputLabel, Checkbox, MenuItem, Select, SelectChangeEvent, FormControlLabel } from '@mui/material';
 import React, { useState } from 'react';
 import CustomInput from '../input/CustomInput';
+import { RoleDataTypes } from '../../types';
 
 interface AddNewUserProps {
   user: {
@@ -9,12 +10,7 @@ interface AddNewUserProps {
     isSuperAdmin: boolean;
   };
   getUsersData: (value: string, name: string) => void;
-  roles: [
-    {
-      id: string;
-      name: string;
-    }
-  ];
+  roles: RoleDataTypes[];
 }
 
 const AddUserForm = ({ user, getUsersData, roles }: AddNewUserProps) => {

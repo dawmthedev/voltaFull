@@ -48,6 +48,7 @@ export type PlannerDataTypes = {
 };
 
 export type RoleDataTypes = {
+  _id?: string;
   name: string;
 };
 

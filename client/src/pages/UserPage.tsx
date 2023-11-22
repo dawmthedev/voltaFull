@@ -131,6 +131,10 @@ export default function UserPage() {
 
   const updateUser = async () => {
     try {
+      if (!user.name) {
+        return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
+      }
+
       const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
       if (response && response.error && response.error.message) {
         dispatch(
@@ -168,6 +172,11 @@ export default function UserPage() {
         dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
         return;
       }
+      const isDuplicate = roles.find((item) => item.name == newRole);
+
+      if (isDuplicate) {
+        return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
+      }
       const response: any = await dispatch(createRole({ role: newRole }));
       if (response && response.error && response.error.message) {
         dispatch(
@@ -189,6 +198,7 @@ export default function UserPage() {
       }
       setIsRoleModalOpen(false);
       handleCloseMenu();
+      setNewRole('');
     } catch (error) {
       dispatch(
         setAlert({
@@ -265,10 +275,16 @@ export default function UserPage() {
           </Button>
         </Stack>
 
-        <CustomModal title="Add New Role" open={isRoleModalOpen} setOpen={setIsRoleModalOpen} handleSubmit={submitRole}>
+        <CustomModal
+          title="Add New Role"
+          open={isRoleModalOpen}
+          setOpen={setIsRoleModalOpen}
+          handleSubmit={submitRole}
+          loading={roleLoading}
+        >
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
-        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading = {roleLoading}>
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={roleLoading}>
           <AddUserForm
             user={user}
             roles={roles}
