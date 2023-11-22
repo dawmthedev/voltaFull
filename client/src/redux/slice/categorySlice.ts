@@ -18,36 +18,36 @@ const categorySlice = createSlice({
       state.loading = true;
     });
     builder.addCase(getCategories.fulfilled, (state, action) => {
-      state.loading = false;
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(getCategories.rejected, (state, action) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     });
     // get category by id
     builder.addCase(getCategory.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(getCategory.fulfilled, (state, action) => {
-      state.loading = false;
       state.category = action.payload;
+      state.loading = false;
     });
     builder.addCase(getCategory.rejected, (state, action) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     });
     // add new column
     builder.addCase(addNewColumn.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(addNewColumn.fulfilled, (state, action) => {
-      state.loading = false;
       state.category = action.payload;
+      state.loading = false;
     });
     builder.addCase(addNewColumn.rejected, (state, action) => {
-      state.loading = false;
       state.error = action.payload;
+      state.loading = false;
     });
   }
 });

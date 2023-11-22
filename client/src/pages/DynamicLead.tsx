@@ -195,6 +195,14 @@ const DynamicLead = () => {
 
   //! Add new column into category
   const updateCategory = async () => {
+    for (const item of fields) {
+      if (!item.name) {
+        return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
+      }
+      if (!item.type) {
+        return dispatch(setAlert({ message: 'Select type for the field.', type: 'error' }));
+      }
+    }
     if (!selectedCategoryId) return;
     const response: any = await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
     if (response.error && response.error.message) {
@@ -214,9 +222,7 @@ const DynamicLead = () => {
   };
 
   const submitAddNewLead = async () => {
-    const leadValues= columnFields;
-
-    for (const item of columnFields ){
+    for (const item of columnFields) {
       if (!item.value) {
         return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
       }
@@ -240,24 +246,32 @@ const DynamicLead = () => {
   };
 
   const submitCategory = async () => {
-    try {
-      const formattedData = {
-        name: addCategory.name,
-        description: addCategory.description || '',
-        fields: fields
-      };
-      await dispatch(createCategory({ category: formattedData }));
-      setIsCategoryModalOpen(false);
-      setAddCategory(initialCategoryState);
-      setFields([initialFieldState]);
-      await dispatch(getCategories({ signal }));
-      fields.forEach((field) => {
-        field.name = '';
-        field.type = '';
-      });
-    } catch (error) {
-      console.log('Error:(', error);
-    }
+    if (!addCategory.name) {
+      return dispatch(setAlert({ message: 'Category name can not be empty.', type: 'error' }));
+    } else
+      for (const item of fields) {
+        if (!item.name) {
+          return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
+        } else if (!item.type) {
+          return dispatch(setAlert({ message: 'Select type for the field.', type: 'error' }));
+        }
+      }
+    const formattedData = {
+      name: addCategory.name,
+      description: addCategory.description || '',
+      fields: fields
+    };
+    console.log(categoryLoading);
+    debugger;
+    await dispatch(createCategory({ category: formattedData, signal }));
+    setIsCategoryModalOpen(false);
+    setAddCategory(initialCategoryState);
+    setFields([initialFieldState]);
+    await dispatch(getCategories({ signal }));
+    fields.forEach((field) => {
+      field.name = '';
+      field.type = '';
+    });
   };
 
   return (

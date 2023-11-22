@@ -39,7 +39,7 @@ const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm
             Cancel
           </Button>
           {loading ? (
-            <Button onClick={handleSubmit} autoFocus>
+            <Button autoFocus>
               <CircularProgress size='14px' sx={{ color: '#0F52BA' }} />
             </Button>
           ) : (
