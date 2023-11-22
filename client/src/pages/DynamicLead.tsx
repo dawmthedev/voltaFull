@@ -204,6 +204,20 @@ const DynamicLead = () => {
       }
     }
     if (!selectedCategoryId) return;
+    debugger;
+    const updatedFields = [...columnFields, ...fields];
+    const isInvalid = fields.some((field) => {
+      return !field.name || !field.type;
+    });
+    if (isInvalid) {
+      return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
+    }
+    const isDuplicate = updatedFields.some((field, index) => {
+      return fields.findIndex((item) => item.name === field.name) !== index;
+    });
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
+    }
     const response: any = await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
     if (response.error && response.error.message) {
       dispatch(setAlert({ message: response.error.message, type: 'error' }));
@@ -245,6 +259,7 @@ const DynamicLead = () => {
     });
   };
 
+  //! Add new category
   const submitCategory = async () => {
     if (!addCategory.name) {
       return dispatch(setAlert({ message: 'Category name can not be empty.', type: 'error' }));
