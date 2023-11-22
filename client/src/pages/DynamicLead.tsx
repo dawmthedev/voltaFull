@@ -196,6 +196,20 @@ const DynamicLead = () => {
   //! Add new column into category
   const updateCategory = async () => {
     if (!selectedCategoryId) return;
+    debugger;
+    const updatedFields = [...columnFields, ...fields];
+    const isInvalid = fields.some((field) => {
+      return !field.name || !field.type;
+    });
+    if (isInvalid) {
+      return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
+    }
+    const isDuplicate = updatedFields.some((field, index) => {
+      return fields.findIndex((item) => item.name === field.name) !== index;
+    });
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
+    }
     const response: any = await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
     if (response.error && response.error.message) {
       dispatch(setAlert({ message: response.error.message, type: 'error' }));
@@ -214,9 +228,9 @@ const DynamicLead = () => {
   };
 
   const submitAddNewLead = async () => {
-    const leadValues= columnFields;
+    const leadValues = columnFields;
 
-    for (const item of columnFields ){
+    for (const item of columnFields) {
       if (!item.value) {
         return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
       }
@@ -239,6 +253,7 @@ const DynamicLead = () => {
     });
   };
 
+  //! Add new category
   const submitCategory = async () => {
     try {
       const formattedData = {
@@ -246,6 +261,18 @@ const DynamicLead = () => {
         description: addCategory.description || '',
         fields: fields
       };
+      const isInvalid = fields.some((field) => {
+        return !field.name || !field.type;
+      });
+      if (isInvalid) {
+        return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
+      }
+      const isDuplicate = fields.some((field, index) => {
+        return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
+      });
+      if (isDuplicate) {
+        return dispatch(setAlert({ message: 'Fields name should be unique', type: 'error' }));
+      }
       await dispatch(createCategory({ category: formattedData }));
       setIsCategoryModalOpen(false);
       setAddCategory(initialCategoryState);
