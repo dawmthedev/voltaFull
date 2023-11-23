@@ -3,7 +3,7 @@ import { get, post } from '../../libs/client/apiClient';
 import { PlannerDataTypes } from '../../types';
 import { setAlert } from '../slice/alertSlice';
 
-const getPlanners = createAsyncThunk('planner/get', async ({ signal }: { signal: AbortSignal }) => {
+const getPlanners = createAsyncThunk('planner/get', async ({ signal }: { signal: AbortSignal }, { dispatch }) => {
   try {
     const { data } = await get('/planner', { signal });
     return data.data;
