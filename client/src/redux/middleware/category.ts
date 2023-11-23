@@ -11,7 +11,7 @@ const getCategories = createAsyncThunk('category/all/get', async ({ signal }: { 
   }
 });
 
-const getCategory = createAsyncThunk('category/get', async ({ id }: { id: string }) => {
+const getCategory = createAsyncThunk('category/get', async({ id, signal }: { id: string ; signal: AbortSignal }) => {
   try {
     const { data } = await get(`/category/${id}`);
     return data.data;
@@ -23,13 +23,14 @@ const getCategory = createAsyncThunk('category/get', async ({ id }: { id: string
 const createCategory = createAsyncThunk(
   'category/create',
   async ({
-    category
+    category, signal
   }: {
     category: {
       name: string;
       description?: string;
       fields: FieldTypes[];
-    };
+    }; 
+    signal: AbortSignal
   }) => {
     try {
       const { data } = await post('/category', category);

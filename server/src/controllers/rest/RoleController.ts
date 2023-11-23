@@ -8,6 +8,7 @@ import { ADMIN, MANAGER } from "../../util/constants";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 import { BadRequest } from "@tsed/exceptions";
 import {  ROLE_EXISTS } from "../../util/errors";
+import { normalizeData } from "../../helper";
 
 class RoleParams {
   @Required() public readonly name: string;
@@ -25,7 +26,7 @@ export class RoleController {
   public async getRoles(@Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     const roles = await this.roleService.findRoles();
-    return new SuccessArrayResult(roles, Object);
+    return new SuccessArrayResult(normalizeData(roles), RoleResultModel);
   }
 
   @Post()

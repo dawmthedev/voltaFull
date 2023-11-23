@@ -196,7 +196,6 @@ const DynamicLead = () => {
   //! Add new column into category
   const updateCategory = async () => {
     if (!selectedCategoryId) return;
-    debugger;
     const updatedFields = [...columnFields, ...fields];
     const isInvalid = fields.some((field) => {
       return !field.name || !field.type;
@@ -205,7 +204,7 @@ const DynamicLead = () => {
       return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
     }
     const isDuplicate = updatedFields.some((field, index) => {
-      return fields.findIndex((item) => item.name === field.name) !== index;
+      return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
     });
     if (isDuplicate) {
       return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
@@ -228,8 +227,6 @@ const DynamicLead = () => {
   };
 
   const submitAddNewLead = async () => {
-    const leadValues = columnFields;
-
     for (const item of columnFields) {
       if (!item.value) {
         return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
@@ -255,36 +252,41 @@ const DynamicLead = () => {
 
   //! Add new category
   const submitCategory = async () => {
-    try {
-      const formattedData = {
-        name: addCategory.name,
-        description: addCategory.description || '',
-        fields: fields
-      };
-      const isInvalid = fields.some((field) => {
-        return !field.name || !field.type;
-      });
-      if (isInvalid) {
-        return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
-      }
-      const isDuplicate = fields.some((field, index) => {
-        return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
-      });
-      if (isDuplicate) {
-        return dispatch(setAlert({ message: 'Fields name should be unique', type: 'error' }));
-      }
-      await dispatch(createCategory({ category: formattedData }));
-      setIsCategoryModalOpen(false);
-      setAddCategory(initialCategoryState);
-      setFields([initialFieldState]);
-      await dispatch(getCategories({ signal }));
-      fields.forEach((field) => {
-        field.name = '';
-        field.type = '';
-      });
-    } catch (error) {
-      console.log('Error:(', error);
+    if (!addCategory.name) {
+      return dispatch(setAlert({ message: 'Category name can not be empty.', type: 'error' }));
     }
+    const filterCategoryName = categories.find((item) => addCategory.name.toLowerCase() == item.name.toLowerCase());
+    if (filterCategoryName) {
+      return dispatch(setAlert({ message: 'Category name already exists', type: 'error' }));
+    }
+    const isInvalid = fields.some((field) => {
+      return !field.name || !field.type;
+    });
+    if (isInvalid) {
+      return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
+    }
+    const isDuplicate = fields.some((field, index) => {
+      return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
+    });
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Fields name should be unique', type: 'error' }));
+    }
+    const formattedData = {
+      name: addCategory.name,
+      description: addCategory.description || '',
+      fields: fields
+    };
+    console.log(categoryLoading);
+    debugger;
+    await dispatch(createCategory({ category: formattedData, signal }));
+    setIsCategoryModalOpen(false);
+    setAddCategory(initialCategoryState);
+    setFields([initialFieldState]);
+    await dispatch(getCategories({ signal }));
+    fields.forEach((field) => {
+      field.name = '';
+      field.type = '';
+    });
   };
 
   return (
@@ -428,7 +430,7 @@ const DynamicLead = () => {
               margin: 1
             }}
           >
-            {!categoryLoading ? (
+            {!categoryLoading || !leadLoading ? (
               (categories && categories.length && (
                 <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
               )) ||

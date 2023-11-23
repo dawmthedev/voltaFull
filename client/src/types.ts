@@ -8,6 +8,7 @@ export type LeadsTypes = {
 };
 
 export type CategoryTypes = {
+  [x: string]: any;
   name: string;
   description: string;
 };
@@ -47,6 +48,7 @@ export type PlannerDataTypes = {
 };
 
 export type RoleDataTypes = {
+  _id?: string;
   name: string;
 };
 
