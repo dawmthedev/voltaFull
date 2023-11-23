@@ -130,40 +130,15 @@ export default function UserPage() {
   };
 
   const updateUser = async () => {
-    try {
-      if (!user.name) {
-        return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
-      }
-
-      const response: any = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
-      if (response && response.error && response.error.message) {
-        dispatch(
-          setAlert({
-            message: response.error.message,
-            type: 'error'
-          })
-        );
-        return;
-      }
-      if (response && response.payload) {
-        dispatch(
-          setAlert({
-            message: 'User updated successfully',
-            type: 'success'
-          })
-        );
-        await dispatch(getUsers({ signal }));
-      }
-      setIsModalOpen(false);
-      handleCloseMenu();
-    } catch (error) {
-      dispatch(
-        setAlert({
-          message: error.message,
-          type: 'error'
-        })
-      );
+    if (!user.name) {
+      return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
     }
+    const response = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
+    if (response && response.payload) {
+      await dispatch(getUsers({ signal }));
+    }
+    setIsModalOpen(false);
+    handleCloseMenu();
   };
 
   const submitRole = async () => {
@@ -172,7 +147,7 @@ export default function UserPage() {
         dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
         return;
       }
-      const isDuplicate = roles.find((item) => item.name == newRole);
+      const isDuplicate = roles.find((item) => item.name === newRole);
 
       if (isDuplicate) {
         return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
