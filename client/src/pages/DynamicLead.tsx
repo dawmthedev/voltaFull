@@ -14,10 +14,9 @@ import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '..
 import { setAlert } from '../redux/slice/alertSlice';
 import { categorySelector, loadingCategory } from '../redux/slice/categorySlice';
 import { leadState, loadingLead, openModal } from '../redux/slice/leadSlice';
-import { CategoryResponseTypes, CategoryTypes, FieldTypes, LeadValueTypes } from '../types';
+import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
 import CustomTable from '../components/custom-table/CustomTable';
-import { loadingRole } from '../redux/slice/roleSlice';
 
 const initialCategoryState = {
   name: '',
@@ -255,10 +254,9 @@ const DynamicLead = () => {
     if (!addCategory.name) {
       return dispatch(setAlert({ message: 'Category name can not be empty.', type: 'error' }));
     }
-    const filterCategoryName = categories.find((item) => addCategory.name.toLowerCase() == item.name.toLowerCase());
-    if (filterCategoryName) {
-      return dispatch(setAlert({ message: 'Category name already exists', type: 'error' }));
-    }
+    const filterCategoryName = categories.find((item) => addCategory.name.toLowerCase() === item.name.toLowerCase());
+    if (filterCategoryName) return dispatch(setAlert({ message: 'Category name already exists', type: 'error' }));
+
     const isInvalid = fields.some((field) => {
       return !field.name || !field.type;
     });
@@ -276,8 +274,6 @@ const DynamicLead = () => {
       description: addCategory.description || '',
       fields: fields
     };
-    console.log(categoryLoading);
-    debugger;
     await dispatch(createCategory({ category: formattedData, signal }));
     setIsCategoryModalOpen(false);
     setAddCategory(initialCategoryState);
