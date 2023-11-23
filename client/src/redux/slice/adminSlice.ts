@@ -27,6 +27,7 @@ const adminSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     });
+
     //update user
     builder.addCase(updateAdmin.pending, (state) => {
       state.loading = true;

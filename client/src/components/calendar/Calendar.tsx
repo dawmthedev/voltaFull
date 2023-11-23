@@ -13,7 +13,6 @@ import PlannerForm from '../planner-form/PlannerForm';
 import dayjs, { Dayjs } from 'dayjs';
 import { useAppDispatch, useAppSelector } from '../../hooks/hooks';
 import { createPlanner, getPlanners } from '../../redux/middleware/planner';
-import { setAlert } from '../../redux/slice/alertSlice';
 import { plannerSelector } from '../../redux/slice/plannerSlice';
 import createAbortController from '../../utils/createAbortController';
 
@@ -109,13 +108,8 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       endDate: addFormValues.endDate.toString(),
       timeOfExecution: addFormValues.timeOfExecution.toString()
     };
-    const response: any = await dispatch(createPlanner({ planner: data }));
-    if (response && response.error && response.error.message) {
-      dispatch(setAlert({ message: response.error.message, type: 'error' }));
-      return;
-    }
+    const response = await dispatch(createPlanner({ planner: data }));
     if (response && response.payload) {
-      dispatch(setAlert({ message: 'Planner created successfully', type: 'success' }));
       setIsModalOpen(false);
       await dispatch(getPlanners({ signal }));
     }
