@@ -194,6 +194,7 @@ const DynamicLead = () => {
 
   //! Add new column into category
   const updateCategory = async () => {
+    debugger;
     if (!selectedCategoryId) return;
     const updatedFields = [...columnFields, ...fields];
     const isInvalid = fields.some((field) => {
@@ -202,8 +203,8 @@ const DynamicLead = () => {
     if (isInvalid) {
       return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
     }
-    const isDuplicate = updatedFields.some((field, index) => {
-      return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
+    const isDuplicate = columnFields.some((field) => {
+      return fields.find((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase());
     });
     if (isDuplicate) {
       return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
