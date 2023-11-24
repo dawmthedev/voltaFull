@@ -29,7 +29,7 @@ import React from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { getUsers, updateAdmin } from '../redux/middleware/admin';
 import createAbortController from '../utils/createAbortController';
-import { adminSelector } from '../redux/slice/adminSlice';
+import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
 import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUserForm';
@@ -87,6 +87,7 @@ export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
   const roleLoading = useAppSelector(loadingRole);
+  const adminLoading = useAppSelector(loadingAdmin);
   const roles = useAppSelector(roleList);
   const { signal, abort } = createAbortController();
   const [open, setOpen] = useState(null);
@@ -104,12 +105,8 @@ export default function UserPage() {
 
   useEffect(() => {
     (async () => {
-      try {
-        await dispatch(getUsers({ signal }));
-        await dispatch(getRoles({ signal }));
-      } catch (error) {
-        console.log('Error:(', error);
-      }
+      await dispatch(getUsers({ signal }));
+      await dispatch(getRoles({ signal }));
     })();
 
     return () => {
@@ -142,46 +139,22 @@ export default function UserPage() {
   };
 
   const submitRole = async () => {
-    try {
-      if (!newRole) {
-        dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
-        return;
-      }
-      const isDuplicate = roles.find((item) => item.name === newRole);
-
-      if (isDuplicate) {
-        return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
-      }
-      const response: any = await dispatch(createRole({ role: newRole }));
-      if (response && response.error && response.error.message) {
-        dispatch(
-          setAlert({
-            message: response.error.message,
-            type: 'error'
-          })
-        );
-        return;
-      }
-      if (response && response.payload) {
-        dispatch(
-          setAlert({
-            message: 'Role added successfully',
-            type: 'success'
-          })
-        );
-        await dispatch(getRoles({ signal }));
-      }
-      setIsRoleModalOpen(false);
-      handleCloseMenu();
-      setNewRole('');
-    } catch (error) {
-      dispatch(
-        setAlert({
-          message: error.message,
-          type: 'error'
-        })
-      );
+    if (!newRole) {
+      dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
+      return;
     }
+    const isDuplicate = roles.find((item) => item.name === newRole);
+
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
+    }
+    await dispatch(createRole({ role: newRole }));
+
+    await dispatch(getRoles({ signal }));
+
+    setIsRoleModalOpen(false);
+    handleCloseMenu();
+    setNewRole('');
   };
 
   const handleRequestSort = (event, property) => {
@@ -192,7 +165,6 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      debugger;
       const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
@@ -259,7 +231,7 @@ export default function UserPage() {
         >
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
-        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={roleLoading}>
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
           <AddUserForm
             user={user}
             roles={roles}

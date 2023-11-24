@@ -208,21 +208,15 @@ const DynamicLead = () => {
     if (isDuplicate) {
       return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
     }
-    const response: any = await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
-    if (response.error && response.error.message) {
-      dispatch(setAlert({ message: response.error.message, type: 'error' }));
-      return;
-    }
-    if (response.payload) {
-      dispatch(setAlert({ message: 'Column added successfully', type: 'success' }));
-      await dispatch(getCategories({ signal }));
-      setFields([initialFieldState]);
-      fields.forEach((field) => {
-        field.name = '';
-        field.type = '';
-      });
-      setIsCategoryModalOpen(false);
-    }
+    await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
+
+    await dispatch(getCategories({ signal }));
+    setFields([initialFieldState]);
+    fields.forEach((field) => {
+      field.name = '';
+      field.type = '';
+    });
+    setIsCategoryModalOpen(false);
   };
 
   const submitAddNewLead = async () => {

@@ -108,11 +108,9 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       endDate: addFormValues.endDate.toString(),
       timeOfExecution: addFormValues.timeOfExecution.toString()
     };
-    const response = await dispatch(createPlanner({ planner: data }));
-    if (response && response.payload) {
-      setIsModalOpen(false);
-      await dispatch(getPlanners({ signal }));
-    }
+    await dispatch(createPlanner({ planner: data }));
+    setIsModalOpen(false);
+    await dispatch(getPlanners({ signal }));
   };
 
   //! Dropdown

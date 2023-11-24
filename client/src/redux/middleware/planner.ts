@@ -8,6 +8,8 @@ const getPlanners = createAsyncThunk('planner/get', async ({ signal }: { signal:
     const { data } = await get('/planner', { signal });
     return data.data;
   } catch (error) {
+    const { message } = error.response.data;
+    dispatch(setAlert({ message, type: 'error' }));
     throw error;
   }
 });

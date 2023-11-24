@@ -1,5 +1,5 @@
 import { createReducer, createSlice } from '@reduxjs/toolkit';
-import { createRole, getRoles } from '../middleware/role';
+import { createRole, getRoles  } from '../middleware/role';
 import { RoleDataTypes } from '../../types';
 
 const initialState = {
@@ -43,6 +43,7 @@ const roleSlice = createSlice({
       state.error = action.payload;
       state.loading = false;
     });
+    
   }
 });
 
