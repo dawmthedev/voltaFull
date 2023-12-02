@@ -46,6 +46,7 @@ const DynamicLead = () => {
   const [categoryData, setCategoryData] = useState<CategoryResponseTypes>();
   const [isLeadEdit, setIsLeadEdit] = useState<boolean>(false);
   const [isCategoryEdit, setIsCategoryEdit] = useState<boolean>(false);
+  const [leadListLoading, setLeadListLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -88,6 +89,7 @@ const DynamicLead = () => {
 
   //! get selected category data
   const getSelectedCategoryData = (id) => {
+    setLeadListLoading(true);
     const categoryData = categories.find((category) => category.id === id);
     const updatedFields = categoryData.fields.map((field) => {
       return {
@@ -101,6 +103,7 @@ const DynamicLead = () => {
     if (categoryData.id === id) {
       (async () => {
         await dispatch(getLeads({ categoryId: id, signal }));
+        setLeadListLoading(false);
       })();
     }
   };
@@ -421,13 +424,16 @@ const DynamicLead = () => {
               margin: 1
             }}
           >
-            {!categoryLoading || !leadLoading ? (
-              (categories && categories.length && (
-                <CustomTable data={leadsData} headLabel={columnFields} onEditClick={editLead} onDeleteClick={deleteDynamicLead} />
-              )) ||
-              'Record does not exist.'
+            {categoryLoading ? (
+              <CircularProgress />
             ) : (
-              <CircularProgress size="30px" sx={{ color: '#0F52BA' }} />
+              <CustomTable
+                data={leadsData}
+                headLabel={columnFields}
+                onEditClick={editLead}
+                onDeleteClick={deleteDynamicLead}
+                loading={leadListLoading}
+              />
             )}
           </Box>
         </Card>
