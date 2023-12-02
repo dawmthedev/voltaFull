@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useLayoutEffect } from 'react';
 import Box from '@mui/material/Box';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { Button } from '@mui/material';
@@ -19,13 +19,13 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
   const [rows, setRows] = React.useState([]);
 
   useEffect(() => {
-    if (data && data.length) {
-      const rows = data?.map((row) => ({
-        id: row._id,
-        ...row
-      }));
-      setRows(rows);
-    }
+    // if (data && data.length) {
+    const rows = data?.map((row) => ({
+      id: row._id,
+      ...row
+    }));
+    setRows(rows);
+    // }
   }, [data]);
 
   const onButtonClick = (e, row) => {
@@ -76,6 +76,8 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
     editable: column.field === 'actions' ? false : true
   }));
 
+  console.log('rows---------', rows);
+
   return (
     <Box
       sx={{
@@ -98,6 +100,7 @@ export default function CustomTable({ data, headLabel, onEditClick, onDeleteClic
         // onPageSizeChange={(value) => handlePageSizeChange(value)} // handle page size changes
         rowCount={data?.length || 0}
         pageSizeOptions={[10, 25, 50, 100, 200]}
+        loading={Boolean(!data.length || !rows?.length)}
       />
     </Box>
   );
