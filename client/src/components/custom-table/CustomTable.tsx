@@ -88,7 +88,7 @@ export default function CustomTable({ data, headLabel, loading, onEditClick, onD
         // onPageSizeChange={(value) => handlePageSizeChange(value)} // handle page size changes
         rowCount={data?.length || 0}
         pageSizeOptions={[10, 25, 50, 100, 200]}
-        loading={Boolean(loading)}
+        loading={loading}
         rowsLoadingMode="server"
       />
     </Box>

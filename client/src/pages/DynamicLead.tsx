@@ -91,6 +91,12 @@ const DynamicLead = () => {
   const getSelectedCategoryData = (id) => {
     setLeadListLoading(true);
     const categoryData = categories.find((category) => category.id === id);
+    if (categoryData.id === id) {
+      (async () => {
+        await dispatch(getLeads({ categoryId: id, signal }));
+        setLeadListLoading(false);
+      })();
+    }
     const updatedFields = categoryData.fields.map((field) => {
       return {
         ...field,
@@ -100,12 +106,6 @@ const DynamicLead = () => {
     setSelectedCategoryId(categoryData.id);
     setColumnFields(updatedFields);
     setCategoryData(categoryData);
-    if (categoryData.id === id) {
-      (async () => {
-        await dispatch(getLeads({ categoryId: id, signal }));
-        setLeadListLoading(false);
-      })();
-    }
   };
 
   const handleCsvData = (csvData) => {
@@ -424,7 +424,7 @@ const DynamicLead = () => {
               margin: 1
             }}
           >
-            {categoryLoading ? (
+            {categoryLoading || leadListLoading ? (
               <CircularProgress />
             ) : (
               <CustomTable
