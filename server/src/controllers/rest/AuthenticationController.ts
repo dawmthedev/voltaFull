@@ -573,7 +573,7 @@ public async crmDeal(@BodyParams() body: CrmDealsBody, @Response() res: Response
     vcadders: data["vcAdders"] || [],  // Assuming vcmadders field exists and is an array
   };
 
-
+//prod
   console.log("Result : ")
 
   console.log(result)
