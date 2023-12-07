@@ -64,6 +64,7 @@ export default function DealsDataLeadgen(props) {
   const apiRef = React.useRef(null);
 
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
+  //Added new profile columns. 
   const columns = useMemo(
     () => [
       {
