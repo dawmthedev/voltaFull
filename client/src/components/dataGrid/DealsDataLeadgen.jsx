@@ -66,26 +66,26 @@ export default function DealsDataLeadgen(props) {
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
-      // {
-      //   field: 'Profile',
-      //   headerName: 'Profile',
-      //   width: 150,
-      //   editable: true,
-      //   renderCell: (params) => {
-      //     return (
-      //       <Button
-      //         variant="outlined"
-      //         onClick={() => {
-      //          //Open up user modal
-      //            navigate(`/lead/${params?.row?.id}`);
+      {
+        field: 'Profile',
+        headerName: 'Profile',
+        width: 150,
+        editable: true,
+        renderCell: (params) => {
+          return (
+            <Button
+              variant="outlined"
+              onClick={() => {
+               //Open up user modal
+                 navigate(`/dashboard/lead/${params?.row?.id}`);
     
-      //         }}
-      //       >
-      //         Pipeline
-      //       </Button>
-      //     );
-      //   },
-      // },
+              }}
+            >
+           Details
+            </Button>
+          );
+        },
+      },
   
   
       {

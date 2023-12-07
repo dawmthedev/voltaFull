@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {  Grid, Dialog, Button, IconButton, TextField, Autocomplete, Box,
   DialogTitle, DialogContent, DialogContentText, DialogActions, Avatar, Tooltip, Zoom,
-  Typography, Paper, List, ListItem, ListItemText
+  Typography, Paper, List, ListItem, ListItemText, Stepper, Step, StepLabel
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 
@@ -9,6 +9,8 @@ import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import PersonIcon from '@mui/icons-material/Person';
+
+
 import { styled } from '@mui/material/styles';
 import { alpha } from '@mui/material/styles';
 
@@ -28,9 +30,10 @@ import { authSelector } from '../redux/slice/authSlice';
 // Import any other necessary local components like StyledAccount, Card, etc.
 
 const LeadDetailPage = () => {
-
+  const steps = ['New Sale','Welcome Call', 'Site Survey', 'Site Survey','NTP', 'QC check', 'Plans' , 'FLA', 'Solar Permit', 'Solar Install', ' Final Inspection' , 'PTO', 'Complete'];
 
   // User redux object
+  //update prod
   const { Projectdata } = useAppSelector(authSelector);
   const recordId = Projectdata?.recordID;
 
@@ -80,17 +83,37 @@ const LeadDetailPage = () => {
   };
 
   const [homeownerData, setHomeownerData] = useState(null);
+  const [stage, setStage] = useState(null);
   const [phoneData, setPhoneData] = useState(null);
   const [emailData, setEmailData] = useState(null);
   const [addressData, setAddressData] = useState(null);
   const [messageData, setMessageData] = useState([]);
   const [addersData, setAddersData] = useState([]);
 
+  const [activeStep, setActiveStep] = useState(0);
+
+const handleNext = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep + 1);
+};
+
+const handleBack = () => {
+  setActiveStep((prevActiveStep) => prevActiveStep - 1);
+};
+
+const handleReset = () => {
+
+  setActiveStep(0);
+
+
+
+};
+
+
 
 
   useEffect(() => {
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`, {
-     // fetch(`http://localhost:4000/rest/auth/crmDeal`, {
+   fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDeal`, {
+   //   fetch(`http://localhost:4000/rest/auth/crmDeal`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -102,10 +125,12 @@ const LeadDetailPage = () => {
         console.log("API Response:", responseData); // Log the API response
         if (responseData.success && responseData.data) {
           // Assuming homeowner data is present in the response
-          const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
-          const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate : 'Loading...';
-          const emailInfo = responseData.data.email ? responseData.data.email : 'Loading...';
-          const addressInfo = responseData.data.homeownerName ? responseData.data.homeownerName : 'Loading...';
+          const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
+         // const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
+          const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, ''): 'Loading...';
+          const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, ''): 'Loading...';
+          const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
+          const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
   
           const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
   
@@ -121,14 +146,80 @@ const LeadDetailPage = () => {
   
           const addersArray = addersInfo.map((adder) => ({
             id: adder.relatedProject,
-            description: adder.description,
+            description: adder.description.replace(/^"|"$/g, ''),
             type: 'call',
             quantity: adder.quantity,
-            price: adder.price,
-            status: adder.status,
+            price: truncateDecimals(parseFloat(adder.price), 2),
+            status: adder.status.replace(/^"|"$/g, ''),
             billTo: adder.billTo
-
           }));
+
+          if (stage != null) {
+            switch (stage) {
+                case "New Sale":
+                    // code for value1
+                    setActiveStep(1)
+                    break;
+                case "Welcome Call":
+                    // code for value2
+                    setActiveStep(2)
+                    break;
+                case "Site Survey":
+                    // code for value2
+                    setActiveStep(3)
+                    break;
+                case "NTP":
+                  setActiveStep(4)
+                      // code for value2
+                    break;   
+
+                case "QC check":
+                  setActiveStep(5)
+                        // code for value2
+                    break;   
+                        
+                case "Plans":
+                  setActiveStep(6)
+                          // code for value2
+                      break;           
+
+                case "FLA":
+                  setActiveStep(7)
+                        // code for value2
+                      break;    
+                case "Solar Permit":
+                  setActiveStep(8)
+                          // code for value2
+                      break;    
+                case "Solar Install":
+                  setActiveStep(9)
+                            // code for value2
+                      break;    
+                            
+                case "Final Inspection":
+                  setActiveStep(10)
+                              // code for value2
+                      break;  
+                      
+                case "PTO":
+                  setActiveStep(11)
+                        // code for value2
+                      break;  
+                      
+               case "Complete":
+                setActiveStep(12)
+                        // code for value2
+                      break;        
+                // add more cases as needed
+                default:
+                    // code to be executed if none of the cases match
+            }
+        }
+        
+
+
+
+
 
 
           setAddersData(addersArray);
@@ -222,68 +313,79 @@ function truncateDecimals(number, decimalPlaces) {
       {/* ... */}
 
      {/* Profile and general project details */}
-     <Grid item xs={11} md={4}>
-        <Paper elevation={3} sx={{ p: 2 }}>
-          <Typography variant="h6" gutterBottom>
-            Homeowner Details
-          </Typography>
-          <List>
-            <ListItem>
-              <PersonIcon color="primary" />
-              <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" />
-</ListItem>
-            {/* <ListItem>
-              <PhoneIcon color="primary" />
-              <ListItemText primary={phoneData !== null ? phoneData : 'Loading...'} secondary="Sale Date" />
+   {/* Main Content Grid */}
+   <Grid container spacing={2}>
+        {/* Top-left Paper Box */}
+        <Grid item xs={12} md={4}>
+          <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'none' }}>
+            <Typography variant="h6" gutterBottom>
+              Homeowner Details
+            </Typography>
+            <List>
+              <ListItem>
+                <PersonIcon color="primary" />
+                <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" />
+              </ListItem>
+              <ListItem>
+                <PersonIcon color="primary" />
+                <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address " />
+              </ListItem>
+              <ListItem>
+                <EmailIcon color="primary" />
+                <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" />
+              </ListItem>
+            </List>
+          </Paper>
+        </Grid>
 
-            </ListItem> */}
-            <ListItem>
-              <EmailIcon color="primary" />
-              <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" />
+        {/* Left side: Horizontal Stepper */}
+        <Grid item xs={12} md={8}>
+          <div style={{ minHeight:'100px', maxHeight: '400px', overflowY: 'auto' , scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch' }}>
+            <Stepper activeStep={activeStep}>
+              {steps.map((label, index) => (
+                <Step key={label}>
+                  <StepLabel>{label}</StepLabel>
+                </Step>
+              ))}
+            </Stepper>
+          </div>
 
-            </ListItem>
+          <Grid sx={{ p: 2, backgroundColor: 'none' }} container direction="column" spacing={2}>
+            {/* Adders */}
+            <Grid item>
+              <h4>Adders</h4>
+              {addersData !== null ? (
+                addersData.map((adder) => (
+                  <AddersCard key={adder.id} data={adder} text={adder.text} getItem={getSelected} type={adder.type} />
+                ))
+              ) : (
+                <p>Loading...</p>
+              )}
+            </Grid>
 
-            {/* <ListItem>
-              <LocationOnIcon color="primary" />
-              <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address" />
-            </ListItem> */}
-          </List>
-        </Paper>
-
-        {/* Adders */}
-      <Grid item xs={10} md={10}>
-        <h4>Adders</h4>
-        {/* Check if messageData is not null before mapping */}
-        {addersData !== null ? (
-          addersData.map((adder) => (
-            <AddersCard key={adder.id} data={adder} text={adder.text}  getItem={getSelected} type={adder.type} />
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-        {/* Render other components like emails, texts, notes here as well */}
-      </Grid>
-
-      </Grid>
-
-
-
-      {/* Mesages */}
-      <Grid item xs={10} md={6}>
-        <h4>Messages</h4>
-        {/* Check if messageData is not null before mapping */}
-        {messageData !== null ? (
-          messageData.map((msg) => (
-            <Card key={msg.id} data={msg} text={msg.text}  from={msg.from} getItem={getSelected} type={msg.type} />
-          ))
-        ) : (
-          <p>Loading...</p>
-        )}
-        {/* Render other components like emails, texts, notes here as well */}
-      </Grid>
-
-
+            {/* Messages */}
+            <Grid item>
+              <h4>Messages</h4>
+              {messageData !== null ? (
+                messageData.map((msg) => (
+                  <Card key={msg.id} data={msg} text={msg.text} from={msg.from} getItem={getSelected} type={msg.type} />
+                ))
+              ) : (
+                <p>Loading...</p>
+              )}
+            </Grid>
           </Grid>
+        </Grid>
+      </Grid>
+
+
+
+  </Grid>
+
+  
+
+
+       
   );
 };
 
@@ -322,17 +424,13 @@ const AddersCard = ({ data, getItem, type,  leadName}) => {
 
           <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {/* {data?.note || data?.message || data?.text || data?.description} */}
-              From: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
+              Status: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
               {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
             </Typography>
+           
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               {/* {data?.note || data?.message || data?.text || data?.description} */}
-              {data?.description && data.description.length > 500 ? data.description.slice(0, 40) + '...' : data.description}
-              {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
-            </Typography>
-            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
-              {/* {data?.note || data?.message || data?.text || data?.description} */}
-              {data?.price && data.price}
+             Price: $ {data?.price && data.price}
               {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
             </Typography>
           </Box>

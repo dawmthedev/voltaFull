@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -29,7 +30,186 @@ export default function DashboardAppPage() {
 
 
 
+  const [AHJTimelineData, setData] = useState([]);
 
+
+  const [DealsData, setDealsData] = useState([]);
+  
+  const [DealsAvgTimelineData, setDealsAvgData] = useState([]);
+
+  const [AhjKeys, setAhjKeys] = useState(null);
+  const [isLoading, setLoading] = useState(true);
+  const [payError, setPayError] = useState(null);
+
+
+  const fetchAhjTimelineData = async () => {
+    try {
+      //fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
+      const response = await fetch(`http://localhost:4000/rest/auth/crmAHJTimelines`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ repId: "00000" }),
+      });
+
+      const responseData = await response.json();
+
+      if (responseData && responseData.data && responseData.data.timeline) {
+        const formattedArray = responseData.data.timeline.map(item => ({
+          name: item.AHJ.replace(/"/g, ""),
+          data: [
+            parseFloat(item.saleStage) || 0,
+            parseFloat(item.welcometage) || 0,
+            parseFloat(item.sstage) || 0,
+            parseFloat(item.ntpstage) || 0,
+            parseFloat(item.qcStage) || 0,
+            parseFloat(item.planStage) || 0,
+            parseFloat(item.flatage) || 0,
+            parseFloat(item.permitStage) || 0,
+            parseFloat(item.installStage) || 0,
+            parseFloat(item.inspectStage) || 0,
+          ],
+        }));
+
+        setData(formattedArray);
+      }
+
+      setLoading(false);
+    } catch (error) {
+      setPayError(error);
+      setLoading(false);
+    }
+  };
+
+
+ 
+
+  const fetchDealsData = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/rest/auth/crmDealsGlobal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ recordId: "7777" }),
+      });
+  
+      const responseData = await response.json();
+  
+      if (responseData && responseData.data && responseData.data.deals) {
+        const financingTypes = ['Sunnova', 'Enium', 'Cash'];
+  
+        // Initialize data structure
+        const monthlyData = financingTypes.map(financingType => ({
+          name: financingType,
+          type: 'column', // Change the type as needed
+          fill: 'solid', // Change the fill as needed
+          data: Array(12).fill(0), // Initialize an array for each month
+        }));
+  
+        responseData.data.deals.forEach(item => {
+          const saleDate = new Date(item.saleDate);
+          const month = saleDate.getMonth();
+          const year = saleDate.getFullYear();
+          const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
+  
+          const index = financingTypes.indexOf(financingType);
+          if (index !== -1) {
+            monthlyData[index].data[month] += 1;
+          }
+        });
+  
+        const chartData = monthlyData.map(item => ({
+          name: item.name,
+          type: item.type,
+          fill: item.fill,
+          data: item.data,
+        }));
+  
+
+
+
+        console.log(chartData)
+        setDealsData(chartData);
+      }
+  
+      setLoading(false);
+    } catch (error) {
+      setPayError(error);
+      setLoading(false);
+    }
+  };
+  const fetchDealsAvgData = async () => {
+    try {
+      const response = await fetch(`http://localhost:4000/rest/auth/crmAvgTimelines`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ repId: "7777" }),
+      });
+  
+      const responseData = await response.json();
+  
+      if (responseData && responseData.data && responseData.data.timeline) {
+        const timeline = responseData.data.timeline;
+  
+        const chartData = Object.entries(timeline).map(([label, value]) => ({
+          label,
+          value: parseFloat(value) || 0,
+        }));
+  
+        console.log(chartData);
+        setDealsAvgData(chartData);
+      }
+  
+      setLoading(false);
+    } catch (error) {
+      setPayError(error);
+      setLoading(false);
+    }
+  };
+  
+  
+  
+
+
+
+  useEffect(() => {
+
+
+
+    fetchAhjTimelineData();
+    fetchDealsData();
+    fetchDealsAvgData();
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}, []);
 
 
 
@@ -48,7 +228,7 @@ export default function DashboardAppPage() {
   return (
     <>
       <Helmet>
-        <title> Dashboard | Minimal UI </title>
+        <title> Dashboard | Voltaic  </title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -58,15 +238,15 @@ export default function DashboardAppPage() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ant-design:home-filled'} />
+            <AppWidgetSummary title="Weekly Sales" total={2} icon={'ant-design:home-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="New Leads" total={1352831} color="info" icon={'ant-design:profile-filled'} />
+            <AppWidgetSummary title="New Leads" total={14} color="info" icon={'ant-design:profile-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Tasks" total={1723315} color="warning" icon={'ant-design:profile-filled'} />
+            <AppWidgetSummary title="Tasks" total={4} color="warning" icon={'ant-design:profile-filled'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
@@ -75,7 +255,7 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Website Visits"
+              title="Installs Month to Month"
               subheader="(+43%) than last year"
               chartLabels={[
                 '01/01/2003',
@@ -90,38 +270,42 @@ export default function DashboardAppPage() {
                 '10/01/2003',
                 '11/01/2003',
               ]}
-              chartData={[
-                {
-                  name: 'Team A',
-                  type: 'column',
-                  fill: 'solid',
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-                },
-                {
-                  name: 'Team B',
-                  type: 'area',
-                  fill: 'gradient',
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-                },
-                {
-                  name: 'Team C',
-                  type: 'line',
-                  fill: 'solid',
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-                },
-              ]}
+
+              chartData={DealsData}
+              // chartData={
+              //   [
+              //   {
+              //     name: 'Sunnova',
+              //     type: 'column',
+              //     fill: 'solid',
+              //     data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+              //   },
+              //   {
+              //     name: 'Enium',
+              //     type: 'area',
+              //     fill: 'gradient',
+              //     data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+              //   },
+              //   {
+              //     name: 'Cash',
+              //     type: 'line',
+              //     fill: 'solid',
+              //     data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+              //   },
+              // ]}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
-              title="Current Visits"
-              chartData={[
-                { label: 'America', value: 4344 },
-                { label: 'Asia', value: 5435 },
-                { label: 'Europe', value: 1443 },
-                { label: 'Africa', value: 4443 },
-              ]}
+              title="Avg Stage Duration"
+              chartData={DealsAvgTimelineData}
+              // chartData={[
+              //   { label: 'America', value: 4344 },
+              //   { label: 'Asia', value: 5435 },
+              //   { label: 'Europe', value: 1443 },
+              //   { label: 'Africa', value: 4443 },
+              // ]}
               chartColors={[
                 theme.palette.primary.main,
                 theme.palette.info.main,
@@ -133,8 +317,9 @@ export default function DashboardAppPage() {
 
           <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
-              title="Conversion Rates"
+              title="Projects by county"
               subheader="(+43%) than last year"
+              // chartData={AHJTimelineData}
               chartData={[
                 { label: 'San Diego County', value: 400 },
                 { label: 'Orange County', value: 430 },
@@ -145,31 +330,28 @@ export default function DashboardAppPage() {
                 { label: 'Ventura County', value: 690 },
                 { label: 'Santa Barbara County', value: 1100 },
                 { label: 'Kern County', value: 1200 },
-                { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
-                // { label: 'San Luis Obispo County', value: 1380 },
+                { label: 'San Luis Obispo County', value: 1380 }
+                
                 ]}
+            
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentSubject
-              title="CRM Activtiy / Retention "
-              chartLabels={['LEAD A', 'LEAD B', 'LEAD C', 'LEAD D', 'LEAD E', 'LEAD F']}
-              chartData={[
-                { name: 'Lead generation and qualification', data: [80, 50, 30, 40, 100, 20] },
-                { name: 'Listing and marketing', data: [20, 30, 40, 80, 20, 80] },
-                { name: 'Closing and follow-up', data: [44, 76, 78, 13, 43, 10] },
-              ]}
+              title="Stage duration by AHJ "
+              chartLabels={['Sale Date','Welcome', 'Site Survey', 'NTP', 'QC Check', 'FLA' ,'Plans', 'Install', 'Inspection', 'PTO']}
+              chartData={AHJTimelineData}
+              // chartData={[
+              //   { name: 'Los Angeles', data: [1, 5, 3, 4, 10, 20] },
+              //   { name: 'Listing and marketing', data: [2, 3, 4, 8, 28, 20] },
+              //   { name: 'Closing and follow-up', data: [1, 5, 7, 3, 45, 17] },
+              // ]}
               chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
             />
           </Grid>
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppNewsUpdate
               title="Messages"
               list={[...Array(5)].map((_, index) => ({
@@ -180,9 +362,9 @@ export default function DashboardAppPage() {
                 postedAt: faker.date.recent(),
               }))}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline
               title="Hot Lead of the day"
               list={[...Array(5)].map((_, index) => ({
@@ -198,9 +380,9 @@ export default function DashboardAppPage() {
                 time: faker.date.past(),
               }))}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={4}>
+          {/* <Grid item xs={12} md={6} lg={4}>
             <AppTrafficBySite
               title="Traffic by Site"
               list={[
@@ -226,9 +408,9 @@ export default function DashboardAppPage() {
                 },
               ]}
             />
-          </Grid>
+          </Grid> */}
 
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppTasks
               title="Tasks"
               list={[
@@ -239,7 +421,7 @@ export default function DashboardAppPage() {
                 { id: '5', label: 'Set Up Meeting' },
               ]}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </>

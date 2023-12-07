@@ -10,6 +10,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import VerifyPage from './pages/VerifyPage';
 import NonVerifiedPage from './pages/NonVerified';
 import Leads from './pages/Leads';
+import VCDashboardAppPage from './pages/VCDash'
 // import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
@@ -34,20 +35,23 @@ export default function Router() {
       path: '/dashboard',
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
-        {
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
-          index: true
-        },
-        {
-          path: 'app',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
-        },
-        {
-          path: 'user',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
-        },
+        // {
+        //   element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
+        //   index: true
+        // },
+        // {
+        //   path: 'app',
+        //   element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
+        // },
+        // {
+        //   path: 'user',
+        //   element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
+        // },
         { path: 'products', element: <ProductsPage /> },
+        { path: 'app', element: <DashboardAppPage /> },
         { path: 'assistant', element: <Assistant/> },
+        { path: 'vcdash', element: <VCDashboardAppPage/> },
+      
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
