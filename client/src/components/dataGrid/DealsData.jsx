@@ -1,5 +1,6 @@
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
+
 import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
 
 import { useMemo, useState, useEffect } from 'react';
@@ -17,6 +18,9 @@ export default function DealsData(props) {
 
   const navigate = useNavigate();
   const {recordUserId} = props;
+
+
+
 
   // Add redux user info here: 
   // const { user } = useSelector((state) => state.auth);
@@ -247,6 +251,14 @@ export default function DealsData(props) {
 
 const leadsRows = data || [];
 
+const filteredRows = leadsRows.filter((row) =>
+  Object.values(row).some(
+    (value) =>
+      typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+);
+
+
 
 
   const handleSearchInputChange = (event) => {
@@ -358,7 +370,10 @@ const leadsRows = data || [];
             <StyledDataGrid
             sx={gridStyles}
           //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
-            rows={leadsRows}
+       //    rows={leadsRows}
+            rows={filteredRows}
+
+      
 
             editable
             editMode="cell"

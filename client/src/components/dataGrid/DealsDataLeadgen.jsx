@@ -253,6 +253,14 @@ const leadsRows = data || [];
     }
   };
 
+  const filteredRows = leadsRows.filter((row) =>
+  Object.values(row).some(
+    (value) =>
+      typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase())
+  )
+);
+
+
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
       setFilter(searchQuery);
@@ -350,7 +358,9 @@ const leadsRows = data || [];
             <StyledDataGrid
             sx={gridStyles}
           //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
-            rows={leadsRows}
+            //rows={leadsRows}
+            rows={filteredRows}
+
 
             editable
             editMode="cell"

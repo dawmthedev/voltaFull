@@ -262,20 +262,7 @@ export default function LeadGenPay(props) {
           });
           
 
-            // const payData = responseData.data.payrollData.map((payrollItem) => {
-            //     return {
-            //         lead: payrollItem.lead,
-            //         userStatus: payrollItem.userStatus,
-            //         ppwFinal: payrollItem.ppwFinal,
-            //         milestone: payrollItem.milestone,
-              
-            //         datePaid:  formatSaleDate(payrollItem.datePaid.slice(1, -1)),
-            //         amount: payrollItem.amount,
-            //         id: Math.random()
-            //     };
-            // });
-            
- 
+  
             setData(payData);
             
         }
@@ -289,6 +276,14 @@ export default function LeadGenPay(props) {
         setPayError(error);
         setLoading(false);
     });
+
+
+
+
+
+
+
+    
 }, [recordUserId]);
 
   // remove categories and tags from data.leads and make new array
@@ -349,6 +344,10 @@ function formatDollar(amount) {
     selectIds = newSelection;
   };
 
+
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
 
   // disable eslint for now
   // eslint-disable-next-line no-unused-vars

@@ -44,8 +44,8 @@ export default function DashboardAppPage() {
 
   const fetchAhjTimelineData = async () => {
     try {
-      //fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
-      const response = await fetch(`http://localhost:4000/rest/auth/crmAHJTimelines`, {
+     // fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
+      const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -87,7 +87,7 @@ export default function DashboardAppPage() {
 
   const fetchDealsData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/rest/auth/crmDealsGlobal`, {
+      const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsGlobal`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -112,6 +112,9 @@ export default function DashboardAppPage() {
           const saleDate = new Date(item.saleDate);
           const month = saleDate.getMonth();
           const year = saleDate.getFullYear();
+
+          console.log(year)
+         /// alert("year")
           const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
   
           const index = financingTypes.indexOf(financingType);
@@ -140,9 +143,16 @@ export default function DashboardAppPage() {
       setLoading(false);
     }
   };
+
+
+
+
+
+
   const fetchDealsAvgData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/rest/auth/crmAvgTimelines`, {
+     // const response = await fetch(`http://localhost:4000/rest/auth/crmAHJTimelines`, {
+     const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAvgTimelines`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -258,17 +268,18 @@ export default function DashboardAppPage() {
               title="Installs Month to Month"
               subheader="(+43%) than last year"
               chartLabels={[
-                '01/01/2003',
-                '02/01/2003',
-                '03/01/2003',
-                '04/01/2003',
-                '05/01/2003',
-                '06/01/2003',
-                '07/01/2003',
-                '08/01/2003',
-                '09/01/2003',
-                '10/01/2003',
-                '11/01/2003',
+                '01/01/2023',
+                '02/01/2023',
+                '03/01/2023',
+                '04/01/2023',
+                '05/01/2023',
+                '06/01/2023',
+                '07/01/2023',
+                '08/01/2023',
+                '09/01/2023',
+                '10/01/2023',
+                '11/01/2023',
+                '12/01/2023',
               ]}
 
               chartData={DealsData}

@@ -51,7 +51,6 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'assistant', element: <Assistant/> },
         { path: 'vcdash', element: <VCDashboardAppPage/> },
-      
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
