@@ -1,19 +1,22 @@
-import { Button, Container } from '@mui/material';
+import { Button, Card, CircularProgress, Container, Grid } from '@mui/material';
 import { Box, Stack } from '@mui/system';
 import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import AddCategory from '../components/add-category/AddCategory';
 import AddLead from '../components/add-lead/AddLead';
-import LeadsTable from '../components/leads-table/LeadsTable';
+import CustomInput from '../components/input/CustomInput';
+import LeadsTable from '../components/csv-table/CsvTable';
 import CustomModal from '../components/modals/CustomModal';
 import CsvUpload from '../components/upload-file/CsvUpload';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { createCategory, getCategories, getCategory } from '../redux/middleware/category';
-import { createBulkLead, createLead, getLeads } from '../redux/middleware/lead';
-import { categoryByIdSelector, categorySelector } from '../redux/slice/categorySlice';
-import { leadState, openModal } from '../redux/slice/leadSlice';
+import { addNewColumn, createCategory, getCategories } from '../redux/middleware/category';
+import { createBulkLead, createLead, deleteLead, getLeads, updateLead } from '../redux/middleware/lead';
+import { setAlert } from '../redux/slice/alertSlice';
+import { categorySelector, loadingCategory } from '../redux/slice/categorySlice';
+import { leadState, loadingLead, openModal } from '../redux/slice/leadSlice';
 import { CategoryResponseTypes, CategoryTypes, FieldTypes } from '../types';
 import createAbortController from '../utils/createAbortController';
+import CustomTable from '../components/custom-table/CustomTable';
 
 const initialCategoryState = {
   name: '',
@@ -26,32 +29,24 @@ const initialFieldState = {
 
 const DynamicLead = () => {
   const categories: CategoryResponseTypes[] = useAppSelector(categorySelector);
-  const categoryData: CategoryResponseTypes = useAppSelector(categoryByIdSelector);
-  const { data, isModalOpen } = useAppSelector(leadState);
+  const categoryLoading = useAppSelector(loadingCategory);
+  const leadLoading = useAppSelector(loadingLead);
+  const { data: leadsData, isModalOpen } = useAppSelector(leadState);
   const dispatch = useAppDispatch();
   const { signal, abort } = createAbortController();
-
-  const [selected, setSelected] = useState([]);
-  const [filterName, setFilterName] = useState('');
   const [uploadedLeads, setUploadedLeads] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState(categories[0]?.id);
+  const [selectedCategoryId, setSelectedCategoryId] = useState(categories[0]?.id);
   const [isAddLeadModalOpen, setIsAddLeadModalOpen] = useState(false);
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState<boolean>(false);
-  const [category, setCategory] = useState<CategoryTypes>(initialCategoryState);
+  const [addCategory, setAddCategory] = useState<CategoryTypes>(initialCategoryState);
   const [fields, setFields] = useState<FieldTypes[]>([initialFieldState]);
-  const [addLeads, setAddLeads] = useState<any>(categoryData?.fields);
+  const [columnFields, setColumnFields] = useState<any>([]);
   const [leadValues, setLeadValues] = useState({});
-
-  useEffect(() => {
-    if (!categoryData) return;
-    const updatedFields = categoryData.fields.map((field) => {
-      return {
-        ...field,
-        value: ''
-      };
-    });
-    setAddLeads(updatedFields);
-  }, [categoryData, selectedCategory]);
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [categoryData, setCategoryData] = useState<CategoryResponseTypes>();
+  const [isLeadEdit, setIsLeadEdit] = useState<boolean>(false);
+  const [isCategoryEdit, setIsCategoryEdit] = useState<boolean>(false);
+  const [leadListLoading, setLeadListLoading] = useState<boolean>(false);
 
   useEffect(() => {
     (async () => {
@@ -64,22 +59,72 @@ const DynamicLead = () => {
 
   useEffect(() => {
     if (!categories.length) return;
+    setSelectedCategoryId(selectedCategoryId || categories[0].id);
     (async () => {
-      await dispatch(getLeads({ categoryId: categories[0].id, signal }));
+      await dispatch(getLeads({ categoryId: selectedCategoryId || categories[0].id, signal }));
     })();
+    // find selected category data
+    let updatedFields;
+    const categoryData = categories.find((category) => category.id === selectedCategoryId);
+    if (categoryData) {
+      updatedFields = categoryData.fields.map((field) => {
+        return {
+          ...field,
+          value: ''
+        };
+      });
+    } else {
+      updatedFields = categories[0].fields.map((field) => {
+        return {
+          ...field,
+          value: ''
+        };
+      });
+    }
+    setColumnFields(updatedFields);
     return () => {
       abort();
     };
-  }, []);
+  }, [categories]);
+
+  //! get selected category data
+  const getSelectedCategoryData = (id) => {
+    setLeadListLoading(true);
+    const categoryData = categories.find((category) => category.id === id);
+    if (categoryData.id === id) {
+      (async () => {
+        await dispatch(getLeads({ categoryId: id, signal }));
+        setLeadListLoading(false);
+      })();
+    }
+    const updatedFields = categoryData.fields.map((field) => {
+      return {
+        ...field,
+        value: ''
+      };
+    });
+    setSelectedCategoryId(categoryData.id);
+    setColumnFields(updatedFields);
+    setCategoryData(categoryData);
+  };
 
   const handleCsvData = (csvData) => {
     setUploadedLeads(csvData);
   };
 
   const submitBulkLeads = async () => {
+    if (!categoryName) {
+      dispatch(setAlert({ message: 'Please add category name', type: 'error' }));
+      return;
+    }
+    if (!uploadedLeads.length) {
+      dispatch(setAlert({ message: 'Please upload leads', type: 'error' }));
+      return;
+    }
+
     const leadsFormattedData = {
-      tableName: 'dynamicleadtests',
-      columns: getColumns(uploadedLeads),
+      tableName: categoryName,
+      fields: getColumns(uploadedLeads),
       data: uploadedLeads
     };
     await dispatch(createBulkLead({ leads: leadsFormattedData, signal }));
@@ -113,9 +158,9 @@ const DynamicLead = () => {
   };
 
   const getAddLeadData = (value, name, index) => {
-    const updatedData = [...addLeads];
+    const updatedData = [...columnFields];
     updatedData[index]['value'] = value;
-    setAddLeads(updatedData);
+    setColumnFields(updatedData);
     const data = {
       ...leadValues,
       [updatedData[index]['name']]: value
@@ -129,29 +174,113 @@ const DynamicLead = () => {
     setFields(updatedField);
   };
 
-  const submitAddNewLead = async () => {
-    const data = {
-      tableId: selectedCategory,
-      data: leadValues
-    };
-    await dispatch(createLead({ lead: data, signal }));
-    setIsAddLeadModalOpen(false);
+  //! Edit lead
+  const editLead = async (e, lead) => {
+    e.stopPropagation();
+    const updatedData = [...columnFields];
+    updatedData.forEach((data) => {
+      data.value = lead[data.name];
+    });
+    setColumnFields(updatedData);
+    setLeadValues(lead);
+    setIsAddLeadModalOpen(true);
+    setIsLeadEdit(true);
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
   };
 
-  const submitCategory = async () => {
-    try {
-      const formattedData = {
-        name: category.name,
-        description: category.description || '',
-        fields: fields
-      };
-      await dispatch(createCategory({ category: formattedData }));
-      setIsCategoryModalOpen(false);
-      setCategory(initialCategoryState);
-      setFields([initialFieldState]);
-    } catch (error) {
-      console.log('Error:(', error);
+  //! Delete lead
+  const deleteDynamicLead = async (e, lead) => {
+    e.stopPropagation();
+    await dispatch(deleteLead({ id: lead.id, tableId: selectedCategoryId }));
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
+  };
+
+  //! Add new column into category
+  const updateCategory = async () => {
+    debugger;
+    if (!selectedCategoryId) return;
+    const updatedFields = [...columnFields, ...fields];
+    const isInvalid = fields.some((field) => {
+      return !field.name || !field.type;
+    });
+    if (isInvalid) {
+      return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
     }
+    const isDuplicate = columnFields.some((field) => {
+      return fields.find((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase());
+    });
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate column name', type: 'error' }));
+    }
+    await dispatch(addNewColumn({ tableId: selectedCategoryId, fields }));
+
+    await dispatch(getCategories({ signal }));
+    setFields([initialFieldState]);
+    fields.forEach((field) => {
+      field.name = '';
+      field.type = '';
+    });
+    setIsCategoryModalOpen(false);
+  };
+
+  const submitAddNewLead = async () => {
+    for (const item of columnFields) {
+      if (!item.value) {
+        return dispatch(setAlert({ message: 'Fields can not be empty.', type: 'error' }));
+      }
+    }
+    const data = {
+      tableId: selectedCategoryId,
+      data: leadValues
+    };
+    if (isLeadEdit) {
+      await dispatch(updateLead({ lead: data, signal }));
+    } else {
+      await dispatch(createLead({ lead: data, signal }));
+    }
+    setIsAddLeadModalOpen(false);
+    await dispatch(getLeads({ categoryId: selectedCategoryId, signal }));
+    setIsLeadEdit(false);
+
+    columnFields.forEach((field) => {
+      field.value = '';
+    });
+  };
+
+  //! Add new category
+  const submitCategory = async () => {
+    if (!addCategory.name) {
+      return dispatch(setAlert({ message: 'Category name can not be empty.', type: 'error' }));
+    }
+    const filterCategoryName = categories.find((item) => addCategory.name.toLowerCase() === item.name.toLowerCase());
+    if (filterCategoryName) return dispatch(setAlert({ message: 'Category name already exists', type: 'error' }));
+
+    const isInvalid = fields.some((field) => {
+      return !field.name || !field.type;
+    });
+    if (isInvalid) {
+      return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
+    }
+    const isDuplicate = fields.some((field, index) => {
+      return fields.findIndex((item) => item.name.toLocaleLowerCase() === field.name.toLocaleLowerCase()) !== index;
+    });
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Fields name should be unique', type: 'error' }));
+    }
+    const formattedData = {
+      name: addCategory.name,
+      description: addCategory.description || '',
+      fields: fields
+    };
+    await dispatch(createCategory({ category: formattedData, signal }));
+    setIsCategoryModalOpen(false);
+    setAddCategory(initialCategoryState);
+    setFields([initialFieldState]);
+    await dispatch(getCategories({ signal }));
+    fields.forEach((field) => {
+      field.name = '';
+      field.type = '';
+    });
   };
 
   return (
@@ -161,17 +290,45 @@ const DynamicLead = () => {
       </Helmet>
       <Container>
         <h1>Dynamic Lead</h1>
-        <Stack direction="row" alignItems="center" gap={2} mb={5} overflow="scroll" width={'100%'}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          gap={2}
+          mb={5}
+          pb={2}
+          sx={{
+            overflowX: 'scroll',
+            scrollbarWidth: 'auto',
+
+            '&::-webkit-scrollbar': {
+              width: '2px',
+              maxHeight: '5px',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-track': {
+              background: 'transparent',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-thumb': {
+              backgroundColor: '#D3D3D3',
+              scrollbarGutter: 'stable',
+              borderRadius: '20px'
+            },
+            '&::-webkit-scrollbar-thumb:hover': {
+              background: '#D3D3D3',
+              borderRadius: '20px'
+            }
+          }}
+          width={'100%'}
+        >
           {(categories &&
             categories.map((category: CategoryResponseTypes) => (
               <Button
                 key={category.name}
-                variant={selectedCategory === category.id ? 'contained' : 'outlined'}
+                variant={selectedCategoryId === category.id ? 'contained' : 'outlined'}
                 sx={{ minWidth: 'auto' }}
-                onClick={async () => {
-                  await dispatch(getCategory({ id: category.id }));
-                  await dispatch(getLeads({ categoryId: category.id, signal }));
-                  setSelectedCategory(category.id);
+                onClick={() => {
+                  getSelectedCategoryData(category.id);
                 }}
               >
                 {category.name}
@@ -196,26 +353,14 @@ const DynamicLead = () => {
             open={isModalOpen}
             setOpen={() => dispatch(openModal(false))}
             handleSubmit={submitBulkLeads}
+            loading={leadLoading}
             size="lg"
           >
             <CsvUpload handleCsvData={handleCsvData} />
-            {(uploadedLeads.length && (
-              <LeadsTable
-                data={uploadedLeads}
-                headLabel={getColumns(uploadedLeads)}
-                order="asc"
-                orderBy={getColumns(uploadedLeads).length && getColumns(uploadedLeads)[0].name}
-                rowCount={10}
-                selected={selected}
-                emptyRows={0}
-                isNotFound={false}
-                filterName={filterName}
-                onRequestSort={() => {}}
-                onSelectAllClick={() => {}}
-                handleClick={() => {}}
-              />
-            )) ||
-              ''}
+            <Grid sx={{ mt: 2, width: '30%' }}>
+              <CustomInput label="Name" name="categoryName" value={categoryName} onChange={(e) => setCategoryName(e.target.value)} />
+            </Grid>
+            {(uploadedLeads.length && <LeadsTable data={uploadedLeads} headLabel={getColumns(uploadedLeads)} />) || ''}
           </CustomModal>
         </Box>
         <Box>
@@ -224,44 +369,74 @@ const DynamicLead = () => {
             open={isAddLeadModalOpen}
             setOpen={() => setIsAddLeadModalOpen(false)}
             handleSubmit={submitAddNewLead}
+            loading={leadLoading}
           >
-            <AddLead leadValue={addLeads} getAddLeadData={getAddLeadData} />
+            <AddLead leadValue={columnFields} getAddLeadData={getAddLeadData} />
           </CustomModal>
         </Box>
         <Box>
           <CustomModal
-            title="Add Category"
+            title={`${isCategoryEdit ? 'Edit' : 'Add'} Category`}
             open={isCategoryModalOpen}
             setOpen={() => setIsCategoryModalOpen(false)}
-            handleSubmit={submitCategory}
+            handleSubmit={isCategoryEdit ? updateCategory : submitCategory}
+            setIsEdit={setIsCategoryEdit}
+            loading={categoryLoading}
           >
             <AddCategory
               fields={fields}
               getFieldsData={getFieldsData}
               addNewField={addNewField}
-              category={category}
-              setCategory={setCategory}
+              category={addCategory}
+              setCategory={setAddCategory}
+              removeField={removeField}
+              isEdit={isCategoryEdit}
             />
           </CustomModal>
         </Box>
-        {categoryData && categoryData.fields && categoryData.fields.length && (
-          <Box>
-            <LeadsTable
-              data={data}
-              headLabel={categoryData.fields}
-              order="asc"
-              orderBy={categoryData.fields[0].name}
-              rowCount={10}
-              selected={selected}
-              emptyRows={0}
-              isNotFound={false}
-              filterName={filterName}
-              onRequestSort={() => {}}
-              onSelectAllClick={() => {}}
-              handleClick={() => {}}
-            />
+        <Card
+          sx={{
+            mt: 2
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              margin: 1
+            }}
+          >
+            <Button
+              variant="contained"
+              onClick={() => {
+                setIsCategoryModalOpen(true);
+                setIsCategoryEdit(true);
+              }}
+            >
+              Add New Column
+            </Button>
           </Box>
-        )}
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              margin: 1
+            }}
+          >
+            {categoryLoading || leadListLoading ? (
+              <CircularProgress />
+            ) : (
+              <CustomTable
+                data={leadsData}
+                headLabel={columnFields}
+                onEditClick={editLead}
+                onDeleteClick={deleteDynamicLead}
+                loading={leadListLoading}
+              />
+            )}
+          </Box>
+        </Card>
       </Container>
     </Fragment>
   );

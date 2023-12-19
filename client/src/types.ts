@@ -8,6 +8,7 @@ export type LeadsTypes = {
 };
 
 export type CategoryTypes = {
+  [x: string]: any;
   name: string;
   description: string;
 };
@@ -35,4 +36,47 @@ export type RegisterOrgTypes = {
 export type FieldTypes = {
   name: string;
   type: string;
+};
+
+export type PlannerDataTypes = {
+  title: string;
+  action: string;
+  description: string;
+  startDate: string;
+  endDate: string;
+  timeOfExecution: string;
+};
+
+export type RoleDataTypes = {
+  _id?: string;
+  name: string;
+};
+
+export type PlannerResponseTypes = {
+  _id: string;
+  title: string;
+  action: string;
+  description: string;
+  startDate: string;
+  timeOfExecution: string;
+  adminId: string;
+};
+
+export type AdminResponseTypes = {
+  id: string;
+  name: string;
+  role: string;
+  company: string;
+  email: string;
+  recordID: string;
+  twoFactorEnabled: boolean;
+  orgId: string;
+  token: string;
+  isSuperAdmin: boolean;
+};
+
+export type LeadValueTypes = {
+  name: string;
+  type: string;
+  value: string;
 };

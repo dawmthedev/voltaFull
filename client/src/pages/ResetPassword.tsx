@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
 import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import CustomInput from '../components/input/CustomInput';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
+import { useAppDispatch } from '../hooks/hooks';
+import { forgotPassword } from '../redux/middleware/authentication';
+import { setAlert } from '../redux/slice/alertSlice';
 
 const ResetPasswordPage = () => {
+  const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
   const [verificationCode, setVerificationCode] = useState<string>('');
@@ -15,16 +18,26 @@ const ResetPasswordPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
 
   const handleResetPassword = async () => {
-    try {
-      const response = await axios.put(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/reset-password`, {
-        code: verificationCode,
-        password: password
-      });
-      if (response?.status === 200) {
-        navigate('/login', { replace: true });
-      }
-    } catch (error) {
-      console.log(error);
+    debugger;
+    const response: any = await dispatch(forgotPassword({ code: verificationCode, password: password }));
+    if (response && response.error && response.error.message) {
+      dispatch(
+        setAlert({
+          message: response.error.message,
+          type: 'error'
+        })
+      );
+      return;
+    }
+
+    if (response && response.payload) {
+      navigate('/login');
+      dispatch(
+        setAlert({
+          message: 'User updated successfully',
+          type: 'success'
+        })
+      );
     }
   };
 
