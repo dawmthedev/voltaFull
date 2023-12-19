@@ -19,6 +19,10 @@ export const Alerts = () => {
       <Alert
         severity={type}
         variant="filled"
+        sx={{
+          color: 'white',
+          fontWeight: 'bold'
+        }}
         onClose={() => {
           dispatch(closeAlert());
         }}
