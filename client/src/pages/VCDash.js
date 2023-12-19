@@ -19,88 +19,72 @@ import {
   AppTrafficBySite,
   AppWidgetSummary,
   AppCurrentSubject,
-  AppConversionRates,
+  AppConversionRates
 } from '../sections/@dashboard/app';
-
-
-
+import { baseURL } from '../libs/client/apiClient';
 
 // ----------------------------------------------------------------------
 
 export default function VCDashboardAppPage() {
+  const boxStyle = {
+    display: 'flex',
+    flexDirection: 'column', // Set the flex direction to column
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    margin: 0,
+    padding: 0
+  };
 
-    const boxStyle = {
-        display: 'flex',
-        flexDirection: 'column', // Set the flex direction to column
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        margin: 0,
-        padding: 0,
-      };
+  const paperStyle = {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100%',
+    width: '100%',
+    margin: 0,
+    padding: 0,
+    textAlign: 'center' // Center text within Paper
+  };
 
-      const paperStyle = {
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        width: '100%',
-        margin: 0,
-        padding: 0,
-        textAlign: 'center', // Center text within Paper
-      };
-      
-      
-
-      // const paperStyle = { display: 'flex',
-      // flexDirection: 'column', // Set the flex direction to column
-      // justifyContent: 'center',
-      // alignItems: 'center',
-      // height: '100%',
-      // width:' 100%',
-      // margin: 0,
-      // padding: 0,}
-
-      
-
+  // const paperStyle = { display: 'flex',
+  // flexDirection: 'column', // Set the flex direction to column
+  // justifyContent: 'center',
+  // alignItems: 'center',
+  // height: '100%',
+  // width:' 100%',
+  // margin: 0,
+  // padding: 0,}
 
   const theme = useTheme();
   const data = useAppSelector(authSelector);
 
-
-
   const [AHJTimelineData, setData] = useState([]);
 
-
   const [DealsData, setDealsData] = useState([]);
-  
+
   const [DealsAvgTimelineData, setDealsAvgData] = useState([]);
 
   const [AhjKeys, setAhjKeys] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [payError, setPayError] = useState(null);
 
-
   const fetchAhjTimelineData = async () => {
     try {
-     const response = await  fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
-     // const response = await fetch(`http://localhost:4000/rest/auth/crmAHJTimelines`, {
-
-
-
+      const response = await fetch(`${baseURL}/auth/crmAHJTimelines`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ repId: "00000" }),
+        body: JSON.stringify({ repId: '00000' })
       });
 
       const responseData = await response.json();
 
       if (responseData && responseData.data && responseData.data.timeline) {
-        const formattedArray = responseData.data.timeline.map(item => ({
-          name: item.AHJ.replace(/"/g, ""),
+        const formattedArray = responseData.data.timeline.map((item) => ({
+          name: item.AHJ.replace(/"/g, ''),
           data: [
             parseFloat(item.saleStage) || 0,
             parseFloat(item.welcometage) || 0,
@@ -111,8 +95,8 @@ export default function VCDashboardAppPage() {
             parseFloat(item.flatage) || 0,
             parseFloat(item.permitStage) || 0,
             parseFloat(item.installStage) || 0,
-            parseFloat(item.inspectStage) || 0,
-          ],
+            parseFloat(item.inspectStage) || 0
+          ]
         }));
 
         setData(formattedArray);
@@ -125,58 +109,52 @@ export default function VCDashboardAppPage() {
     }
   };
 
-
- 
-
   const fetchDealsData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/rest/auth/crmDealsGlobal`, {
+      const response = await fetch(`${baseURL}/auth/crmDealsGlobal`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ recordId: "7777" }),
+        body: JSON.stringify({ recordId: '7777' })
       });
-  
+
       const responseData = await response.json();
-  
+
       if (responseData && responseData.data && responseData.data.deals) {
         const financingTypes = ['Sunnova', 'Enium', 'Cash'];
-  
+
         // Initialize data structure
-        const monthlyData = financingTypes.map(financingType => ({
+        const monthlyData = financingTypes.map((financingType) => ({
           name: financingType,
           type: 'column', // Change the type as needed
           fill: 'solid', // Change the fill as needed
-          data: Array(12).fill(0), // Initialize an array for each month
+          data: Array(12).fill(0) // Initialize an array for each month
         }));
-  
-        responseData.data.deals.forEach(item => {
+
+        responseData.data.deals.forEach((item) => {
           const saleDate = new Date(item.saleDate);
           const month = saleDate.getMonth();
           const year = saleDate.getFullYear();
           const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
-  
+
           const index = financingTypes.indexOf(financingType);
           if (index !== -1) {
             monthlyData[index].data[month] += 1;
           }
         });
-  
-        const chartData = monthlyData.map(item => ({
+
+        const chartData = monthlyData.map((item) => ({
           name: item.name,
           type: item.type,
           fill: item.fill,
-          data: item.data,
+          data: item.data
         }));
-  
 
-
-
-        console.log(chartData)
+        console.log(chartData);
         setDealsData(chartData);
       }
-  
+
       setLoading(false);
     } catch (error) {
       setPayError(error);
@@ -185,59 +163,45 @@ export default function VCDashboardAppPage() {
   };
   const fetchDealsAvgData = async () => {
     try {
-      const response = await fetch(`http://localhost:4000/rest/auth/crmAvgTimelines`, {
+      const response = await fetch(`${baseURL}/auth/crmAvgTimelines`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ repId: "7777" }),
+        body: JSON.stringify({ repId: '7777' })
       });
-  
+
       const responseData = await response.json();
-  
+
       if (responseData && responseData.data && responseData.data.timeline) {
         const timeline = responseData.data.timeline;
-  
+
         const chartData = Object.entries(timeline).map(([label, value]) => ({
           label,
-          value: parseFloat(value) || 0,
+          value: parseFloat(value) || 0
         }));
-  
+
         console.log(chartData);
         setDealsAvgData(chartData);
       }
-  
+
       setLoading(false);
     } catch (error) {
       setPayError(error);
       setLoading(false);
     }
   };
-  
-  
-  
-
-
 
   useEffect(() => {
-
-
-
     fetchAhjTimelineData();
     fetchDealsData();
     fetchDealsAvgData();
-  
-}, []);
-
-
-
-
-
+  }, []);
 
   return (
     <>
       <Helmet>
-        <title> Dashboard | Voltaic  </title>
+        <title> Dashboard | Voltaic </title>
       </Helmet>
 
       <Container maxWidth="xl">

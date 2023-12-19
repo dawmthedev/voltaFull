@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
 import { RegisterOrgTypes } from '../types';
+import { baseURL } from '../libs/client/apiClient';
 
 const initialState = {
   email: '',
@@ -25,7 +26,7 @@ const RegisterPage = () => {
 
   const handleClick = async () => {
     try {
-      const response = await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/start-verification`, {
+      const response = await axios.post(`${baseURL}/auth/start-verification`, {
         email: register.email,
         type: 'email'
       });
@@ -39,7 +40,7 @@ const RegisterPage = () => {
   };
   const handleRegister = async () => {
     try {
-      const response = await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/register`, {
+      const response = await axios.post(`${baseURL}/auth/register`, {
         email: register.email,
         name: register.name,
         company: register.company,

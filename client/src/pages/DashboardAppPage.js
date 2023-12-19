@@ -19,8 +19,9 @@ import {
   AppTrafficBySite,
   AppWidgetSummary,
   AppCurrentSubject,
-  AppConversionRates,
+  AppConversionRates
 } from '../sections/@dashboard/app';
+import { baseURL } from '../libs/client/apiClient';
 
 // ----------------------------------------------------------------------
 
@@ -28,36 +29,31 @@ export default function DashboardAppPage() {
   const theme = useTheme();
   const data = useAppSelector(authSelector);
 
-
-
   const [AHJTimelineData, setData] = useState([]);
 
-
   const [DealsData, setDealsData] = useState([]);
-  
+
   const [DealsAvgTimelineData, setDealsAvgData] = useState([]);
 
   const [AhjKeys, setAhjKeys] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [payError, setPayError] = useState(null);
 
-
   const fetchAhjTimelineData = async () => {
     try {
-     // fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
-      const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAHJTimelines`, {
+      const response = await fetch(`${baseURL}/auth/crmAHJTimelines`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ repId: "00000" }),
+        body: JSON.stringify({ repId: '00000' })
       });
 
       const responseData = await response.json();
 
       if (responseData && responseData.data && responseData.data.timeline) {
-        const formattedArray = responseData.data.timeline.map(item => ({
-          name: item.AHJ.replace(/"/g, ""),
+        const formattedArray = responseData.data.timeline.map((item) => ({
+          name: item.AHJ.replace(/"/g, ''),
           data: [
             parseFloat(item.saleStage) || 0,
             parseFloat(item.welcometage) || 0,
@@ -68,8 +64,8 @@ export default function DashboardAppPage() {
             parseFloat(item.flatage) || 0,
             parseFloat(item.permitStage) || 0,
             parseFloat(item.installStage) || 0,
-            parseFloat(item.inspectStage) || 0,
-          ],
+            parseFloat(item.inspectStage) || 0
+          ]
         }));
 
         setData(formattedArray);
@@ -82,163 +78,103 @@ export default function DashboardAppPage() {
     }
   };
 
-
- 
-
   const fetchDealsData = async () => {
     try {
-      const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsGlobal`, {
+      const response = await fetch(`${baseURL}/auth/crmDealsGlobal`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ recordId: "7777" }),
+        body: JSON.stringify({ recordId: '7777' })
       });
-  
+
       const responseData = await response.json();
-  
+
       if (responseData && responseData.data && responseData.data.deals) {
         const financingTypes = ['Sunnova', 'Enium', 'Cash'];
-  
+
         // Initialize data structure
-        const monthlyData = financingTypes.map(financingType => ({
+        const monthlyData = financingTypes.map((financingType) => ({
           name: financingType,
           type: 'column', // Change the type as needed
           fill: 'solid', // Change the fill as needed
-          data: Array(12).fill(0), // Initialize an array for each month
+          data: Array(12).fill(0) // Initialize an array for each month
         }));
-  
-        responseData.data.deals.forEach(item => {
+
+        responseData.data.deals.forEach((item) => {
           const saleDate = new Date(item.saleDate);
           const month = saleDate.getMonth();
           const year = saleDate.getFullYear();
 
-          console.log(year)
-         /// alert("year")
+          console.log(year);
+          /// alert("year")
           const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
-  
+
           const index = financingTypes.indexOf(financingType);
           if (index !== -1) {
             monthlyData[index].data[month] += 1;
           }
         });
-  
-        const chartData = monthlyData.map(item => ({
+
+        const chartData = monthlyData.map((item) => ({
           name: item.name,
           type: item.type,
           fill: item.fill,
-          data: item.data,
+          data: item.data
         }));
-  
 
-
-
-        console.log(chartData)
+        console.log(chartData);
         setDealsData(chartData);
       }
-  
+
       setLoading(false);
     } catch (error) {
       setPayError(error);
       setLoading(false);
     }
   };
-
-
-
-
-
 
   const fetchDealsAvgData = async () => {
     try {
-     // const response = await fetch(`http://localhost:4000/rest/auth/crmAHJTimelines`, {
-     const response = await fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmAvgTimelines`, {
+      const response = await fetch(`${baseURL}/auth/crmAvgTimelines`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ repId: "7777" }),
+        body: JSON.stringify({ repId: '7777' })
       });
-  
+
       const responseData = await response.json();
-  
+
       if (responseData && responseData.data && responseData.data.timeline) {
         const timeline = responseData.data.timeline;
-  
+
         const chartData = Object.entries(timeline).map(([label, value]) => ({
           label,
-          value: parseFloat(value) || 0,
+          value: parseFloat(value) || 0
         }));
-  
+
         console.log(chartData);
         setDealsAvgData(chartData);
       }
-  
+
       setLoading(false);
     } catch (error) {
       setPayError(error);
       setLoading(false);
     }
   };
-  
-  
-  
-
-
 
   useEffect(() => {
-
-
-
     fetchAhjTimelineData();
     fetchDealsData();
     fetchDealsAvgData();
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-}, []);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  }, []);
 
   return (
     <>
       <Helmet>
-        <title> Dashboard | Voltaic  </title>
+        <title> Dashboard | Voltaic </title>
       </Helmet>
 
       <Container maxWidth="xl">
@@ -279,9 +215,8 @@ export default function DashboardAppPage() {
                 '09/01/2023',
                 '10/01/2023',
                 '11/01/2023',
-                '12/01/2023',
+                '12/01/2023'
               ]}
-
               chartData={DealsData}
               // chartData={
               //   [
@@ -317,12 +252,7 @@ export default function DashboardAppPage() {
               //   { label: 'Europe', value: 1443 },
               //   { label: 'Africa', value: 4443 },
               // ]}
-              chartColors={[
-                theme.palette.primary.main,
-                theme.palette.info.main,
-                theme.palette.warning.main,
-                theme.palette.error.main,
-              ]}
+              chartColors={[theme.palette.primary.main, theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
             />
           </Grid>
 
@@ -342,16 +272,14 @@ export default function DashboardAppPage() {
                 { label: 'Santa Barbara County', value: 1100 },
                 { label: 'Kern County', value: 1200 },
                 { label: 'San Luis Obispo County', value: 1380 }
-                
-                ]}
-            
+              ]}
             />
           </Grid>
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentSubject
               title="Stage duration by AHJ "
-              chartLabels={['Sale Date','Welcome', 'Site Survey', 'NTP', 'QC Check', 'FLA' ,'Plans', 'Install', 'Inspection', 'PTO']}
+              chartLabels={['Sale Date', 'Welcome', 'Site Survey', 'NTP', 'QC Check', 'FLA', 'Plans', 'Install', 'Inspection', 'PTO']}
               chartData={AHJTimelineData}
               // chartData={[
               //   { name: 'Los Angeles', data: [1, 5, 3, 4, 10, 20] },

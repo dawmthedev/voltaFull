@@ -214,6 +214,7 @@ export class AuthenticationController {
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
   public async crmPayroll(@BodyParams() body: CrmPayBody, @Response() res: Response) {
+    console.log("crm payroll-----------------------------------------")
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -232,6 +233,7 @@ export class AuthenticationController {
     console.log(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
+    console.log("response--------", response);
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
