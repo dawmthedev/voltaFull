@@ -289,7 +289,7 @@ export default function DealsData(props) {
     >
       {/* filter lead modal */}
 
-      <div style={{ height: 350, width: '80%', overflow: 'auto' }}>
+      <div style={{ height: 350, overflow: 'auto' }}>
         <Box
           sx={{
             height: '100%',
@@ -322,6 +322,7 @@ export default function DealsData(props) {
               value={searchQuery}
               onKeyPress={handleKeyPress}
               onChange={(e) => handleSearchInputChange(e)}
+              sx={{ my: '0.5rem' }}
             />
           </Box>
 

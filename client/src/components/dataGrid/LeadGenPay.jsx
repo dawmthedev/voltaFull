@@ -309,7 +309,7 @@ export default function LeadGenPay(props) {
         justifyContent: 'center'
       }}
     >
-      <div style={{ height: 350, width: '80%', overflow: 'auto' }}>
+      <div style={{ height: 350, overflow: 'auto' }}>
         <Box
           sx={{
             height: 'fit-content',
@@ -319,21 +319,19 @@ export default function LeadGenPay(props) {
         >
           <Box
             sx={{
-              marginBottom: '16px',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'flex-end',
               position: 'relative',
-              top: '60px',
+
               right: '16px',
               zIndex: '2',
               width: '60%',
-
               // maxWidth: '330px',
               marginLeft: 'auto'
             }}
           >
-            <TextField size="small" variant="outlined" type={'search'} label="Search" value={searchQuery} />
+            <TextField size="small" variant="outlined" type={'search'} label="Search" value={searchQuery} sx={{ my: '0.5rem' }} />
           </Box>
 
           {isLoading ? (

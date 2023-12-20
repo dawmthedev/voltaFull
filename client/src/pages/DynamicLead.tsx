@@ -289,7 +289,7 @@ const DynamicLead = () => {
         <title> Dynamic Leads | Minimal UI </title>
       </Helmet>
       <Container>
-        <h1>Dynamic Lead</h1>
+        <h2>Dynamic Lead</h2>
         <Stack
           direction="row"
           alignItems="center"
