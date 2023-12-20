@@ -50,6 +50,7 @@ export default function Router() {
         },
         { path: 'products', element: <ProductsPage /> },
         { path: 'assistant', element: <Assistant /> },
+        { path: 'vcdash', element: <VCDashboardAppPage /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
@@ -59,8 +60,7 @@ export default function Router() {
         { path: 'rates', element: <DealerRates /> },
         { path: 'pay', element: <PayPage /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
-        { path: 'planner', element: <Planner /> },
-        { path: 'deals', element: <DealsPage /> }
+        { path: 'planner', element: <Planner /> }
       ]
     },
     {
