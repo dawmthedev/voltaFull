@@ -22,7 +22,7 @@ export class AdminController {
   @Get()
   @Returns(200, SuccessArrayResult).Of(AdminResultModel)
   public async getAllUsers(@BodyParams() body: { orgId: string }, @Context() context: Context) {
-    // await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
+    await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const admins = await this.adminService.findAdmins();
     const response = {
       admins: admins.map((admin) => {
@@ -44,7 +44,7 @@ export class AdminController {
   @Put()
   @Returns(200, SuccessResult).Of(AdminResultModel)
   public async updateAdmin(@BodyParams() body: UpdateAdminParams, @Context() context: Context) {
-    // await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
+    await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const admin = await this.adminService.updateAdmin({ ...body });
     return new SuccessResult(
       {
