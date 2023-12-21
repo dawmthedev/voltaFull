@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AdminResponseTypes } from '../../types';
 
-import { login, startVerification, register, verifyCode, completeVerification, forgotPassword } from '../middleware/authentication';
+import { login, startVerification, register, verifyCode, completeVerification, forgotPassword, logout } from '../middleware/authentication';
 
 type AuthState = {
   loading: boolean;
@@ -51,6 +51,7 @@ const authSlice = createSlice({
       state.loading = false;
       state.data = action.payload;
       document.cookie = `session=${action.payload.token}`;
+      localStorage.setItem('authToken', action.payload.token);
     });
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false;
@@ -124,6 +125,19 @@ const authSlice = createSlice({
       state.data = action.payload;
     });
     builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // logout
+    builder.addCase(logout.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.loading = false;
+      localStorage.clear();
+    });
+    builder.addCase(logout.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });

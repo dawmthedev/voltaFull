@@ -4,12 +4,14 @@ import { urls } from '../../apiConfig';
 const env = process.env.REACT_APP_STAGE || 'local';
 export const baseURL = urls[env];
 
+const authToken = localStorage.getItem('authToken');
 const apiClient = axios.create({
   baseURL: baseURL || 'https://recrm-dd33eadabf10.herokuapp.com/rest',
   timeout: 30000,
   withCredentials: true,
   headers: {
-    'Content-Type': 'application/json'
+    'Content-Type': 'application/json',
+    Authorization: authToken
   }
 });
 
