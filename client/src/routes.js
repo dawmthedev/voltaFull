@@ -46,9 +46,8 @@ export default function Router() {
         },
         {
           path: 'user',
-          element: <UserPage />
+          element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
         },
-        // element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
 
         { path: 'products', element: <ProductsPage /> },
         { path: 'assistant', element: <Assistant /> },
