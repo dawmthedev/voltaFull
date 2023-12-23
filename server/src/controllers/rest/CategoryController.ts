@@ -28,6 +28,7 @@ export class CategoryController {
   @Get("/")
   @Returns(200, SuccessArrayResult).Of(CategoryResultModel)
   public async getCategories(@Context() context: Context) {
+    console.log("context", context.get("user"));
     const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
     const categories = await this.categoryService.findCategories();
