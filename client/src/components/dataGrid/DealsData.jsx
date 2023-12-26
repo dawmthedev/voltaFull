@@ -415,21 +415,40 @@ const stageToPercentMapping = {
 const ProgressBar = ({ percentage, status }) => {
   const color = getColorForPercentage(percentage);
   return (
-    <div style={{ width: '100%', backgroundColor: '#eee', borderRadius: '4px', position: 'relative' }}>
+    <div
+      style={{
+        width: '100%',
+        borderRadius: '4px',
+        position: 'relative'
+      }}
+    >
       <div
         style={{
           width: `${percentage}%`,
           backgroundColor: color,
           height: '20px',
           borderRadius: '4px',
+          position: 'absolute',
+          zIndex: 1,
+          top: '50%',
+          transform: 'translateY(-50%)'
+        }}
+      ></div>
+      <p
+        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          fontWeight: 'bold'
+          fontWeight: 'bold',
+          color: color === 'darkgreen' ? 'white' : 'black',
+          zIndex: 4,
+          position: 'relative',
+          border: '1px solid grey',
+          borderRadius: '4px'
         }}
       >
         {status}
-      </div>
+      </p>
     </div>
   );
 };
