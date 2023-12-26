@@ -261,14 +261,14 @@ export default function LeadGenPay(props) {
             };
           });
           
-
   
-            setData(payData);
+        setData(payData);
+
+
+
+        
             
         }
-
-
-
         
        setLoading(false);
     })
