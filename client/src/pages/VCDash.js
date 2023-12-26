@@ -1,280 +1,479 @@
+// import React, { useState, useMemo } from 'react';
+// import {
+//   Box,
+//   Container,
+//   Grid,
+//   Card,
+//   CardContent,
+//   Typography,
+//   Button,
+//   ButtonGroup,
+//   Divider,
+//   List,
+//   ListItem,
+//   ListItemText,
+//   TableCell,
+//   Table,
+//   TableRow,
+//   TableBody,
+//   TableHead, 
+//   Paper,
+//   TableContainer
+// } from '@mui/material';
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
+
+// // Define a theme for the dashboard
+// const theme = createTheme({
+//   palette: {
+//     primary: {
+//       main: '#1976d2',
+//     },
+//     secondary: {
+//       main: '#ec407a',
+//     },
+//   },
+// });
+
+// function KpiCard({ title, value }) {
+//   return (
+//     <Card variant="outlined" sx={{ minWidth: 200, m: 1 }}>
+//       <CardContent>
+//         <Typography variant="h6" component="div">
+//           {title}
+//         </Typography>
+//         <Typography variant="body2">
+//           {value}
+//         </Typography>
+//       </CardContent>
+//     </Card>
+//   );
+// }
+
+// // Example of a list component for graveyard leads
+// function GraveyardLeads({ leads }) {
+//   return (
+//     <List dense>
+//       {leads.map((lead, index) => (
+//         <ListItem key={index}>
+//           <ListItemText
+//             primary={lead.name}
+//             secondary={`Status: ${lead.status}`}
+//           />
+//         </ListItem>
+//       ))}
+//     </List>
+//   );
+// }
+// function RepCardRankings({ repCardUsers, sortConfig, handleSort }) {
+//   // Memoize the sorted data to avoid unnecessary sorting on each render
+//   const sortedUsers = useMemo(() => {
+//     // ... (sorting logic here)
+//     // Placeholder for sorting function, which you will replace with actual logic
+//     return repCardUsers;
+//   }, [repCardUsers, sortConfig]);
+
+//   return (
+//     <TableContainer component={Paper}>
+//       <Table aria-label="simple table">
+//         <TableHead>
+//           <TableRow>
+//             <TableCell>Name</TableCell>
+//             {/* Add more TableCell elements for each metric with sort buttons */}
+//             {/* ... */}
+//           </TableRow>
+//         </TableHead>
+//         <TableBody>
+//           {sortedUsers.map((user, index) => (
+//             <TableRow key={index}>
+//               <TableCell component="th" scope="row">
+//                 {user.name}
+//               </TableCell>
+//               {/* Add more TableCell elements for each metric */}
+//               {/* ... */}
+//             </TableRow>
+//           ))}
+//         </TableBody>
+//       </Table>
+//     </TableContainer>
+//   );
+// }
+
+
+
+// export default function Dashboard() {
+//   const [timeFilter, setTimeFilter] = useState('week');
+//  // RepCard users' data example
+//  // Define initial RepCard users' data
+//  const [repCardUsers, setRepCardUsers] = useState([
+//   { name: 'Rep A', doorsKnocked: 150, appointmentsSet: 90, appointmentsSat: 45, appointmentsClosed: 30, closedInstalled: 15 },
+//   { name: 'Rep B', doorsKnocked: 120, appointmentsSet: 60, appointmentsSat: 30, appointmentsClosed: 20, closedInstalled: 10 },
+//   { name: 'Rep C', doorsKnocked: 180, appointmentsSet: 100, appointmentsSat: 70, appointmentsClosed: 50, closedInstalled: 25 },
+//   // Add more rep data here...
+// ]);
+// // Sorting configuration state
+// const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
+
+//  // Sort handler
+//  const handleSort = (key) => {
+//   const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
+//   setSortConfig({ key, direction });
+// };
+//   // Example data for KPIs
+//   const kpiData = {
+//     week: {
+//       doorsKnocked: '120',
+//       appointmentsSet: '80',
+//       appointmentsSat: '60',
+//       appointmentsCanceled: '5',
+//       appointmentsRescheduled: '10',
+//       appointmentsClosed: '50',
+//       graveyardLeads: [
+//         { name: 'Lead 1', status: 'Didn’t Close' },
+//         { name: 'Lead 2', status: 'Canceled' },
+//         // More leads...
+//       ],
+//       // Add more KPI data for 'week'
+//     },
+//     // Add data for 'month' and 'year'
+//   };
+
+ 
+
+
+//   // Placeholder for the leads carousel component
+//   function LeadsCarousel() {
+//     return <Typography>Carousel Placeholder</Typography>;
+//   }
+
+//   const handleTimeFilterChange = (event, newValue) => {
+//     setTimeFilter(newValue);
+//   };
+
+//   return (
+//     <ThemeProvider theme={theme}>
+//       <Container maxWidth="xl" sx={{ mt: 4 }}>
+//         <Typography variant="h4" component="div" gutterBottom>
+//           Door Knocking Dashboard
+//         </Typography>
+//         <Divider sx={{ mb: 4 }} />
+
+//         {/* Time filter buttons */}
+//         <Box sx={{ mb: 3 }}>
+//           <ButtonGroup variant="text" color="primary">
+//             <Button onClick={() => setTimeFilter('week')} variant={timeFilter === 'week' ? 'contained' : 'text'}>
+//               This Week
+//             </Button>
+//             <Button onClick={() => setTimeFilter('month')} variant={timeFilter === 'month' ? 'contained' : 'text'}>
+//               This Month
+//             </Button>
+//             <Button onClick={() => setTimeFilter('year')} variant={timeFilter === 'year' ? 'contained' : 'text'}>
+//               This Year
+//             </Button>
+//           </ButtonGroup>
+//         </Box>
+
+//         {/* KPI cards */}
+//         <Grid container spacing={2}>
+//           {Object.entries(kpiData[timeFilter] || {}).map(([key, value], index) => (
+//             key !== 'graveyardLeads' && (
+//               <Grid item key={index} xs={12} sm={6} md={3} lg={2}>
+//                 <KpiCard title={key.split(/(?=[A-Z])/).join(" ")} value={value} />
+//               </Grid>
+//             )
+//           ))}
+//         </Grid>
+
+//         {/* Graveyard Leads */}
+//         <Box sx={{ mt: 4 }}>
+//           <Typography variant="h6" gutterBottom>
+//             Graveyard Leads
+//           </Typography>
+//           <GraveyardLeads leads={kpiData[timeFilter].graveyardLeads} />
+//         </Box>
+
+//          {/* RepCard User Rankings */}
+//          <Box sx={{ mt: 4 }}>
+//           <Typography variant="h6" gutterBottom>
+//             RepCard User Rankings
+//           </Typography>
+//           <RepCardRankings repCardUsers={repCardUsers} sortConfig={sortConfig} handleSort={handleSort} />
+//         </Box>
+//         {/* Leads Carousel */}
+//         <Box sx={{ mt: 4 }}>
+//           <Typography variant="h6" gutterBottom>
+//             Leads Carousel
+//           </Typography>
+//           <LeadsCarousel />
+//           {/* Implement the carousel with a third-party library */}
+//         </Box>
+//       </Container>
+//     </ThemeProvider>
+//   );
+// }
+
+
+
+
+
+// ============================================
+
+
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
-import { useTheme } from '@mui/material/styles';
-import { Grid, Container, Typography, Paper } from '@mui/material';
+import { useTheme, ThemeProvider } from '@mui/material/styles';
+import { Grid, Container, Typography, Paper, ListItem, List , ListItemText} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
+// ... (rest of your imports)
+// Import additional components
+import { Tab, Tabs, Box, Button, ButtonGroup } from '@mui/material';
 
-// components
-import Iconify from '../components/iconify';
-// sections
-import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
-  AppCurrentVisits,
-  AppWebsiteVisits,
-  AppTrafficBySite,
-  AppWidgetSummary,
-  AppCurrentSubject,
-  AppConversionRates
-} from '../sections/@dashboard/app';
-import { baseURL } from '../libs/client/apiClient';
-
-// ----------------------------------------------------------------------
+// ... (rest of your code)
 
 export default function VCDashboardAppPage() {
-  const boxStyle = {
-    display: 'flex',
-    flexDirection: 'column', // Set the flex direction to column
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    margin: 0,
-    padding: 0
+  // ... (existing states and functions)
+
+ // Add the leaderboard filters and options back into the UI
+ const timeFilters = ['This Week', 'This Month', 'This Year'];
+ const typeFilters = ['Company', 'Office'];
+ const dataTypes = ['Closing Rate', 'Agreements', 'Revenue'];
+
+ const [leaderboardType, setLeaderboardType] = useState('revenue');
+  // Leaderboard filter states
+  const [timeFilter, setTimeFilter] = useState('thisWeek');
+  const [officeFilter, setOfficeFilter] = useState('company');
+  const [dataFilter, setDataFilter] = useState('closingRate');
+
+  const [activeTab, setActiveTab] = useState('myLeads');
+  const [taskTab, setTaskTab] = useState('toDo');
+
+
+  // Mock data for leaderboard
+  const leaderboardData = {
+    thisWeek: {
+      company: {
+        closingRate: [
+          { name: 'Alice, Enerflo', closingRate: '80%', agreements: '45', revenue: '$95.00k' },
+          // ... other entries
+        ],
+        agreements: [
+          // ... data sorted by agreements
+        ],
+        revenue: [
+          // ... data sorted by revenue
+        ],
+      },
+      office: {
+        // ... data for the office category
+      },
+    },
+    thisMonth: {
+      // ... data for thisMonth
+    },
+    thisYear: {
+      // ... data for thisYear
+    },
   };
 
-  const paperStyle = {
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%',
-    margin: 0,
-    padding: 0,
-    textAlign: 'center' // Center text within Paper
+  // Mock data for leads, deals, and installs
+  const mockData = {
+    myDoors: [
+      { id: 1, title: 'Danny Copinga', subtitle: '23 Dominguez St' },
+      { id: 2, title: 'Steve Kawasaki', subtitle: '2430 Chapman St' },
+      // ... add more leads
+    ],
+    myAppointments: [
+      { id: 1, title: 'Sunshine Solar', subtitle: 'Completed: 15' },
+      { id: 2, title: 'Enerflo Power', subtitle: 'Pending: 7' },
+      // ... add more deals
+    ],
+    myCloses: [
+      { id: 1, title: 'Rooftop Install', subtitle: '2430 Chapman St' },
+      { id: 2, title: 'Panel Upgrade', subtitle: '1985 Toucan Cir' },
+      // ... add more installs
+    ],
+    myInstalls: [
+      { id: 1, title: 'Door: Sets', subtitle: '43/72', percentage: '50%' },
+      { id: 2, title: 'Sets: Sits', subtitle: '43/72', percentage: '50%'},
+      { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%'},
+      { id: 2, title: 'Sits: Close',  subtitle: '43/72', percentage: '50%' },
+      // ... add more installs
+    ],
   };
 
-  // const paperStyle = { display: 'flex',
-  // flexDirection: 'column', // Set the flex direction to column
-  // justifyContent: 'center',
-  // alignItems: 'center',
-  // height: '100%',
-  // width:' 100%',
-  // margin: 0,
-  // padding: 0,}
+  // Mock data for appointments and tasks
+  const appointments = [
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    // ... add more appointments
+  ];
 
-  const theme = useTheme();
-  const data = useAppSelector(authSelector);
+  const tasks = {
+    toDo: [
+      { title: 'Follow up with lead', completed: false },
+      // ... add more to-do tasks
+    ],
+    recentlyCompleted: [
+      { title: 'Send proposal to client', completed: true },
+      // ... add more completed tasks
+    ],
+  };
 
-  const [AHJTimelineData, setData] = useState([]);
 
-  const [DealsData, setDealsData] = useState([]);
+  // Function to simulate filtered data based on selected filters
+  const getFilteredLeaderboardData = () => {
+    const timeData = leaderboardData[timeFilter] || {};
+    const officeData = timeData[officeFilter] || {};
+    const filteredData = officeData[dataFilter] || [];
 
-  const [DealsAvgTimelineData, setDealsAvgData] = useState([]);
+    return filteredData;
+  };
 
-  const [AhjKeys, setAhjKeys] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-  const [payError, setPayError] = useState(null);
 
-  const fetchAhjTimelineData = async () => {
-    try {
-      const response = await fetch(`${baseURL}/auth/crmAHJTimelines`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ repId: '00000' })
-      });
-
-      const responseData = await response.json();
-
-      if (responseData && responseData.data && responseData.data.timeline) {
-        const formattedArray = responseData.data.timeline.map((item) => ({
-          name: item.AHJ.replace(/"/g, ''),
-          data: [
-            parseFloat(item.saleStage) || 0,
-            parseFloat(item.welcometage) || 0,
-            parseFloat(item.sstage) || 0,
-            parseFloat(item.ntpstage) || 0,
-            parseFloat(item.qcStage) || 0,
-            parseFloat(item.planStage) || 0,
-            parseFloat(item.flatage) || 0,
-            parseFloat(item.permitStage) || 0,
-            parseFloat(item.installStage) || 0,
-            parseFloat(item.inspectStage) || 0
-          ]
-        }));
-
-        setData(formattedArray);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      setPayError(error);
-      setLoading(false);
+  const getFilteredData = (dataKey) => {
+    // Check if the dataKey exists in mockData
+    const data = mockData[dataKey];
+    if (!data) {
+      return <Typography>No data available.</Typography>;
     }
+  
+    return data.map((item) => (
+      <ListItem key={item.id}>
+        <ListItemText primary={item.title} secondary={item.subtitle} />
+      </ListItem>
+    ));
   };
-
-  const fetchDealsData = async () => {
-    try {
-      const response = await fetch(`${baseURL}/auth/crmDealsGlobal`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ recordId: '7777' })
-      });
-
-      const responseData = await response.json();
-
-      if (responseData && responseData.data && responseData.data.deals) {
-        const financingTypes = ['Sunnova', 'Enium', 'Cash'];
-
-        // Initialize data structure
-        const monthlyData = financingTypes.map((financingType) => ({
-          name: financingType,
-          type: 'column', // Change the type as needed
-          fill: 'solid', // Change the fill as needed
-          data: Array(12).fill(0) // Initialize an array for each month
-        }));
-
-        responseData.data.deals.forEach((item) => {
-          const saleDate = new Date(item.saleDate);
-          const month = saleDate.getMonth();
-          const year = saleDate.getFullYear();
-          const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
-
-          const index = financingTypes.indexOf(financingType);
-          if (index !== -1) {
-            monthlyData[index].data[month] += 1;
-          }
-        });
-
-        const chartData = monthlyData.map((item) => ({
-          name: item.name,
-          type: item.type,
-          fill: item.fill,
-          data: item.data
-        }));
-
-        console.log(chartData);
-        setDealsData(chartData);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      setPayError(error);
-      setLoading(false);
-    }
-  };
-  const fetchDealsAvgData = async () => {
-    try {
-      const response = await fetch(`${baseURL}/auth/crmAvgTimelines`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ repId: '7777' })
-      });
-
-      const responseData = await response.json();
-
-      if (responseData && responseData.data && responseData.data.timeline) {
-        const timeline = responseData.data.timeline;
-
-        const chartData = Object.entries(timeline).map(([label, value]) => ({
-          label,
-          value: parseFloat(value) || 0
-        }));
-
-        console.log(chartData);
-        setDealsAvgData(chartData);
-      }
-
-      setLoading(false);
-    } catch (error) {
-      setPayError(error);
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchAhjTimelineData();
-    fetchDealsData();
-    fetchDealsAvgData();
-  }, []);
+  
 
   return (
     <>
-      <Helmet>
-        <title> Dashboard | Voltaic </title>
-      </Helmet>
+    <Helmet>
+      <title>Dashboard | Voltaic</title>
+    </Helmet>
 
-      <Container maxWidth="xl">
-        <Typography variant="h4" sx={{ mb: 5 }}>
-          Hi, Welcome back
-        </Typography>
+    <Container maxWidth="xl">
+      <Typography variant="h4" sx={{ mb: 5 }}>
+        Hi, Welcome back
+      </Typography>
 
-        <Grid container spacing={0} sx={{ height: '80vh', backgroundColor: 'purple', textAlign: 'center' }}>
-          {/* Column 1 */}
-          <Grid item xs={12} md={4} sx={{ backgroundColor: 'blue', height: '100%', ...boxStyle }}>
-            {/* Box 1 (100% Height) */}
-            <Grid container spacing={3} sx={{ backgroundColor: 'green', height: '100%', ...boxStyle }}>
-              <Grid item xs={12} sx={paperStyle}>
-                <Paper sx={paperStyle}>
-                  <Typography variant="h4" color="black">
-                    1
-                  </Typography>
-                </Paper>
-              </Grid>
+      <Grid container spacing={3}>
+        
+         {/* Sidebar - Leaderboards */}
+         <Grid item xs={12} md={3}>
+            <Paper sx={{ p: 2, height: '100%' }}>
+              {/* Time Filters */}
+              <ButtonGroup variant="contained" fullWidth>
+                <Button onClick={() => setTimeFilter('thisWeek')} variant={timeFilter === 'thisWeek' ? 'contained' : 'outlined'}>
+                  This Week
+                </Button>
+                <Button onClick={() => setTimeFilter('thisMonth')} variant={timeFilter === 'thisMonth' ? 'contained' : 'outlined'}>
+                  This Month
+                </Button>
+                <Button onClick={() => setTimeFilter('thisYear')} variant={timeFilter === 'thisYear' ? 'contained' : 'outlined'}>
+                  This Year
+                </Button>
+              </ButtonGroup>
+              {/* Office Filter */}
+              <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
+                <Button onClick={() => setOfficeFilter('company')} variant={officeFilter === 'company' ? 'contained' : 'outlined'}>
+                  Company
+                </Button>
+                <Button onClick={() => setOfficeFilter('office')} variant={officeFilter === 'office' ? 'contained' : 'outlined'}>
+                  Office
+                </Button>
+              </ButtonGroup>
+              {/* Data Filters */}
+              <ButtonGroup variant="contained" fullWidth>
+                <Button onClick={() => setDataFilter('closingRate')} variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}>
+                  Closing Rate
+                </Button>
+                <Button onClick={() => setDataFilter('agreements')} variant={dataFilter === 'agreements' ? 'contained' : 'outlined'}>
+                  Agreements
+                </Button>
+                <Button onClick={() => setDataFilter('revenue')} variant={dataFilter === 'revenue' ? 'contained' : 'outlined'}>
+                  Revenue
+                </Button>
+              </ButtonGroup>
+
+
+              <List sx={{ mt: 2 }}>
+                {getFilteredLeaderboardData().map((data, index) => (
+                  <ListItem key={index} divider>
+                    <ListItemText
+                      primary={data.name}
+                      secondary={`Closing Rate: ${data.closingRate}, Agreements: ${data.agreements}, Revenue: ${data.revenue}`}
+                    />
+                  </ListItem>
+                ))}
+              </List>
+
+
+
+
+            </Paper>
+          </Grid>
+
+
+
+
+
+           {/* Main Content - Leads, Deals, Installs, and Map */}
+           <Grid item xs={12} md={6} container spacing={3} direction="column" sx={{ height: 'calc(100vh - 64px)' }}>
+            {/* Tabs for Leads, Deals, Installs */}
+            <Grid item>
+              <Paper sx={{ p: 2 }}>
+                <Tabs value={activeTab} onChange={(event, newValue) => setActiveTab(newValue)} variant="fullWidth">
+                  <Tab label="Doors knocked" value="myDoors" />
+                  <Tab label="Graveyard leads" value="myAppointments" />
+                  <Tab label="Conversion Rates" value="myInstalls" />
+                </Tabs>
+                <List>
+                  {getFilteredData(activeTab)}
+                </List>
+              </Paper>
+            </Grid>
+
+            {/* Map */}
+            <Grid item xs>
+              <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                <Typography variant="h5" gutterBottom>Map goes here</Typography>
+                {/* Insert map component or iframe here */}
+              </Paper>
             </Grid>
           </Grid>
 
-          {/* Column 2 */}
-          <Grid item xs={12} md={4} sx={{ backgroundColor: 'green', height: '100%', ...boxStyle }}>
-            {/* Box 2 (50% Height) */}
-            <Grid container spacing={3} sx={{ backgroundColor: 'purple', height: '50%', ...boxStyle }}>
-              <Grid item xs={12} sx={paperStyle}>
-                <Paper sx={paperStyle}>
-                  <Typography variant="h4" color="black">
-                    2
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
+        {/* Right Sidebar - Appointments & Tasks */}
+        <Grid item xs={12} md={3}>
+          <Paper sx={{ p: 2, height: '40%' }}>
+          <Typography variant="h5" gutterBottom>Appoitments</Typography>
+            <List>
+              {appointments.map((appointment, index) => (
+                <ListItem key={index} divider>
+                  <ListItemText primary={appointment.title} secondary={`${appointment.date}, ${appointment.time}`} />
+                </ListItem>
+              ))}
+            </List>
+          </Paper>
+          <Paper sx={{ p: 2, mt: 3, height: '60%' }}>
+          <Typography variant="h5" gutterBottom>Tasks</Typography>
+          <Tabs value={taskTab} onChange={(event, newValue) => setTaskTab(newValue)} variant="fullWidth">
+  <Tab label="To Do" value="toDo" />
+  <Tab label="Recently Completed" value="recentlyCompleted" />
+</Tabs>
+<List>
+  {tasks[taskTab] ? tasks[taskTab].map((task, index) => (
+    <ListItem key={index} divider>
+      <ListItemText primary={task.title} />
+    </ListItem>
+  )) : <Typography>No tasks available.</Typography>}
+</List>
 
-            {/* Box 3 (50% Height) */}
-            <Grid container spacing={3} sx={{ backgroundColor: 'pink', height: '50%', ...boxStyle }}>
-              <Grid item xs={12} sx={paperStyle}>
-                <Paper sx={paperStyle}>
-                  <Typography variant="h4" color="black">
-                    3
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Grid>
-
-          {/* Column 3 */}
-          <Grid item xs={12} md={4} sx={{ backgroundColor: 'blue', height: '100%', ...boxStyle }}>
-            {/* Box 4 (40% height) */}
-            <Grid container spacing={3} sx={{ height: '40%', backgroundColor: 'yellow', ...boxStyle }}>
-              <Grid item xs={12} sx={paperStyle}>
-                <Paper sx={paperStyle}>
-                  <Typography variant="h4" color="black">
-                    4
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
-
-            {/* Box 5 (60% height) */}
-            <Grid container spacing={3} sx={{ height: '60%', backgroundColor: 'orange', ...boxStyle }}>
-              <Grid item xs={12} sx={paperStyle}>
-                <Paper sx={paperStyle}>
-                  <Typography variant="h4" color="black">
-                    5
-                  </Typography>
-                </Paper>
-              </Grid>
-            </Grid>
-          </Grid>
+          </Paper>
         </Grid>
-      </Container>
-    </>
+      </Grid>
+    </Container>
+  </>
   );
 }

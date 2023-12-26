@@ -52,7 +52,7 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
         { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
-        { path: 'vcboard', element: <VCDashboardAppPage /> },
+        { path: 'vcdash', element: <VCDashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'rookies', element: <Rookies /> },
