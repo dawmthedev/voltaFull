@@ -73,7 +73,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     []
   );
   const handleSelectSlot = useCallback(({ start, end, box, nativeEvent }) => {
-    const boundingBox = box || nativeEvent.target.getBoundingClientRect();
+    const boundingBox = box;
     setSelectedSlot({ start, end, boundingBox });
     setDropdownVisible(true);
     setAddFormValues({ ...addFormValues, startDate: dayjs(start), endDate: dayjs(end) });
