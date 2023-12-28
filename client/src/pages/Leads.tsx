@@ -43,6 +43,7 @@ import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { leadsList } from '../redux/slice/leadSlice';
 import createAbortController from '../utils/createAbortController';
 import { categorySelector } from '../redux/slice/categorySlice';
+import { baseURL } from '../libs/client/apiClient';
 
 const TABLE_HEAD = [
   { id: 'firstName', label: 'First Name', alignRight: false },
@@ -135,7 +136,7 @@ export default function Leads() {
 
   const submitLead = async () => {
     try {
-      await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/lead`, lead);
+      await axios.post(`${baseURL}/lead`, lead);
       setIsModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -143,7 +144,7 @@ export default function Leads() {
   };
   const submitCategory = async () => {
     try {
-      await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/category`, category);
+      await axios.post(`${baseURL}/category`, category);
       setIsCategoryModalOpen(false);
     } catch (error) {
       console.log('Error:(', error);
@@ -153,7 +154,7 @@ export default function Leads() {
   const submitBulkLeads = async () => {
     try {
       if (!bulkLeads.length) return;
-      const response = await axios.post(`https://recrm-dd33eadabf10.herokuapp.com/rest/lead/bulk`, bulkLeads);
+      const response = await axios.post(`${baseURL}/lead/bulk`, bulkLeads);
       if (response?.status === 200) {
         setIsCsvModalOpen(false);
       }

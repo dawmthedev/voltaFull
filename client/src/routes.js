@@ -10,6 +10,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import VerifyPage from './pages/VerifyPage';
 import NonVerifiedPage from './pages/NonVerified';
 import Leads from './pages/Leads';
+import VCDashboardAppPage from './pages/VCDash';
 // import RegisterPage from './pages/RegisterPage';
 import ResetPasswordPage from './pages/ResetPassword';
 import VerifyEmail from './pages/VerifyEmail';
@@ -19,10 +20,11 @@ import PayPage from './pages/PayPage';
 import DealsPage from './pages/DealsPage';
 import { authSelector } from './redux/slice/authSlice';
 import { useAppSelector } from './hooks/hooks';
+import Planner from './pages/Planner';
 import LeadDetailPage from './pages/LeadDetailPage';
 import DealerRates from './pages/DealerRates';
 import Assistant from './pages/Assistant';
-import RookieData from './components/dataGrid/RookiesData';
+import Rookies from './pages/Rookies';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -35,27 +37,31 @@ export default function Router() {
       element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
         {
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
+          element: data && data?.isSuperAdmin ? <Navigate to="/dashboard/app" /> : <Navigate to="/deals" />,
           index: true
         },
         {
           path: 'app',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <DashboardAppPage /> : <Navigate to="/deals" replace />
+          element: data && data?.isSuperAdmin ? <DashboardAppPage /> : <Navigate to="/deals" replace />
         },
         {
           path: 'user',
-          element: data && data?.email === 'dominiqmartinez@voltaicnow.com' ? <UserPage /> : <Navigate to="/deals" replace />
+          element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
         },
+
         { path: 'products', element: <ProductsPage /> },
-        { path: 'assistant', element: <Assistant/> },
+        { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
+        { path: 'vcdash', element: <VCDashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
-        { path: 'rookies', element: <RookieData /> },
+        { path: 'rookies', element: <Rookies /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'rates', element: <DealerRates /> },
         { path: 'pay', element: <PayPage /> },
+        { path: 'dynamic-leads', element: <DynamicLead /> },
+        { path: 'planner', element: <Planner /> },
         { path: 'deals', element: <DealsPage /> }
       ]
     },

@@ -8,21 +8,17 @@ import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { styled, darken, lighten } from '@mui/material/styles';
+import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
 
-
-
 export default function DealsDataLeadgen(props) {
-
-
   const navigate = useNavigate();
-  const {recordUserId} = props;
+  const { recordUserId } = props;
 
-  // Add redux user info here: 
+  // Add redux user info here:
   // const { user } = useSelector((state) => state.auth);
   // console.log("User" , user)
 
- 
   const [sortModel, setSortModel] = useState([{ field: 'name', sort: 'asc' }]);
   const [sort, setSort] = useState('');
   const [column, setColumn] = useState('');
@@ -31,7 +27,7 @@ export default function DealsDataLeadgen(props) {
 
   const [columnsToShow, setColumnsToShow] = useState([]);
   const [gridRef] = useState({});
- 
+
   const [rowSelectedUsers] = useState(['dominiqmartinez13@gmail.com', 'unhashlabs@gmail.com']);
   const [take, setTake] = useState('10');
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,60 +36,56 @@ export default function DealsDataLeadgen(props) {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(10);
   const [skip, setSkip] = React.useState(0);
- // const [isLoading, setIsLoading] = useState(true);
-
+  // const [isLoading, setIsLoading] = useState(true);
 
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
 
- 
   // Provide a default value if UserData or recordID is undefined
 
-//  const repIDValue = UserData.recordID; // Replace this with the actual repID value you want to send
+  //  const repIDValue = UserData.recordID; // Replace this with the actual repID value you want to send
 
-  //STYLES: 
+  //STYLES:
 
   const gridStyles = {
     height: 350,
     maxWidth: '100%', // ensure the grid does not exceed the width of its container
-    overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
+    overflow: 'auto' // allow scrolling within the grid if content exceeds its bounds
   };
-
 
   const apiRef = React.useRef(null);
 
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
+  //Added new profile columns.
   const columns = useMemo(
     () => [
-      // {
-      //   field: 'Profile',
-      //   headerName: 'Profile',
-      //   width: 150,
-      //   editable: true,
-      //   renderCell: (params) => {
-      //     return (
-      //       <Button
-      //         variant="outlined"
-      //         onClick={() => {
-      //          //Open up user modal
-      //            navigate(`/lead/${params?.row?.id}`);
-    
-      //         }}
-      //       >
-      //         Pipeline
-      //       </Button>
-      //     );
-      //   },
-      // },
-  
-  
+      {
+        field: 'Profile',
+        headerName: 'Profile',
+        width: 150,
+        editable: true,
+        renderCell: (params) => {
+          return (
+            <Button
+              variant="outlined"
+              onClick={() => {
+                //Open up user modal
+                navigate(`/dashboard/lead/${params?.row?.id}`);
+              }}
+            >
+              Details
+            </Button>
+          );
+        }
+      },
+
       {
         field: 'homeownerName',
         headerName: 'Homeowner Name',
         width: 180,
         editable: false,
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'status',
@@ -110,13 +102,12 @@ export default function DealsDataLeadgen(props) {
           }
           return '';
         }
-      
       },
       {
         field: 'email',
         headerName: 'Email',
         width: 250,
-        editable: false,
+        editable: false
       },
       {
         field: 'stage',
@@ -125,54 +116,47 @@ export default function DealsDataLeadgen(props) {
         editable: false,
         hide: false,
         renderCell: (params) => {
-          const percentage = stageToPercentMapping[params.value.toString()];  // or just params.value if it's already a string
+          const percentage = stageToPercentMapping[params.value.toString()]; // or just params.value if it's already a string
           return <ProgressBar percentage={percentage} status={params.value} />;
-        },
+        }
       },
       {
         field: 'plansReceived',
         headerName: 'Plans Received Date',
         width: 180,
         editable: false,
-        type: 'text',
+        type: 'text'
       },
       {
         field: 'installComplete',
         headerName: 'Install Complete Date',
         width: 180,
         editable: false,
-        type: 'text',
+        type: 'text'
       },
-        {
+      {
         field: 'ptoApproved',
         headerName: 'PTO Approved Date',
         width: 180,
         editable: false,
-        type: 'text',
+        type: 'text'
       },
 
-
-   
       {
         field: 'ppwFinal',
         headerName: 'PpwFinal',
         width: 500,
         editable: false,
-        hide: false,
-      },
-
+        hide: false
+      }
     ],
     [data]
   );
 
-
-
-
-    function truncateDecimals(number, decimalPlaces) {
-      const multiplier = Math.pow(10, decimalPlaces);
-      return Math.floor(number * multiplier) / multiplier;
-    }
-
+  function truncateDecimals(number, decimalPlaces) {
+    const multiplier = Math.pow(10, decimalPlaces);
+    return Math.floor(number * multiplier) / multiplier;
+  }
 
   //EDIT THE LEAD ROWS HERE:
   // Make the API call
@@ -192,55 +176,45 @@ export default function DealsDataLeadgen(props) {
     }
   });
 
-
   useEffect(() => {
-   
-
-    fetch(`https://recrm-dd33eadabf10.herokuapp.com/rest/auth/crmDealsLeadgen`,{
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ recordId: recordUserId })
+    fetch(`${baseURL}/auth/crmDealsLeadgen`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ recordId: recordUserId })
     })
-    .then(response => response.json())
-    .then(responseData => {
+      .then((response) => response.json())
+      .then((responseData) => {
         if (responseData.success && responseData.data.deals) {
-            const dealsData = responseData.data.deals.map((deal) => {
-                return {
-                    stage: deal.stage.replace(/^"|"$/g, ''), 
-                    status: deal.status.replace(/^"|"$/g, ''),
-                    milestone: deal.milestone.replace(/^"|"$/g, ''),
-                    datePaid: deal.datePaid.replace(/^"|"$/g, ''), 
-                    email: deal.email.replace(/^"|"$/g, ''), 
-                    saleDate: deal.saleDate.replace(/^"|"$/g, ''), 
-                    plansReceived: deal.plansReceived.replace(/^"|"$/g, ''), 
-                    installComplete: deal.installComplete.replace(/^"|"$/g, ''), 
-                    ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''), 
-                    ppwFinal: truncateDecimals(deal.ppwFinal, 1),
-                    homeownerName: deal.homeownerName.replace(/^"|"$/g, ''), 
-                    profile: 'hello',
-                    id: deal.projectID 
-                };
-            });
-            setData(dealsData);
-            
+          const dealsData = responseData.data.deals.map((deal) => {
+            return {
+              stage: deal.stage.replace(/^"|"$/g, ''),
+              status: deal.status.replace(/^"|"$/g, ''),
+              milestone: deal.milestone.replace(/^"|"$/g, ''),
+              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
+              email: deal.email.replace(/^"|"$/g, ''),
+              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
+              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
+              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
+              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
+              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
+              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
+              profile: 'hello',
+              id: deal.projectID
+            };
+          });
+          setData(dealsData);
         }
-       setLoading(false);
-    })
-    .catch(error => {
-      
+        setLoading(false);
+      })
+      .catch((error) => {
         setDealsError(error);
         setLoading(false);
-    });
-}, [recordUserId]);
+      });
+  }, [recordUserId]);
 
-
-
-
-const leadsRows = data || [];
-
-
+  const leadsRows = data || [];
 
   const handleSearchInputChange = (event) => {
     const input = event.target.value;
@@ -251,6 +225,10 @@ const leadsRows = data || [];
       setFilterModel({});
     }
   };
+
+  const filteredRows = leadsRows.filter((row) =>
+    Object.values(row).some((value) => typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase()))
+  );
 
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
@@ -271,21 +249,17 @@ const leadsRows = data || [];
     setFilterModel(newFilterModel.items[0]);
   }
 
-
-
   // sorting
   function handleSortModelChange(newSortModel) {
     if (!newSortModel.length) return;
     setSort(newSortModel[0].sort);
     setColumn(newSortModel[0].field);
     setSortModel(newSortModel);
-   
+
     setSkip(0);
     setPage(0);
     // setPageSize(10);
   }
-
-
 
   let selectIds = [];
 
@@ -293,39 +267,43 @@ const leadsRows = data || [];
     selectIds = newSelection;
   };
 
-
-
   // disable eslint for now
   // eslint-disable-next-line no-unused-vars
 
   return (
-    <div style={{ 
-    
-        flexDirection: 'column', alignItems: 'center', width: '100%', overflow: 'auto', justifyContent: 'center' }}>
-      
-        {/* filter lead modal */}
-  
-        <div style={{  height: 350, width: '80%', overflow: 'auto' }}>
-  
-        <Box sx={{
-                     
-                     height: '100%', maxWidth: '100%', overflow: 'hidden' }}>
-            <Box
-              sx={{
-           
-              
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'flex-end',
-                position: 'relative',
-               
-                right: '16px',
-                zIndex: '2',
-                width: '60%',
-                // maxWidth: '330px',
-                marginLeft: 'auto',
-              }}
-            >
+    <div
+      style={{
+        flexDirection: 'column',
+        alignItems: 'center',
+        width: '100%',
+        overflow: 'auto',
+        justifyContent: 'center'
+      }}
+    >
+      {/* filter lead modal */}
+
+      <div style={{ height: 350, overflow: 'auto' }}>
+        <Box
+          sx={{
+            height: '100%',
+            maxWidth: '100%',
+            overflow: 'hidden'
+          }}
+        >
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'flex-end',
+              position: 'relative',
+
+              right: '16px',
+              zIndex: '2',
+              width: '60%',
+              // maxWidth: '330px',
+              marginLeft: 'auto'
+            }}
+          >
             {/* <Typography variant="h6" style={{ marginRight: 16 }}>
               User Fields
             </Typography> */}
@@ -337,6 +315,7 @@ const leadsRows = data || [];
               value={searchQuery}
               onKeyPress={handleKeyPress}
               onChange={(e) => handleSearchInputChange(e)}
+              sx={{ my: '0.5rem' }}
             />
           </Box>
 
@@ -345,52 +324,47 @@ const leadsRows = data || [];
               <CircularProgress />
             </Box>
           ) : (
-
             <StyledDataGrid
-            sx={gridStyles}
-          //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
-            rows={leadsRows}
-
-            editable
-            editMode="cell"
-            apiRef={apiRef}
-            disableColumnMenu
-            checkboxSelection
-            // selectionModel={selectedIds}
-            onSelectionModelChange={(e) => handleSelectionModelChange(e)}
-            // filterModel={filterModel}
-            onFilterModelChange={(value) => handleFilterModelChange(value)}
-            sortModel={sortModel}
-            onSortModelChange={(e) => handleSortModelChange(e)}
-            key={Math.random().toString()}
-         
-            components={{ Toolbar: GridToolbar, gridRef }}
-            componentsProps={{
-              filterPanel: {
-                disableAddFilterButton: true,
-              },
-            }}
-            rowsPerPageOptions={[10, 25, 50, 100, 200]}
-            pagination="true" // enable pagination
-            pageSize={pageSize} // set the page size to 10
-            page={page} // set the initial page to 1
-            rowCount={data?.leads?.count} // set the total number of rows to the length of the rows array
-            paginationMode="server" // paginate on the client-side
-           
-            columns={columns}
-
-           getRowClassName={(params) => {
-              if (params.row.status === 'Active') {
-                return 'active-cell';
-              } else if (params.row.status === 'Cancelled') {
-                return 'inactive-cell';
-              } else if (params.row.status === 'Retention') {
-                return 'retention-cell';
-              }
-              return '';
-            }}
-          />
-      
+              sx={gridStyles}
+              //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
+              //rows={leadsRows}
+              rows={filteredRows}
+              editable
+              editMode="cell"
+              apiRef={apiRef}
+              disableColumnMenu
+              checkboxSelection
+              // selectionModel={selectedIds}
+              onSelectionModelChange={(e) => handleSelectionModelChange(e)}
+              // filterModel={filterModel}
+              onFilterModelChange={(value) => handleFilterModelChange(value)}
+              sortModel={sortModel}
+              onSortModelChange={(e) => handleSortModelChange(e)}
+              key={Math.random().toString()}
+              components={{ Toolbar: GridToolbar, gridRef }}
+              componentsProps={{
+                filterPanel: {
+                  disableAddFilterButton: true
+                }
+              }}
+              rowsPerPageOptions={[10, 25, 50, 100, 200]}
+              pagination="true" // enable pagination
+              pageSize={pageSize} // set the page size to 10
+              page={page} // set the initial page to 1
+              rowCount={data?.leads?.count} // set the total number of rows to the length of the rows array
+              paginationMode="server" // paginate on the client-side
+              columns={columns}
+              getRowClassName={(params) => {
+                if (params.row.status === 'Active') {
+                  return 'active-cell';
+                } else if (params.row.status === 'Cancelled') {
+                  return 'inactive-cell';
+                } else if (params.row.status === 'Retention') {
+                  return 'retention-cell';
+                }
+                return '';
+              }}
+            />
           )}
         </Box>
       </div>
@@ -398,8 +372,8 @@ const leadsRows = data || [];
   );
 }
 
-// Stage Mapping 
-//Color Row Status 
+// Stage Mapping
+//Color Row Status
 
 const getColorForPercentage = (percentage) => {
   if (percentage >= 0 && percentage <= 30) {
@@ -411,7 +385,7 @@ const getColorForPercentage = (percentage) => {
   } else if (percentage > 90) {
     return 'darkgreen';
   }
-  return 'gray';  // default case
+  return 'gray'; // default case
 };
 
 const stageToPercentMapping = {
@@ -419,91 +393,85 @@ const stageToPercentMapping = {
   'Welcome Call': 5,
   'Site Survey': 10,
   'Construction Call': 15,
-  'NTP': 20,
+  NTP: 20,
   'QC Check': 30,
-  'Plans': 40,
-  'FLA': 50,
-  'FLA': 60,
+  Plans: 40,
+  FLA: 50,
+  FLA: 60,
   'Solar Permit': 70,
   'Solar Install': 80,
   'Final Inspection': 90,
-  'PTO': 95,
-  'Complete': 100,
+  PTO: 95,
+  Complete: 100
 };
 
 const ProgressBar = ({ percentage, status }) => {
   const color = getColorForPercentage(percentage);
   return (
     <div style={{ width: '100%', backgroundColor: '#eee', borderRadius: '4px', position: 'relative' }}>
-      <div style={{
-        width: `${percentage}%`,
-        backgroundColor: color,
-        height: '20px',
-        borderRadius: '4px',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        fontWeight: 'bold'
-      }}>
+      <div
+        style={{
+          width: `${percentage}%`,
+          backgroundColor: color,
+          height: '20px',
+          borderRadius: '4px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontWeight: 'bold'
+        }}
+      >
         {status}
       </div>
-    
     </div>
   );
 };
 
+const getBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7));
 
-const getBackgroundColor = (color, mode) =>
-  mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7);
+const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6));
 
-const getHoverBackgroundColor = (color, mode) =>
-  mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6);
+const getSelectedBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5));
 
-const getSelectedBackgroundColor = (color, mode) =>
-  mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5);
-
-const getSelectedHoverBackgroundColor = (color, mode) =>
-  mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4);
+const getSelectedHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4));
 
 const StyledDataGrid = styled(DataGridPro)(({ theme }) => ({
-
-
   '& .retention-cell': {
     backgroundColor: getBackgroundColor(theme.palette.warning.main, theme.palette.mode), // using warning palette (yellow) for retention
     '&:hover': {
-      backgroundColor: getHoverBackgroundColor(theme.palette.warning.main, theme.palette.mode),
+      backgroundColor: getHoverBackgroundColor(theme.palette.warning.main, theme.palette.mode)
     },
     '&.Mui-selected': {
       backgroundColor: getSelectedBackgroundColor(theme.palette.warning.main, theme.palette.mode),
       '&:hover': {
-        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.warning.main, theme.palette.mode),
-      },
-    },
+        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.warning.main, theme.palette.mode)
+      }
+    }
   },
-  
+
   '& .active-cell': {
     backgroundColor: getBackgroundColor(theme.palette.success.main, theme.palette.mode),
     '&:hover': {
-      backgroundColor: getHoverBackgroundColor(theme.palette.success.main, theme.palette.mode),
+      backgroundColor: getHoverBackgroundColor(theme.palette.success.main, theme.palette.mode)
     },
     '&.Mui-selected': {
       backgroundColor: getSelectedBackgroundColor(theme.palette.success.main, theme.palette.mode),
       '&:hover': {
-        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.success.main, theme.palette.mode),
-      },
-    },
+        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.success.main, theme.palette.mode)
+      }
+    }
   },
 
   '& .inactive-cell': {
     backgroundColor: getBackgroundColor(theme.palette.error.main, theme.palette.mode),
     '&:hover': {
-      backgroundColor: getHoverBackgroundColor(theme.palette.error.main, theme.palette.mode),
+      backgroundColor: getHoverBackgroundColor(theme.palette.error.main, theme.palette.mode)
     },
     '&.Mui-selected': {
       backgroundColor: getSelectedBackgroundColor(theme.palette.error.main, theme.palette.mode),
       '&:hover': {
-        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.error.main, theme.palette.mode),
-      },
-    },
-  },
+        backgroundColor: getSelectedHoverBackgroundColor(theme.palette.error.main, theme.palette.mode)
+      }
+    }
+  }
 }));

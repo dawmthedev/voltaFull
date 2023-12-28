@@ -1,6 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 // @mui
 import {
@@ -26,17 +25,17 @@ import Label from '../components/label';
 import Iconify from '../components/iconify';
 import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
-import USERLIST from '../_mock/user';
 import React from 'react';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { getUsers } from '../redux/middleware/admin';
+import { getUsers, updateAdmin } from '../redux/middleware/admin';
 import createAbortController from '../utils/createAbortController';
-import { adminSelector } from '../redux/slice/adminSlice';
+import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
+import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUserForm';
-import { register } from '../redux/middleware/authentication';
-import { authSelector } from '../redux/slice/authSlice';
-
+import { setAlert } from '../redux/slice/alertSlice';
+import { createRole, getRoles } from '../redux/middleware/role';
+import CustomInput from '../components/input/CustomInput';
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -44,6 +43,7 @@ const TABLE_HEAD = [
   { id: 'email', name: 'Email', alignRight: false },
   { id: 'company', name: 'Company', alignRight: false },
   { id: 'role', name: 'Role', alignRight: false },
+  { id: 'isSuperAdmin', name: 'Super Admin', alignRight: false },
   // { id: 'isVerified', name: 'Verified', alignRight: false },
   // { id: 'status', name: 'Status', alignRight: false },
   { id: '' }
@@ -77,16 +77,19 @@ function applySortFilter(array, comparator, query) {
 }
 
 const initialState = {
-  email: '',
-  role: ''
+  id: '',
+  name: '',
+  role: '',
+  isSuperAdmin: false
 };
 
 export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
-
+  const roleLoading = useAppSelector(loadingRole);
+  const adminLoading = useAppSelector(loadingAdmin);
+  const roles = useAppSelector(roleList);
   const { signal, abort } = createAbortController();
-
   const [open, setOpen] = useState(null);
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -96,12 +99,16 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
   const [user, setUser] = useState(initialState);
+  const [newRole, setNewRole] = useState<string>('');
 
   useEffect(() => {
     (async () => {
       await dispatch(getUsers({ signal }));
+      await dispatch(getRoles({ signal }));
     })();
+
     return () => {
       abort();
     };
@@ -111,8 +118,43 @@ export default function UserPage() {
     setOpen(event.currentTarget);
   };
 
+  const getSelectedUser = (userData) => {
+    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role, isSuperAdmin: userData.isSuperAdmin });
+  };
+
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+
+  const updateUser = async () => {
+    if (!user.name) {
+      return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
+    }
+    const response = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
+    if (response && response.payload) {
+      await dispatch(getUsers({ signal }));
+    }
+    setIsModalOpen(false);
+    handleCloseMenu();
+  };
+
+  const submitRole = async () => {
+    if (!newRole) {
+      dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
+      return;
+    }
+    const isDuplicate = roles.find((item) => item.name === newRole);
+
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
+    }
+    await dispatch(createRole({ role: newRole }));
+
+    await dispatch(getRoles({ signal }));
+
+    setIsRoleModalOpen(false);
+    handleCloseMenu();
+    setNewRole('');
   };
 
   const handleRequestSort = (event, property) => {
@@ -123,7 +165,6 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      debugger;
       const newSelecteds = users.map((n) => n.name);
       setSelected(newSelecteds);
       return;
@@ -165,7 +206,6 @@ export default function UserPage() {
   const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && !!filterName;
-
   return (
     <>
       <Helmet>
@@ -177,14 +217,24 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
-          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
-            New User
-          </Button> */}
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
+            Add New Role
+          </Button>
         </Stack>
 
-        <CustomModal title="Add New User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={() => {}}>
+        <CustomModal
+          title="Add New Role"
+          open={isRoleModalOpen}
+          setOpen={setIsRoleModalOpen}
+          handleSubmit={submitRole}
+          loading={roleLoading}
+        >
+          <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
+        </CustomModal>
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
           <AddUserForm
             user={user}
+            roles={roles}
             getUsersData={(value, name) => {
               setUser({ ...user, [name]: value });
             }}
@@ -207,7 +257,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { name, email, role, company, avatarUrl } = row;
+                    const { name, email, role, company, avatarUrl, isSuperAdmin } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -228,7 +278,18 @@ export default function UserPage() {
                         <TableCell align="left">{email}</TableCell>
                         <TableCell align="left">{company}</TableCell>
 
-                        <TableCell align="left">{role}</TableCell>
+                        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                          {role}
+                        </TableCell>
+                        {isSuperAdmin ? (
+                          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                            True
+                          </TableCell>
+                        ) : (
+                          <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+                            False
+                          </TableCell>
+                        )}
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 
@@ -237,7 +298,14 @@ export default function UserPage() {
                         </TableCell> */}
 
                         <TableCell align="right">
-                          <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                          <IconButton
+                            size="large"
+                            color="inherit"
+                            onClick={(event) => {
+                              handleOpenMenu(event);
+                              getSelectedUser(row);
+                            }}
+                          >
                             <Iconify icon={'eva:more-vertical-fill'} />
                           </IconButton>
                         </TableCell>
@@ -308,7 +376,7 @@ export default function UserPage() {
           }
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => setIsModalOpen(true)}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
         </MenuItem>

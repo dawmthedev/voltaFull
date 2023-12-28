@@ -1,4 +1,5 @@
-import { ArrayOf, Property, Required } from "@tsed/schema";
+import { ArrayOf, Enum, Property, Required } from "@tsed/schema";
+import { SocialAction } from "../../types";
 import { CategoryFieldType } from "./CategoryModel";
 
 export class IdModel {
@@ -11,6 +12,11 @@ export class AdminModel {
   @Property() public readonly company: string;
   @Property() public readonly email: string;
   @Property() public readonly twoFactorEnabled: boolean;
+}
+export class AdminRoleModel {
+  @Property() public readonly id: string;
+  @Property() public readonly role: string;
+  @Property() public readonly email: string;
 }
 export class VerificationSuccessModel {
   @Required() public readonly email: string;
@@ -33,6 +39,7 @@ export class AdminProfileResultModel {
   @Property() public readonly verifyStatus: string;
 }
 export class AdminResultModel {
+  @Property() public readonly id: string;
   @Property() public readonly name: string;
   @Property() public readonly role: string;
   @Property() public readonly company: string;
@@ -41,6 +48,7 @@ export class AdminResultModel {
   @Property() public readonly twoFactorEnabled: boolean;
   @Property() public readonly orgId: string;
   @Property() public token: string;
+  @Property() public readonly isSuperAdmin: boolean;
 }
 
 export class OrganizationResultModel {
@@ -92,6 +100,7 @@ export class SingleCrmDealResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
+  @Property() public readonly address: string;
   @Property() public readonly vcmessages: {
     relatedProject: string;
     type: string;
@@ -127,6 +136,7 @@ export class SingleCrmDealResultModel {
     milestone: string;
     datePaid: string;
     amount: string;
+    address: string;
     vcmessages: {
       relatedProject: string;
       type: string;
@@ -160,6 +170,7 @@ export class SingleCrmDealResultModel {
     this.milestone = data.milestone;
     this.datePaid = data.datePaid;
     this.amount = data.amount;
+    this.address = data.address;
     this.vcmessages = data.vcmessages;
     this.vcadders = data.vcadders;
   }
@@ -176,6 +187,38 @@ export class CrmRateResultModel {
   @Property() public readonly feerate: string;
 
 }
+
+export class CrmTimelineAvgResultModel{
+  @Property() public readonly saleStage: string;
+  @Property() public readonly welcometage: string;
+  @Property() public readonly sstage: string;
+  @Property() public readonly ntpstage: string;
+  @Property() public readonly qcStage: string;
+  @Property() public readonly planStage: string;
+  @Property() public readonly flatage: string;
+  @Property() public readonly permitStage: string;
+  @Property() public readonly installStage: string;
+  @Property() public readonly inspectStage: string;
+  @Property() public readonly ptoStage: string;
+
+}
+
+export class CrmTimelineResultModel{
+  @Property() public readonly saleStage: string;
+  @Property() public readonly welcometage: string;
+  @Property() public readonly sstage: string;
+  @Property() public readonly ntpstage: string;
+  @Property() public readonly qcStage: string;
+  @Property() public readonly planStage: string;
+  @Property() public readonly flatage: string;
+  @Property() public readonly permitStage: string;
+  @Property() public readonly installStage: string;
+  @Property() public readonly inspectStage: string;
+  @Property() public readonly ptoStage: string;
+  @Property() public readonly AHJ: string;
+}
+
+
 export class AIResponseModel {
   @Property() public response: string; // removed the readonly modifier
 }
@@ -218,6 +261,8 @@ export class CrmDealResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
+  @Property() public readonly installer: string;
+  @Property() public readonly financing: string;
 }
 
 export class CrmPayrollResultModel {
@@ -231,14 +276,11 @@ export class CrmPayrollResultModel {
 
   @Property() public readonly addersFinal: string;
   @Property() public readonly systemSizeFinal: string;
- 
+
   @Property() public readonly recordID: string;
   @Property() public readonly saleStatus: string;
 
-  
-
   @Property() public readonly clawbackNotes: string;
-
 
   @Property() public readonly repRedline: string;
 
@@ -251,4 +293,22 @@ export class CrmPayrollResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string; // Change to match the type you need
+}
+
+export class PlannerResultModel {
+  @Property() public readonly _id: string;
+  @Property() public readonly title: string;
+  @Property() @Enum(SocialAction) public readonly action: SocialAction;
+  @Property() public readonly description: string;
+  @Property() public readonly startDate: string;
+  @Property() public readonly endDate: string;
+  @Property() public readonly timeOfExecution: string;
+  @Property() public readonly adminId: string;
+}
+
+export class RoleResultModel {
+  @Property() public readonly _id: string;
+  @Property() public readonly name: string;
+  @Property() public readonly createdAt: Date;
+  @Property() public readonly updatedAt: Date;
 }

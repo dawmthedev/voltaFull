@@ -18,11 +18,12 @@ const navConfig = [
     path: '/dashboard/pay',
     icon: icon('ic_user')
   },
-  // {
-  //   title: 'Users',
-  //   path: '/dashboard/user',
-  //   icon: icon('ic_user')
-  // },
+  {
+    title: 'Users',
+    path: '/dashboard/user',
+    icon: icon('ic_user'),
+    isSuperAdmin: true
+  },
   {
     title: 'Resources',
     path: '/dashboard/blog',
@@ -54,11 +55,18 @@ const navConfig = [
   //   path: '/dashboard/leads',
   //   icon: icon('ic_blog')
   // },
-  // {
-  //   title: 'Dynamic-Leads',
-  //   path: '/dashboard/dynamic-leads',
-  //   icon: icon('ic_analytics')
-  // },
+  {
+    title: 'Dynamic-Leads',
+    path: '/dashboard/dynamic-leads',
+    icon: icon('ic_analytics'),
+    isSuperAdmin: true
+  },
+  {
+    title: 'Planner',
+    path: '/dashboard/planner',
+    icon: icon('ic_analytics'),
+    isSuperAdmin: true
+  }
   // {
   //   title: 'Not found',
   //   path: '/404',

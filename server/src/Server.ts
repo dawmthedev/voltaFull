@@ -62,7 +62,15 @@ export class Server {
       })
     );
     this.app.use(AuthMiddleware);
-    this.app.use(cors(corsSettings));
+    this.app.use(
+      cors({
+        exposedHeaders: ["Authorization", "Content-Type"],
+        origin: ["https://vccrm.vercel.app", "https://crm-admin-chi.vercel.app", "http://localhost:3000"],
+        methods: ["GET", "POST", "PUT", "Delete", "PATCH", "OPTIONS"],
+        credentials: true,
+        allowedHeaders: ["Content-Type", "Authorization"]
+      })
+    );
     this.app
       .use(cookieParser())
       .use(compression({}))

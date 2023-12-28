@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async';
 import { Box } from '@mui/material';
 
 import RookieData from '../components/dataGrid/RookiesData';
+import RookieDataLead from '../components/dataGrid/RookieLeadgens';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 
@@ -38,19 +39,20 @@ export default function Rookies() {
             md: '40px',
             xs: '2px',
           },
+          
         }}
       >
      <Box sx={{width: '100%', height: 'fit-content', overflow: 'auto', paddingTop: '1em', paddingLeft: '1em'}}>
       
           {/* <DataGridProCSV /> */}
-          <h4>Sales Deals</h4>
+          <h4>Rookie Sales Deals</h4>
           <RookieData recordUserId={recordId}/>
 
 
-          <h4>Leadgen Deals</h4>
+          <h4>Rookie Leadgen Deals</h4>
 
 
-          <DealsDataLeadgen recordUserId={recordId}/>
+          <RookieDataLead recordUserId={recordId}/>
 
         </Box>
       </Box>

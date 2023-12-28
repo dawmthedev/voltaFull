@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
+import { AdminResponseTypes } from '../../types';
 
-import { login, startVerification, register, verifyCode, completeVerification } from '../middleware/authentication';
+import { login, startVerification, register, verifyCode, completeVerification, forgotPassword, logout } from '../middleware/authentication';
 
 type AuthState = {
   loading: boolean;
-  data: any;
+  data: AdminResponseTypes[];
   error: string | null;
   verificationData: any;
   verificationLoading: boolean;
@@ -49,10 +50,8 @@ const authSlice = createSlice({
     builder.addCase(login.fulfilled, (state, action) => {
       state.loading = false;
       state.data = action.payload;
-      if (document.cookie.indexOf('session=') !== -1) {
-        document.cookie = 'session=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-      }
       document.cookie = `session=${action.payload.token}`;
+      localStorage.setItem('authToken', action.payload.token);
     });
     builder.addCase(login.rejected, (state, action) => {
       state.loading = false;
@@ -113,6 +112,32 @@ const authSlice = createSlice({
       state.isStartVerification = false;
     });
     builder.addCase(completeVerification.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // forgot password
+    builder.addCase(forgotPassword.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(forgotPassword.fulfilled, (state, action) => {
+      state.loading = false;
+      state.data = action.payload;
+    });
+    builder.addCase(forgotPassword.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message;
+    });
+
+    // logout
+    builder.addCase(logout.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(logout.fulfilled, (state, action) => {
+      state.loading = false;
+      localStorage.clear();
+    });
+    builder.addCase(logout.rejected, (state, action) => {
       state.loading = false;
       state.error = action.error.message;
     });
