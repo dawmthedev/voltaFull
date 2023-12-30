@@ -66,6 +66,12 @@ const navConfig = [
     path: '/dashboard/planner',
     icon: icon('ic_analytics'),
     isSuperAdmin: true
+  },
+  {
+    title: 'Availability Planner',
+    path: '/dashboard/availability-planner',
+    icon: icon('ic_analytics'),
+    isSuperAdmin: true
   }
   // {
   //   title: 'Not found',

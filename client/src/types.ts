@@ -39,12 +39,12 @@ export type FieldTypes = {
 };
 
 export type PlannerDataTypes = {
-  title: string;
-  action: string;
-  description: string;
+  title?: string;
+  action?: string;
+  description?: string;
   startDate: string;
   endDate: string;
-  timeOfExecution: string;
+  timeOfExecution?: string;
 };
 
 export type RoleDataTypes = {
