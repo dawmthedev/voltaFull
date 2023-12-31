@@ -77,4 +77,5 @@ export type PlannerDataTypes = {
   endDate: string;
   orgId?: string;
   adminId?: string;
+  categoryId?: string;
 };

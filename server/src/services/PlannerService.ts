@@ -17,7 +17,17 @@ export class PlannerService {
     return await this.planner.findById({ _id: id });
   }
 
-  public async createPlanner({ title, action, description, startDate, timeOfExecution, orgId, adminId, endDate }: PlannerDataTypes) {
+  public async createPlanner({
+    title,
+    action,
+    description,
+    startDate,
+    timeOfExecution,
+    orgId,
+    adminId,
+    endDate,
+    categoryId,
+  }: PlannerDataTypes) {
     return await this.planner.create({
       title,
       action,
@@ -26,7 +36,8 @@ export class PlannerService {
       endDate,
       timeOfExecution,
       orgId,
-      adminId
+      adminId,
+      categoryId,
     });
   }
 }

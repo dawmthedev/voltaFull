@@ -24,11 +24,11 @@ export class CategoryService {
   }
 
   public async createCategory({ name, description, fields, orgId, adminId }: CategoryBodyTypes) {
-    return await this.category.create({ name, description, orgId, adminId, fields });
+    return await this.category.create({ name: name.toLocaleLowerCase(), description, orgId, adminId, fields });
   }
 
   public async updateCategory({ id, name, description }: CategoryBodyTypes & { id: string }) {
-    return await this.category.findByIdAndUpdate(id, { name, description });
+    return await this.category.findByIdAndUpdate(id, { name: name.toLocaleLowerCase(), description });
   }
 
   public async deleteCategory(id: string) {
