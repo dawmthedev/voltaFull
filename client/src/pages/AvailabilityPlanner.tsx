@@ -1,13 +1,13 @@
 import { Box, Container } from '@mui/material';
 import React from 'react';
-import WeekCalendar from '../components/calendar/WeekCalender';
+import AvailabilityCalendar from '../components/calendar/AvailabilityCalender';
 
 const AvaiabilityPlanner = () => {
   return (
     <Container>
       <h1>Availability Planner</h1>
-   {/* <MyCalendar value={'email'} getActionData={() => {}} /> */}
-    <WeekCalendar value={'email'} getActionData={() => {}} />
+      {/* <MyCalendar value={'email'} getActionData={() => {}} /> */}
+      <AvailabilityCalendar value={'email'} getActionData={() => {}} />
     </Container>
   );
 };

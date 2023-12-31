@@ -212,7 +212,6 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
             if (name === 'description' && value) setError({ ...error, description: '' });
           }}
           error={error}
-          unavailable = {false}
         />
       </CustomModal>
     </Box>
