@@ -9,7 +9,6 @@ export const plannerModel = createSchema({
     { name: "description", type: "string" },
     { name: "timeOfExecution", type: "string" },
     { name: "startDate", type: "string" },
-    { name: "endDate", type: "string" },
     { name: "orgId", type: "string" },
     { name: "adminId", type: "string" },
     { name: "source", type: "string" },

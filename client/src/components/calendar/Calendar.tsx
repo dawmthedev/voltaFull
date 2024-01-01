@@ -29,9 +29,8 @@ export type PlannerState = {
   description: string;
   action: string;
   startDate: Dayjs | null;
-  endDate: Dayjs | null;
   timeOfExecution: Dayjs | null;
-  category: string;
+  source: string;
 };
 
 const initialState: PlannerState = {
@@ -39,9 +38,8 @@ const initialState: PlannerState = {
   description: '',
   action: 'email',
   startDate: dayjs(new Date()),
-  endDate: dayjs(new Date()),
   timeOfExecution: dayjs(new Date()),
-  category: ''
+  source: ''
 };
 
 const localizer = momentLocalizer(moment);
@@ -83,7 +81,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
     const boundingBox = box;
     setSelectedSlot({ start, end, boundingBox });
     setDropdownVisible(true);
-    setAddFormValues({ ...addFormValues, startDate: dayjs(start), endDate: dayjs(end) });
+    setAddFormValues({ ...addFormValues, startDate: dayjs(start) });
   }, []);
 
   const handleSelectEvent = useCallback((event) => window.alert(event.title), []);
@@ -113,8 +111,8 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       description: addFormValues.description,
       action: addFormValues.action,
       startDate: addFormValues.startDate.toString(),
-      endDate: addFormValues.endDate.toString(),
-      timeOfExecution: addFormValues.timeOfExecution.toString()
+      timeOfExecution: addFormValues.timeOfExecution.toString(),
+      source: addFormValues.source
     };
     await dispatch(createPlanner({ planner: data }));
     setIsModalOpen(false);

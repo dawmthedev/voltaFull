@@ -28,9 +28,6 @@ export class PlannerModel {
   @Required()
   startDate: Date;
 
-  @Required()
-  endDate: Date;
-
   @Property()
   orgId: string;
 

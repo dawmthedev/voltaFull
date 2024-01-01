@@ -17,7 +17,7 @@ class PlannerBodyTypes {
   @Required() @Enum(SocialAction) public readonly action: SocialAction;
   @Property() public readonly description: string;
   @Property() public readonly startDate: string;
-  @Property() public readonly endDate: string;
+  // @Property() public readonly endDate: string;
   @Required() public readonly timeOfExecution: string;
   @Required() public readonly source: string;
 }
@@ -43,7 +43,7 @@ export class PlannerController {
     const { orgId, adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!orgId) throw new Unauthorized(ORG_NOT_FOUND);
     if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
-    const { title, action, description, startDate, endDate, timeOfExecution, source } = body;
+    const { title, action, description, startDate, timeOfExecution, source } = body;
     const category = await this.categoryService.findCategoryByName(source.toLocaleLowerCase());
     if (!category) throw new NotFound(CATEGORY_NOT_FOUND);
     const response = await this.plannerService.createPlanner({
@@ -51,11 +51,10 @@ export class PlannerController {
       action,
       description,
       startDate,
-      endDate,
       timeOfExecution,
       orgId,
       adminId,
-      categoryId: category._id,
+      categoryId: category._id
     });
     const result = {
       _id: response._id,
@@ -65,7 +64,7 @@ export class PlannerController {
       startDate: response.startDate.toString(),
       timeOfExecution: response.timeOfExecution.toString(),
       adminId: response.adminId,
-      categoryId: response.categoryId,
+      categoryId: response.categoryId
     };
     return new SuccessResult(result, PlannerResultModel);
   }

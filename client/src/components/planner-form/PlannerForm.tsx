@@ -24,6 +24,14 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
 
   return (
     <Box>
+      <CustomSelectField
+        label={'Select Source'}
+        value={state.source}
+        onChange={(e) => getFormData({ name: 'source', value: e.target.value.toString() })}
+        items={categories.map((category) => category.name)}
+        open={isCustomFieldOpen}
+        setOpen={setIsCustomFieldOpen}
+      />
       <CustomInput
         label="Title"
         name={'title'}
@@ -38,14 +46,6 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
         value={state.description}
         error={error.description}
       />
-      <CustomSelectField
-        label={'Select Category'}
-        value={state.category}
-        onChange={(e) => getFormData({ name: 'category', value: e.target.value.toString() })}
-        items={categories.map((category) => category.name)}
-        open={isCustomFieldOpen}
-        setOpen={setIsCustomFieldOpen}
-      />
       <Box mt={1.5}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DateTimePicker', 'DatePicker', 'TimeClock']}>
@@ -54,17 +54,14 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
               value={state.startDate}
               onChange={(newValue) => getFormData({ name: 'startDate', value: newValue })}
             />
-            <DatePicker
-              label="Close Event"
-              value={state.endDate}
-              onChange={(newValue) => getFormData({ name: 'endDate', value: newValue })}
-            />
             <Box alignItems={'center'}>
               <TimeClock
                 ampm
                 ampmInClock
                 value={state.timeOfExecution}
-                onChange={(newValue) => getFormData({ name: 'timeOfExecution', value: newValue })}
+                onChange={(newValue) => {
+                  getFormData({ name: 'timeOfExecution', value: newValue });
+                }}
               />
             </Box>
             {/* <MultiSectionDigitalClock
