@@ -9,14 +9,19 @@ import { TimeClock } from '@mui/x-date-pickers/TimeClock';
 // import { MultiSectionDigitalClock } from '@mui/x-date-pickers/MultiSectionDigitalClock';
 import { PlannerState } from '../calendar/Calendar';
 import { Dayjs } from 'dayjs';
+import { CategoryResponseTypes } from '../../types';
+import CustomSelectField from '../custom-select-field/CustomSelectField';
 
 interface PlannerProps {
   state: PlannerState;
+  categories: CategoryResponseTypes[];
   error: { title: string; description: string };
   getFormData: ({ name, value }: { name: string; value: string | Dayjs }) => void;
 }
 
-const PlannerForm = ({ state, error, getFormData }: PlannerProps) => {
+const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) => {
+  const [isCustomFieldOpen, setIsCustomFieldOpen] = React.useState(false);
+
   return (
     <Box>
       <CustomInput
@@ -32,6 +37,14 @@ const PlannerForm = ({ state, error, getFormData }: PlannerProps) => {
         onChange={(e) => getFormData({ name: e.target.name, value: e.target.value })}
         value={state.description}
         error={error.description}
+      />
+      <CustomSelectField
+        label={'Select Category'}
+        value={state.category}
+        onChange={(e) => getFormData({ name: 'category', value: e.target.value.toString() })}
+        items={categories.map((category) => category.name)}
+        open={isCustomFieldOpen}
+        setOpen={setIsCustomFieldOpen}
       />
       <Box mt={1.5}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
