@@ -1,6 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AvailabilityResponseTypes } from '../../types';
-import { createAvailability, getAvailability } from '../middleware/availability';
+import { createAvailability, deleteAvailability, getAvailability } from '../middleware/availability';
 
 const initialState: { data: AvailabilityResponseTypes[]; events: { startDate: Date; endDate: Date }[]; loading: boolean; error: any } = {
   loading: false,
@@ -21,25 +21,44 @@ const availabilitySlice = createSlice({
     builder.addCase(getAvailability.fulfilled, (state, action) => {
       state.data = action.payload;
       state.events = action.payload.items.map((availability) => {
+     
         return {
-          startDate: new Date(availability.startDate),
-          endDate: new Date(availability.endDate)
+          id: availability._id,
+          start: new Date(availability.startDate),
+          end: new Date(availability.endDate)
         };
       });
+      state.loading = false;
     });
     builder.addCase(getAvailability.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
     });
 
-    // Create Planner
+    // Create Availabiity
     builder.addCase(createAvailability.pending, (state) => {
       state.loading = true;
     });
     builder.addCase(createAvailability.fulfilled, (state, action) => {
       state.data = action.payload;
+      state.loading = false;
     });
     builder.addCase(createAvailability.rejected, (state, action) => {
       state.error = action.error;
+      state.loading = false;
+    });
+
+    // Delete Availability
+    builder.addCase(deleteAvailability.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteAvailability.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(deleteAvailability.rejected, (state, action) => {
+      state.error = action.error;
+      state.loading = false;
     });
   }
 });

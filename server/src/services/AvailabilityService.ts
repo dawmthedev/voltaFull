@@ -8,11 +8,11 @@ export class AvailabilityService {
   // constructor(@Inject(PlannerModel) private planner: MongooseModel<PlannerModel>) {}
   @Inject(AvailabilityModel) private availability: MongooseModel<AvailabilityModel>;
 
-  public async findPlanner() {
+  public async findAvailability() {
     return await this.availability.find();
   }
 
-  public async findPlannerById(id: string) {
+  public async findAvailabilityById(id: string) {
     return await this.availability.findById({ _id: id });
   }
 
@@ -22,5 +22,8 @@ export class AvailabilityService {
       endDate,
       adminId
     });
+  }
+  public async deleteAvailability(id: string) {
+    return await this.availability.deleteOne({ _id: id });
   }
 }

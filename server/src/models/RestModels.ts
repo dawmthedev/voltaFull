@@ -307,7 +307,7 @@ export class PlannerResultModel {
 }
 
 export class AvailabilityResultModel {
-  @Property() public readonly id: string;
+  @Property() public readonly _id: string;
   @Property() public readonly startDate: string;
   @Property() public readonly endDate: string;
   @Property() public readonly adminId: string;
