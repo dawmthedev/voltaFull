@@ -39,13 +39,26 @@ export type FieldTypes = {
 };
 
 export type PlannerDataTypes = {
-  title: string;
-  action: string;
-  description: string;
+  title?: string;
+  action?: string;
+  description?: string;
   startDate: string;
   timeOfExecution: string;
   source: string;
 };
+
+export type AvailabilityDataTypes = {
+  startDate: string;
+  endDate: string;
+};
+
+export type AvailabilityResponseTypes = {
+  id: string;
+  startDate: string;
+  endDate: string;
+  adminId: string;
+};
+
 
 export type RoleDataTypes = {
   _id?: string;

@@ -197,7 +197,6 @@ const DynamicLead = () => {
 
   //! Add new column into category
   const updateCategory = async () => {
-    debugger;
     if (!selectedCategoryId) return;
     const updatedFields = [...columnFields, ...fields];
     const isInvalid = fields.some((field) => {

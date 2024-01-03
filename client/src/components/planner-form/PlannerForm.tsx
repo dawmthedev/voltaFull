@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import CustomInput from '../input/CustomInput';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -13,10 +13,10 @@ import { CategoryResponseTypes } from '../../types';
 import CustomSelectField from '../custom-select-field/CustomSelectField';
 
 interface PlannerProps {
-  state: PlannerState;
+  state?: PlannerState;
   categories: CategoryResponseTypes[];
-  error: { title: string; description: string };
-  getFormData: ({ name, value }: { name: string; value: string | Dayjs }) => void;
+  error?: { title: string; description: string };
+  getFormData?: ({ name, value }: { name: string; value: string | Dayjs }) => void;
 }
 
 const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) => {
@@ -65,9 +65,9 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
               />
             </Box>
             {/* <MultiSectionDigitalClock
-            value={state.timeOfExecution}
-            onChange={(newValue) => getFormData({ name: 'timeOfExecution', value: newValue })}
-          /> */}
+              value={state.timeOfExecution}
+              onChange={(newValue) => getFormData({ name: 'timeOfExecution', value: newValue })}
+              /> */}
           </DemoContainer>
         </LocalizationProvider>
       </Box>
