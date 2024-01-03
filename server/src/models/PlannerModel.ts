@@ -23,7 +23,7 @@ export class PlannerModel {
   categoryId: string;
 
   @Required()
-  timeOfExecution: Date;
+  timeOfExecution: string;
 
   @Required()
   startDate: Date;

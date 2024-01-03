@@ -41,7 +41,9 @@ export class CategoryService {
   }
 
   public async findCategoryByName(name: string) {
-    return await this.category.findOne({ name });
+    return await this.category.findOne({
+      name: { $regex: new RegExp(name, "i") }
+    });
   }
 
   public async findCategoryByNameAndOrgId({ name, orgId }: { name: string; orgId: string }) {

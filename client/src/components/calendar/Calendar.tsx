@@ -111,7 +111,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
       description: addFormValues.description,
       action: addFormValues.action,
       startDate: addFormValues.startDate.toString(),
-      timeOfExecution: addFormValues.timeOfExecution.toString(),
+      timeOfExecution: addFormValues.timeOfExecution.toDate().getTime().toString(),
       source: addFormValues.source
     };
     await dispatch(createPlanner({ planner: data }));
