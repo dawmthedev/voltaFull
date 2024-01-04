@@ -39,11 +39,6 @@ const AdminConfig = [
     path: '/dashboard/Q',
     icon: icon('ic_cart')
   },
-  {
-    title: 'Availability',
-    path: '/dashboard/availability-planner',
-    icon: icon('ic_cart')
-  },
   // {
   //   title: 'Listings',
   //   path: '/dashboard/products',

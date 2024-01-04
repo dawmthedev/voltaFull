@@ -200,7 +200,7 @@ const MyCalendar = ({ value, getActionData }: CalendarProps) => {
         startAccessor="start"
         endAccessor="end"
         defaultDate={defaultDate}
-        //defaultView={Views.MONTH}
+        defaultView={Views.MONTH}
         style={{ height: 500 }}
         selectable={true}
         onSelectEvent={handleSelectEvent}
