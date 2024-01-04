@@ -23,8 +23,9 @@ export class AvailabilityController {
   @Get()
   @Returns(200, SuccessArrayResult).Of(Pagination).Nested(AvailabilityResultModel)
   public async getAvailability(@Context() context: Context) {
-    await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
-    const availability = await this.availabilityService.findAvailability();
+    const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
+    if(!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
+    const availability = await this.availabilityService.findAvailabilityByAdminId(adminId);
     const availabilityData = normalizeData(availability);
     return new SuccessResult(new Pagination(availabilityData, availability.length, AvailabilityResultModel), Pagination);
   }

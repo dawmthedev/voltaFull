@@ -26,4 +26,8 @@ export class AvailabilityService {
   public async deleteAvailability(id: string) {
     return await this.availability.deleteOne({ _id: id });
   }
+
+  public async findAvailabilityByAdminId(adminId: string) {
+    return await this.availability.find({ adminId });
+  }
 }
