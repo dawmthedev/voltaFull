@@ -22,7 +22,7 @@ export class PlannerService {
       title,
       action,
       description,
-      startDate,
+      startDate: new Date(startDate),
       timeOfExecution,
       orgId,
       adminId,

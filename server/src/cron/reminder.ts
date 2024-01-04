@@ -23,8 +23,10 @@ export const notifyLeads = async () => {
   console.log("filteredPlanners-------------**", filteredPlanners);
 
   const planners = await plannerModel.find({
-    timeOfExecution: { $lte: new Date().getTime().toString() }
-    // startDate: { $eq: new Date() }
+    timeOfExecution: { $lte: new Date().getTime().toString(), 
+    // startDate is today
+    startDate: { $eq: new Date().toISOString().split("T")[0] }
+    }
   });
   console.log("planners-------------", planners);
   const categories = await categoryModel.find({

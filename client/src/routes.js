@@ -49,11 +49,11 @@ export default function Router() {
           path: 'user',
           element: data && data?.isSuperAdmin ? <UserPage /> : <Navigate to="/deals" replace />
         },
+        { path: 'vcdash', element: data && data?.isSuperAdmin ? <VCDashboardAppPage /> : <Navigate to="/deals" replace /> },
 
         { path: 'products', element: <ProductsPage /> },
         { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
-        { path: 'vcdash', element: <VCDashboardAppPage /> },
         { path: 'blog', element: <BlogPage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'rookies', element: <Rookies /> },

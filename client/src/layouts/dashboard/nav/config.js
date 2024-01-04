@@ -29,6 +29,11 @@ const navConfig = [
     path: '/dashboard/blog',
     icon: icon('ic_blog')
   },
+  {
+    title: 'VC Dashboard',
+    path: '/dashboard/vcdash',
+    icon: icon('ic_blog')
+  },
 
   // {
   //   title: 'Rookies',

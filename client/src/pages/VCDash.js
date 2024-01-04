@@ -16,7 +16,7 @@
 //   Table,
 //   TableRow,
 //   TableBody,
-//   TableHead, 
+//   TableHead,
 //   Paper,
 //   TableContainer
 // } from '@mui/material';
@@ -98,8 +98,6 @@
 //   );
 // }
 
-
-
 // export default function Dashboard() {
 //   const [timeFilter, setTimeFilter] = useState('week');
 //  // RepCard users' data example
@@ -112,7 +110,6 @@
 // ]);
 // // Sorting configuration state
 // const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
-
 
 //  // Sort handler
 //  const handleSort = (key) => {
@@ -137,9 +134,6 @@
 //     },
 //     // Add data for 'month' and 'year'
 //   };
-
- 
-
 
 //   // Placeholder for the leads carousel component
 //   function LeadsCarousel() {
@@ -212,19 +206,14 @@
 //   );
 // }
 
-
-
-
-
 // ============================================
-
 
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme, ThemeProvider } from '@mui/material/styles';
-import { Grid, Container, Typography, Paper, ListItem, List , ListItemText} from '@mui/material';
+import { Grid, Container, Typography, Paper, ListItem, List, ListItemText } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 // ... (rest of your imports)
@@ -236,12 +225,12 @@ import { Tab, Tabs, Box, Button, ButtonGroup } from '@mui/material';
 export default function VCDashboardAppPage() {
   // ... (existing states and functions)
 
- // Add the leaderboard filters and options back into the UI
- const timeFilters = ['This Week', 'This Month', 'This Year'];
- const typeFilters = ['Company', 'Office'];
- const dataTypes = ['Closing Rate', 'Agreements', 'Revenue'];
+  // Add the leaderboard filters and options back into the UI
+  const timeFilters = ['This Week', 'This Month', 'This Year'];
+  const typeFilters = ['Company', 'Office'];
+  const dataTypes = ['Closing Rate', 'Agreements', 'Revenue'];
 
- const [leaderboardType, setLeaderboardType] = useState('revenue');
+  const [leaderboardType, setLeaderboardType] = useState('revenue');
   // Leaderboard filter states
   const [timeFilter, setTimeFilter] = useState('thisWeek');
   const [officeFilter, setOfficeFilter] = useState('company');
@@ -250,13 +239,12 @@ export default function VCDashboardAppPage() {
   const [activeTab, setActiveTab] = useState('myLeads');
   const [taskTab, setTaskTab] = useState('toDo');
 
-
   // Mock data for leaderboard
   const leaderboardData = {
     thisWeek: {
       company: {
         closingRate: [
-          { name: 'Alice, Enerflo', closingRate: '80%', agreements: '45', revenue: '$95.00k' },
+          { name: 'Alice, Enerflo', closingRate: '80%', agreements: '45', revenue: '$95.00k' }
           // ... other entries
         ],
         agreements: [
@@ -264,63 +252,68 @@ export default function VCDashboardAppPage() {
         ],
         revenue: [
           // ... data sorted by revenue
-        ],
+        ]
       },
       office: {
         // ... data for the office category
-      },
+      }
     },
     thisMonth: {
       // ... data for thisMonth
     },
     thisYear: {
       // ... data for thisYear
-    },
+    }
   };
 
   // Mock data for leads, deals, and installs
   const mockData = {
     myDoors: [
       { id: 1, title: 'Danny Copinga', subtitle: '23 Dominguez St' },
-      { id: 2, title: 'Steve Kawasaki', subtitle: '2430 Chapman St' },
+      { id: 2, title: 'Steve Kawasaki', subtitle: '2430 Chapman St' }
       // ... add more leads
     ],
     myAppointments: [
       { id: 1, title: 'Sunshine Solar', subtitle: 'Completed: 15' },
-      { id: 2, title: 'Enerflo Power', subtitle: 'Pending: 7' },
+      { id: 2, title: 'Enerflo Power', subtitle: 'Pending: 7' }
       // ... add more deals
     ],
     myCloses: [
       { id: 1, title: 'Rooftop Install', subtitle: '2430 Chapman St' },
-      { id: 2, title: 'Panel Upgrade', subtitle: '1985 Toucan Cir' },
+      { id: 2, title: 'Panel Upgrade', subtitle: '1985 Toucan Cir' }
       // ... add more installs
     ],
     myInstalls: [
       { id: 1, title: 'Door: Sets', subtitle: '43/72', percentage: '50%' },
-      { id: 2, title: 'Sets: Sits', subtitle: '43/72', percentage: '50%'},
-      { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%'},
-      { id: 2, title: 'Sits: Close',  subtitle: '43/72', percentage: '50%' },
+      { id: 2, title: 'Sets: Sits', subtitle: '43/72', percentage: '50%' },
+      { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' },
+      { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' }
       // ... add more installs
-    ],
+    ]
   };
 
   // Mock data for appointments and tasks
   const appointments = [
     { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
+    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' }
     // ... add more appointments
   ];
 
   const tasks = {
     toDo: [
-      { title: 'Follow up with lead', completed: false },
+      { title: 'Follow up with lead', completed: false }
       // ... add more to-do tasks
     ],
     recentlyCompleted: [
-      { title: 'Send proposal to client', completed: true },
+      { title: 'Send proposal to client', completed: true }
       // ... add more completed tasks
-    ],
+    ]
   };
-
 
   // Function to simulate filtered data based on selected filters
   const getFilteredLeaderboardData = () => {
@@ -331,37 +324,34 @@ export default function VCDashboardAppPage() {
     return filteredData;
   };
 
-
   const getFilteredData = (dataKey) => {
     // Check if the dataKey exists in mockData
     const data = mockData[dataKey];
     if (!data) {
       return <Typography>No data available.</Typography>;
     }
-  
+
     return data.map((item) => (
       <ListItem key={item.id}>
         <ListItemText primary={item.title} secondary={item.subtitle} />
       </ListItem>
     ));
   };
-  
 
   return (
     <>
-    <Helmet>
-      <title>Dashboard | Voltaic</title>
-    </Helmet>
+      <Helmet>
+        <title>Dashboard | Voltaic</title>
+      </Helmet>
 
-    <Container maxWidth="xl">
-      <Typography variant="h4" sx={{ mb: 5 }}>
-        Hi, Welcome back
-      </Typography>
+      <Container maxWidth="xl">
+        <Typography variant="h4" sx={{ mb: 5 }}>
+          Hi, Welcome back
+        </Typography>
 
-      <Grid container spacing={3}>
-        
-         {/* Sidebar - Leaderboards */}
-         <Grid item xs={12} md={3}>
+        <Grid container spacing={3}>
+          {/* Sidebar - Leaderboards */}
+          <Grid item xs={12} md={3}>
             <Paper sx={{ p: 2, height: '100%' }}>
               {/* Time Filters */}
               <ButtonGroup variant="contained" fullWidth>
@@ -397,7 +387,6 @@ export default function VCDashboardAppPage() {
                 </Button>
               </ButtonGroup>
 
-
               <List sx={{ mt: 2 }}>
                 {getFilteredLeaderboardData().map((data, index) => (
                   <ListItem key={index} divider>
@@ -408,19 +397,11 @@ export default function VCDashboardAppPage() {
                   </ListItem>
                 ))}
               </List>
-
-
-
-
             </Paper>
           </Grid>
 
-
-
-
-
-           {/* Main Content - Leads, Deals, Installs, and Map */}
-           <Grid item xs={12} md={6} container spacing={3} direction="column" sx={{ height: 'calc(100vh - 64px)' }}>
+          {/* Main Content - Leads, Deals, Installs, and Map */}
+          <Grid item xs={12} md={6} container spacing={3} direction="column" sx={{ height: 'calc(100vh - 64px)' }}>
             {/* Tabs for Leads, Deals, Installs */}
             <Grid item>
               <Paper sx={{ p: 2 }}>
@@ -429,51 +410,63 @@ export default function VCDashboardAppPage() {
                   <Tab label="Graveyard leads" value="myAppointments" />
                   <Tab label="Conversion Rates" value="myInstalls" />
                 </Tabs>
-                <List>
-                  {getFilteredData(activeTab)}
-                </List>
+                <List>{getFilteredData(activeTab)}</List>
               </Paper>
             </Grid>
 
             {/* Map */}
             <Grid item xs>
-              <Paper sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <Typography variant="h5" gutterBottom>Map goes here</Typography>
+              <Paper
+                sx={{ p: 2, height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}
+              >
+                <Typography variant="h5" gutterBottom>
+                  Map goes here
+                </Typography>
                 {/* Insert map component or iframe here */}
               </Paper>
             </Grid>
           </Grid>
 
-        {/* Right Sidebar - Appointments & Tasks */}
-        <Grid item xs={12} md={3}>
-          <Paper sx={{ p: 2, height: '40%' }}>
-          <Typography variant="h5" gutterBottom>Appoitments</Typography>
-            <List>
-              {appointments.map((appointment, index) => (
-                <ListItem key={index} divider>
-                  <ListItemText primary={appointment.title} secondary={`${appointment.date}, ${appointment.time}`} />
-                </ListItem>
-              ))}
-            </List>
-          </Paper>
-          <Paper sx={{ p: 2, mt: 3, height: '60%' }}>
-          <Typography variant="h5" gutterBottom>Tasks</Typography>
-          <Tabs value={taskTab} onChange={(event, newValue) => setTaskTab(newValue)} variant="fullWidth">
-  <Tab label="To Do" value="toDo" />
-  <Tab label="Recently Completed" value="recentlyCompleted" />
-</Tabs>
-<List>
-  {tasks[taskTab] ? tasks[taskTab].map((task, index) => (
-    <ListItem key={index} divider>
-      <ListItemText primary={task.title} />
-    </ListItem>
-  )) : <Typography>No tasks available.</Typography>}
-</List>
-
-          </Paper>
+          {/* Right Sidebar - Appointments & Tasks */}
+          <Grid item xs={12} md={3}>
+            <Paper sx={{ height: '40%' }}>
+              <Typography variant="h5" px={2} pt={2} gutterBottom>
+                Appoitments
+              </Typography>
+              <List style={{ height: '80%', overflowY: 'scroll' }}>
+                {appointments.map((appointment, index) => (
+                  <ListItem key={index} divider>
+                    <ListItemText primary={appointment.title} secondary={`${appointment.date}, ${appointment.time}`} />
+                    <Button variant="outlined" sx={{}}>
+                      Claim
+                    </Button>
+                  </ListItem>
+                ))}
+              </List>
+            </Paper>
+            <Paper sx={{ p: 2, mt: 3, height: '60%' }}>
+              <Typography variant="h5" gutterBottom>
+                Tasks
+              </Typography>
+              <Tabs value={taskTab} onChange={(event, newValue) => setTaskTab(newValue)} variant="fullWidth">
+                <Tab label="To Do" value="toDo" />
+                <Tab label="Recently Completed" value="recentlyCompleted" />
+              </Tabs>
+              <List>
+                {tasks[taskTab] ? (
+                  tasks[taskTab].map((task, index) => (
+                    <ListItem key={index} divider>
+                      <ListItemText primary={task.title} />
+                    </ListItem>
+                  ))
+                ) : (
+                  <Typography>No tasks available.</Typography>
+                )}
+              </List>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
-  </>
+      </Container>
+    </>
   );
 }
