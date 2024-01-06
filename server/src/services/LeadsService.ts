@@ -1,6 +1,6 @@
 import { Inject, Injectable } from "@tsed/di";
-import { LeadModel } from "../models/LeadModel";
-import { FieldTypes, LeadTypes } from "types";
+import { LeadModel } from "../models/LeadsModel";
+import { FieldTypes, LeadTypes, LeadsParamTypes } from "../../types";
 import { MongooseModel } from "@tsed/mongoose";
 import { CategoryModel } from "../models/CategoryModel";
 
@@ -18,12 +18,21 @@ export class LeadService {
   public async findLeadById(id: string) {
     return this.lead.findById({ _id: id });
   }
-  public async findLeadsByName(email : string) {
+  public async findByLeadId(leadId: string) {
+    return this.lead.findOne({ leadId });
+  }
+  public async findLeadsByName(email: string) {
     return this.lead.findOne({ email });
   }
 
-  public async createLead({ firstName, lastName, email, phone, categoryId, orgId }: LeadTypes) {
-    return this.lead.create({ firstName, lastName, email, phone, categoryId, orgId });
+  public async createLead({ source, status, leadId, categoryId, adminId }: LeadsParamTypes) {
+    return this.lead.create({
+      source,
+      status,
+      leadId,
+      categoryId,
+      adminId
+    });
   }
 
   public async createBulkLeads({ body, orgId }: { body: LeadTypes[]; orgId: string }) {
@@ -46,8 +55,18 @@ export class LeadService {
     return response;
   }
 
-  public async updateLead({ id, firstName, lastName, email, phone }: LeadTypes & { id: string }) {
-    return this.lead.findByIdAndUpdate({ _id: id }, { firstName, lastName, email, phone });
+  public async updateLead({ leadId, adminId }: LeadsParamTypes) {
+    const lead = await this.findLeadById(leadId!);
+    if (!lead) return false;
+    return this.lead.findByIdAndUpdate({ _id: lead._id }, { adminId });
+  }
+
+  public async updateLeadStatus({ leadId, adminId, status }: LeadsParamTypes) {
+    console.log("leadId-----------------", leadId);
+    const lead = await this.findLeadById(leadId!);
+    console.log("lead-----------------", lead);
+    if (!lead) return false;
+    return this.lead.findByIdAndUpdate({ _id: lead._id }, { adminId, status });
   }
 
   public async deleteLead(id: string) {
@@ -56,5 +75,17 @@ export class LeadService {
 
   public async deleteLeadsByCategoryId(categoryId: string) {
     return this.lead.deleteMany({ categoryId });
+  }
+
+  public async deleteByLeadId(leadId: string) {
+    return this.lead.deleteMany({ leadId });
+  }
+
+  public async getOpenLeads({ status }: LeadsParamTypes) {
+    return this.lead.find({ status });
+  }
+
+  public async getOpenLeadsByAdminId({ adminId, status }: LeadsParamTypes) {
+    return this.lead.find({ adminId, status });
   }
 }

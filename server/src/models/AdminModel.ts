@@ -5,6 +5,7 @@ import { VerifySessionModal } from "./VerifySessionModal";
 import { CategoryModel } from "./CategoryModel";
 import { PlannerModel } from "./PlannerModel";
 import { AvailabilityModel } from "./AvailabilityModel";
+import { SaleRepModel } from "./SaleRepModel";
 
 @Model({ name: "admin" })
 export class AdminModel {
@@ -63,4 +64,8 @@ export class AdminModel {
   @Ref(() => AvailabilityModel)
   @CollectionOf(() => AvailabilityModel)
   availability: Ref<AvailabilityModel>[];
+
+  @Ref(() => SaleRepModel)
+  @CollectionOf(() => SaleRepModel)
+  saleRep: Ref<SaleRepModel>[];
 }

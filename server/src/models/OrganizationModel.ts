@@ -2,7 +2,7 @@ import { CollectionOf, Default, Property, Required } from "@tsed/schema";
 import { Model, ObjectID, Ref, Unique } from "@tsed/mongoose";
 import { AdminModel } from "./AdminModel";
 import { CategoryModel } from "./CategoryModel";
-import { LeadModel } from "./LeadModel";
+import { LeadModel } from "./LeadsModel";
 import { PlannerModel } from "./PlannerModel";
 
 @Model({ name: "org" })

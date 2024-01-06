@@ -213,16 +213,23 @@ import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
 import { useTheme, ThemeProvider } from '@mui/material/styles';
-import { Grid, Container, Typography, Paper, ListItem, List, ListItemText } from '@mui/material';
+import { Grid, Container, Typography, Paper, ListItem, List, ListItemText, CircularProgress } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 // ... (rest of your imports)
 // Import additional components
 import { Tab, Tabs, Box, Button, ButtonGroup } from '@mui/material';
+import { leadState } from '../redux/slice/leadSlice';
+import { claimLead, getLeadsForClaim } from '../redux/middleware/lead';
+import createAbortController from '../utils/createAbortController';
 
 // ... (rest of your code)
 
 export default function VCDashboardAppPage() {
+  const { claimData, loading: claimLeadLoading } = useAppSelector(leadState);
+  const dispatch = useAppDispatch();
+  const { signal, abort } = createAbortController();
+
   // ... (existing states and functions)
 
   // Add the leaderboard filters and options back into the UI
@@ -238,6 +245,24 @@ export default function VCDashboardAppPage() {
 
   const [activeTab, setActiveTab] = useState('myLeads');
   const [taskTab, setTaskTab] = useState('toDo');
+
+  useEffect(() => {
+    (async () => {
+      await getClaimableLeads();
+    })();
+
+    return () => {
+      abort();
+    };
+  }, []);
+
+  const getClaimableLeads = async () => {
+    await dispatch(
+      getLeadsForClaim({
+        signal
+      })
+    );
+  };
 
   // Mock data for leaderboard
   const leaderboardData = {
@@ -291,18 +316,6 @@ export default function VCDashboardAppPage() {
       // ... add more installs
     ]
   };
-
-  // Mock data for appointments and tasks
-  const appointments = [
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' },
-    { time: '9:00am', title: 'Site Survey', date: 'Nov 22' }
-    // ... add more appointments
-  ];
 
   const tasks = {
     toDo: [
@@ -431,17 +444,29 @@ export default function VCDashboardAppPage() {
           <Grid item xs={12} md={3}>
             <Paper sx={{ height: '40%' }}>
               <Typography variant="h5" px={2} pt={2} gutterBottom>
-                Appoitments
+                Appointments
               </Typography>
               <List style={{ height: '80%', overflowY: 'scroll' }}>
-                {appointments.map((appointment, index) => (
+                {claimLeadLoading && (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+                    <CircularProgress size={20} />
+                  </Box>
+                )}
+                {/* {!claimData.length && <Typography sx={{ p: 2 }}>No lead is available for claim </Typography>} */}
+                {claimData.map((item, index) => (
                   <ListItem key={index} divider>
-                    <ListItemText primary={appointment.title} secondary={`${appointment.date}, ${appointment.time}`} />
-                    <Button variant="outlined" sx={{}}>
+                    <ListItemText sx={{ textTransform: 'capitalize' }} primary={item.source || ''} secondary={item.name || ''} />
+                    <Button
+                      variant="outlined"
+                      onClick={async () => {
+                        await dispatch(claimLead({ id: item._id, leadId: item.leadId, sourceId: item.categoryId }));
+                        await getClaimableLeads();
+                      }}
+                    >
                       Claim
                     </Button>
                   </ListItem>
-                ))}
+                )) || 'No lead is available for claim'}
               </List>
             </Paper>
             <Paper sx={{ p: 2, mt: 3, height: '60%' }}>

@@ -3,13 +3,17 @@ import { BodyParams, Context, PathParams } from "@tsed/platform-params";
 import { Delete, Get, Post, Property, Put, Required, Returns } from "@tsed/schema";
 import { Schema, model } from "mongoose";
 import { AdminService } from "../../services/AdminService";
-import { LeadService } from "../../services/LeadService";
+import { LeadService } from "../../services/LeadsService";
 import { createSchema, getColumns, normalizeData } from "../../helper";
 import { CategoryService } from "../../services/CategoryService";
 import { ADMIN, MANAGER } from "../../util/constants";
-import { BadRequest } from "@tsed/exceptions";
+import { BadRequest, Unauthorized } from "@tsed/exceptions";
 import { ADMIN_NOT_FOUND, CATEGORY_ALREADY_EXISTS, CATEGORY_NOT_FOUND, ORG_NOT_FOUND } from "../../util/errors";
 import { SuccessResult } from "../../util/entities";
+import { LeadStatusEnum } from "../../../types";
+import { AvailabilityService } from "../../services/AvailabilityService";
+import { SaleRepService } from "../../services/SaleRepService";
+import { LeadModel } from "../../models/LeadsModel";
 
 // fields types
 
@@ -32,6 +36,12 @@ export class DynamicController {
   private categoryServices: CategoryService;
   @Inject()
   private categoryService: CategoryService;
+  @Inject()
+  private leadsService: LeadService;
+  @Inject()
+  private availabilityService: AvailabilityService;
+  @Inject()
+  private saleRepService: SaleRepService;
 
   @Post("/")
   async createDynamicModel(@BodyParams() modelData: any) {
@@ -54,8 +64,7 @@ export class DynamicController {
 
     const newRecord = new dynamicModel({
       ...data,
-      isNotify: false,
-      category: category?._id,
+      categoryId: category?._id,
       orgId,
       createdAt: new Date(),
       updatedAt: new Date()
@@ -115,18 +124,23 @@ export class DynamicController {
   @Get("/:categoryId")
   @Returns(200, SuccessResult).Of(Object)
   async getDynamicModel(@PathParams("categoryId") categoryId: string, @Context() context: Context) {
-    const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    const { orgId, adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     const category = await this.categoryServices.findCategoryById(categoryId);
     if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
     const tableName = category.name;
-    let dynamicModel;
-    try {
-      dynamicModel = model(tableName);
-    } catch (error) {
-      const ProductSchema = new Schema({}, { strict: false });
-      dynamicModel = model(tableName, ProductSchema);
-    }
-    const result = await dynamicModel.find();
+    // let dynamicModel;
+    // try {
+    //   dynamicModel = model(tableName);
+    // } catch (error) {
+    //   const ProductSchema = new Schema({}, { strict: false });
+    //   dynamicModel = model(tableName, ProductSchema);
+    // }
+    // const lead = await dynamicModel.find();
+    const dynamicModel = createSchema({ tableName: category.name, columns: category.fields });
+    const result = await dynamicModel.find({
+      status: LeadStatusEnum.claim,
+      adminId: adminId
+    });
     return new SuccessResult(normalizeData(result), Object);
   }
 
@@ -150,6 +164,8 @@ export class DynamicController {
 
   @Post("/webhook/lead")
   async createWebhookLead(@BodyParams() { source, lead }: CreateLeadWebhookBodyParams) {
+    // find sale rep based on availability and 15 min duration and score of sale rep
+
     let category = await this.categoryServices.findCategoryByName(source.toLocaleLowerCase());
     const fields = getColumns(lead);
     if (!category) {
@@ -163,11 +179,139 @@ export class DynamicController {
     const dynamicModel = createSchema({ tableName: source.toLocaleLowerCase(), columns: fields });
     const newRecord = new dynamicModel({
       ...lead,
-      category: category?._id,
+      isNotify: false,
+      status: LeadStatusEnum.open,
+      categoryId: category?._id,
       createdAt: new Date(),
       updatedAt: new Date()
     });
     const response = await newRecord.save();
+
+    const salesRep = await this.saleRepService.findSaleRepByScore();
+    let isAssigned = false;
+    if (salesRep && salesRep.length) {
+      const createLead = await this.leadsService.createLead({
+        source: source.toLocaleLowerCase(),
+        status: LeadStatusEnum.open,
+        leadId: response._id,
+        categoryId: category._id,
+        adminId: salesRep[0].adminId
+      });
+      const updateSaleRep = await this.saleRepService.updateSaleRep({
+        id: salesRep[0]._id,
+        leadId: createLead._id
+      });
+      if (updateSaleRep) isAssigned = true;
+    }
+    return new SuccessResult({ response, isAssigned }, Object);
+  }
+
+  // claim lead
+  @Post("/claim/lead")
+  @Returns(200, SuccessResult).Of(Object)
+  async claimLead(@BodyParams() { sourceId, leadId, id }: { sourceId: string; leadId: string; id: string }, @Context() context: Context) {
+    const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
+    const category = await this.categoryServices.findCategoryById(sourceId);
+    if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
+    const dynamicModel = createSchema({ tableName: category.name, columns: category.fields });
+    // update lead status to claim
+    const response = await dynamicModel.updateOne(
+      { _id: id },
+      { $set: { status: LeadStatusEnum.claim, adminId: adminId, updatedAt: new Date() } }
+    );
+    await this.leadsService.updateLeadStatus({ leadId: leadId, status: LeadStatusEnum.claim, adminId });
     return new SuccessResult(response, Object);
+  }
+
+  // get leads for claim
+  @Get("/claim/leads")
+  @Returns(200, SuccessResult).Of(Object)
+  async getClaimLeads(@Context() context: Context) {
+    console.log("claim-leads--------------------------------------");
+    const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
+    if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
+    const allLeads = await this.leadsService.getOpenLeadsByAdminId({ adminId, status: LeadStatusEnum.open });
+    console.log("allLeads--------------------------------------", allLeads);
+    // query for all the leads which are not claimed and status is open without category directly from lead model
+    // let filteredLeads: any = [];
+    const filterLeadFun = async (allLeads: LeadModel[]) => {
+      let filteredLeads: any = [];
+      for (let i = 0; i < allLeads.length; i++) {
+        const lead = allLeads[i];
+        const salesRep = await this.saleRepService.findSaleRepBySourceAvailability(lead.leadId);
+        console.log("salesRep--------------------------------------", salesRep);
+        if (!salesRep) return;
+        const category = await this.categoryServices.findCategoryById(lead.categoryId);
+        if (!category) return;
+        let dynamicModel;
+        try {
+          dynamicModel = model(category.name);
+        } catch (error) {
+          const schema = new Schema({}, { strict: false });
+          dynamicModel = model(category.name, schema);
+        }
+        const response = await dynamicModel.find({ _id: lead.leadId });
+
+        filteredLeads = [...filteredLeads, { ...response[0]._doc, adminId: salesRep[0]._id, source: lead.source, leadId: lead._id }];
+      }
+      return filteredLeads;
+    };
+    const result = await filterLeadFun(allLeads);
+    console.log("result--------------------------------------", result);
+
+    // console.log("filteredLeads--------------------------------------", filteredLeads);
+    return new SuccessResult(result, Object);
+  }
+
+  // after 15 minutes lead will go to next sale rep if first not claimed
+  @Post("/claim/lead/next")
+  @Returns(200, SuccessResult).Of(Object)
+  async claimNextLead(@Context() context: Context) {
+    // find lead which are not claimed and status is open
+    const leads = await this.leadsService.getOpenLeads({ status: LeadStatusEnum.open });
+    console.log("leads--------------------------------------**", leads);
+    if (!leads.length) return;
+    // const salesRep = await this.saleRepService.findSaleRepByLeadIds(leadIds);
+    // now assign these leads to that sale rep
+    const updateLeads = async (leads: LeadModel[]) => {
+      let updatedLeads: any = [];
+      for (let i = 0; i < leads.length; i++) {
+        const lead = leads[i];
+        // console.log("lead---------", lead)
+        const saleRep = await this.saleRepService.findSaleRepByLeadId(lead._id);
+        console.log("saleRep---------", saleRep);
+        if (!saleRep) {
+          console.log("saleRep--------------------init");
+          await this.leadsService.updateLeadStatus({ leadId: lead._id, status: LeadStatusEnum.pending, adminId: "" });
+          return updatedLeads.push([]);
+        }
+        const updateLead = await this.leadsService.updateLead({ leadId: lead._id, adminId: saleRep.adminId });
+
+        console.log("updateLead--------------------------------------", updateLead);
+        let dynamicModel;
+        try {
+          dynamicModel = model(lead.source.toLocaleLowerCase());
+        } catch (error) {
+          const schema = new Schema({}, { strict: false });
+          dynamicModel = model(lead.source.toLocaleLowerCase(), schema);
+        }
+        const response = await dynamicModel.updateOne(
+          { _id: lead.leadId },
+          { $set: { status: LeadStatusEnum.claim, adminId: saleRep.adminId, updatedAt: new Date() } }
+        );
+        await this.saleRepService.updateSaleRep({
+          id: saleRep._id,
+          leadId: lead._id
+        });
+        console.log("response--------------------------------------", response);
+        updatedLeads = [...updatedLeads, updateLead];
+      }
+      return updatedLeads;
+    };
+    const updatedLeads = await updateLeads(leads);
+    console.log("updatedLeads--------------------------------------", updatedLeads);
+
+    return new SuccessResult({ success: true, data: updatedLeads }, Object);
   }
 }

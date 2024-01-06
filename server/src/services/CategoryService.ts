@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@tsed/di";
 import { CategoryFieldType, CategoryModel } from "../models/CategoryModel";
 import { CategoryBodyTypes, FieldTypes } from "types";
-import { LeadService } from "./LeadService";
+import { LeadService } from "./LeadsService";
 import { MongooseModel } from "@tsed/mongoose";
 
 @Injectable()

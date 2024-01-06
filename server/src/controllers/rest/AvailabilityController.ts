@@ -24,7 +24,7 @@ export class AvailabilityController {
   @Returns(200, SuccessArrayResult).Of(Pagination).Nested(AvailabilityResultModel)
   public async getAvailability(@Context() context: Context) {
     const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
-    if(!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
+    if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
     const availability = await this.availabilityService.findAvailabilityByAdminId(adminId);
     const availabilityData = normalizeData(availability);
     return new SuccessResult(new Pagination(availabilityData, availability.length, AvailabilityResultModel), Pagination);
@@ -43,8 +43,8 @@ export class AvailabilityController {
     });
     const result = {
       _id: response._id,
-      startDate: response.startDate.toString(),
-      endDate: response.endDate.toString(),
+      startDate: new Date(response.startDate).toString(),
+      endDate: new Date(response.endDate).toString(),
       adminId: response.adminId
     };
     return new SuccessResult(result, AvailabilityResultModel);

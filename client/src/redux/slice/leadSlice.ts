@@ -1,10 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { LeadsTypes } from '../../types';
-import { getLead, getLeads, createLead, createBulkLead, updateLead, deleteLead } from '../middleware/lead';
+import { getLead, getLeads, createLead, createBulkLead, updateLead, deleteLead, getLeadsForClaim, claimLead } from '../middleware/lead';
 
-const initialState: { data: LeadsTypes[]; loading: boolean; isModalOpen: boolean; error: any } = {
+const initialState: { data: LeadsTypes[]; claimData: any; loading: boolean; isModalOpen: boolean; error: any } = {
   loading: false,
   data: [],
+  claimData: [],
   error: null,
   isModalOpen: false
 };
@@ -100,11 +101,38 @@ const leadSlice = createSlice({
       state.error = action.error;
       state.loading = false;
     });
+
+    // Get Leads for Claim
+    builder.addCase(getLeadsForClaim.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(getLeadsForClaim.fulfilled, (state, action) => {
+      state.claimData = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(getLeadsForClaim.rejected, (state, action) => {
+      state.error = action.error;
+      state.loading = false;
+    });
+
+    // Claim Lead
+    builder.addCase(claimLead.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(claimLead.fulfilled, (state, action) => {
+      state.data = action.payload;
+      state.loading = false;
+    });
+    builder.addCase(claimLead.rejected, (state, action) => {
+      state.error = action.error;
+      state.loading = false;
+    });
   }
 });
 
 export const leadsList = (state) => state.lead.data;
-export const leadState = (state: { lead: { data: LeadsTypes[]; loading: boolean; isModalOpen: boolean; error: any } }) => state.lead;
+export const leadState = (state: { lead: { data: LeadsTypes[]; claimData: any; loading: boolean; isModalOpen: boolean; error: any } }) =>
+  state.lead;
 export default leadSlice.reducer;
 export const { openModal } = leadSlice.actions;
 export const loadingLead = (state) => state.lead.loading;

@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { get, post, put, destroy } from '../../libs/client/apiClient';
-import { LeadsTypes } from '../../types';
+import { get, post, put } from '../../libs/client/apiClient';
 import { setAlert } from '../slice/alertSlice';
 
 const getLeads = createAsyncThunk(
@@ -80,7 +79,33 @@ const deleteLead = createAsyncThunk('lead/delete', async ({ id, tableId }: { id:
   }
 });
 
-export { getLeads, getLead, createLead, createBulkLead, updateLead, deleteLead };
+const getLeadsForClaim = createAsyncThunk('dynamic/getLeadsForClaim', async ({ signal }: { signal: AbortSignal }, { dispatch }) => {
+  try {
+    const { data } = await get(`/dynamic/claim/leads`, { signal });
+    return data.data;
+  } catch (error) {
+    const { message } = error.response.data;
+    dispatch(setAlert({ message, type: 'error' }));
+    throw error;
+  }
+});
+
+const claimLead = createAsyncThunk(
+  'dynamic/claimLead',
+  async ({ id, leadId, sourceId }: { id: string; leadId: string; sourceId: string }, { dispatch }) => {
+    try {
+      const { data } = await post('/dynamic/claim/lead', { id, leadId, sourceId });
+      dispatch(setAlert({ message: 'Lead claimed successfully', type: 'success' }));
+      return data.data;
+    } catch (error) {
+      const { message } = error.response.data;
+      dispatch(setAlert({ message, type: 'error' }));
+      throw error;
+    }
+  }
+);
+
+export { getLeads, getLead, createLead, createBulkLead, updateLead, deleteLead, getLeadsForClaim, claimLead };
 
 type FieldTypes = {
   name: string;

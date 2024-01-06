@@ -10,7 +10,8 @@ import { ADMIN_NOT_FOUND, CATEGORY_ALREADY_EXISTS, CATEGORY_NOT_FOUND, ORG_NOT_F
 import { BadRequest } from "@tsed/exceptions";
 import { CategoryFieldType } from "../../models/CategoryModel";
 import { FieldTypes } from "../../../types";
-import { LeadService } from "../../services/LeadService";
+import { LeadService } from "../../services/LeadsService";
+import mongoose, { Schema, model } from "mongoose";
 
 class CategoryBodyParams {
   @Required() public name: string;
@@ -24,6 +25,8 @@ export class CategoryController {
   private adminService: AdminService;
   @Inject()
   private categoryService: CategoryService;
+  @Inject()
+  private leadsService: LeadService;
 
   @Get("/")
   @Returns(200, SuccessArrayResult).Of(CategoryResultModel)
@@ -97,7 +100,11 @@ export class CategoryController {
   public async deleteCategory(@PathParams() { id }: IdModel, @Context() context: Context) {
     const { orgId, email } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
-    const category = await this.categoryService.deleteCategory(id);
+    const category = await this.categoryService.findCategoryById(id);
+    if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
+    await this.categoryService.deleteCategory(id);
+    await this.leadsService.deleteLeadsByCategoryId(category._id);
+    await mongoose.connection.db.dropCollection(category.name);
     return new SuccessResult({ success: true, message: "Category deleted successfully" }, SuccessMessageModel);
   }
 }

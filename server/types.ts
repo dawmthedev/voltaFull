@@ -84,3 +84,18 @@ export type AvailabilityDataTypes = {
   endDate: string;
   adminId?: string;
 };
+
+export enum LeadStatusEnum {
+  open = "open",
+  claim = "claim",
+  close = "close",
+  pending = "pending"
+}
+
+export type LeadsParamTypes = {
+  status?: LeadStatusEnum;
+  source?: string;
+  leadId?: string;
+  adminId?: string;
+  categoryId?: string;
+};

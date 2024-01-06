@@ -1,7 +1,6 @@
 import { ArrayOf, CollectionOf, Default, Property } from "@tsed/schema";
 import { Model, ObjectID, Ref } from "@tsed/mongoose";
 import { AdminModel } from "./AdminModel";
-import { LeadModel } from "./LeadModel";
 import { OrganizationModel } from "./OrganizationModel";
 import { PlannerModel } from "./PlannerModel";
 
@@ -47,8 +46,4 @@ export class CategoryModel {
   @Ref(() => PlannerModel)
   @CollectionOf(() => PlannerModel)
   planners: Ref<PlannerModel>[];
-
-  // @Ref(() => LeadModel)
-  // @CollectionOf(() => LeadModel)
-  // leads: Ref<LeadModel>[];
 }

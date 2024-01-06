@@ -1,22 +1,36 @@
 import { model, Schema } from "mongoose";
+import { SaleRepModel } from "src/models/SaleRepModel";
+import { LeadStatusEnum } from "../../types";
+
+
 
 export const createSchema = ({ tableName, columns }: { tableName: string; columns: any }) => {
   let dynamicModel;
   try {
     dynamicModel = model(tableName);
   } catch (error) {
-    const isNotify = {
-      name: "isNotify",
-      type: "boolean"
-    };
-    const updatedColumn = [...columns, isNotify];
+    // const isNotify = {
+    //   name: "isNotify",
+    //   type: "boolean"
+    // };
+    // const status = {
+    //   name: "status",
+    //   type: "string",
+    //   enum: Object.values(LeadStatusEnum)
+    // };
+
+    // const updatedColumn = [...columns, isNotify, status];
     const schemaDefinition: Record<string, any> = {};
-    for (const column of updatedColumn) {
+    for (const column of columns) {
       schemaDefinition[column.name] = column.type;
     }
     const schema = new Schema(schemaDefinition);
     schema.add({
       isNotify: Boolean,
+      status: {
+        type: String,
+        enum: Object.values(LeadStatusEnum)
+      },
       categoryId: String,
       adminId: String,
       orgId: String,
@@ -50,3 +64,25 @@ export const getColumns = (data: any) => {
   });
   return columns;
 };
+
+// write algorithm to assign lead to sales rep based on availability and 15 min duration and score of sale rep
+// const assignLeadToSaleRep = async (lead: any, adminId: string) => {
+//   const { _id, name, email, phone, address, createdAt, updatedAt } = lead;
+//   const saleRep = await SaleRepModel.find({ availabilityStatus: true, durationStatus: true, adminId: adminId }).sort({ score: -1 }).limit(1);
+//   if (saleRep.length) {
+//     const { _id: saleRepId } = saleRep[0];
+//     const saleRepData = {
+//       leadId: _id,
+//       name,
+//       email,
+//       phone,
+//       address,
+//       createdAt,
+//       updatedAt,
+//       adminId: adminId,
+//       availabilityId: saleRep[0].availabilityId,
+//       saleRepId
+//     };
+//     await SaleRepModel.create(saleRepData);
+//   }
+// }

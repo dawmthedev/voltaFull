@@ -318,3 +318,12 @@ export class RoleResultModel {
   @Property() public readonly _id: string;
   @Property() public readonly name: string;
 }
+
+export class SaleRefResultModel {
+  @Property() public readonly _id: string;
+  @Property() public readonly adminId: string;
+  @Property() public readonly score: number;
+  @Property() public readonly leads: string[];
+  @Property() public readonly createdAt: Date;
+  @Property() public readonly updatedAt: Date;
+}

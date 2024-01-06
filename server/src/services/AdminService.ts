@@ -8,6 +8,7 @@ import { AdminModel } from "../models/AdminModel";
 import { MongooseModel } from "@tsed/mongoose";
 import { OrganizationModel } from "../models/OrganizationModel";
 import { VerifySessionModal } from "../models/VerifySessionModal";
+import { SaleRepService } from "./SaleRepService";
 
 @Injectable()
 export class AdminService {
@@ -16,6 +17,8 @@ export class AdminService {
     @Inject(AdminModel) private admin: MongooseModel<AdminModel>,
     @Inject(VerifySessionModal) private verifySession: MongooseModel<VerifySessionModal>
   ) {}
+  @Inject()
+  private saleRep: SaleRepService;
 
   private createToken(id: string) {
     return encrypt(id);
@@ -52,7 +55,7 @@ export class AdminService {
     return await this.admin.findByIdAndUpdate({ _id: adminId }, { twoFactorEnabled });
   }
 
-  public async updateAdmin(data: { id: string; name?: string; role?: string; isSuperAdmin: boolean; }) {
+  public async updateAdmin(data: { id: string; name?: string; role?: string; isSuperAdmin: boolean }) {
     const { id, name, role, isSuperAdmin } = data;
     return await this.admin.findByIdAndUpdate({ _id: id }, { name, role, isSuperAdmin });
   }
@@ -66,7 +69,7 @@ export class AdminService {
     recordID: string;
   }) {
     const { email, name, password, organizationId, role, recordID } = params;
-    return await this.admin.create({
+    const response = await this.admin.create({
       email: email.trim().toLowerCase(),
       name,
       role,
@@ -75,6 +78,8 @@ export class AdminService {
       password: createPasswordHash({ email, password }),
       isSuperAdmin: email === process.env.SUPER_USER_EMAIL ? true : false
     });
+    await this.saleRep.createSaleRep({ adminId: response._id });
+    return response;
   }
 
   public async completeAdminRegistration({ id, name, email, password }: { id: string; name: string; email: string; password: string }) {
