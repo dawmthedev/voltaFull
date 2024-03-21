@@ -2,6 +2,7 @@ import nodemailer from "nodemailer";
 import { NodeMailerTypes } from "types";
 
 export class NodemailerClient {
+  ///
   public static async sendVerificationEmail({ title = "Email", email, code }: NodeMailerTypes) {
     const transporter = nodemailer.createTransport({
       host: "smtp.porkbun.com",
