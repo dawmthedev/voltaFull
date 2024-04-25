@@ -45,7 +45,8 @@ import axios from 'axios';
 
 const submitNewMessage= async ({
   Message,
-  relatedProject
+  relatedProject,
+  TaggedUsers
 
 }) => {
   const QB_DOMAIN = "voltaic.quickbase.com";
@@ -62,7 +63,8 @@ const submitNewMessage= async ({
     data: [{
       6: { value: Message},
       26: { value: relatedProject },
-       61: { value: 'Project Manager'}
+       61: { value: 'Project Manager'},
+       62: { value: TaggedUsers}
     }],
     fieldsToReturn: [] // Specify fields to return, if any
   };
@@ -108,6 +110,8 @@ const LeadDetailPage = () => {
 
 
   // State for the message modal and message text
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [isMessageModalOpen, setMessageModalOpen] = useState(false);
   const [messageText, setMessageText] = useState('');
   // User redux object
@@ -186,6 +190,7 @@ const LeadDetailPage = () => {
   // Function to handle closing the message modal
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
+    setSelectedUser(null);
   };
 
   // Function to handle sending the message
@@ -218,6 +223,21 @@ const LeadDetailPage = () => {
     console.log('Message to send:', messageText);
     console.log('recordID', id);
 
+
+    if (!selectedUser) {
+      // alert('Please select a user');
+      // return;
+      console.log("No User Set")
+    }else{ 
+      console.log('Sending message to:', selectedUser.email, 'Message:', messageText);
+
+    }
+
+  
+     // Extract emails from the selected users
+     const taggedUserEmails = selectedUser.map(user => user.email).join('; '); // Join emails with semicolon and space
+
+
     // Optimistically update the UI (optional)
     // const newMessage = {
     //     id: Date.now(), // Temporary ID; the backend might return a real ID
@@ -230,7 +250,7 @@ const LeadDetailPage = () => {
 
     try {
         // Make the API call to send the message
-        const response = await submitNewMessage({ Message: messageText, relatedProject: id });
+        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails});
         console.log('Message sent successfully:', response);
 
         // Optionally update the message with real data returned from the backend if necessary
@@ -238,6 +258,7 @@ const LeadDetailPage = () => {
 
         setMessageText(''); // Clear the message input
         setMessageModalOpen(false); // Close the modal
+        setSelectedUser([]); // Reset the selected users
     } catch (error) {
         console.error('Failed to send message:', error);
         // Handle the error, e.g., by removing the optimistic message or showing an error message
@@ -265,6 +286,58 @@ const LeadDetailPage = () => {
   };
 
   //details
+
+
+
+  useEffect(() => {
+    const fetchCRMUsers = async () => {
+      const API_URL = "https://api.quickbase.com/v1/records/query";
+      const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
+      const QB_DOMAIN = "voltaic.quickbase.com";
+
+      const requestBody = {
+        from: "br5cqr4wu",
+        where: "({53.CT.'Active'})",
+        sortBy: [
+          { fieldId: 12, order: "ASC" },
+          { fieldId: 52, order: "ASC" },
+          { fieldId: 10, order: "ASC" },
+          { fieldId: 602, order: "ASC" },
+        ],
+        groupBy: [
+          { fieldId: 12, grouping: "equal-values" },
+          { fieldId: 53, grouping: "equal-values" },
+          { fieldId: 10, grouping: "equal-values" },
+          { fieldId: 602, grouping: "equal-values" },
+        ],
+        options: { skip: 0, top: 0, compareWithAppLocalTime: false },
+      };
+
+      const headers = {
+        Authorization: USER_TOKEN,
+        "QB-Realm-Hostname": QB_DOMAIN,
+        "Content-Type": "application/json",
+      };
+
+      try {
+        const response = await axios.post(API_URL, requestBody, { headers });
+        if (response.data && response.data.data) {
+          const activeUsers = response.data.data
+            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'Active' users
+            .map((user) => ({
+              id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
+              name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
+              email: user['10'] ? user['10'].value : 'No Email',
+            }));
+          setUsers(activeUsers);
+        }
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    fetchCRMUsers();
+  }, []);
 
   useEffect(() => {
     fetch(`${baseURL}/auth/crmDeal`, {
@@ -387,6 +460,36 @@ const LeadDetailPage = () => {
         setDealsError(error);
         setLoading(false);
       });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   }, [id]);
 
   function truncateDecimals(number, decimalPlaces) {
@@ -514,6 +617,17 @@ const LeadDetailPage = () => {
       <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
         <DialogTitle>Add a New Message</DialogTitle>
         <DialogContent>
+
+        <Autocomplete
+             multiple 
+            options={users}
+
+            getOptionLabel={(option) => option.name}
+            onChange={(event, newValue) => {
+              setSelectedUser(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} label="Select User" variant="outlined" />}
+          />
           <DialogContentText>
             Enter your message below.
           </DialogContentText>
