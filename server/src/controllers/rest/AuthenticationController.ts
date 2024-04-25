@@ -185,7 +185,14 @@ export class AuthenticationController {
   @Post("/login")
   @Returns(200, SuccessResult).Of(AdminResultModel)
   public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
+
+
     const { email, password } = body;
+
+
+    console.log("Testing Login...");
+    console.log("Received login request for email:", email); // Be careful with logging sensitive information
+
     if (!email || !password) throw new BadRequest(MISSING_PARAMS);
     const admin = await this.adminService.findAdminByEmail(email);
     if (!admin) throw new NotFound(EMAIL_NOT_EXISTS);

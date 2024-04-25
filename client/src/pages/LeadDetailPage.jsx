@@ -21,21 +21,13 @@ import {
   ListItemText,
   Stepper,
   Step,
+  
   StepLabel
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
-
-import PhoneIcon from '@mui/icons-material/Phone';
 import EmailIcon from '@mui/icons-material/Email';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
+
 import PersonIcon from '@mui/icons-material/Person';
-
-import { styled } from '@mui/material/styles';
-import { alpha } from '@mui/material/styles';
-
-import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
-import EditNoteIcon from '@mui/icons-material/EditNote';
 
 // Import Timeline components if they are from MUI
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
@@ -47,6 +39,55 @@ import { authSelector } from '../redux/slice/authSlice';
 import { baseURL } from '../libs/client/apiClient';
 
 // Import any other necessary local components like StyledAccount, Card, etc.
+
+
+import axios from 'axios';
+
+const submitNewMessage= async ({
+  Message,
+  relatedProject
+
+}) => {
+  const QB_DOMAIN = "voltaic.quickbase.com";
+  const API_ENDPOINT = "https://api.quickbase.com/v1/records";
+  
+  const headers = {
+    Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+    "QB-Realm-Hostname": QB_DOMAIN,
+    "Content-Type": "application/json",
+  };
+
+  const requestBody = {
+    to: "br5cqr42m", // Table identifier in Quickbase
+    data: [{
+      6: { value: Message},
+      26: { value: relatedProject },
+      // 61: { value: 'Project Manager'}
+    }],
+    fieldsToReturn: [] // Specify fields to return, if any
+  };
+
+  try {
+    const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+    console.log("Success!", response.data);
+  //  return response.data; // You can modify what to return based on your needs
+  } catch (error) {
+    console.error("Failed to send data:", error);
+    throw error; // Rethrow or handle error as needed
+  }
+};
+
+
+
+
+
+
+
+
+
+
+
+
 
 const LeadDetailPage = () => {
   const steps = [
@@ -65,6 +106,10 @@ const LeadDetailPage = () => {
     'Complete'
   ];
 
+
+  // State for the message modal and message text
+  const [isMessageModalOpen, setMessageModalOpen] = useState(false);
+  const [messageText, setMessageText] = useState('');
   // User redux object
   //update prod
   const { Projectdata } = useAppSelector(authSelector);
@@ -133,6 +178,80 @@ const LeadDetailPage = () => {
 
   const [activeStep, setActiveStep] = useState(0);
 
+  // Function to handle opening the message modal
+  const handleOpenMessageModal = () => {
+    setMessageModalOpen(true);
+  };
+
+  // Function to handle closing the message modal
+  const handleCloseMessageModal = () => {
+    setMessageModalOpen(false);
+  };
+
+  // Function to handle sending the message
+  // const handleSendMessage = () => {
+  //   console.log('Message to send:', messageText);
+  //   console.log('recordiD', id)
+
+
+  //   submitNewMessage({ Message: messageText, relatedProject: id });
+
+  //   // Here you would typically handle the message sending logic, e.g., an API call
+  //   // Resetting the message text and closing the modal
+  //   setMessageText('');
+  //   setMessageModalOpen(false);
+
+
+
+
+
+
+
+
+    
+  // };
+
+
+
+
+  const handleSendMessage = async () => {
+    console.log('Message to send:', messageText);
+    console.log('recordID', id);
+
+    // Optimistically update the UI (optional)
+    const newMessage = {
+        id: Date.now(), // Temporary ID; the backend might return a real ID
+        from: "Current User", // This should match whatever your backend/API expects
+        text: messageText,
+        createdAt: new Date().toISOString()
+    };
+
+    setMessageData(prevMessages => [...prevMessages, newMessage]);
+
+    try {
+        // Make the API call to send the message
+        const response = await submitNewMessage({ Message: messageText, relatedProject: id });
+        console.log('Message sent successfully:', response);
+
+        // Optionally update the message with real data returned from the backend if necessary
+        // setMessageData(prevMessages => prevMessages.map(msg => msg.id === newMessage.id ? { ...msg, ...updatedDataFromResponse } : msg));
+
+        setMessageText(''); // Clear the message input
+        setMessageModalOpen(false); // Close the modal
+    } catch (error) {
+        console.error('Failed to send message:', error);
+        // Handle the error, e.g., by removing the optimistic message or showing an error message
+        setMessageData(prevMessages => prevMessages.filter(msg => msg.id !== newMessage.id));
+    }
+};
+
+
+
+
+
+
+
+  
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -386,7 +505,39 @@ const LeadDetailPage = () => {
 
             {/* Messages */}
             <Grid item>
-              <h4>Messages</h4>
+            <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+    <h4 style={{ margin: 0, fontWeight: 'bold' }}>Messages</h4>
+      {/* Button to open the message modal */}
+      <Button onClick={handleOpenMessageModal} style={{ backgroundColor: 'blue', color: 'white', padding: '8px 15px', fontSize: '16px', borderRadius: '5px' }}>Add Message</Button>
+
+      {/* Message Modal Dialog */}
+      <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
+        <DialogTitle>Add a New Message</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            Enter your message below.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="message"
+            label="Message Text"
+            type="text"
+            fullWidth
+            variant="outlined"
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMessageModal}>Cancel</Button>
+          <Button onClick={handleSendMessage} color="primary">Send Message</Button>
+        </DialogActions>
+      </Dialog>
+
+</Box>
+
+              
               {messageData !== null ? (
                 messageData.map((msg) => (
                   <Card key={msg.id} data={msg} text={msg.text} from={msg.from} getItem={getSelected} type={msg.type} />
@@ -479,50 +630,3 @@ const Card = ({ data, getItem, type, leadName, from }) => {
     </Box>
   );
 };
-
-const StyledAccount = styled('div')(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  justifyContent: 'space-between',
-  border: '1px solid #e3e3e3',
-  gap: theme.spacing(1.5),
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12)
-}));
-const StyledTextArea = styled('div')(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  width: '100%',
-  height: '150px',
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12)
-}));
-
-const StyledInformation = styled('div')(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  display: 'flex',
-  flexGrow: '1',
-  maxHeight: '770px',
-  overflowY: 'scroll',
-  gap: theme.spacing(1.5),
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12)
-}));
-
-const WrapSelectable = styled('div')(({ theme }) => ({
-  marginLeft: theme.spacing(2),
-  display: 'flex',
-  flexDirection: 'column',
-  alignItems: 'center',
-  // justifyContent: 'space-between',
-  border: '1px solid #e3e3e3',
-  gap: theme.spacing(1.5),
-  padding: theme.spacing(2, 2.5),
-  width: '100%',
-  height: '150px',
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12)
-}));
