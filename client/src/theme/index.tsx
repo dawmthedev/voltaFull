@@ -12,7 +12,16 @@ import componentsOverride from "./overrides";
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
   const themeOptions = useMemo(
     () => ({
-      palette,
+      palette: {
+        primary: {
+          main: '#556cd6',
+          contrastText: '#ffffff',
+        },
+        secondary: {
+          main: '#19857b',
+          contrastText: '#000000',
+        },
+      },
       shape: { borderRadius: 6 },
       typography,
       shadows: shadows(),

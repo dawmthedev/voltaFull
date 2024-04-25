@@ -62,7 +62,7 @@ const submitNewMessage= async ({
     data: [{
       6: { value: Message},
       26: { value: relatedProject },
-      // 61: { value: 'Project Manager'}
+       61: { value: 'Project Manager'}
     }],
     fieldsToReturn: [] // Specify fields to return, if any
   };
@@ -219,14 +219,14 @@ const LeadDetailPage = () => {
     console.log('recordID', id);
 
     // Optimistically update the UI (optional)
-    const newMessage = {
-        id: Date.now(), // Temporary ID; the backend might return a real ID
-        from: "Current User", // This should match whatever your backend/API expects
-        text: messageText,
-        createdAt: new Date().toISOString()
-    };
+    // const newMessage = {
+    //     id: Date.now(), // Temporary ID; the backend might return a real ID
+    //     from: "Current User", // This should match whatever your backend/API expects
+    //     text: messageText,
+    //     createdAt: new Date().toISOString()
+    // };
 
-    setMessageData(prevMessages => [...prevMessages, newMessage]);
+   // setMessageData(prevMessages => [...prevMessages, newMessage]);
 
     try {
         // Make the API call to send the message
@@ -241,7 +241,7 @@ const LeadDetailPage = () => {
     } catch (error) {
         console.error('Failed to send message:', error);
         // Handle the error, e.g., by removing the optimistic message or showing an error message
-        setMessageData(prevMessages => prevMessages.filter(msg => msg.id !== newMessage.id));
+       // setMessageData(prevMessages => prevMessages.filter(msg => msg.id !== newMessage.id));
     }
 };
 
