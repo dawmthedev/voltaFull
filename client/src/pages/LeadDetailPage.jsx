@@ -297,7 +297,7 @@ const LeadDetailPage = () => {
 
       const requestBody = {
         from: "br5cqr4wu",
-        where: "({53.CT.'Active'})",
+        where: "({1049.CT.'true'})",
         sortBy: [
           { fieldId: 12, order: "ASC" },
           { fieldId: 1049, order: "ASC" },
@@ -325,7 +325,7 @@ const LeadDetailPage = () => {
         const response = await axios.post(API_URL, requestBody, { headers });
         if (response.data && response.data.data) {
           const activeUsers = response.data.data
-            .filter((user) => user['1049'] && user['1049'].value === 'true') // Filter for 'isLeft' users
+            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
             .map((user) => ({
               id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
               name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
