@@ -323,7 +323,7 @@ const LeadDetailPage = () => {
         const response = await axios.post(API_URL, requestBody, { headers });
         if (response.data && response.data.data) {
           const activeUsers = response.data.data
-            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'Active' users
+            .filter((user) => user['1049'] && user['1049'].value === 'true') // Filter for 'Active' users
             .map((user) => ({
               id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
               name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
