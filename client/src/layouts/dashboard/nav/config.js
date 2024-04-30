@@ -29,11 +29,19 @@ const navConfig = [
     path: '/dashboard/blog',
     icon: icon('ic_blog')
   },
+
   {
-    title: 'VC Dashboard',
-    path: '/dashboard/vcdash',
-    icon: icon('ic_blog')
+    title: 'New Sales',
+    path: '/dashboard/NewSalePage',
+    icon: icon('ic_blog'),
+    isSuperAdmin: true
+
   },
+  // {
+  //   title: 'VC Dashboard',
+  //   path: '/dashboard/vcdash',
+  //   icon: icon('ic_blog')
+  // },
 
   // {
   //   title: 'Rookies',
@@ -60,12 +68,12 @@ const navConfig = [
   //   path: '/dashboard/leads',
   //   icon: icon('ic_blog')
   // },
-  {
-    title: 'Dynamic-Leads',
-    path: '/dashboard/dynamic-leads',
-    icon: icon('ic_analytics'),
-    isSuperAdmin: true
-  },
+  // {
+  //   title: 'Dynamic-Leads',
+  //   path: '/dashboard/dynamic-leads',
+  //   icon: icon('ic_analytics'),
+  //   isSuperAdmin: true
+  // },
   {
     title: 'Planner',
     path: '/dashboard/planner',

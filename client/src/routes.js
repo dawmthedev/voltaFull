@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 import BlogPage from './pages/BlogPage';
+import NewSalePage from './pages/NewSales';
 import UserPage from './pages/UserPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
@@ -55,6 +56,7 @@ export default function Router() {
         { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
+        { path: 'newSalePage', element: <NewSalePage /> },
         { path: 'leads', element: <Leads /> },
         { path: 'rookies', element: <Rookies /> },
         { path: 'dynamic-leads', element: <DynamicLead /> },

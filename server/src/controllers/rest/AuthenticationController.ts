@@ -13,6 +13,7 @@ import {
   CrmRateResultModel,
   SingleCrmDealResultModel,
   CrmPayrollResultModel,
+  NewSaleResultModel,
   CrmTimelineResultModel,
   CrmTimelineAvgResultModel
 } from "../../models/RestModels";
@@ -102,6 +103,12 @@ class timelineBody {
 export class CrmPayrollResultCollection {
   @Property(CrmPayrollResultModel)
   public readonly payrollData: CrmPayrollResultModel[];
+}
+
+
+export class NewSaleResultCollection {
+  @Property(NewSaleResultModel)
+  public readonly newSaleData: NewSaleResultModel[];
 }
 
 const isSecure = process.env.NODE_ENV === "production";
@@ -217,6 +224,87 @@ export class AuthenticationController {
       AdminResultModel
     );
   }
+
+
+  @Post("/crmNewSales")
+  @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
+  public async crmNewSales(@BodyParams() body: CrmPayBody, @Response() res: Response) {
+    console.log("crm payroll-----------------------------------------")
+    const { recordId } = body;
+    CrmPayBody;
+    if (!recordId) throw new BadRequest(MISSING_PARAMS);
+
+    const API_URL = "https://voltaicqbapi.herokuapp.com/NewSales";
+
+    const requestBody = {
+      repID: recordId
+    };
+
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    console.log("Getting CRM Payroll...");
+    console.log(recordId);
+
+    const response = await axios.post(API_URL, requestBody, { headers });
+    console.log("response--------", response);
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
+    const data = response.data;
+    const dataArray = Array.isArray(data) ? data : [data];
+
+    // const payrollResults = dataArray.map((record) => ({
+    //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
+    //   userStatus: record["userStatus"] ? record["userStatus"].replace(/"/g, '') : null,
+    //   salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, '') : null,
+    //   ppwFinal: record["ppwFinal"] ?  record["ppwFinal"]  : null,
+    //   status: record["systemSizeFinal"] ? record["systemSizeFinal"]  : null,
+    //   milestone: record["milestone"] ? record["milestone"].replace(/"/g, '') : null,
+    //   datePaid: record["datePaid"] ? record["datePaid"].replace(/"/g, '') : null,
+    //   amount: record["amount"] ? record["amount"] : null,
+    //   // Add other properties here as needed
+    // }));
+
+    const NewSaleResults = dataArray.map((record) => ({
+      installer: record["installer"] ? record["installer"].replace(/"/g, "") : null,
+      atticImage: record["atticImage"] ? record["atticImage"].replace(/"/g, "") : null,
+      utilityImage1: record["utilityImage1"] ? record["utilityImage1"].replace(/"/g, "") : null,
+      licenseimage: record["licenseimage"] ? record["licenseimage"].replace(/"/g, "") : null,
+      depositImage: record["depositImage"] ? record["depositImage"].replace(/"/g, "") : null,
+      program: record["program"] ? record["program"].replace(/"/g, "") : null,
+      notes: record["notes"] ? record["notes"].replace(/"/g, "") : null,
+      leadGen: record["leadGen"] ? record["leadGen"].replace(/"/g, "") : null,
+      utilityImage2: record["utilityImage2"] ? record["utilityImage2"].replace(/"/g, "") : null,
+      utilityImage3: record["utilityImage3"] ? record["utilityImage3"].replace(/"/g, "") : null,
+      utilityImage4: record["utilityImage4"] ? record["utilityImage4"].replace(/"/g, "") : null,
+      utilityImage5: record["utilityImage5"] ? record["utilityImage5"].replace(/"/g, "") : null,
+      utilityImage6: record["utilityImage6"] ? record["utilityImage6"].replace(/"/g, "") : null,
+      utilityImage7: record["utilityImage7"] ? record["utilityImage7"].replace(/"/g, "") : null,
+      atticImage2: record["atticImage2"] ? record["atticImage2"].replace(/"/g, "") : null,
+      design: record["design"] ? record["design"].replace(/"/g, "") : null,
+      designNotes: record["designNotes"] ? record["designNotes"].replace(/"/g, "") : null,
+      mpuNotes: record["mpuNotes"] ? record["mpuNotes"].replace(/"/g, "") : null,
+      mpu: record["mpu"] ? record["mpu"].replace(/"/g, "") : null,
+      adders: record["adders"] ? record["adders"].replace(/"/g, "") : null,
+      salesRep: record["salesRep"] ? record["salesRep"].replace(/"/g, "") : null,
+      batteryQuantity: record["batteryQuantity"] ? record["batteryQuantity"].replace(/"/g, "") : null,
+      batteryPlacementNotes: record["batteryPlacementNotes"] ? record["batteryPlacementNotes"].replace(/"/g, "") : null,
+      ownerName: record["ownerName"] ? record["ownerName"].replace(/"/g, "") : null,
+      inverter: record["inverter"] ? record["inverter"].replace(/"/g, "") : null,
+      batteries: record["batteries"] ? record["batteries"].replace(/"/g, "") : null,
+      batteryMode: record["batteryMode"] ? record["batteryMode"].replace(/"/g, "") : null,
+      batteryPlacement: record["batteryPlacement"] ? record["batteryPlacement"].replace(/"/g, "") : null
+    }));
+    
+
+    console.log("Returning CRM payroll data...");
+
+    return new SuccessResult({ newSaleData: NewSaleResults }, NewSaleResultCollection);
+  }
+
+
+
+
 
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)

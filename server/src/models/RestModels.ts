@@ -265,6 +265,44 @@ export class CrmDealResultModel {
   @Property() public readonly financing: string;
 }
 
+
+
+export class NewSaleResultModel {
+  @Property() public readonly installer: string;
+  @Property() public readonly atticImage: string;
+  @Property() public readonly utilityImage1: string;
+  @Property() public readonly licenseimage: string;
+  @Property() public readonly depositImage: string;
+  @Property() public readonly program: string;
+  @Property() public readonly notes: string;
+  @Property() public readonly leadGen: string;
+  @Property() public readonly utilityImage2: string;
+  @Property() public readonly utilityImage3: string;
+  @Property() public readonly utilityImage4: string;
+  @Property() public readonly utilityImage5: string;
+  @Property() public readonly utilityImage6: string;
+  @Property() public readonly utilityImage7: string;
+  @Property() public readonly atticImage2: string;
+  @Property() public readonly design: string;
+  @Property() public readonly designNotes: string; // Change to match the type you need
+  @Property() public readonly mpuNotes: string; // Change to match the type you need
+  @Property() public readonly mpu: string;
+  @Property() public readonly adders: string;
+  @Property() public readonly salesRep: string; // Change to match the type you need
+  @Property() public readonly batteryQuantity: string; // Change to match the type you need
+  @Property() public readonly batteryPlacementNotes: string; // Change to match the type you need
+  @Property() public readonly ownerName: string; // Change to match the type you need
+  @Property() public readonly inverter: string; // Change to match the type you need
+  @Property() public readonly batteries: string; // Change to match the type you need
+  @Property() public readonly batteryMode: string; // Change to match the type you need
+  @Property() public readonly batteryPlacement: string; // Change to match the type you need
+
+
+
+
+
+}
+
 export class CrmPayrollResultModel {
   @Property() public readonly lead: string;
   @Property() public readonly relatedProject: string;
