@@ -227,7 +227,7 @@ export class AuthenticationController {
 
 
   @Post("/crmNewSales")
-  @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
+  @Returns(200, SuccessResult).Of(NewSaleResultModel)
   public async crmNewSales(@BodyParams() body: CrmPayBody, @Response() res: Response) {
     console.log("crm payroll-----------------------------------------")
     const { recordId } = body;

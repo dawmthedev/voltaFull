@@ -21,10 +21,12 @@ export default function NewSaleData(props) {
 
   const fetchNewSaleData = async () => {
     try {
-      const response = await fetch(`${baseURL}/auth/crmNewSales`, {
+      const response = await 
+      
+      fetch(`${baseURL}/auth/crmNewSales`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recordId: recordUserId })
+        body: JSON.stringify({ recordId: "0000" })
       });
       const result = await response.json();
       if (response.ok && result.data && result.data.newSaleData) {
