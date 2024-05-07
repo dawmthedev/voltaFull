@@ -148,14 +148,8 @@ export default function DealsData(props) {
         width: 500,
         editable: false,
         hide: false
-      },
-      {
-        field: 'id',
-        headerName: 'id',
-        width: 500,
-        editable: false,
-        hide: true
       }
+    
     ],
     [data]
   );

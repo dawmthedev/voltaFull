@@ -5,9 +5,7 @@ export class NodemailerClient {
   ///
   public static async sendVerificationEmail({ title = "Email", email, code }: NodeMailerTypes) {
     const transporter = nodemailer.createTransport({
-      host: "smtp.porkbun.com",
-      port: 587,
-      secure: false,
+      host: "smtp.gmail.com",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD
@@ -32,14 +30,23 @@ export class NodemailerClient {
 
   public static async sendCompleteRegistrationEmail({ email }: { email: string }) {
     const transporter = nodemailer.createTransport({
-      host: "smtp.porkbun.com",
-      port: 587,
-      secure: false,
+      host: "smtp.gmail.com",
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD
       }
     });
+
+  // public static async sendCompleteRegistrationEmail({ email }: { email: string }) {
+  //   const transporter = nodemailer.createTransport({
+  //     host: "smtp.porkbun.com",
+  //     port: 587,
+  //     secure: false,
+  //     auth: {
+  //       user: process.env.EMAIL,
+  //       pass: process.env.PASSWORD
+  //     }
+  //   });
     const mailOptions = {
       from: process.env.EMAIL,
       to: email,
