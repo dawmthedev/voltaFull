@@ -297,7 +297,7 @@ const LeadDetailPage = () => {
 
       const requestBody = {
         from: "br5cqr4wu",
-        where: "({1049.EX.'true'})",
+        where: "({53.EX.'Active'})",
         
         sortBy: [
           { fieldId: 12, order: "ASC" },
