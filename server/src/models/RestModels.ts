@@ -303,6 +303,11 @@ export class NewSaleResultModel {
 
 }
 
+export class UtilityBillResultModel {
+  @Property()
+  public annualUsage: number; // Assuming 'Annual Usage' is a numeric value
+}
+
 export class CrmPayrollResultModel {
   @Property() public readonly lead: string;
   @Property() public readonly relatedProject: string;

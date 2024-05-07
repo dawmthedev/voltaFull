@@ -14,9 +14,14 @@ import { AuthMiddleware } from "./middleware/AuthMiddleware";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import compression from "compression";
+import multer from "multer";
+
 
 @Configuration({
   ...config,
+  multer: { // Add multer settings here
+    storage: multer.memoryStorage() // Storing files in memory
+  },
   acceptMimes: ["application/json"],
   httpPort: process.env.PORT || 8083,
   httpsPort: false, // CHANGE

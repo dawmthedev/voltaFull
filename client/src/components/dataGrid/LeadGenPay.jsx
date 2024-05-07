@@ -153,48 +153,48 @@ export default function LeadGenPay(props) {
 
         hide: false
       },
-      {
-        field: 'milestone',
-        headerName: 'Milestone',
-        width: 180,
-        editable: false,
+      // {
+      //   field: 'milestone',
+      //   headerName: 'Milestone',
+      //   width: 180,
+      //   editable: false,
 
-        hide: false
-      },
+      //   hide: false
+      // },
 
-      {
-        field: 'clawbackNotes',
-        headerName: 'Clawback Notes',
-        width: 380,
-        editable: false,
+      // {
+      //   field: 'clawbackNotes',
+      //   headerName: 'Clawback Notes',
+      //   width: 380,
+      //   editable: false,
 
-        hide: false
-      },
-      {
-        field: 'amount',
-        headerName: 'Amount',
-        width: 180,
-        editable: false,
+      //   hide: false
+      // },
+      // {
+      //   field: 'amount',
+      //   headerName: 'Amount',
+      //   width: 180,
+      //   editable: false,
 
-        hide: false
-      },
-      {
-        field: 'datePaid',
-        headerName: 'Date Paid',
-        width: 180,
-        editable: false,
-        type: 'date',
-        hide: false
-      },
+      //   hide: false
+      // },
+      // {
+      //   field: 'datePaid',
+      //   headerName: 'Date Paid',
+      //   width: 180,
+      //   editable: false,
+      //   type: 'date',
+      //   hide: false
+      // },
 
-      {
-        field: 'leadgenRedlineOverrride',
-        headerName: 'Leadgen Redline Override',
-        width: 180,
-        editable: false,
+      // {
+      //   field: 'leadgenRedlineOverrride',
+      //   headerName: 'Leadgen Redline Override',
+      //   width: 180,
+      //   editable: false,
 
-        hide: false
-      }
+      //   hide: false
+      // }
     ],
     [data]
   );

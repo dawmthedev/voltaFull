@@ -1,7 +1,7 @@
-import { BodyParams, Req, Res, Response } from "@tsed/common";
+import { BodyParams, Req, Res, Response, MultipartFile } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
-import { Enum, Post, Property, Required, Returns, Put, Get } from "@tsed/schema";
+import { Enum, Post, Property, Required, Returns, Put, Get,Description,  Summary } from "@tsed/schema";
 import { ADMIN_NOT_FOUND, EMAIL_EXISTS, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, INVALID_TOKEN, MISSING_PARAMS } from "../../util/errors";
 import {
   SuccessMessageModel,
@@ -14,9 +14,11 @@ import {
   SingleCrmDealResultModel,
   CrmPayrollResultModel,
   NewSaleResultModel,
+  UtilityBillResultModel,
   CrmTimelineResultModel,
   CrmTimelineAvgResultModel
 } from "../../models/RestModels";
+
 import { openAIService } from "../../helper/OpenAIService";
 import { SuccessResult } from "../../util/entities";
 import { VerificationService } from "../../services/VerificationService";
@@ -27,6 +29,11 @@ import { OrganizationService } from "../../services/OrganizationService";
 import { createPasswordHash } from "../../util";
 import { VerificationEnum } from "../../../types";
 import axios from "axios";
+
+type MulterFile = Express.Multer.File;
+// Then use MulterFile where you previously used Express.Multer.File
+// Define a local interface for the file, minimal based on what Multer provides
+
 
 export class StartVerificationParams {
   @Required() public readonly email: string;
@@ -43,6 +50,9 @@ class CompleteRegistration {
   @Required() public readonly email: string;
   @Required() public readonly password: string;
 }
+
+
+
 
 class ForgetAdminPasswordParams {
   @Required() public readonly email: string;
@@ -151,6 +161,9 @@ export class AuthenticationController {
     await this.verificationService.verifyCodeByEmail({ code, email });
     return new SuccessResult({ success: true, message: "Verification Code verified successfully" }, SuccessMessageModel);
   }
+
+
+
 
   @Post("/register")
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
@@ -305,6 +318,117 @@ export class AuthenticationController {
 
 
 
+  @Post('/uploadUtilityBill')
+  @Summary('Upload and analyze utility bill')
+  @Description('This route allows uploading a utility bill for analysis.')
+  async uploadUtilityBill(@MultipartFile('file') file: MulterFile): Promise<string> {
+    if (!file) {
+      throw new BadRequest('No file uploaded');
+    }
+
+    try {
+      return await this.analyzeWithOpenAI(file.buffer);
+    } catch (error) {
+      throw new BadRequest('Error processing utility bill with OpenAI: ' + error.message);
+    }
+  }
+
+
+  private async analyzeWithOpenAI(fileBuffer: Buffer): Promise<string> {
+    const base64Image = fileBuffer.toString('base64');
+    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    const payload = {
+      model: "gpt-4-turbo",
+      messages: [{
+        "role": "user",
+        "content": [{
+          "type": "text",
+          "text": "What’s in this image?"
+        }, {
+          "type": "image_base64",
+          "image_base64": base64Image
+        }]
+      }],
+      max_tokens: 300
+    };
+  
+    console.log("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
+  
+    try {
+      const response = await axios.post(apiUrl, payload, {
+        headers: {
+          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+          'Content-Type': 'application/json'
+        }
+      });
+  
+      console.log("Received Response from OpenAI:", response.data); // Log response details
+  
+      if (response.data.choices && response.data.choices.length > 0) {
+        return response.data.choices[0].text.trim();
+      } else {
+        throw new Error('No valid response from OpenAI');
+      }
+    } catch (error) {
+      console.error('Error in OpenAI API call:', error.response ? error.response.data : error.message);
+      throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
+    }
+  }
+  
+  
+//   private async analyzeWithOpenAI(fileBuffer: Buffer): Promise<string> {
+//     const base64Image = fileBuffer.toString('base64'); // Ensure the image is fully captured in base64 format
+//     try {
+//         const apiUrl = 'https://api.openai.com/v1/chat/completions';
+//         const payload = {
+//             model: "gpt-4-turbo", // Confirm the model name, e.g., use an appropriate model that can process image data.
+//             messages: [
+//               {
+//                 "role": "user",
+//                 "content": [
+//                   {
+//                     "type": "text",
+//                     "text": "What’s in this image?"
+//                   },
+//                   {
+//                     "type": "image_url",
+//                     "image_url": {
+//                       "url": `data:image/jpeg;base64,${base64Image}`
+//                     }
+//                   }
+//                 ]
+//               }
+//             ],
+//             max_tokens: 300
+//         };
+
+//         const response = await axios.post(apiUrl, payload, {
+//             headers: {
+//                 Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+//                 'Content-Type': 'application/json'
+//             }
+//         });
+
+//         console.log("OpenAI Response:", response.data);
+
+//         if (response.data.choices && response.data.choices.length > 0) {
+//             return response.data.choices[0].text.trim();
+//         } else {
+//             throw new Error('No valid response from OpenAI');
+//         }
+//     } catch (error) {
+//         console.error('Error in OpenAI API call:', error);
+//         throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
+//     }
+// }
+
+
+
+
+
+
+
+
 
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
@@ -373,6 +497,8 @@ export class AuthenticationController {
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
+
+
 
   @Post("/crmPayrollLeadgen")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
