@@ -22,6 +22,7 @@ import {
   Stepper,
   Step,
   CircularProgress,
+  ListItemIcon,
   StepLabel
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -580,27 +581,35 @@ const LeadDetailPage = () => {
       {/* Main Content Grid */}
       <Grid container spacing={2}>
         {/* Top-left Paper Box */}
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'none' }}>
-            <Typography variant="h6" gutterBottom>
-              Homeowner Details
-            </Typography>
-            <List>
-              <ListItem>
+
+
+       <Grid item xs={12} md={4}>
+        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'none' }}>
+          <Typography variant="h6" gutterBottom>
+            Homeowner Details
+          </Typography>
+          <List sx={{ padding: 0 }}>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
                 <PersonIcon color="primary" />
-                <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" />
-              </ListItem>
-              <ListItem>
+              </ListItemIcon>
+              <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
                 <PersonIcon color="primary" />
-                <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address " />
-              </ListItem>
-              <ListItem>
+              </ListItemIcon>
+              <ListItemText primary={addressData !== null ? addressData : 'Loading...'} secondary="Address" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
                 <EmailIcon color="primary" />
-                <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" />
-              </ListItem>
-            </List>
-          </Paper>
-        </Grid>
+              </ListItemIcon>
+              <ListItemText primary={emailData !== null ? emailData : 'Loading...'} secondary="Email" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+          </List>
+        </Paper>
+      </Grid>
 
         {/* Left side: Horizontal Stepper */}
         <Grid item xs={12} md={8}>
