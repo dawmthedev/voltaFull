@@ -21,7 +21,7 @@ import {
   ListItemText,
   Stepper,
   Step,
-  
+  CircularProgress,
   StepLabel
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
@@ -124,6 +124,7 @@ const LeadDetailPage = () => {
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
+  
 
   // Sample hardcoded call data
   const sampleCalls = [
@@ -446,6 +447,9 @@ const LeadDetailPage = () => {
             }
           }
 
+
+
+          setLoading(false);
           setAddersData(addersArray);
           setMessageData(messagesArray);
 
@@ -461,6 +465,7 @@ const LeadDetailPage = () => {
       .catch((error) => {
         console.error('API Error:', error); // Log API error
         setDealsError(error);
+    
         setLoading(false);
       });
 
@@ -542,6 +547,21 @@ const LeadDetailPage = () => {
   const handleCall = () => console.log('Simulate call action');
   const handleInputChange = (e) => setDescription(e.target.value);
   const handleSubmit = () => console.log('Simulate submit action');
+
+
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (dealsError) {
+    return <p>Error loading data: {dealsError.message}</p>;
+  }
+
 
   return (
     <Grid container spacing={2} sx={{ overflow: 'hidden', padding: 2 }}>
