@@ -39,7 +39,7 @@ const navConfig = [
   },
   // {
   //   title: 'VC Dashboard',
-  //   path: '/dashboard/vcdash',
+  //   path: '/dashboard/app',
   //   icon: icon('ic_blog')
   // },
 
