@@ -384,9 +384,9 @@ const LeadDetailPage = () => {
 
           const messagesArray = messageInfo.map((message) => ({
             id: message.id,
-            from: message.from,
+            from: message.from.replace(/^"|"$/g, ''),
             type: 'message',
-            text: message.text,
+            text: message.text.replace(/^"|"$/g, ''),
             createdAt: new Date(message.createdAt).toString()
           }));
 
