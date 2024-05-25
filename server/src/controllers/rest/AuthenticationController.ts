@@ -709,7 +709,7 @@ export class AuthenticationController {
 
         plansReceived: project["plansReceived"] || null,
         installComplete: project["installComplete"] || null,
-        ptoApproved: project["ptoApproved"] || null,
+        ptoApproved: project["ptodate"] || null,
 
         datePaid: project["datePaid"] || null,
         amount: project["amount"] || null
@@ -768,8 +768,26 @@ export class AuthenticationController {
       amount: data["amount"] || null,
       address: data["address"] || "",
       vcmessages: data["vcmessages"] || [], // Assuming vcmessages field exists and is an array
-      vcadders: data["vcAdders"] || [] // Assuming vcmadders field exists and is an array
+      vcadders: data["vcAdders"] || [], // Assuming vcmadders field exists and is an array,
+
+
+      welcomeDate: data["welcomeDate"] || null,
+      siteSurveyDate: data["siteSurveyDate"] || null,
+      NTPDate: data["ntpDate"] || null,
+      QcChecDate: data["qcCheckDate"] || null,
+      FLADate: data["flaDate"] || null,
+      SolarPermitDate: data["solarPermitDate"] || null,
+      solarInstallDate: data["solarInstallDate"] || null,
+      FIDate: data["fidate"] || null,
+      PTODate: data["ptodate"] || null,
+
+
+
+
+
     };
+
+
 
     //prod
     console.log("Result : ");

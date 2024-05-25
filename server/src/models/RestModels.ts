@@ -101,6 +101,17 @@ export class SingleCrmDealResultModel {
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
   @Property() public readonly address: string;
+
+  @Property() public readonly welcomeDate: string;
+  @Property() public readonly siteSurveyDate: string;
+  @Property() public readonly NTPDate: string;
+  @Property() public readonly QcChecDate: string;
+  @Property() public readonly FLADate: string;
+  @Property() public readonly SolarPermitDate: string;
+  @Property() public readonly solarInstallDate: string;
+  @Property() public readonly FIDate: string;
+  @Property() public readonly PTODate: string;
+ 
   @Property() public readonly vcmessages: {
     relatedProject: string;
     type: string;
@@ -119,6 +130,16 @@ export class SingleCrmDealResultModel {
   }[]; // Define vcmessages as an array of objects
 
   constructor(data: {
+    welcomeDate: string;
+    siteSurveyDate: string;
+    NTPDate: string;
+    QcChecDate: string;
+    FLADate: string;
+    SolarPermitDate: string;
+    solarInstallDate: string;
+    FIDate: string;
+    PTODate: string;
+
     email: string;
     projectID: string;
     plansReceived: string;
@@ -173,6 +194,21 @@ export class SingleCrmDealResultModel {
     this.address = data.address;
     this.vcmessages = data.vcmessages;
     this.vcadders = data.vcadders;
+
+    this.welcomeDate = data.welcomeDate;
+    this.siteSurveyDate = data.siteSurveyDate;
+    this.NTPDate = data.NTPDate; 
+    this.QcChecDate = data.QcChecDate; 
+    this.FLADate = data.FLADate;
+    this.SolarPermitDate = data.SolarPermitDate; 
+    this.solarInstallDate = data.solarInstallDate;
+    this.FIDate = data.FIDate; 
+    this.PTODate = data.PTODate;
+
+ 
+
+
+
   }
 }
 

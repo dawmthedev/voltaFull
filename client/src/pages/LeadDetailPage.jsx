@@ -93,21 +93,6 @@ const submitNewMessage= async ({
 
 
 const LeadDetailPage = () => {
-  const steps = [
-    'New Sale',
-    'Welcome Call',
-    'Site Survey',
-    'Site Survey',
-    'NTP',
-    'QC check',
-    'Plans',
-    'FLA',
-    'Solar Permit',
-    'Solar Install',
-    ' Final Inspection',
-    'PTO',
-    'Complete'
-  ];
 
 
   // State for the message modal and message text
@@ -115,6 +100,25 @@ const LeadDetailPage = () => {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isMessageModalOpen, setMessageModalOpen] = useState(false);
   const [messageText, setMessageText] = useState('');
+
+
+  const stepLabels = [
+    { label: 'New Sale', key: 'saleDate' },
+    { label: 'Welcome Call', key: 'welcomeDate' },
+    { label: 'Site Survey', key: 'siteSurveyDate' },
+    { label: 'NTP', key: 'NTPDate' },
+    { label: 'QC Check', key: 'QcChecDate' },
+    { label: 'Plans', key: 'plansReceived' },
+    { label: 'FLA', key: 'FLADate' },
+    { label: 'Solar Permit', key: 'SolarPermitDate' },
+    { label: 'Solar Install', key: 'solarInstallDate' },
+    { label: 'Final Inspection', key: 'FIDate' },
+    { label: 'PTO', key: 'PTODate' },
+    // { label: 'Complete', key: 'completeDate' }
+  ];
+  
+  // State to hold the task dates
+  const [taskDates, setTaskDates] = useState({});
   // User redux object
   //update prod
   const { Projectdata } = useAppSelector(authSelector);
@@ -269,12 +273,6 @@ const LeadDetailPage = () => {
 };
 
 
-
-
-
-
-
-  
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
@@ -289,8 +287,25 @@ const LeadDetailPage = () => {
 
   //details
 
-
-
+  const updateStages = (data) => {
+    console.log("Updating stages with data:", data);
+    setTaskDates({
+      saleDate: data.saleDate ? data.saleDate.replace(/^"|"$/g, '') : null,
+      welcomeDate: data.welcomeDate ? data.welcomeDate.replace(/^"|"$/g, '') : null,
+      siteSurveyDate: data.siteSurveyDate ? data.siteSurveyDate.replace(/^"|"$/g, '') : null,
+      NTPDate: data.NTPDate && data.NTPDate !== "\"\"" ? data.NTPDate.replace(/^"|"$/g, '') : null,
+      QcChecDate: data.QcChecDate && data.QcChecDate !== "\"\"" ? data.QcChecDate.replace(/^"|"$/g, '') : null,
+      plansReceived: data.plansReceived && data.plansReceived !== "\"\"" ? data.plansReceived.replace(/^"|"$/g, '') : null,
+      FLADate: data.FLADate && data.FLADate !== "\"\"" ? data.FLADate.replace(/^"|"$/g, '') : null,
+      SolarPermitDate: data.SolarPermitDate && data.SolarPermitDate !== "\"\"" ? data.SolarPermitDate.replace(/^"|"$/g, '') : null,
+      solarInstallDate: data.solarInstallDate && data.solarInstallDate !== "\"\"" ? data.solarInstallDate.replace(/^"|"$/g, '') : null,
+      FIDate: data.FIDate && data.FIDate !== "\"\"" ? data.FIDate.replace(/^"|"$/g, '') : null,
+      PTODate: data.PTODate && data.PTODate !== "\"\"" ? data.PTODate.replace(/^"|"$/g, '') : null,
+      //completeDate: data.PTODate && data.PTODate !== "\"\"" ? data.PTODate.replace(/^"|"$/g, '') : null,  // Assume no completion date available
+    });
+  }
+  
+  
   useEffect(() => {
     const fetchCRMUsers = async () => {
       const API_URL = "https://api.quickbase.com/v1/records/query";
@@ -344,6 +359,7 @@ const LeadDetailPage = () => {
     fetchCRMUsers();
   }, []);
 
+
   useEffect(() => {
     fetch(`${baseURL}/auth/crmDeal`, {
       method: 'POST',
@@ -374,6 +390,17 @@ const LeadDetailPage = () => {
             createdAt: new Date(message.createdAt).toString()
           }));
 
+
+          
+
+
+          if (responseData.success) {
+
+            console.log("Received data for stages update:", responseData.data);
+
+            updateStages(responseData.data);
+          }
+
           const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
 
           const addersArray = addersInfo.map((adder) => ({
@@ -386,68 +413,7 @@ const LeadDetailPage = () => {
             billTo: adder.billTo
           }));
 
-          if (stage != null) {
-            switch (stage) {
-              case 'New Sale':
-                // code for value1
-                setActiveStep(1);
-                break;
-              case 'Welcome Call':
-                // code for value2
-                setActiveStep(2);
-                break;
-              case 'Site Survey':
-                // code for value2
-                setActiveStep(3);
-                break;
-              case 'NTP':
-                setActiveStep(4);
-                // code for value2
-                break;
-
-              case 'QC check':
-                setActiveStep(5);
-                // code for value2
-                break;
-
-              case 'Plans':
-                setActiveStep(6);
-                // code for value2
-                break;
-
-              case 'FLA':
-                setActiveStep(7);
-                // code for value2
-                break;
-              case 'Solar Permit':
-                setActiveStep(8);
-                // code for value2
-                break;
-              case 'Solar Install':
-                setActiveStep(9);
-                // code for value2
-                break;
-
-              case 'Final Inspection':
-                setActiveStep(10);
-                // code for value2
-                break;
-
-              case 'PTO':
-                setActiveStep(11);
-                // code for value2
-                break;
-
-              case 'Complete':
-                setActiveStep(12);
-                // code for value2
-                break;
-              // add more cases as needed
-              default:
-              // code to be executed if none of the cases match
-            }
-          }
-
+  
 
 
           setLoading(false);
@@ -462,7 +428,8 @@ const LeadDetailPage = () => {
           console.log('homeowner name', homeownerInfo);
         }
         setLoading(false);
-      })
+      })  
+
       .catch((error) => {
         console.error('API Error:', error); // Log API error
         setDealsError(error);
@@ -614,15 +581,28 @@ const LeadDetailPage = () => {
         {/* Left side: Horizontal Stepper */}
         <Grid item xs={12} md={8}>
           <div
-            style={{ minHeight: '100px', maxHeight: '400px', overflowY: 'auto', scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch' }}
+            style={{  minHeight: '100px', maxHeight: '400px', overflowY: 'auto', scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch' }}
           >
-            <Stepper activeStep={activeStep}>
-              {steps.map((label, index) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
+          <Stepper sx={{paddingLeft: '50px',}} activeStep={activeStep} orientation="vertical">
+  {stepLabels.map((step, index) => {
+    const stepDate = taskDates[step.key];
+    const isCompleted = Boolean(stepDate);
+
+    return (
+      <Step  key={step.label} completed={isCompleted}>
+        <StepLabel>
+          {step.label}
+          {isCompleted && (
+            <Typography variant="caption" style={{ marginLeft: '10px', color: 'green' }}>
+              {stepDate}
+            </Typography>
+          )}
+        </StepLabel>
+      </Step>
+    );
+  })}
+</Stepper>
+
           </div>
 
           <Grid sx={{ p: 2, backgroundColor: 'none' }} container direction="column" spacing={2}>
