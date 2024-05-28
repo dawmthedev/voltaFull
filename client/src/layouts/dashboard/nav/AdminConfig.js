@@ -13,7 +13,7 @@ const AdminConfig = [
   },
 
   {
-    title: 'Deals',
+    title: 'Projects',
     path: '/dashboard/deals',
     icon: icon('ic_cart')
   },
