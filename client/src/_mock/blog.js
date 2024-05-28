@@ -36,7 +36,7 @@ const links = [
 "https://vccrm.vercel.app/dashboard/rates",
 "https://voltaicapp.vercel.app/NewSaleForm"];
 
-const posts = [...Array(3)].map((_, index) => ({
+const posts = [...Array(4)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   link: links[index],
