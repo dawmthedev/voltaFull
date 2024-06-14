@@ -25,6 +25,8 @@ import {
   ListItemIcon,
   StepLabel
 } from '@mui/material';
+import moment from 'moment';
+
 import { useParams } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
 
@@ -387,7 +389,15 @@ const LeadDetailPage = () => {
             from: message.from.replace(/^"|"$/g, ''),
             type: 'message',
             text: message.text.replace(/^"|"$/g, ''),
-            createdAt: new Date(message.createdAt).toString()
+            createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
+              month: '2-digit',
+              day: '2-digit',
+              year: '2-digit',
+              hour: '2-digit',
+              minute: '2-digit',
+              hour12: false
+            })
+
           }));
 
 

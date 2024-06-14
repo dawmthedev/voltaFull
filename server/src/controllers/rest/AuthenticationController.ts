@@ -334,8 +334,14 @@ export class AuthenticationController {
   }
 
 
-  private async analyzeWithOpenAI(fileBuffer: Buffer): Promise<string> {
-    const base64Image = fileBuffer.toString('base64');
+  private async analyzeWithOpenAI(buffer: Buffer): Promise<string> {
+
+    const maxRetries = 3;
+    let attempt = 0;
+    const retryDelay = 1000; // 1 second
+
+
+    const base64Image = buffer.toString('base64');
     const apiUrl = 'https://api.openai.com/v1/chat/completions';
     const payload = {
       model: "gpt-4-turbo",
@@ -354,6 +360,7 @@ export class AuthenticationController {
   
     console.log("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
   
+    while (attempt < maxRetries) {
     try {
       const response = await axios.post(apiUrl, payload, {
         headers: {
@@ -371,8 +378,28 @@ export class AuthenticationController {
       }
     } catch (error) {
       console.error('Error in OpenAI API call:', error.response ? error.response.data : error.message);
+      if (error.response && error.response.status === 429) {
+        // If rate-limited, wait and retry
+        attempt++;
+        console.log(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, retryDelay));
+      } else {
+        // If a different error, throw it
+        throw error;
+      }
+     
+     
+     
       throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
     }
+
+  }
+
+
+  throw new Error('Failed to process utility bill with OpenAI: Rate limit exceeded');
+
+
+
   }
   
   
