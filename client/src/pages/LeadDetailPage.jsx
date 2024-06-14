@@ -395,7 +395,9 @@ const LeadDetailPage = () => {
               year: '2-digit',
               hour: '2-digit',
               minute: '2-digit',
-              hour12: false
+              second: '2-digit',
+              hour12: true,
+              hourCycle: 'h12'
             })
 
           }));
