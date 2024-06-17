@@ -102,6 +102,13 @@ export class SingleCrmDealResultModel {
   @Property() public readonly amount: string;
   @Property() public readonly address: string;
 
+
+  @Property() public readonly contractAmount: string;
+  @Property() public readonly dealerFee: string;
+  @Property() public readonly addersTotal: string;
+  @Property() public readonly installer: string;
+
+
   @Property() public readonly welcomeDate: string;
   @Property() public readonly siteSurveyDate: string;
   @Property() public readonly NTPDate: string;
@@ -139,6 +146,13 @@ export class SingleCrmDealResultModel {
     solarInstallDate: string;
     FIDate: string;
     PTODate: string;
+
+
+    installer: string;
+    contractAmount: string;
+    dealerFee: string;
+    addersTotal: string;
+
 
     email: string;
     projectID: string;
@@ -188,6 +202,16 @@ export class SingleCrmDealResultModel {
     this.systemSizeFinal = data.systemSizeFinal;
     this.stage = data.stage;
     this.status = data.status;
+
+    this.installer = data.installer;
+    this.contractAmount = data.contractAmount;
+    this.dealerFee = data.dealerFee;
+    this.addersTotal = data.addersTotal;
+
+
+
+
+
     this.milestone = data.milestone;
     this.datePaid = data.datePaid;
     this.amount = data.amount;

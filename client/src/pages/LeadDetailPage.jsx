@@ -181,6 +181,14 @@ const LeadDetailPage = () => {
   };
 
   const [homeownerData, setHomeownerData] = useState(null);
+
+
+  const [ppwFinal, setPPWFinal] = useState(null);
+  const [dealerFee, setDealerFee] = useState(null);
+  const [contractAmount, setContractAmount] = useState(null);
+  const [addersTotal, setAddersTotal] = useState(null);
+  const [installer, setInstaller] = useState(null);
+
   const [stage, setStage] = useState(null);
   const [phoneData, setPhoneData] = useState(null);
   const [emailData, setEmailData] = useState(null);
@@ -384,6 +392,21 @@ const LeadDetailPage = () => {
 
           const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
 
+
+          const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
+        
+          const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
+        
+          const installer = responseData.data.installer ? responseData.data.installer.replace(/^"|"$/g, '') : 'Loading...';
+        
+          const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
+        
+          const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
+        
+
+
+         
+
           const messagesArray = messageInfo.map((message) => ({
             id: message.id,
             from: message.from.replace(/^"|"$/g, ''),
@@ -426,6 +449,11 @@ const LeadDetailPage = () => {
 
   
 
+          setContractAmount(contractAmount)
+          setAddersTotal(adderTotal)
+          setInstaller(installer)
+          setDealerFee(dealerFee)
+          setPPWFinal(ppwFinal)
 
           setLoading(false);
           setAddersData(addersArray);
@@ -587,6 +615,57 @@ const LeadDetailPage = () => {
             </ListItem>
           </List>
         </Paper>
+      </Grid>
+
+
+      <Grid item xs={12} md={4}>
+        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'lightgreen', color : 'whitesmoke' }}>
+          <Typography variant="h6" gutterBottom>
+            Economics
+          </Typography>
+          <List sx={{ padding: 0 , color:'black'}}>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+            
+              </ListItemIcon>
+              <ListItemText primary={installer !== null ? installer : 'Loading...'} secondary="Project Installer" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' , fontWeight: 250} }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+           
+              </ListItemIcon>
+              <ListItemText primary={addersTotal !== null ? "$ "+ addersTotal : 'Loading...'} secondary="Adders Total" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+           
+              </ListItemIcon>
+              <ListItemText primary={dealerFee !== null ?"$ "+ dealerFee : 'Loading...'} secondary="Dealer Fee" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+               
+              </ListItemIcon>
+              <ListItemText primary={contractAmount !== null ? "$ "+contractAmount : 'Loading...'} secondary="Contract Amount" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+     
+              </ListItemIcon>
+              <ListItemText primary={ppwFinal !== null ?"$ "+ ppwFinal : 'Loading...'} secondary="PPW FInal" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+      
+
+
+
+          </List>
+        </Paper>
+     
+     
+     
+     
+     
+     
       </Grid>
 
         {/* Left side: Horizontal Stepper */}

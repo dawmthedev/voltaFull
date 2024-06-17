@@ -786,6 +786,12 @@ export class AuthenticationController {
       ppwFinal: data["ppwFinal"] || null,
       systemSizeFinal: data["systemSizeFinal"] || null,
       stage: data["stage"] || "",
+
+      contractAmount: data["contractAmount"] || "",
+      addersTotal: data["addersTotal"] || "",
+      dealerFee: data["dealerFee"] || "",
+      installer: data["installer"] || "",
+      
       status: data["status"] || "",
       milestone: data["milestone"] || null,
       plansReceived: data["plansReceived"] || null,
