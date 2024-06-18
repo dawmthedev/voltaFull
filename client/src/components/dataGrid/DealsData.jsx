@@ -13,6 +13,9 @@ import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
 
 export default function DealsData(props) {
+
+
+
   const navigate = useNavigate();
   const { recordUserId } = props;
 
@@ -20,7 +23,7 @@ export default function DealsData(props) {
   // const { user } = useSelector((state) => state.auth);
   // console.log("User" , user)
 
-  const [sortModel, setSortModel] = useState([{ field: 'name', sort: 'asc' }]);
+  const [sortModel, setSortModel] = useState([{ field: 'saleDate', sort: 'desc' }]);
   const [sort, setSort] = useState('');
   const [column, setColumn] = useState('');
 
@@ -79,7 +82,13 @@ export default function DealsData(props) {
           );
         }
       },
-
+      {
+        field: 'saleDate',
+        headerName: 'Sale Date',
+        width: 180,
+        editable: false,
+        type: 'text'
+      },
       {
         field: 'homeownerName',
         headerName: 'Homeowner Name',
