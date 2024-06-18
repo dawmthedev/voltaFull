@@ -28,6 +28,8 @@ import Assistant from './pages/Assistant';
 import Rookies from './pages/Rookies';
 import AvailabilityPlanner from './pages/AvailabilityPlanner';
 
+import UtilitySign from './pages/UtilitySign';
+
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
   session = session ? session.split('=')[1] : null;
@@ -53,6 +55,8 @@ export default function Router() {
         { path: 'vcdash', element: data && data?.isSuperAdmin ? <VCDashboardAppPage /> : <Navigate to="/deals" replace /> },
 
         { path: 'products', element: <ProductsPage /> },
+
+        { path: 'utilitySign', element: <UtilitySign /> },
         { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
