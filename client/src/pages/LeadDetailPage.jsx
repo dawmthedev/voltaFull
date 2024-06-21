@@ -71,7 +71,6 @@ const submitNewMessage= async ({
       26: { value: relatedProject },
        61: { value: 'Project Manager'},
        62: { value: TaggedUsers},
-       62: { value: TaggedUsers},
        82: { value: from}
     }],
     fieldsToReturn: [] // Specify fields to return, if any
@@ -102,7 +101,9 @@ const submitNewMessage= async ({
 const LeadDetailPage = () => {
 
   //User object
-  const { UserData } = useAppSelector(authSelector);
+  const UserData = useAppSelector(authSelector)?.data;
+  const userName = UserData?.name;
+
 
   // State for the message modal and message text
   const [users, setUsers] = useState([]);
@@ -273,7 +274,7 @@ const LeadDetailPage = () => {
 
     try {
         // Make the API call to send the message
-        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: data?.name});
+        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: UserData?.name});
         console.log('Message sent successfully:', response);
 
         // Optionally update the message with real data returned from the backend if necessary
@@ -377,142 +378,218 @@ const LeadDetailPage = () => {
   }, []);
 
 
+
+
   useEffect(() => {
-    fetch(`${baseURL}/auth/crmDeal`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ recordId: id ? id : '3613' })
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        console.log('API Response:', responseData); // Log the API response
-        if (responseData.success && responseData.data) {
-          // Assuming homeowner data is present in the response
-          const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
-          // const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
-          const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
-          const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
-          const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
-          const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
+    if (UserData) {
+      console.log('UserData in LeadDetailPage:', UserData);
 
-          const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+      fetch(`${baseURL}/auth/crmDeal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ recordId: id ? id : '3613' })
+      })
+        .then((response) => response.json())
+        .then((responseData) => {
+          console.log('API Response:', responseData);
+          if (responseData.success && responseData.data) {
+            const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
+            const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
+            const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
+            const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
+            const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
+            const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+
+            const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
+            const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
+            const installer = responseData.data.installer ? responseData.data.installer.replace(/^"|"$/g, '') : 'Loading...';
+            const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
+            const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
+
+            const messagesArray = messageInfo.map((message) => ({
+              id: message.id,
+              from: message.from.replace(/^"|"$/g, ''),
+              type: 'message',
+              text: message.text.replace(/^"|"$/g, ''),
+              createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
+                month: '2-digit',
+                day: '2-digit',
+                year: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                hourCycle: 'h12'
+              })
+            }));
+
+            if (responseData.success) {
+              console.log("Received data for stages update:", responseData.data);
+              updateStages(responseData.data);
+            }
+
+            const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
+            const addersArray = addersInfo.map((adder) => ({
+              id: adder.relatedProject,
+              description: adder.description.replace(/^"|"$/g, ''),
+              type: 'call',
+              quantity: adder.quantity,
+              price: truncateDecimals(parseFloat(adder.price), 2),
+              status: adder.status.replace(/^"|"$/g, ''),
+              billTo: adder.billTo
+            }));
+
+            setContractAmount(contractAmount);
+            setAddersTotal(adderTotal);
+            setInstaller(installer);
+            setDealerFee(dealerFee);
+            setPPWFinal(ppwFinal);
+
+            setLoading(false);
+            setAddersData(addersArray);
+            setMessageData(messagesArray);
+
+            setHomeownerData(String(homeownerInfo));
+            setPhoneData(phoneInfo);
+            setEmailData(emailInfo);
+            setAddressData(addressInfo);
+
+            console.log('homeowner name', homeownerInfo);
+          }
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error('API Error:', error);
+          setDealsError(error);
+          setLoading(false);
+        });
+    }
+  }, [id, UserData]);
 
 
-          const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
+
+
+
+
+
+
+
+  // useEffect(() => {
+
+
+
+
+  //   console.log('UserData in LeadDetailPage:', UserData); // Check if UserData is being logged correctly
+
+  //   console.log('UserName:', userName); // Check if UserData is being logged correctly
+
+  //   fetch(`${baseURL}/auth/crmDeal`, {
+  //     method: 'POST',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     },
+  //     body: JSON.stringify({ recordId: id ? id : '3613' })
+  //   })
+  //     .then((response) => response.json())
+  //     .then((responseData) => {
+  //       console.log('API Response:', responseData); // Log the API response
+  //       if (responseData.success && responseData.data) {
+  //         // Assuming homeowner data is present in the response
+  //         const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
+  //         // const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
+  //         const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
+  //         const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
+  //         const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
+  //         const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
+
+  //         const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+
+
+  //         const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
         
-          const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
+  //         const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
         
-          const installer = responseData.data.installer ? responseData.data.installer.replace(/^"|"$/g, '') : 'Loading...';
+  //         const installer = responseData.data.installer ? responseData.data.installer.replace(/^"|"$/g, '') : 'Loading...';
         
-          const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
+  //         const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
         
-          const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
+  //         const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
         
 
 
          
 
-          const messagesArray = messageInfo.map((message) => ({
-            id: message.id,
-            from: message.from.replace(/^"|"$/g, ''),
-            type: 'message',
-            text: message.text.replace(/^"|"$/g, ''),
-            createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
-              month: '2-digit',
-              day: '2-digit',
-              year: '2-digit',
-              hour: '2-digit',
-              minute: '2-digit',
-              hour12: true,
-              hourCycle: 'h12'
-            })
+  //         const messagesArray = messageInfo.map((message) => ({
+  //           id: message.id,
+  //           from: message.from.replace(/^"|"$/g, ''),
+  //           type: 'message',
+  //           text: message.text.replace(/^"|"$/g, ''),
+  //           createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
+  //             month: '2-digit',
+  //             day: '2-digit',
+  //             year: '2-digit',
+  //             hour: '2-digit',
+  //             minute: '2-digit',
+  //             hour12: true,
+  //             hourCycle: 'h12'
+  //           })
 
-          }));
+  //         }));
 
 
           
 
 
-          if (responseData.success) {
+  //         if (responseData.success) {
 
-            console.log("Received data for stages update:", responseData.data);
+  //           console.log("Received data for stages update:", responseData.data);
 
-            updateStages(responseData.data);
-          }
+  //           updateStages(responseData.data);
+  //         }
 
-          const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
+  //         const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
 
-          const addersArray = addersInfo.map((adder) => ({
-            id: adder.relatedProject,
-            description: adder.description.replace(/^"|"$/g, ''),
-            type: 'call',
-            quantity: adder.quantity,
-            price: truncateDecimals(parseFloat(adder.price), 2),
-            status: adder.status.replace(/^"|"$/g, ''),
-            billTo: adder.billTo
-          }));
+  //         const addersArray = addersInfo.map((adder) => ({
+  //           id: adder.relatedProject,
+  //           description: adder.description.replace(/^"|"$/g, ''),
+  //           type: 'call',
+  //           quantity: adder.quantity,
+  //           price: truncateDecimals(parseFloat(adder.price), 2),
+  //           status: adder.status.replace(/^"|"$/g, ''),
+  //           billTo: adder.billTo
+  //         }));
 
   
 
-          setContractAmount(contractAmount)
-          setAddersTotal(adderTotal)
-          setInstaller(installer)
-          setDealerFee(dealerFee)
-          setPPWFinal(ppwFinal)
+  //         setContractAmount(contractAmount)
+  //         setAddersTotal(adderTotal)
+  //         setInstaller(installer)
+  //         setDealerFee(dealerFee)
+  //         setPPWFinal(ppwFinal)
 
-          setLoading(false);
-          setAddersData(addersArray);
-          setMessageData(messagesArray);
+  //         setLoading(false);
+  //         setAddersData(addersArray);
+  //         setMessageData(messagesArray);
 
-          setHomeownerData(String(homeownerInfo));
-          setPhoneData(phoneInfo);
-          setEmailData(emailInfo);
-          setAddressData(addressInfo);
+  //         setHomeownerData(String(homeownerInfo));
+  //         setPhoneData(phoneInfo);
+  //         setEmailData(emailInfo);
+  //         setAddressData(addressInfo);
 
-          console.log('homeowner name', homeownerInfo);
-        }
-        setLoading(false);
-      })  
+  //         console.log('homeowner name', homeownerInfo);
+  //       }
+  //       setLoading(false);
+  //     })  
 
-      .catch((error) => {
-        console.error('API Error:', error); // Log API error
-        setDealsError(error);
+  //     .catch((error) => {
+  //       console.error('API Error:', error); // Log API error
+  //       setDealsError(error);
     
-        setLoading(false);
-      });
+  //       setLoading(false);
+  //     });
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  }, [id]);
+  // }, [id, UserData]);
 
   function truncateDecimals(number, decimalPlaces) {
     const multiplier = Math.pow(10, decimalPlaces);
@@ -725,6 +802,7 @@ const LeadDetailPage = () => {
       {/* Message Modal Dialog */}
       <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
         <DialogTitle>Add a New Message</DialogTitle>
+        <DialogTitle>{userName}</DialogTitle>
         <DialogContent>
 
         <Autocomplete
