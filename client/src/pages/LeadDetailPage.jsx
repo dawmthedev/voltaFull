@@ -26,9 +26,8 @@ import {
   StepLabel
 } from '@mui/material';
 import moment from 'moment';
-import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+import { useAppDispatch } from '../hooks/hooks';
 
-import { authSelector } from '../redux/slice/authSlice';
 
 import { useParams } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
@@ -274,7 +273,7 @@ const LeadDetailPage = () => {
 
     try {
         // Make the API call to send the message
-        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: data?.email});
+        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: data?.name});
         console.log('Message sent successfully:', response);
 
         // Optionally update the message with real data returned from the backend if necessary
