@@ -26,6 +26,7 @@ function UtilitySign() {
       fontFamily: '"Arial", sans-serif',
       maxWidth: '600px',
       margin: 'auto',
+      color: 'black', 
       padding: '20px',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       borderRadius: '8px',
