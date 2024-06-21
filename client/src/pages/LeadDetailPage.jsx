@@ -802,7 +802,7 @@ const LeadDetailPage = () => {
       {/* Message Modal Dialog */}
       <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
         <DialogTitle>Add a New Message</DialogTitle>
-        <DialogTitle>{userName}</DialogTitle>
+
         <DialogContent>
 
         <Autocomplete

@@ -20,6 +20,8 @@ const StyledRoot = styled('div')({
 const Main = styled('div')(({ theme }) => ({
   flexGrow: 1,
   overflow: 'auto',
+  backgroundColor: '#C2B280',
+  color: 'white',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
   paddingBottom: theme.spacing(10),
@@ -37,6 +39,7 @@ export default function DashboardLayout() {
 
   return (
     <StyledRoot>
+      
       <Header onOpenNav={() => setOpen(true)} />
 
       <Nav openNav={open} onCloseNav={() => setOpen(false)} />

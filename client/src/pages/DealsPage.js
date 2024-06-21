@@ -20,15 +20,15 @@ export default function DealsPage() {
       </Helmet>
       <Container>
         {/* <DataGridProCSV /> */}
-        <h2>Sales Deals</h2>
+        <h2>Projects</h2>
         <Card sx={{ p: '1rem' }}>
           <DealsData recordUserId={recordId} />
         </Card>
         <Box mt={6}>
-          <h2>Leadgen Deals</h2>
-          <Card sx={{ p: '1rem' }}>
+          {/* <h2>Leadgen Deals</h2> */}
+          {/* <Card sx={{ p: '1rem' }}>
             <DealsDataLeadgen recordUserId={recordId} />
-          </Card>
+          </Card> */}
         </Box>
       </Container>
     </Fragment>

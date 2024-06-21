@@ -53,7 +53,7 @@ export default function DealsData(props) {
   //STYLES:
 
   const gridStyles = {
-    height: 350,
+    height: '75vh',
     maxWidth: '100%', // ensure the grid does not exceed the width of its container
     overflow: 'auto' // allow scrolling within the grid if content exceeds its bounds
   };
@@ -292,7 +292,7 @@ export default function DealsData(props) {
     >
       {/* filter lead modal */}
 
-      <div style={{ height: 350, overflow: 'auto' }}>
+      <div style={{ height: '75vh', overflow: 'auto' }}>
         <Box
           sx={{
             height: '100%',
