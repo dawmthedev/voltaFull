@@ -2,17 +2,21 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 function UtilitySign() {
+  // State variables for each form field
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState('');
+  const [phone, setPhone] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log('Logging email:', email);
+    console.log('Logging details:', { name, email, address, phone });
 
     try {
-      const response = await axios.post('https://api.example.com/submit-email', { email });
-      console.log('Email submitted successfully:', response.data);
+      const response = await axios.post('https://api.example.com/submit-details', { name, email, address, phone });
+      console.log('Details submitted successfully:', response.data);
     } catch (error) {
-      console.error('Error submitting email:', error);
+      console.error('Error submitting details:', error);
     }
   };
 
@@ -55,6 +59,15 @@ function UtilitySign() {
     <div style={styles.container}>
       <h3>Utility Affidavit Signature Prep</h3>
       <form onSubmit={handleSubmit} style={styles.form}>
+        <label htmlFor="name" style={styles.label}>Homeowner's Name:</label>
+        <input
+          type="text"
+          id="name"
+          value={name}
+          style={styles.input}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
         <label htmlFor="email" style={styles.label}>Homeowner's Email:</label>
         <input
           type="email"
@@ -64,7 +77,25 @@ function UtilitySign() {
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit" style={styles.button}>Request Signature</button>
+        <label htmlFor="address" style={styles.label}>Homeowner's Address:</label>
+        <input
+          type="text"
+          id="address"
+          value={address}
+          style={styles.input}
+          onChange={(e) => setAddress(e.target.value)}
+          required
+        />
+        <label htmlFor="phone" style={styles.label}>Homeowner's Phone Number:</label>
+        <input
+          type="tel"
+          id="phone"
+          value={phone}
+          style={styles.input}
+          onChange={(e) => setPhone(e.target.value)}
+          required
+        />
+        <button type="submit" style={styles.button}>Generate Proposal</button>
       </form>
     </div>
   );

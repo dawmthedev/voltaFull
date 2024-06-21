@@ -28,6 +28,13 @@ export class AdminModel {
   @Default("admin")
   role: string;
 
+
+  @Property()
+  @Default("false")
+  unlocked: string;
+
+
+  
   @Property()
   @Default(false)
   isSuperAdmin: boolean;

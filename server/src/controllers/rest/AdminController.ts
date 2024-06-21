@@ -33,6 +33,7 @@ export class AdminController {
           name: admin.name,
           email: admin.email,
           role: admin.role || "",
+          unlocked: admin.unlocked || "",
           twoFactorEnabled: admin.twoFactorEnabled,
           orgId: admin.orgId || "",
           company: "Voltaic LLC",

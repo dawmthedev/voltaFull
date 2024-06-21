@@ -74,6 +74,7 @@ export class AdminService {
       name,
       role,
       recordID,
+      unlocked :"false",
       orgId: organizationId,
       password: createPasswordHash({ email, password }),
       isSuperAdmin: email === process.env.SUPER_USER_EMAIL ? true : false

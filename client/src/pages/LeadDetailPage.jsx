@@ -26,6 +26,9 @@ import {
   StepLabel
 } from '@mui/material';
 import moment from 'moment';
+import { useAppDispatch, useAppSelector } from '../hooks/hooks';
+
+import { authSelector } from '../redux/slice/authSlice';
 
 import { useParams } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
@@ -49,7 +52,8 @@ import axios from 'axios';
 const submitNewMessage= async ({
   Message,
   relatedProject,
-  TaggedUsers
+  TaggedUsers,
+  from
 
 }) => {
   const QB_DOMAIN = "voltaic.quickbase.com";
@@ -67,7 +71,9 @@ const submitNewMessage= async ({
       6: { value: Message},
       26: { value: relatedProject },
        61: { value: 'Project Manager'},
-       62: { value: TaggedUsers}
+       62: { value: TaggedUsers},
+       62: { value: TaggedUsers},
+       82: { value: from}
     }],
     fieldsToReturn: [] // Specify fields to return, if any
   };
@@ -96,6 +102,8 @@ const submitNewMessage= async ({
 
 const LeadDetailPage = () => {
 
+  //User object
+  const { UserData } = useAppSelector(authSelector);
 
   // State for the message modal and message text
   const [users, setUsers] = useState([]);
@@ -266,7 +274,7 @@ const LeadDetailPage = () => {
 
     try {
         // Make the API call to send the message
-        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails});
+        const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: data?.email});
         console.log('Message sent successfully:', response);
 
         // Optionally update the message with real data returned from the backend if necessary
