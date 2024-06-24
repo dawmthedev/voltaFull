@@ -186,9 +186,6 @@ export default function DealsData(props) {
     }
   });
 
-
-
-
   useEffect(() => {
     fetch(`${baseURL}/auth/crmDealsLeadgen`, {
       method: 'POST',
@@ -266,8 +263,7 @@ export default function DealsData(props) {
       });
   }, [recordUserId]);
 
-
-
+  
 
   useEffect(() => {
     fetch(`${baseURL}/auth/crmDealsLeadgen`, {
