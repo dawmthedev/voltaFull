@@ -192,6 +192,8 @@ const LeadDetailPage = () => {
 
 
   const [ppwFinal, setPPWFinal] = useState(null);
+
+  const [status, setStatus] = useState(null)
   const [dealerFee, setDealerFee] = useState(null);
   const [contractAmount, setContractAmount] = useState(null);
   const [addersTotal, setAddersTotal] = useState(null);
@@ -401,6 +403,7 @@ const LeadDetailPage = () => {
             const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
             const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
             const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+            const projectStatus = responseData.data.status ? responseData.data.status.replace(/^"|"$/g, '') : 'Loading...';
 
             const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
             const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
@@ -445,7 +448,7 @@ const LeadDetailPage = () => {
             setInstaller(installer);
             setDealerFee(dealerFee);
             setPPWFinal(ppwFinal);
-
+            setStatus(projectStatus)
             setLoading(false);
             setAddersData(addersArray);
             setMessageData(messagesArray);
@@ -674,8 +677,8 @@ const LeadDetailPage = () => {
 
 
        <Grid item xs={12} md={4}>
-        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'none' }}>
-          <Typography variant="h6" gutterBottom>
+       <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status === 'Active' ? 'lightgreen' : 'red' }}>
+   <Typography variant="h6" gutterBottom>
             Homeowner Details
           </Typography>
           <List sx={{ padding: 0 }}>
@@ -685,6 +688,8 @@ const LeadDetailPage = () => {
               </ListItemIcon>
               <ListItemText primary={homeownerData !== null ? homeownerData : 'Loading...'} secondary="Homeowner Name" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
             </ListItem>
+
+      
             <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
               <ListItemIcon sx={{ minWidth: '40px' }}>
                 <PersonIcon color="primary" />
@@ -703,7 +708,7 @@ const LeadDetailPage = () => {
 
 
       <Grid item xs={12} md={4}>
-        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: 'lightgreen', color : 'whitesmoke' }}>
+        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status === 'Active' ? 'lightgreen' : 'red', color : 'whitesmoke' }}>
           <Typography variant="h6" gutterBottom>
             Economics
           </Typography>
