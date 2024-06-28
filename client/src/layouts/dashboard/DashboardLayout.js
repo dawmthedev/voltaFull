@@ -20,7 +20,7 @@ const StyledRoot = styled('div')({
 const Main = styled('div')(({ theme }) => ({
   flexGrow: 1,
   overflow: 'auto',
-  backgroundColor: '#C2B280',
+  backgroundColor: '#D2C5B4',
   color: 'white',
   minHeight: '100%',
   paddingTop: APP_BAR_MOBILE + 24,
