@@ -86,19 +86,22 @@ const submitNewMessage= async ({
   }
 };
 
-
-
-
-
-
-
-
-
-
-
-
-
 const LeadDetailPage = () => {
+
+  const styles = {
+    stickyBanner: {
+      position: 'sticky',
+      top: 0,
+      width: '100%',
+      backgroundColor: 'red',
+      color: 'white',
+      textAlign: 'center',
+      padding: '10px',
+      zIndex: 1000,
+      fontSize: '20px',
+      fontWeight: 'bold'
+    }
+  };
 
   //User object
   const UserData = useAppSelector(authSelector)?.data;
@@ -264,15 +267,6 @@ const LeadDetailPage = () => {
      const taggedUserEmails = selectedUser.map(user => user.email).join('; '); // Join emails with semicolon and space
 
 
-    // Optimistically update the UI (optional)
-    // const newMessage = {
-    //     id: Date.now(), // Temporary ID; the backend might return a real ID
-    //     from: "Current User", // This should match whatever your backend/API expects
-    //     text: messageText,
-    //     createdAt: new Date().toISOString()
-    // };
-
-   // setMessageData(prevMessages => [...prevMessages, newMessage]);
 
     try {
         // Make the API call to send the message
@@ -471,129 +465,6 @@ const LeadDetailPage = () => {
   }, [id, UserData]);
 
 
-
-
-
-
-
-
-
-  // useEffect(() => {
-
-
-
-
-  //   console.log('UserData in LeadDetailPage:', UserData); // Check if UserData is being logged correctly
-
-  //   console.log('UserName:', userName); // Check if UserData is being logged correctly
-
-  //   fetch(`${baseURL}/auth/crmDeal`, {
-  //     method: 'POST',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     },
-  //     body: JSON.stringify({ recordId: id ? id : '3613' })
-  //   })
-  //     .then((response) => response.json())
-  //     .then((responseData) => {
-  //       console.log('API Response:', responseData); // Log the API response
-  //       if (responseData.success && responseData.data) {
-  //         // Assuming homeowner data is present in the response
-  //         const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
-  //         // const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
-  //         const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
-  //         const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
-  //         const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
-  //         const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
-
-  //         const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
-
-
-  //         const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
-        
-  //         const adderTotal = responseData.data.addersTotal ? responseData.data.addersTotal.replace(/^"|"$/g, '') : 'Loading...';
-        
-  //         const installer = responseData.data.installer ? responseData.data.installer.replace(/^"|"$/g, '') : 'Loading...';
-        
-  //         const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
-        
-  //         const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
-        
-
-
-         
-
-  //         const messagesArray = messageInfo.map((message) => ({
-  //           id: message.id,
-  //           from: message.from.replace(/^"|"$/g, ''),
-  //           type: 'message',
-  //           text: message.text.replace(/^"|"$/g, ''),
-  //           createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
-  //             month: '2-digit',
-  //             day: '2-digit',
-  //             year: '2-digit',
-  //             hour: '2-digit',
-  //             minute: '2-digit',
-  //             hour12: true,
-  //             hourCycle: 'h12'
-  //           })
-
-  //         }));
-
-
-          
-
-
-  //         if (responseData.success) {
-
-  //           console.log("Received data for stages update:", responseData.data);
-
-  //           updateStages(responseData.data);
-  //         }
-
-  //         const addersInfo = responseData.data.vcadders ? responseData.data.vcadders : [];
-
-  //         const addersArray = addersInfo.map((adder) => ({
-  //           id: adder.relatedProject,
-  //           description: adder.description.replace(/^"|"$/g, ''),
-  //           type: 'call',
-  //           quantity: adder.quantity,
-  //           price: truncateDecimals(parseFloat(adder.price), 2),
-  //           status: adder.status.replace(/^"|"$/g, ''),
-  //           billTo: adder.billTo
-  //         }));
-
-  
-
-  //         setContractAmount(contractAmount)
-  //         setAddersTotal(adderTotal)
-  //         setInstaller(installer)
-  //         setDealerFee(dealerFee)
-  //         setPPWFinal(ppwFinal)
-
-  //         setLoading(false);
-  //         setAddersData(addersArray);
-  //         setMessageData(messagesArray);
-
-  //         setHomeownerData(String(homeownerInfo));
-  //         setPhoneData(phoneInfo);
-  //         setEmailData(emailInfo);
-  //         setAddressData(addressInfo);
-
-  //         console.log('homeowner name', homeownerInfo);
-  //       }
-  //       setLoading(false);
-  //     })  
-
-  //     .catch((error) => {
-  //       console.error('API Error:', error); // Log API error
-  //       setDealsError(error);
-    
-  //       setLoading(false);
-  //     });
-
-  // }, [id, UserData]);
-
   function truncateDecimals(number, decimalPlaces) {
     const multiplier = Math.pow(10, decimalPlaces);
     return Math.floor(number * multiplier) / multiplier;
@@ -659,6 +530,13 @@ const LeadDetailPage = () => {
 
   return (
     <Grid container spacing={2} sx={{ overflow: 'hidden', padding: 2 }}>
+
+          {/* Sticky Banner */}
+    {status !== 'Active' && (
+      <div style={styles.stickyBanner}>
+        Project Status: {status}
+      </div>
+    )}
       {/* isMessageModal Dialog */}
       {/* ... */}
       {/* Confirm Call Dialog */}
