@@ -787,12 +787,10 @@ export class AuthenticationController {
       ppwFinal: data["ppwFinal"] || null,
       systemSizeFinal: data["systemSizeFinal"] || null,
       stage: data["stage"] || "",
-
       contractAmount: data["contractAmount"] || "",
       addersTotal: data["addersTotal"] || "",
       dealerFee: data["dealerFee"] || "",
       installer: data["installer"] || "",
-      
       status: data["status"] || "",
       milestone: data["milestone"] || null,
       plansReceived: data["plansReceived"] || null,
@@ -803,8 +801,6 @@ export class AuthenticationController {
       address: data["address"] || "",
       vcmessages: data["vcmessages"] || [], // Assuming vcmessages field exists and is an array
       vcadders: data["vcAdders"] || [], // Assuming vcmadders field exists and is an array,
-
-
       welcomeDate: data["welcomeDate"] || null,
       siteSurveyDate: data["siteSurveyDate"] || null,
       NTPDate: data["ntpDate"] || null,
@@ -814,6 +810,7 @@ export class AuthenticationController {
       solarInstallDate: data["solarInstallDate"] || null,
       FIDate: data["fidate"] || null,
       PTODate: data["ptodate"] || null,
+      financing: data["financing"] || null,
 
 
 

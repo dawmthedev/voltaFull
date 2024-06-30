@@ -201,6 +201,8 @@ const LeadDetailPage = () => {
   const [contractAmount, setContractAmount] = useState(null);
   const [addersTotal, setAddersTotal] = useState(null);
   const [installer, setInstaller] = useState(null);
+  const [financing, setFinancing] = useState(null);
+  
 
   const [stage, setStage] = useState(null);
   const [phoneData, setPhoneData] = useState(null);
@@ -393,6 +395,7 @@ const LeadDetailPage = () => {
           if (responseData.success && responseData.data) {
             const homeownerInfo = responseData.data.homeownerName ? responseData.data.homeownerName.replace(/^"|"$/g, '') : 'Loading...';
             const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
+            const financing = responseData.data.financing ? responseData.data.financing.replace(/^"|"$/g, '') : 'Loading...';
             const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
             const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
             const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
@@ -438,6 +441,7 @@ const LeadDetailPage = () => {
             }));
 
             setContractAmount(contractAmount);
+            setFinancing(financing)
             setAddersTotal(adderTotal);
             setInstaller(installer);
             setDealerFee(dealerFee);
@@ -591,12 +595,26 @@ const LeadDetailPage = () => {
             Economics
           </Typography>
           <List sx={{ padding: 0 , color:'black'}}>
-            <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+
+
+
+          <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
               <ListItemIcon sx={{ minWidth: '40px' }}>
-            
+           
+              </ListItemIcon>
+              <ListItemText primary={dealerFee !== null ?""+ financing : 'Loading...'} secondary="Financing" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+
+
+            {/* <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
               </ListItemIcon>
               <ListItemText primary={installer !== null ? installer : 'Loading...'} secondary="Project Installer" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' , fontWeight: 250} }} secondaryTypographyProps={{ variant: 'caption' }} />
-            </ListItem>
+            </ListItem> */}
+
+
+
+
             <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
               <ListItemIcon sx={{ minWidth: '40px' }}>
            
@@ -609,6 +627,10 @@ const LeadDetailPage = () => {
               </ListItemIcon>
               <ListItemText primary={dealerFee !== null ?"$ "+ dealerFee : 'Loading...'} secondary="Dealer Fee" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
             </ListItem>
+
+
+
+            
             <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
               <ListItemIcon sx={{ minWidth: '40px' }}>
                

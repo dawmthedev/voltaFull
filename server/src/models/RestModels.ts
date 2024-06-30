@@ -120,6 +120,7 @@ export class SingleCrmDealResultModel {
   @Property() public readonly solarInstallDate: string;
   @Property() public readonly FIDate: string;
   @Property() public readonly PTODate: string;
+  @Property() public readonly financing: string;
  
   @Property() public readonly vcmessages: {
     relatedProject: string;
@@ -142,6 +143,7 @@ export class SingleCrmDealResultModel {
     welcomeDate: string;
     siteSurveyDate: string;
     NTPDate: string;
+    financing: string;
     QcChecDate: string;
     FLADate: string;
     SolarPermitDate: string;
@@ -194,6 +196,7 @@ export class SingleCrmDealResultModel {
     this.projectID = data.projectID;
     this.plansReceived = data.plansReceived;
     this.installComplete = data.installComplete;
+    this.financing = data.financing;
     this.ptoApproved = data.ptoApproved;
     this.homeownerName = data.homeownerName;
     this.repName = data.repName;
