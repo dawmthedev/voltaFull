@@ -129,7 +129,9 @@ const LeadDetailPage = () => {
     { label: 'PTO', key: 'PTODate' },
     // { label: 'Complete', key: 'completeDate' }
   ];
-  
+
+
+
   // State to hold the task dates
   const [taskDates, setTaskDates] = useState({});
   // User redux object
@@ -321,6 +323,13 @@ const LeadDetailPage = () => {
     });
   }
   
+
+  useEffect(() => {
+    if (financing === 'Sunnova') {
+      stepLabels.splice(3, 0, { label: 'Submit NTP at Permit Submit by Design', key: 'permitSubmitDate' });
+    }
+  }, [financing]);
+
   
   useEffect(() => {
     const fetchCRMUsers = async () => {
@@ -662,7 +671,41 @@ const LeadDetailPage = () => {
           <div
             style={{  minHeight: '100px', maxHeight: '400px', overflowY: 'auto', scrollbarWidth: 'thin', WebkitOverflowScrolling: 'touch' }}
           >
-          <Stepper sx={{paddingLeft: '50px',}} activeStep={activeStep} orientation="vertical">
+
+
+
+
+
+<Stepper sx={{ paddingLeft: '50px' }} activeStep={activeStep} orientation="vertical">
+            {stepLabels.map((step, index) => {
+              let stepContent;
+              if (step.key === 'NTPDate' && financing=="Sunnova") {
+                stepContent = (
+                  <Typography variant="caption" style={{ marginLeft: '10px', color: 'green' }}>
+                    NTP not required for Sunnova
+                  </Typography>
+                );
+              } else {
+                const stepDate = taskDates[step.key];
+                const isCompleted = Boolean(stepDate);
+                stepContent = isCompleted ? (
+                  <Typography variant="caption" style={{ marginLeft: '10px', color: 'green' }}>
+                    {stepDate}
+                  </Typography>
+                ) : null;
+              }
+
+              return (
+                <Step key={step.label} completed={Boolean(taskDates[step.key]) || (step.key === 'NTPDate' && financing=="Sunnova")}>
+                  <StepLabel>
+                    {step.label}
+                    {stepContent}
+                  </StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {/* <Stepper sx={{paddingLeft: '50px',}} activeStep={activeStep} orientation="vertical">
   {stepLabels.map((step, index) => {
     const stepDate = taskDates[step.key];
     const isCompleted = Boolean(stepDate);
@@ -680,7 +723,7 @@ const LeadDetailPage = () => {
       </Step>
     );
   })}
-</Stepper>
+</Stepper> */}
 
           </div>
 
