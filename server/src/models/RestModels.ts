@@ -88,6 +88,7 @@ export class SingleCrmDealResultModel {
   @Property() public readonly email: string;
   @Property() public readonly projectID: string;
   @Property() public readonly plansReceived: string;
+  @Property() public readonly progress: string;
   @Property() public readonly installComplete: string;
   @Property() public readonly ptoApproved: string;
   @Property() public readonly homeownerName: string;
@@ -142,6 +143,7 @@ export class SingleCrmDealResultModel {
 
   constructor(data: {
     welcomeDate: string;
+    progress: string;
     siteSurveyDate: string;
     NTPDate: string;
     products: string;
@@ -196,6 +198,7 @@ export class SingleCrmDealResultModel {
   }) {
     this.email = data.email;
     this.products = data.products;
+    this.progress = data.progress;
     this.projectID = data.projectID;
     this.plansReceived = data.plansReceived;
     this.installComplete = data.installComplete;

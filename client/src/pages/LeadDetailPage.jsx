@@ -23,7 +23,8 @@ import {
   Step,
   CircularProgress,
   ListItemIcon,
-  StepLabel
+  StepLabel,
+  LinearProgress
 } from '@mui/material';
 import moment from 'moment';
 import { useAppDispatch } from '../hooks/hooks';
@@ -200,6 +201,7 @@ const LeadDetailPage = () => {
 
   const [status, setStatus] = useState(null)
   const [products, setProducts] = useState(null)
+  const [progress, setProgress] = useState(null)
   const [dealerFee, setDealerFee] = useState(null);
   const [contractAmount, setContractAmount] = useState(null);
   const [addersTotal, setAddersTotal] = useState(null);
@@ -408,6 +410,7 @@ const LeadDetailPage = () => {
             const financing = responseData.data.financing ? responseData.data.financing.replace(/^"|"$/g, '') : 'Loading...';
             const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
             const products = responseData.data.products ? responseData.data.products.replace(/^"|"$/g, '') : 'Loading...';
+            const progress = responseData.data.progress ? responseData.data.progress.replace(/^"|"$/g, '') : 'Loading...';
   
             const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
             const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
@@ -479,6 +482,11 @@ const LeadDetailPage = () => {
               billTo: adder.billTo
             }));
 
+
+
+            const progressValue = parseFloat(progress.replace('%', ''));
+            setProgress(progressValue);
+      
             setContractAmount(contractAmount);
             setFinancing(financing)
             setAddersTotal(adderTotal);
@@ -573,7 +581,24 @@ const LeadDetailPage = () => {
 
 
   return (
+
+
     <Grid container spacing={2} sx={{ overflow: 'hidden', padding: 2 }}>
+ <Grid item xs={12}>
+        <Box sx={{ position: 'relative', width: '100%', display: 'inline-flex', alignItems: 'center' }}>
+          <LinearProgress variant="determinate" value={progress * 100} sx={{ width: '100%', height: 20, borderRadius: 2 }} />
+          <Typography
+            variant="body2"
+            color="textSecondary"
+            sx={{ position: 'absolute', width: '100%', textAlign: 'center' }}
+          >
+            {`${Math.round(progress * 100)}%`}
+          </Typography>
+        </Box>
+      </Grid>
+
+
+
 
           {/* Sticky Banner */}
     {status !== 'Active' && (
