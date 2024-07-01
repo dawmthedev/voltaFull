@@ -199,6 +199,7 @@ const LeadDetailPage = () => {
   const [ppwFinal, setPPWFinal] = useState(null);
 
   const [status, setStatus] = useState(null)
+  const [products, setProducts] = useState(null)
   const [dealerFee, setDealerFee] = useState(null);
   const [contractAmount, setContractAmount] = useState(null);
   const [addersTotal, setAddersTotal] = useState(null);
@@ -406,6 +407,8 @@ const LeadDetailPage = () => {
             const phoneInfo = responseData.data.saleDate ? responseData.data.saleDate.replace(/^"|"$/g, '') : 'Loading...';
             const financing = responseData.data.financing ? responseData.data.financing.replace(/^"|"$/g, '') : 'Loading...';
             const stage = responseData.data.stage ? responseData.data.stage.replace(/^"|"$/g, '') : 'Loading...';
+            const products = responseData.data.products ? responseData.data.products.replace(/^"|"$/g, '') : 'Loading...';
+  
             const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
             const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
             const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
@@ -454,6 +457,7 @@ const LeadDetailPage = () => {
             setAddersTotal(adderTotal);
             setInstaller(installer);
             setDealerFee(dealerFee);
+            setProducts(products);
             setPPWFinal(ppwFinal);
             setStatus(projectStatus)
             setLoading(false);
@@ -569,7 +573,7 @@ const LeadDetailPage = () => {
 
        <Grid item xs={12} md={4}>
        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status === 'Active' ? 'lightgreen' : 'red' }}>
-   <Typography variant="h6" gutterBottom>
+   <Typography variant="h6" gutterBottom sx={{color : 'whitesmoke'}}>
             Homeowner Details
           </Typography>
           <List sx={{ padding: 0 }}>
@@ -652,6 +656,47 @@ const LeadDetailPage = () => {
               </ListItemIcon>
               <ListItemText primary={ppwFinal !== null ?"$ "+ ppwFinal : 'Loading...'} secondary="PPW FInal" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
             </ListItem>
+      
+
+
+
+          </List>
+        </Paper>
+     
+     
+     
+     
+     
+     
+      </Grid>
+
+      <Grid item xs={12} md={4}>
+        <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status === 'Active' ? 'lightgreen' : 'red', color : 'whitesmoke' }}>
+          <Typography variant="h6" gutterBottom>
+            Products
+          </Typography>
+          <List sx={{ padding: 0 , color:'black'}}>
+
+
+
+          <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+           
+              </ListItemIcon>
+              <ListItemText primary={products !== null ?""+ products : 'Loading...'} secondary="Financing" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem>
+
+
+            {/* <ListItem sx={{ paddingY: 1, alignItems: 'flex-start' }}>
+              <ListItemIcon sx={{ minWidth: '40px' }}>
+              </ListItemIcon>
+              <ListItemText primary={installer !== null ? installer : 'Loading...'} secondary="Project Installer" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' , fontWeight: 250} }} secondaryTypographyProps={{ variant: 'caption' }} />
+            </ListItem> */}
+
+
+
+
+       
       
 
 

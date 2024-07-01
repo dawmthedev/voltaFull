@@ -104,6 +104,7 @@ export class SingleCrmDealResultModel {
   @Property() public readonly amount: string;
   @Property() public readonly address: string;
 
+  @Property() public readonly products: string;
 
   @Property() public readonly contractAmount: string;
   @Property() public readonly dealerFee: string;
@@ -143,6 +144,7 @@ export class SingleCrmDealResultModel {
     welcomeDate: string;
     siteSurveyDate: string;
     NTPDate: string;
+    products: string;
     financing: string;
     QcChecDate: string;
     FLADate: string;
@@ -193,6 +195,7 @@ export class SingleCrmDealResultModel {
     }[]; // Define vcmessages as an array of objects
   }) {
     this.email = data.email;
+    this.products = data.products;
     this.projectID = data.projectID;
     this.plansReceived = data.plansReceived;
     this.installComplete = data.installComplete;

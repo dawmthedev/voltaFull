@@ -784,6 +784,7 @@ export class AuthenticationController {
       salesRep: data["salesRep"] || "crm",
       leadGen: data["leadGenerator"] || "crm",
       saleDate: data["saleDate"] || null,
+      products: data["products"] || null,
       ppwFinal: data["ppwFinal"] || null,
       systemSizeFinal: data["systemSizeFinal"] || null,
       stage: data["stage"] || "",

@@ -55,7 +55,8 @@ export default function DealsData(props) {
   const gridStyles = {
     height: '75vh',
     maxWidth: '100%', // ensure the grid does not exceed the width of its container
-    overflow: 'auto' // allow scrolling within the grid if content exceeds its bounds
+    overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
+    backgroundColor: 'none'
   };
 
   const apiRef = React.useRef(null);
