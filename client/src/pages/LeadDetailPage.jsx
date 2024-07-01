@@ -420,21 +420,48 @@ const LeadDetailPage = () => {
             const dealerFee = responseData.data.dealerFee ? responseData.data.dealerFee.replace(/^"|"$/g, '') : 'Loading...';
             const ppwFinal = responseData.data.ppwFinal ? responseData.data.ppwFinal.replace(/^"|"$/g, '') : 'Loading...';
 
-            const messagesArray = messageInfo.map((message) => ({
-              id: message.id,
-              from: message.from.replace(/^"|"$/g, ''),
-              type: 'message',
-              text: message.text.replace(/^"|"$/g, ''),
-              createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
-                month: '2-digit',
-                day: '2-digit',
-                year: '2-digit',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-                hourCycle: 'h12'
-              })
-            }));
+            // const messagesArray = messageInfo.map((message) => ({
+            //   id: message.id,
+            //   from: message.from.replace(/^"|"$/g, ''),
+            //   type: 'message',
+            //   text: message.text.replace(/^"|"$/g, ''),
+            //   createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')).toLocaleString('en-US', {
+            //     month: '2-digit',
+            //     day: '2-digit',
+            //     year: '2-digit',
+            //     hour: '2-digit',
+            //     minute: '2-digit',
+            //     hour12: true,
+            //     hourCycle: 'h12'
+            //   })
+            // }));
+
+
+
+
+
+
+            const messagesArray = messageInfo
+  .map((message) => ({
+    id: message.id,
+    from: message.from.replace(/^"|"$/g, ''),
+    type: 'message',
+    text: message.text.replace(/^"|"$/g, ''),
+    createdAt: new Date(message.createdAt.replace(/^"|"$/g, '')) // Store as Date object for sorting
+  }))
+  .sort((a, b) => b.createdAt - a.createdAt) // Sort by createdAt in descending order
+  .map((message) => ({
+    ...message,
+    createdAt: message.createdAt.toLocaleString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+      hourCycle: 'h12'
+    })
+  }));
 
             if (responseData.success) {
               console.log("Received data for stages update:", responseData.data);
