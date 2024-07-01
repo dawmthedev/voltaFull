@@ -748,7 +748,7 @@ const LeadDetailPage = () => {
 
 
 
-<Stepper sx={{ paddingLeft: '50px' }} activeStep={activeStep} orientation="vertical">
+<Stepper sx={{ paddingLeft: '50px', backgroundColor: 'whitesmoke' , borderRadius: 2}} activeStep={activeStep} orientation="vertical">
             {stepLabels.map((step, index) => {
               let stepContent;
               if (step.key === 'NTPDate' && financing=="Sunnova") {
@@ -801,8 +801,8 @@ const LeadDetailPage = () => {
 
           <Grid sx={{ p: 2, backgroundColor: 'none' }} container direction="column" spacing={2}>
             {/* Adders */}
-            <Grid item>
-              <h4>Adders</h4>
+            <Grid item sx={{ p: 2, backgroundColor: 'none', marginTop: 2, marginLeft: 2 ,backgroundColor: 'whitesmoke' , borderRadius: 2}} container direction="column" spacing={2} >
+              <h4 style={{ margin: 0, fontWeight: 'bold', color: 'brown' }}>Adders</h4>
               {addersData !== null ? (
                 addersData.map((adder) => (
                   <AddersCard key={adder.id} data={adder} text={adder.text} getItem={getSelected} type={adder.type} />
@@ -813,9 +813,11 @@ const LeadDetailPage = () => {
             </Grid>
 
             {/* Messages */}
-            <Grid item>
+            <Grid item sx={{ p: 2, backgroundColor: 'none', marginTop: 2, marginLeft: 2, backgroundColor: 'whitesmoke' , borderRadius: 2 }} container direction="column" spacing={2} >
+
+
             <Box style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-    <h4 style={{ margin: 0, fontWeight: 'bold' }}>Messages</h4>
+    <h4 style={{ margin: 0, fontWeight: 'bold', color: 'brown' }}>Messages</h4>
       {/* Button to open the message modal */}
       <Button onClick={handleOpenMessageModal} style={{ backgroundColor: 'blue', color: 'white', padding: '8px 15px', fontSize: '16px', borderRadius: '5px' }}>Add Message</Button>
 
@@ -867,6 +869,9 @@ const LeadDetailPage = () => {
                 <p>Loading...</p>
               )}
             </Grid>
+
+
+
           </Grid>
         </Grid>
       </Grid>
@@ -879,6 +884,7 @@ export default LeadDetailPage;
 const AddersCard = ({ data, getItem, type, leadName }) => {
   return (
     <Box sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }} onClick={() => getItem(data)}>
+  
       <Box sx={{ display: 'flex', gap: '8px' }}>
         <TimelineSeparator>
           <TimelineDot
