@@ -683,7 +683,7 @@ const LeadDetailPage = () => {
               <ListItemIcon sx={{ minWidth: '40px' }}>
            
               </ListItemIcon>
-              <ListItemText primary={products !== null ?""+ products : 'Loading...'} secondary="Financing" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
+              <ListItemText primary={products !== null ?""+ products : 'Loading...'} secondary="Products" primaryTypographyProps={{ variant: 'body1', style: { marginBottom: '4px' } }} secondaryTypographyProps={{ variant: 'caption' }} />
             </ListItem>
 
 

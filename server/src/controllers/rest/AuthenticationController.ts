@@ -834,6 +834,10 @@ export class AuthenticationController {
   @Post("/askOpenAI")
   @Returns(200, SuccessResult).Of(AIResponseModel)
   public async askOpenAI(@BodyParams() body: any, @Response() res: Response) {
+
+    //added productsclea
+
+    //added
     try {
       // Extract the question from the request body
       const userQuestion = body.question;
