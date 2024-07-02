@@ -216,6 +216,8 @@ const LeadDetailPage = () => {
   const [messageData, setMessageData] = useState([]);
   const [addersData, setAddersData] = useState([]);
 
+  const [payrollData, setPayroll] = useState([]);
+  
   const [activeStep, setActiveStep] = useState(0);
 
   // Function to handle opening the message modal
@@ -415,6 +417,8 @@ const LeadDetailPage = () => {
             const emailInfo = responseData.data.email ? responseData.data.email.replace(/^"|"$/g, '') : 'Loading...';
             const addressInfo = responseData.data.address ? responseData.data.address.replace(/^"|"$/g, '') : 'Loading...';
             const messageInfo = responseData.data.vcmessages ? responseData.data.vcmessages : [];
+
+            const payrollItems = responseData.data.vccommissions ? responseData.data.vccommissions : [];
             const projectStatus = responseData.data.status ? responseData.data.status.replace(/^"|"$/g, '') : 'Loading...';
 
             const contractAmount = responseData.data.contractAmount ? responseData.data.contractAmount.replace(/^"|"$/g, '') : 'Loading...';
@@ -490,12 +494,34 @@ const LeadDetailPage = () => {
             setContractAmount(contractAmount);
             setFinancing(financing)
             setAddersTotal(adderTotal);
+
+
+
+
+
+            const payrollInfo = payrollItems.map((payrollItem) => ({
+              id: payrollItem.relatedProject.replace(/^"|"$/g, ''),
+              user: payrollItem.user.replace(/^"|"$/g, ''),
+              type:  payrollItem.itemType.replace(/^"|"$/g, ''),
+              status: payrollItem.status.replace(/^"|"$/g, ''),
+              milestone: payrollItem.milestone.replace(/^"|"$/g, ''),
+              datePaid: payrollItem.datePaid.replace(/^"|"$/g, ''),
+              amount: payrollItem.amount.replace(/^"|"$/g, ''),
+              paidBy: payrollItem.paidBy.replace(/^"|"$/g, ''),
+            }));
+
+
+            setPayroll(payrollInfo)
             setInstaller(installer);
             setDealerFee(dealerFee);
             setProducts(products);
             setPPWFinal(ppwFinal);
             setStatus(projectStatus)
             setLoading(false);
+
+
+
+            
             setAddersData(addersArray);
             setMessageData(messagesArray);
 
@@ -825,6 +851,23 @@ const LeadDetailPage = () => {
           </div>
 
           <Grid sx={{ p: 2, backgroundColor: 'none' }} container direction="column" spacing={2}>
+            
+               {/* Payroll */}
+               <Grid item sx={{ p: 2, backgroundColor: 'none', marginTop: 2, marginLeft: 2 ,backgroundColor: 'whitesmoke' , borderRadius: 2}} container direction="column" spacing={2} >
+              <h4 style={{ margin: 0, fontWeight: 'bold', color: 'brown' }}>Payroll</h4>
+              {payrollData !== null ? (
+                payrollData.map((payrollItem) => (
+                  <PayrollCard key={payrollItem.id} data={payrollItem} text={payrollItem.id} getItem={getSelected} type={'note'} />
+                ))
+              ) : (
+                <p>Loading...</p>
+              )}
+            </Grid>
+
+            
+            
+            
+            
             {/* Adders */}
             <Grid item sx={{ p: 2, backgroundColor: 'none', marginTop: 2, marginLeft: 2 ,backgroundColor: 'whitesmoke' , borderRadius: 2}} container direction="column" spacing={2} >
               <h4 style={{ margin: 0, fontWeight: 'bold', color: 'brown' }}>Adders</h4>
@@ -976,6 +1019,56 @@ const Card = ({ data, getItem, type, leadName, from }) => {
               {data?.createdAt && data.createdAt}
               {/* {data?.createdAt ? fDateTime(new Date(1685299278395).getTime()) : fDateTime(new Date().getTime())} */}
             </Typography>
+          </Box>
+        </Box>
+      </Box>
+    </Box>
+  );
+};
+
+
+
+const PayrollCard = ({ data, getItem, type, leadName }) => {
+  return (
+    <Box sx={{ boxShadow: '0px 0px 10px #e3e3e3', marginTop: '16px', padding: '16px', cursor: 'pointer' }} onClick={() => getItem(data)}>
+      <Box sx={{ display: 'flex', gap: '8px' }}>
+        <TimelineSeparator>
+          <TimelineDot
+            sx={{ margin: '6px 0' }}
+            color={type === 'note' ? 'primary' : type === 'call' ? 'success' : type === 'message' ? 'secondary' : ''}
+          />
+          <TimelineConnector />
+        </TimelineSeparator>
+        <Box>
+          <Typography variant="subtitle2">{data?.FirstName || leadName}</Typography>
+          <Box display="flex" flexDirection="column">
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Milestone: {data?.milestone && data.milestone.length > 500 ? data.milestone.slice(0, 40) + '...' : data.milestone}
+            </Typography>
+
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Type: {data?.itemType && data.type.length > 500 ? data.type.slice(0, 40) + '...' : data.type}
+            </Typography>
+
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              User Name: {data?.user && data.user.length > 500 ? data.id.slice(0, 40) + '...' : data.user}
+            </Typography>
+            
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Amount: {data?.amount && data.amount.length > 500 ? data.amount.slice(0, 40) + '...' : data.amount}
+            </Typography>
+            
+          
+            
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Date Paid: {data?.datePaid && data.datePaid.length > 500 ? data.datePaid.slice(0, 40) + '...' : data.datePaid}
+            </Typography>
+            
+            
+
+
+
+
           </Box>
         </Box>
       </Box>

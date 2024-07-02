@@ -802,7 +802,8 @@ export class AuthenticationController {
       amount: data["amount"] || null,
       address: data["address"] || "",
       vcmessages: data["vcmessages"] || [], // Assuming vcmessages field exists and is an array
-      vcadders: data["vcAdders"] || [], // Assuming vcmadders field exists and is an array,
+      vcadders: data["vcAdders"] || [],
+      vccommissions: data["payrollItems"] || [],// Assuming vcmadders field exists and is an array,
       welcomeDate: data["welcomeDate"] || null,
       siteSurveyDate: data["siteSurveyDate"] || null,
       NTPDate: data["ntpDate"] || null,
@@ -813,7 +814,6 @@ export class AuthenticationController {
       FIDate: data["fidate"] || null,
       PTODate: data["ptodate"] || null,
       financing: data["financing"] || null,
-
 
 
 
