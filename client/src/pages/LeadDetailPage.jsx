@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   Grid,
   Dialog,
@@ -26,9 +26,12 @@ import {
   StepLabel,
   LinearProgress
 } from '@mui/material';
+import { v4 as uuidv4 } from "uuid";
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
+
 import moment from 'moment';
 import { useAppDispatch } from '../hooks/hooks';
-
+import { useDropzone } from 'react-dropzone'; // Add this import
 
 import { useParams } from 'react-router-dom';
 import EmailIcon from '@mui/icons-material/Email';
@@ -44,48 +47,15 @@ import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 import { baseURL } from '../libs/client/apiClient';
 
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { storage } from '../API/firebase';
+
 // Import any other necessary local components like StyledAccount, Card, etc.
 
 
 import axios from 'axios';
 
-const submitNewMessage= async ({
-  Message,
-  relatedProject,
-  TaggedUsers,
-  from
-
-}) => {
-  const QB_DOMAIN = "voltaic.quickbase.com";
-  const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-  
-  const headers = {
-    Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-    "QB-Realm-Hostname": QB_DOMAIN,
-    "Content-Type": "application/json",
-  };
-
-  const requestBody = {
-    to: "br5cqr42m", // Table identifier in Quickbase
-    data: [{
-      6: { value: Message},
-      26: { value: relatedProject },
-       61: { value: 'Project Manager'},
-       62: { value: TaggedUsers},
-       82: { value: from}
-    }],
-    fieldsToReturn: [] // Specify fields to return, if any
-  };
-
-  try {
-    const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-    console.log("Success!", response.data);
-  //  return response.data; // You can modify what to return based on your needs
-  } catch (error) {
-    console.error("Failed to send data:", error);
-    throw error; // Rethrow or handle error as needed
-  }
-};
 
 const LeadDetailPage = () => {
 
@@ -111,10 +81,54 @@ const LeadDetailPage = () => {
 
   // State for the message modal and message text
   const [users, setUsers] = useState([]);
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState([]);
   const [isMessageModalOpen, setMessageModalOpen] = useState(false);
   const [messageText, setMessageText] = useState('');
-
+  const [files, setFiles] = useState([]);
+  const [fileUrls, setFileUrls] = useState([]);
+  const [uploadProgress, setUploadProgress] = useState({});
+  const submitNewMessage= async ({
+    Message,
+    relatedProject,
+    TaggedUsers,
+    from
+  
+  }) => {
+    const QB_DOMAIN = "voltaic.quickbase.com";
+    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
+    
+    const headers = {
+      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      "QB-Realm-Hostname": QB_DOMAIN,
+      "Content-Type": "application/json",
+    };
+  
+    const requestBody = {
+      to: "br5cqr42m", // Table identifier in Quickbase
+      data: [{
+        6: { value: Message},
+        26: { value: relatedProject },
+         61: { value: 'Project Manager'},
+         62: { value: TaggedUsers},
+         82: { value: from},
+         83: { value: fileUrls[0]?fileUrls[0]: null},
+         84: { value: fileUrls[1]?fileUrls[1]: null},
+         85: { value: fileUrls[2]?fileUrls[2]: null},
+         86: { value: fileUrls[3]?fileUrls[3]: null}
+      }],
+      fieldsToReturn: [] // Specify fields to return, if any
+    };
+  
+    try {
+      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      console.log("Success!", response.data);
+    //  return response.data; // You can modify what to return based on your needs
+    } catch (error) {
+      console.error("Failed to send data:", error);
+      throw error; // Rethrow or handle error as needed
+    }
+  };
+  
 
   const stepLabels = [
     { label: 'New Sale', key: 'saleDate' },
@@ -222,13 +236,17 @@ const LeadDetailPage = () => {
 
   // Function to handle opening the message modal
   const handleOpenMessageModal = () => {
+    // alert("opening message modal")
     setMessageModalOpen(true);
   };
 
   // Function to handle closing the message modal
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
-    setSelectedUser(null);
+    setSelectedUser([]);
+    setFiles([]);
+    setFileUrls([]);
+    setUploadProgress({});
   };
 
   // Function to handle sending the message
@@ -249,13 +267,56 @@ const LeadDetailPage = () => {
 
 
 
+  const handleFileUpload = async (file) => {
+    const fileRef = ref(storage, `messages/${file.name}`);
+    const uploadTask = uploadBytes(fileRef, file);
+    
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setUploadProgress((prev) => ({ ...prev, [file.name]: progress }));
+      },
+      (error) => {
+        console.error('File upload error:', error);
+      },
+      async () => {
+        const downloadUrl = await getDownloadURL(fileRef);
+        setFileUrls((prev) => [...prev, downloadUrl]);
+      }
+    );
+  };
 
 
     
   // };
+  const onDrop = useCallback((acceptedFiles) => {
 
-
-
+    const file = acceptedFiles[0];
+    if (file) {
+      const preUri = "images/utility" + uuidv4() + ".jpg";
+      const pathReference = ref(storage, preUri);
+      uploadBytes(pathReference, file, {
+        onProgress: (snapshot) => {
+          const percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      
+        },
+      }).then(() => {
+        const httpsReference = ref(storage, "https://firebasestorage.googleapis.com/v0/b/voltaic-383203.appspot.com/o/" + encodeURIComponent(preUri));
+        getDownloadURL(httpsReference).then((url) => {
+          setFileUrls((prev) => [...prev, url]);
+         
+        });
+      }).catch(error => {
+ 
+        console.error("Upload error:", error);
+      });
+    }
+  }, []);
+  
+  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  
+ 
 
   const handleSendMessage = async () => {
     console.log('Message to send:', messageText);
@@ -278,6 +339,12 @@ const LeadDetailPage = () => {
 
 
     try {
+
+
+
+     // Message text here....
+     console.log(messageText)
+       
         // Make the API call to send the message
         const response = await submitNewMessage({ Message: messageText, relatedProject: id , TaggedUsers: taggedUserEmails, from: UserData?.name});
         console.log('Message sent successfully:', response);
@@ -288,6 +355,9 @@ const LeadDetailPage = () => {
         setMessageText(''); // Clear the message input
         setMessageModalOpen(false); // Close the modal
         setSelectedUser([]); // Reset the selected users
+
+        setFiles([]);
+        setFileUrls([]);
     } catch (error) {
         console.error('Failed to send message:', error);
         // Handle the error, e.g., by removing the optimistic message or showing an error message
@@ -592,7 +662,7 @@ const LeadDetailPage = () => {
   const handleSubmit = () => console.log('Simulate submit action');
 
 
-
+ 
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
@@ -604,6 +674,7 @@ const LeadDetailPage = () => {
   if (dealsError) {
     return <p>Error loading data: {dealsError.message}</p>;
   }
+
 
 
   return (
@@ -890,7 +961,71 @@ const LeadDetailPage = () => {
       <Button onClick={handleOpenMessageModal} style={{ backgroundColor: 'blue', color: 'white', padding: '8px 15px', fontSize: '16px', borderRadius: '5px' }}>Add Message</Button>
 
       {/* Message Modal Dialog */}
+
+
       <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
+        <DialogTitle>New Message</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To send a message, please enter your message here.
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="message"
+            label="Message"
+            type="text"
+            fullWidth
+            value={messageText}
+            onChange={(e) => setMessageText(e.target.value)}
+          />
+          <Autocomplete
+            multiple
+            id="tags-outlined"
+            options={users}
+            getOptionLabel={(option) => option.email}
+            filterSelectedOptions
+            value={selectedUser}
+            onChange={(event, newValue) => setSelectedUser(newValue)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Tag Users"
+                placeholder="Add users"
+              />
+            )}
+          />
+          <section className="container">
+            <div {...getRootProps({ className: 'dropzone' })} style={{ border: '2px dashed #cccccc', padding: '20px', textAlign: 'center' , marginTop: '20px'}}>
+              <input {...getInputProps()} />
+              <p style={{border: '2px'}}>Drag 'n' drop some files here, or click to select files</p>
+        
+        
+            </div>
+            <aside>
+              <h4>Files</h4>
+              <ul>
+  {fileUrls.slice(0, 10).map((url, index) => (
+    <li key={index} style={{ display: 'flex', alignItems: 'center' }}>
+      <InsertDriveFileIcon style={{ marginRight: '8px' }} />
+      <a href={url} target="_blank" rel="noopener noreferrer">
+        {url.slice(0, 20) + '...'}
+      </a>
+    </li>
+  ))}
+</ul>
+
+
+            </aside>
+          </section>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleCloseMessageModal}>Cancel</Button>
+          <Button onClick={handleSendMessage}>Send</Button>
+        </DialogActions>
+      </Dialog>
+      {/* <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
         <DialogTitle>Add a New Message</DialogTitle>
 
         <DialogContent>
@@ -924,7 +1059,7 @@ const LeadDetailPage = () => {
           <Button onClick={handleCloseMessageModal}>Cancel</Button>
           <Button onClick={handleSendMessage} color="primary">Send Message</Button>
         </DialogActions>
-      </Dialog>
+      </Dialog> */}
 
 </Box>
 
@@ -1058,7 +1193,10 @@ const PayrollCard = ({ data, getItem, type, leadName }) => {
               Amount: {data?.amount && data.amount.length > 500 ? data.amount.slice(0, 40) + '...' : data.amount}
             </Typography>
             
-          
+            <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+              Status: {data?.status && data.status.length > 500 ? data.status.slice(0, 40) + '...' : data.status}
+            </Typography>
+
             
             <Typography variant="caption" sx={{ color: 'text.secondary' }}>
               Date Paid: {data?.datePaid && data.datePaid.length > 500 ? data.datePaid.slice(0, 40) + '...' : data.datePaid}
