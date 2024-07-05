@@ -37,7 +37,7 @@ const AuthenticationLayout = ({ title, link, children }: AuthenticationLayoutPro
   return (
     <Fragment>
       <Helmet>
-        <title>{title} | Voltaic-CRM</title>
+        <title>{title} | Volta</title>
       </Helmet>
 
       <StyledRoot>
@@ -58,7 +58,7 @@ style={{
 />
         <StyledContent>
           <Typography variant="h4" gutterBottom>
-            Login to Voltaic-CRM
+            Login to Volta
           </Typography>
           <Typography variant="body2" sx={{ mb: 5 }}>
             Don’t have an account? <Link to={link.to}>{link.text} here</Link>
