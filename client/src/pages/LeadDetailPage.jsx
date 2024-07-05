@@ -38,6 +38,8 @@ import EmailIcon from '@mui/icons-material/Email';
 
 import PersonIcon from '@mui/icons-material/Person';
 
+
+import  MainStepper from '../components/MainStepper';
 // Import Timeline components if they are from MUI
 import TimelineSeparator from '@mui/lab/TimelineSeparator';
 import TimelineDot from '@mui/lab/TimelineDot';
@@ -144,6 +146,7 @@ const LeadDetailPage = () => {
     { label: 'PTO', key: 'PTODate' },
     // { label: 'Complete', key: 'completeDate' }
   ];
+
 
 
 
@@ -870,7 +873,9 @@ const LeadDetailPage = () => {
 
 
 
-<Stepper sx={{ paddingLeft: '50px', backgroundColor: 'whitesmoke' , borderRadius: 2}} activeStep={activeStep} orientation="vertical">
+
+
+{/* <Stepper sx={{ paddingLeft: '50px', backgroundColor: 'whitesmoke' , borderRadius: 2}} activeStep={activeStep} orientation="vertical">
             {stepLabels.map((step, index) => {
               let stepContent;
               if (step.key === 'NTPDate' && financing=="Sunnova") {
@@ -898,26 +903,15 @@ const LeadDetailPage = () => {
                 </Step>
               );
             })}
-          </Stepper>
-          {/* <Stepper sx={{paddingLeft: '50px',}} activeStep={activeStep} orientation="vertical">
-  {stepLabels.map((step, index) => {
-    const stepDate = taskDates[step.key];
-    const isCompleted = Boolean(stepDate);
+          </Stepper> */}
 
-    return (
-      <Step  key={step.label} completed={isCompleted}>
-        <StepLabel>
-          {step.label}
-          {isCompleted && (
-            <Typography variant="caption" style={{ marginLeft: '10px', color: 'green' }}>
-              {stepDate}
-            </Typography>
-          )}
-        </StepLabel>
-      </Step>
-    );
-  })}
-</Stepper> */}
+
+
+
+<MainStepper activeStep={activeStep} taskDates={taskDates} financing={financing} />
+    
+
+
 
           </div>
 
