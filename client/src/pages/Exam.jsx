@@ -1,49 +1,35 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import { useAppSelector } from '../hooks/hooks';
-import { authSelector } from '../redux/slice/authSlice';
 
-function Exam() {
-  const UserData = useAppSelector(authSelector)?.data;
-  const [email, setEmail] = useState('');
-  const [isSubmitted, setIsSubmitted] = useState(false); // State to track submission status
+const Exam = () => {
+  const [answers, setAnswers] = useState({});
+  const [score, setScore] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
 
-  const submitNewUtilityAFD = async (e) => {
-    e.preventDefault();
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
-  
-    const requestBody = {
-      to: "btc8mr5x9", // Table identifier in Quickbase
-      data: [{
-         7: { value: email },
-         62: { value: UserData?.id },
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
-    };
-  
-    try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
-      setIsSubmitted(true); // Set the submission status to true upon success
-    } catch (error) {
-      console.error("Failed to send data:", error);
-    }
+  const questions = [
+    { question: 'What is 2 + 2?', options: ['3', '4', '5'], correct: '4' },
+    { question: 'What is the capital of France?', options: ['London', 'Berlin', 'Paris'], correct: 'Paris' },
+    { question: 'What is the chemical symbol for water?', options: ['H2O', 'CO2', 'NaCl'], correct: 'H2O' }
+  ];
+
+  const handleChange = (index, value) => {
+    setAnswers({ ...answers, [index]: value });
   };
 
-  // Inline styles
+  const handleSubmit = () => {
+    let correctAnswers = 0;
+    questions.forEach((q, index) => {
+      if (answers[index] === q.correct) correctAnswers += 1;
+    });
+    setScore(correctAnswers);
+    setSubmitted(true);
+  };
+
   const styles = {
     container: {
       fontFamily: '"Arial", sans-serif',
       maxWidth: '600px',
       margin: 'auto',
-      color: 'black', 
+      color: 'black',
       padding: '20px',
       boxShadow: '0 0 10px rgba(0,0,0,0.1)',
       borderRadius: '8px',
@@ -75,32 +61,49 @@ function Exam() {
       textAlign: 'center',
       color: 'green',
       fontWeight: 'bold',
-    }
+    },
+    question: {
+      marginBottom: '20px',
+    },
+    questionTitle: {
+      fontWeight: 'bold',
+    },
   };
+
+  if (submitted) {
+    return (
+      <div style={styles.container}>
+        {score >= 2 ? (
+          <div style={styles.successMessage}>Congratulations! You passed the exam.</div>
+        ) : (
+          <div style={styles.successMessage}>Sorry, you did not pass. Try again!</div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div style={styles.container}>
-      <h3>Utility Affidavit Signature Prep</h3>
-      {isSubmitted ? (
-        <div style={styles.successMessage}>
-          Your proposal has been successfully generated!
+      <h1>Exam</h1>
+      {questions.map((q, index) => (
+        <div key={index} style={styles.question}>
+          <p style={styles.questionTitle}>{q.question}</p>
+          {q.options.map((option, i) => (
+            <label key={i}>
+              <input
+                type="radio"
+                name={`question-${index}`}
+                value={option}
+                onChange={() => handleChange(index, option)}
+              />
+              {option}
+            </label>
+          ))}
         </div>
-      ) : (
-        <form onSubmit={submitNewUtilityAFD} style={styles.form}>
-          <label htmlFor="email" style={styles.label}>Homeowner's Email:</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            style={styles.input}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-          <button type="submit" style={styles.button}>Generate Proposal</button>
-        </form>
-      )}
+      ))}
+      <button onClick={handleSubmit} style={styles.button}>Submit</button>
     </div>
   );
-}
+};
 
 export default Exam;

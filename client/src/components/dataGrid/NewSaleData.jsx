@@ -2,11 +2,36 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { Button, TextField, Typography, Modal, Box, CircularProgress } from '@mui/material';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { baseURL } from '../../libs/client/apiClient';
-
 import axios from 'axios';
+import { startOfDay, startOfWeek, startOfMonth, startOfYear, isWithinInterval } from 'date-fns';
 
+const isToday = (date) => {
+  return isWithinInterval(new Date(date), {
+    start: startOfDay(new Date()),
+    end: new Date(),
+  });
+};
 
+const isThisWeek = (date) => {
+  return isWithinInterval(new Date(date), {
+    start: startOfWeek(new Date()),
+    end: new Date(),
+  });
+};
 
+const isThisMonth = (date) => {
+  return isWithinInterval(new Date(date), {
+    start: startOfMonth(new Date()),
+    end: new Date(),
+  });
+};
+
+const isThisYear = (date) => {
+  return isWithinInterval(new Date(date), {
+    start: startOfYear(new Date()),
+    end: new Date(),
+  });
+};
 
 const EditModal = ({ open, onClose, data, onSave }) => {
   const [formData, setFormData] = useState({
@@ -258,35 +283,54 @@ export default function NewSaleData(props) {
     { field: 'inverter', headerName: 'Inverter', width: 150 },
   ], []);
 
+  const calculateCounts = () => {
+    const today = data.filter((item) => isToday(item.salesRep)).length;
+    const thisWeek = data.filter((item) => isThisWeek(item.salesRep)).length;
+    const thisMonth = data.filter((item) => isThisMonth(item.salesRep)).length;
+    const thisYear = data.filter((item) => isThisYear(item.salesRep)).length;
+
+    return { today, thisWeek, thisMonth, thisYear };
+  };
+
+  const counts = calculateCounts();
+
   return (
-    <div style={{ height: 400, width: '100%' }}>
-      {isLoading ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <CircularProgress />
-        </Box>
-      ) : error ? (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-          <Typography color="error">{error}</Typography>
-        </Box>
-      ) : (
-        <>
-          <DataGridPro
-            rows={data}
-            columns={columns}
-            disableSelectionOnClick={true}
-            pageSize={10}
-            rowsPerPageOptions={[5, 10, 20]}
-            checkboxSelection={false}
-            components={{ Toolbar: GridToolbar }}
-          />
-          <EditModal
-            open={openModal}
-            onClose={handleCloseModal}
-            data={selectedRow || {}}
-            onSave={handleSave}
-          />
-        </>
-      )}
+    <div>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px', background: '#f9f9f9' }}>
+        <Typography variant="body1">Submitted Today: {counts.today}</Typography>
+        <Typography variant="body1">Submitted This Week: {counts.thisWeek}</Typography>
+        <Typography variant="body1">Submitted This Month: {counts.thisMonth}</Typography>
+        <Typography variant="body1">Submitted This Year: {counts.thisYear}</Typography>
+      </Box>
+      <div style={{ height: 400, width: '100%' }}>
+        {isLoading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
+            <Typography color="error">{error}</Typography>
+          </Box>
+        ) : (
+          <>
+            <DataGridPro
+              rows={data}
+              columns={columns}
+              disableSelectionOnClick={true}
+              pageSize={10}
+              rowsPerPageOptions={[5, 10, 20]}
+              checkboxSelection={false}
+              components={{ Toolbar: GridToolbar }}
+            />
+            <EditModal
+              open={openModal}
+              onClose={handleCloseModal}
+              data={selectedRow || {}}
+              onSave={handleSave}
+            />
+          </>
+        )}
+      </div>
     </div>
   );
 }
