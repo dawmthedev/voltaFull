@@ -9,6 +9,7 @@ const POST_TITLES = [
   'Voltaic Dealer Rates',
   'Voltaic New Sale Form',
   'Utility Affidavit Request',
+  'Exam',
   '✨What is Done is Done ✨',
   'Fresh Prince',
   'Six Socks Studio',
@@ -36,9 +37,11 @@ const links = [
 "https://docs.google.com/spreadsheets/d/1TckEylF3qWgF8VjXzUjKm5KOsSokTVM9tJsySLpBA-w/edit#gid=0",
 "https://vccrm.vercel.app/dashboard/rates",
 "https://voltaicapp.vercel.app/NewSaleForm",
-"https://vccrm.vercel.app/dashboard/utilitySign"];
+"https://vccrm.vercel.app/dashboard/utilitySign",
+"https://vccrm.vercel.app/dashboard/exam"
+];
 
-const posts = [...Array(5)].map((_, index) => ({
+const posts = [...Array(6)].map((_, index) => ({
   id: faker.datatype.uuid(),
   cover: `/assets/images/covers/cover_${index + 1}.jpg`,
   link: links[index],

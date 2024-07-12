@@ -29,6 +29,7 @@ import Rookies from './pages/Rookies';
 import AvailabilityPlanner from './pages/AvailabilityPlanner';
 
 import UtilitySign from './pages/UtilitySign';
+import Exam from './pages/Exam';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -57,6 +58,7 @@ export default function Router() {
         { path: 'products', element: <ProductsPage /> },
 
         { path: 'utilitySign', element: <UtilitySign /> },
+        { path: 'exam', element: <Exam /> },
         { path: 'assistant', element: <Assistant /> },
         { path: 'lead/:id', element: <LeadDetailPage /> },
         { path: 'blog', element: <BlogPage /> },
