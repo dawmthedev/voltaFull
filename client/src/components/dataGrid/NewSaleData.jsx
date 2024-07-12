@@ -8,12 +8,15 @@ import axios from 'axios';
 
 
 
-
 const EditModal = ({ open, onClose, data, onSave }) => {
-  const [formData, setFormData] = useState(data);
-
+  const [formData, setFormData] = useState({
+    customerFirstName: '',
+    customerLastName: '',
+    customerFullName: '',
+    customerEmail: '',
+    customerPhone: ''  // Initialize customerPhone
+  });
   const [isSubmitted, setIsSubmitted] = useState(false);
-
 
   const submitMissingData = async (e) => {
     e.preventDefault();
@@ -27,13 +30,13 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     };
   
     const requestBody = {
-      to: "btc8mr5x9", // Table identifier in Quickbase
+      to: "bs9fegk3x", // Table identifier in Quickbase
       data: [{
-          3: {value: '83'},
-         40: { value: formData.email },
-         44: { value: formData.firstName },
-         45: { value: formData.lastName },
-         
+        3: { value: '83' },
+        40: { value: formData.customerEmail },
+        44: { value: formData.customerFirstName },
+        45: { value: formData.customerLastName },
+        46: { value: formData.customerPhone }, // Add customerPhone to the request
       }],
       fieldsToReturn: [] // Specify fields to return, if any
     };
@@ -42,13 +45,8 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
       setIsSubmitted(true); // Set the submission status to true upon success
-
-
-
- 
-
-
     } catch (error) {
+      alert("Failed sending data")
       console.error("Failed to send data:", error);
     }
   };
@@ -56,14 +54,23 @@ const EditModal = ({ open, onClose, data, onSave }) => {
   useEffect(() => {
     if (data.ownerName) {
       const [firstName, ...lastName] = data.ownerName.split(' ');
-      setFormData({
-        ...data,
+      setFormData((prevState) => ({
+        ...prevState,
         customerFirstName: firstName,
         customerLastName: lastName.join(' '),
-        customerFullName: `${firstName} ${lastName.join(' ')}`
-      });
+        customerFullName: `${firstName} ${lastName.join(' ')}`,
+        customerEmail: data.customerEmail || '',
+        customerPhone: data.customerPhone || '' // Ensure phone is correctly set
+      }));
     } else {
-      setFormData(data);
+      setFormData((prevState) => ({
+        ...prevState,
+        customerFirstName: '',
+        customerLastName: '',
+        customerFullName: '',
+        customerEmail: data.customerEmail || '',
+        customerPhone: data.customerPhone || '' // Ensure phone is correctly set
+      }));
     }
   }, [data]);
 
@@ -74,22 +81,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     });
   };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   const handleAddressChange = async (address) => {
     const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=YOUR_API_KEY`);
     const result = await response.json();
@@ -99,7 +90,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         city: addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '',
         state: addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.short_name || '',
         zipCode: addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '',
-        // other components...
       };
       setFormData({
         ...formData,
@@ -159,7 +149,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
           fullWidth
           margin="normal"
         />
-        {/* Add other input fields as needed */}
         <Button onClick={submitMissingData} variant="contained" color="primary" fullWidth>
           Send Welcome Call
         </Button>
@@ -177,13 +166,6 @@ export default function NewSaleData(props) {
   const [openModal, setOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [formData, setFormData] = useState({});
-
-
-
-
-
-
-
 
   const fetchNewSaleData = async () => {
     try {
@@ -294,7 +276,6 @@ export default function NewSaleData(props) {
             disableSelectionOnClick={true}
             pageSize={10}
             rowsPerPageOptions={[5, 10, 20]}
-         
             checkboxSelection={false}
             components={{ Toolbar: GridToolbar }}
           />
