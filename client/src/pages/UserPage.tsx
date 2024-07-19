@@ -32,7 +32,7 @@ import createAbortController from '../utils/createAbortController';
 import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
 import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
-import AddUserForm from '../components/add-user-form/AddUserForm';
+import AddUserForm from '../components/add-user-form/AddUser';
 import { setAlert } from '../redux/slice/alertSlice';
 import { createRole, getRoles } from '../redux/middleware/role';
 import CustomInput from '../components/input/CustomInput';
@@ -87,6 +87,7 @@ export default function UserPage() {
   const dispatch = useAppDispatch();
   const users = useAppSelector(adminSelector);
   const roleLoading = useAppSelector(loadingRole);
+
   const adminLoading = useAppSelector(loadingAdmin);
   const roles = useAppSelector(roleList);
   const { signal, abort } = createAbortController();
@@ -100,6 +101,7 @@ export default function UserPage() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
+
   const [user, setUser] = useState(initialState);
   const [newRole, setNewRole] = useState<string>('');
 
@@ -139,6 +141,26 @@ export default function UserPage() {
   };
 
   const submitRole = async () => {
+    if (!newRole) {
+      dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
+      return;
+    }
+    const isDuplicate = roles.find((item) => item.name === newRole);
+
+    if (isDuplicate) {
+      return dispatch(setAlert({ message: 'Duplicate role name', type: 'error' }));
+    }
+    await dispatch(createRole({ role: newRole }));
+
+    await dispatch(getRoles({ signal }));
+
+    setIsRoleModalOpen(false);
+    handleCloseMenu();
+    setNewRole('');
+  };
+
+
+  const submitNewUser = async () => {
     if (!newRole) {
       dispatch(setAlert({ message: 'Please add a role', type: 'error' }));
       return;
@@ -217,8 +239,16 @@ export default function UserPage() {
           <Typography variant="h4" gutterBottom>
             User
           </Typography>
+
+
+
+
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
             Add New Role
+          </Button>
+
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
+            Add New User
           </Button>
         </Stack>
 
@@ -231,13 +261,13 @@ export default function UserPage() {
         >
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
+   
+
+
         <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
           <AddUserForm
-            user={user}
-            roles={roles}
-            getUsersData={(value, name) => {
-              setUser({ ...user, [name]: value });
-            }}
+         
+        
           />
         </CustomModal>
         <Card>
