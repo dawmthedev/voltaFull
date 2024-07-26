@@ -287,6 +287,7 @@ export class AuthenticationController {
       depositImage: record["depositImage"] ? record["depositImage"].replace(/"/g, "") : null,
       program: record["program"] ? record["program"].replace(/"/g, "") : null,
       notes: record["notes"] ? record["notes"].replace(/"/g, "") : null,
+      recordID: record["recordID"] ? record["recordID"].replace(/"/g, "") : null,
       leadGen: record["leadGen"] ? record["leadGen"].replace(/"/g, "") : null,
       utilityImage2: record["utilityImage2"] ? record["utilityImage2"].replace(/"/g, "") : null,
       utilityImage3: record["utilityImage3"] ? record["utilityImage3"].replace(/"/g, "") : null,

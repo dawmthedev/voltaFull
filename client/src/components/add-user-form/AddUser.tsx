@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 
-const AddUserForm = () => {
+const AddUserForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -12,8 +12,37 @@ const AddUserForm = () => {
     role: '',
   });
 
+  const [errors, setErrors] = useState({
+    hisLicense: '',
+  });
+
+  const [submissionStatus, setSubmissionStatus] = useState({
+    success: false,
+    message: '',
+  });
+
+  const validateForm = () => {
+    let valid = true;
+    const newErrors = { hisLicense: '' };
+
+    if (formData.role === 'admin' || formData.role === 'user') {
+      if (!formData.hisLicense) {
+        newErrors.hisLicense = 'HIS License is required for Manager or Sales Rep roles.';
+        valid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return valid;
+  };
+
   const submitNewUserData = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
+
     const QB_DOMAIN = "voltaic.quickbase.com";
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
@@ -29,8 +58,9 @@ const AddUserForm = () => {
         10: { value: formData.email },
         6: { value: formData.firstName },
         7: { value: formData.lastName },
-        14: { value: formData.phone }, // Add phone to the request
-        // You can add HIS License and Role here if needed in Quickbase table
+        14: { value: formData.phone },
+        796: { value: formData.hisLicense }, // Assuming field ID for HIS License
+        931: { value: formData.role }, // Assuming field ID for Role
       }],
       fieldsToReturn: [] // Specify fields to return, if any
     };
@@ -38,7 +68,13 @@ const AddUserForm = () => {
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
-      // Add any additional actions on success here
+      setSubmissionStatus({
+        success: true,
+        message: 'User added successfully!',
+      });
+      setTimeout(() => {
+        onClose(); // Close the modal after 2 seconds
+      }, 2000);
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
@@ -87,14 +123,7 @@ const AddUserForm = () => {
         fullWidth
         margin="normal"
       />
-      <TextField
-        label="HIS License (optional)"
-        name="hisLicense"
-        value={formData.hisLicense}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-      />
+
       <FormControl fullWidth margin="normal">
         <InputLabel id="role-select-label">Role</InputLabel>
         <Select
@@ -103,11 +132,29 @@ const AddUserForm = () => {
           value={formData.role}
           onChange={handleChange}
         >
-          <MenuItem value="admin">Admin</MenuItem>
-          <MenuItem value="user">User</MenuItem>
-          <MenuItem value="manager">Manager</MenuItem>
+          <MenuItem value="admin">Manager</MenuItem>
+          <MenuItem value="user">Sales Rep</MenuItem>
+          <MenuItem value="manager">Setter</MenuItem>
         </Select>
       </FormControl>
+
+      <TextField
+        label={formData.role === 'admin' || formData.role === 'user' ? 'HIS License (required)' : 'HIS License (optional)'}
+        name="hisLicense"
+        value={formData.hisLicense}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+        error={!!errors.hisLicense}
+        helperText={errors.hisLicense}
+      />
+
+      {submissionStatus.success && (
+        <div style={{ margin: '16px 0', color: 'green' }}>
+          {submissionStatus.message}
+        </div>
+      )}
+
       <Button type="submit" variant="contained" color="primary" fullWidth>
         Submit
       </Button>

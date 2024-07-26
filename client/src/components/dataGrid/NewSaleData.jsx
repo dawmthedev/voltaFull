@@ -4,6 +4,11 @@ import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { baseURL } from '../../libs/client/apiClient';
 import axios from 'axios';
 import { startOfDay, startOfWeek, startOfMonth, startOfYear, isWithinInterval } from 'date-fns';
+import Autocomplete from 'react-google-autocomplete';
+import { useCallback } from 'react';
+
+
+
 
 const isToday = (date) => {
   return isWithinInterval(new Date(date), {
@@ -33,13 +38,22 @@ const isThisYear = (date) => {
   });
 };
 
+
+
+
 const EditModal = ({ open, onClose, data, onSave }) => {
   const [formData, setFormData] = useState({
     customerFirstName: '',
     customerLastName: '',
     customerFullName: '',
     customerEmail: '',
-    customerPhone: ''  // Initialize customerPhone
+    recordID: '',
+    customerPhone: '',
+    address: '',
+    city: '',
+    state: '',
+    zipCode: '',
+    country: ''
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -53,25 +67,74 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
+
+    console.log(formData)
   
     const requestBody = {
-      to: "bs9fegk3x", // Table identifier in Quickbase
+      to: "bs9fegk3x",
       data: [{
-        3: { value: '83' },
+        3: { value: formData.recordID },
         40: { value: formData.customerEmail },
         44: { value: formData.customerFirstName },
         45: { value: formData.customerLastName },
-        46: { value: formData.customerPhone }, // Add customerPhone to the request
+        46: { value: formData.customerPhone },
       }],
-      fieldsToReturn: [] // Specify fields to return, if any
+      fieldsToReturn: []
     };
   
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
-      setIsSubmitted(true); // Set the submission status to true upon success
+      setIsSubmitted(true);
+
+      //Make sure this is called properly...
+      pushNewProject(e);
     } catch (error) {
-      alert("Failed sending data")
+      alert("Failed sending data");
+      console.error("Failed to send data:", error);
+    }
+  };
+
+  const pushNewProject = async (e) => {
+    e.preventDefault();
+    const QB_DOMAIN = "voltaic.quickbase.com";
+    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
+    
+    const headers = {
+      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      "QB-Realm-Hostname": QB_DOMAIN,
+      "Content-Type": "application/json",
+    };
+
+  
+  
+    const requestBody = {
+      to: "br5cqr4r3",
+      data: [{
+        90: { value: formData.customerEmail },
+        84: { value: formData.customerFirstName },
+        85: { value: formData.customerLastName },
+        88: { value: formData.customerPhone },
+        93: { value: formData.address },
+        94: { value: '' },
+        633: { value: '71' },
+        37: { value: 'Incomplete' },
+        95: { value: formData.city },
+        96: { value: formData.state == "CA" ? "California":null },
+        97: { value: formData.zipCode },
+        98: { value: formData.country },
+      }],
+      fieldsToReturn: []
+    };
+  
+    try {
+      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      console.log("Success!", response.data);
+      setIsSubmitted(true);
+
+
+    } catch (error) {
+      alert("Failed sending data");
       console.error("Failed to send data:", error);
     }
   };
@@ -85,7 +148,8 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         customerLastName: lastName.join(' '),
         customerFullName: `${firstName} ${lastName.join(' ')}`,
         customerEmail: data.customerEmail || '',
-        customerPhone: data.customerPhone || '' // Ensure phone is correctly set
+        recordID: data.recordID || '',
+        customerPhone: data.customerPhone || ''
       }));
     } else {
       setFormData((prevState) => ({
@@ -94,7 +158,8 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         customerLastName: '',
         customerFullName: '',
         customerEmail: data.customerEmail || '',
-        customerPhone: data.customerPhone || '' // Ensure phone is correctly set
+        recordID: data.recordID || '',
+        customerPhone: data.customerPhone || ''
       }));
     }
   }, [data]);
@@ -106,15 +171,15 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     });
   };
 
-  const handleAddressChange = async (address) => {
-    const response = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=YOUR_API_KEY`);
-    const result = await response.json();
-    if (result.status === 'OK') {
-      const addressComponents = result.results[0].address_components;
+  const handlePlaceSelected = (place) => {
+    if (place && place.address_components) {
+      const addressComponents = place.address_components;
       const separatedAddress = {
+        address: place.formatted_address,
         city: addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '',
         state: addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.short_name || '',
         zipCode: addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '',
+        country: addressComponents.find(comp => comp.types.includes('country'))?.long_name || '',
       };
       setFormData({
         ...formData,
@@ -122,6 +187,34 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       });
     }
   };
+
+  const adjustAutocompleteZIndex = useCallback(() => {
+    const pacContainer = document.querySelector('.pac-container');
+    if (pacContainer) {
+      pacContainer.style.zIndex = '1600'; // Ensure the dropdown appears above the modal
+    }
+  }, []);
+
+  useEffect(() => {
+    adjustAutocompleteZIndex();
+  }, [adjustAutocompleteZIndex]);
+
+  useEffect(() => {
+    const observer = new MutationObserver(adjustAutocompleteZIndex);
+    const target = document.querySelector('body');
+
+    const config = { childList: true, subtree: true };
+
+    if (target) {
+      observer.observe(target, config);
+    }
+
+    return () => {
+      if (target) {
+        observer.disconnect();
+      }
+    };
+  }, [adjustAutocompleteZIndex]);
 
   const handleSave = () => {
     onSave(formData);
@@ -139,6 +232,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         bgcolor: 'background.paper',
         boxShadow: 24,
         p: 4,
+        zIndex: 1300
       }}>
         <Typography variant="h6" component="h2" gutterBottom>
           Edit Sale Data
@@ -167,12 +261,21 @@ const EditModal = ({ open, onClose, data, onSave }) => {
           fullWidth
           margin="normal"
         />
-        <TextField
-          name="address"
-          label="Address"
-          onBlur={(e) => handleAddressChange(e.target.value)}
-          fullWidth
-          margin="normal"
+        <Autocomplete
+          apiKey="AIzaSyDzUn0CKCVkUOaJtzzw16qT3QTSfPTtS6Q"
+          onPlaceSelected={handlePlaceSelected}
+          options={{
+            types: ['address'],
+            componentRestrictions: { country: "us" },
+          }}
+          style={{
+            width: '100%',
+            margin: 'normal',
+            zIndex: 1500, // Ensure this is higher than the modal's zIndex
+            position: 'relative'
+          }}
+          defaultValue={formData.address || ''}
+          placeholder="Enter Address"
         />
         <Button onClick={submitMissingData} variant="contained" color="primary" fullWidth>
           Send Welcome Call
@@ -181,6 +284,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     </Modal>
   );
 };
+
 
 export default function NewSaleData(props) {
   const { recordUserId } = props;
@@ -255,6 +359,7 @@ export default function NewSaleData(props) {
     },
     { field: 'installer', headerName: 'Installer', width: 180 },
     { field: 'ownerName', headerName: 'Homeowner', width: 150 },
+    { field: 'recordID', headerName: 'record ID', width: 150 },
     { field: 'adders', headerName: 'Adders', width: 130 },
     { field: 'salesRep', headerName: 'Sales Rep', width: 150 },
     { field: 'design', headerName: 'Design', width: 150 },

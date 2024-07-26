@@ -33,6 +33,8 @@ import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
 import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUser';
+
+import EmailUserForm from '../components/email-user/EmailUser';
 import { setAlert } from '../redux/slice/alertSlice';
 import { createRole, getRoles } from '../redux/middleware/role';
 import CustomInput from '../components/input/CustomInput';
@@ -100,6 +102,7 @@ export default function UserPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
 
   const [user, setUser] = useState(initialState);
@@ -223,6 +226,13 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
+
+    // Function to handle closing the modal
+    const handleCloseModal = () => {
+      setIsModalOpen(false);
+    };
+  
+
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
   const filteredUsers = applySortFilter(users, getComparator(order, orderBy), filterName);
@@ -250,6 +260,13 @@ export default function UserPage() {
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
             Add New User
           </Button>
+          
+
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsEmailModalOpen(true)}>
+            Send Email
+          </Button>
+
+
         </Stack>
 
         <CustomModal
@@ -265,11 +282,25 @@ export default function UserPage() {
 
 
         <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
-          <AddUserForm
+        <AddUserForm onClose={handleCloseModal} />
+
+
+        </CustomModal>
+
+
+
+
+{/* 
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsEmailModalOpen} handleSubmit={updateUser} loading={adminLoading}>
+          <EmailUserForm
          
         
           />
-        </CustomModal>
+        </CustomModal> */}
+
+
+
+
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 

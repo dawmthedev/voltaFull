@@ -370,6 +370,7 @@ export class NewSaleResultModel {
   @Property() public readonly depositImage: string;
   @Property() public readonly program: string;
   @Property() public readonly notes: string;
+  @Property() public readonly recordID: string;
   @Property() public readonly leadGen: string;
   @Property() public readonly utilityImage2: string;
   @Property() public readonly utilityImage3: string;
