@@ -4,6 +4,7 @@ const Exam = () => {
   const [answers, setAnswers] = useState({});
   const [score, setScore] = useState(null);
   const [submitted, setSubmitted] = useState(false);
+  const [examStarted, setExamStarted] = useState(false);
 
   const questions = [
     { question: 'What is 2 + 2?', options: ['3', '4', '5'], correct: '4' },
@@ -24,6 +25,10 @@ const Exam = () => {
     setSubmitted(true);
   };
 
+  const startExam = () => {
+    setExamStarted(true);
+  };
+
   const styles = {
     container: {
       fontFamily: '"Arial", sans-serif',
@@ -35,16 +40,6 @@ const Exam = () => {
       borderRadius: '8px',
       background: '#f9f9f9',
     },
-    form: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: '10px',
-    },
-    input: {
-      padding: '10px',
-      border: '1px solid #ccc',
-      borderRadius: '4px',
-    },
     button: {
       padding: '10px 20px',
       border: 'none',
@@ -52,6 +47,19 @@ const Exam = () => {
       background: '#007BFF',
       color: 'white',
       cursor: 'pointer',
+      marginRight: '10px', // Adding some space between buttons
+    },
+    purpleButton: {
+      padding: '10px 20px',
+      border: 'none',
+      borderRadius: '4px',
+      background: '#6f42c1', // Purple color
+      color: 'white',
+      cursor: 'pointer',
+      textDecoration: 'none',
+      display: 'inline-block',
+      textAlign: 'center',
+      marginBottom: '10px', // Adding some space below the button
     },
     label: {
       marginBottom: '5px',
@@ -61,6 +69,11 @@ const Exam = () => {
       textAlign: 'center',
       color: 'green',
       fontWeight: 'bold',
+    },
+    welcomeMessage: {
+      textAlign: 'center',
+      fontSize: '1.2em',
+      marginBottom: '20px',
     },
     question: {
       marginBottom: '20px',
@@ -73,11 +86,47 @@ const Exam = () => {
   if (submitted) {
     return (
       <div style={styles.container}>
-        {score >= 2 ? (
-          <div style={styles.successMessage}>Congratulations! You passed the exam.</div>
-        ) : (
-          <div style={styles.successMessage}>Sorry, you did not pass. Try again!</div>
-        )}
+        <div style={styles.successMessage}>
+          {score >= 2 ? (
+            <>
+              Congratulations! You passed the exam.
+              <br />
+              <a 
+                href="https://mentistechnologies.ai/course_detail/course_detail?v=1681883065111x777951302577029100"
+                style={styles.purpleButton}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View Course Details
+              </a>
+            </>
+          ) : (
+            <>
+              Sorry, you did not pass. Try again!
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  if (!examStarted) {
+    return (
+      <div style={styles.container}>
+        <div style={styles.welcomeMessage}>
+          <h1>Welcome to the Exam</h1>
+          <p>Before you start, you can view the course content using the button below.</p>
+          <a 
+            href="https://mentistechnologies.ai/course_detail/course_detail?v=1681883065111x777951302577029100"
+            style={styles.purpleButton}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            View Course Content
+          </a>
+          <br />
+          <button onClick={startExam} style={styles.button}>Start Exam</button>
+        </div>
       </div>
     );
   }

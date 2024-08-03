@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup } from '@mui/material';
 import axios from 'axios';
 
 const AddUserForm = ({ onClose }) => {
@@ -10,6 +10,7 @@ const AddUserForm = ({ onClose }) => {
     phone: '',
     hisLicense: '',
     role: '',
+    payrollType: 'W2' // Default to 'W2'
   });
 
   const [errors, setErrors] = useState({
@@ -61,6 +62,7 @@ const AddUserForm = ({ onClose }) => {
         14: { value: formData.phone },
         796: { value: formData.hisLicense }, // Assuming field ID for HIS License
         931: { value: formData.role }, // Assuming field ID for Role
+        1071: { value: formData.payrollType } // Field ID for Payroll Type
       }],
       fieldsToReturn: [] // Specify fields to return, if any
     };
@@ -87,6 +89,13 @@ const AddUserForm = ({ onClose }) => {
       ...formData,
       [name]: value,
     });
+  };
+
+  const handlePayrollTypeChange = (event) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      payrollType: event.target.checked ? '1099' : 'W2',
+    }));
   };
 
   return (
@@ -148,6 +157,13 @@ const AddUserForm = ({ onClose }) => {
         error={!!errors.hisLicense}
         helperText={errors.hisLicense}
       />
+
+      <FormGroup>
+        <FormControlLabel
+          control={<Switch checked={formData.payrollType === '1099'} onChange={handlePayrollTypeChange} />}
+          label={formData.payrollType}
+        />
+      </FormGroup>
 
       {submissionStatus.success && (
         <div style={{ margin: '16px 0', color: 'green' }}>

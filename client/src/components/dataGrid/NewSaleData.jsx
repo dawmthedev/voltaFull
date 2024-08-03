@@ -68,8 +68,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       "Content-Type": "application/json",
     };
 
-    console.log(formData)
-  
     const requestBody = {
       to: "bs9fegk3x",
       data: [{
@@ -78,6 +76,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         44: { value: formData.customerFirstName },
         45: { value: formData.customerLastName },
         46: { value: formData.customerPhone },
+        46: { value: formData.customerPhone }, //
       }],
       fieldsToReturn: []
     };
@@ -87,7 +86,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       console.log("Success!", response.data);
       setIsSubmitted(true);
 
-      //Make sure this is called properly...
+      // Ensure this is called properly...
       pushNewProject(e);
     } catch (error) {
       alert("Failed sending data");
@@ -106,8 +105,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       "Content-Type": "application/json",
     };
 
-  
-  
     const requestBody = {
       to: "br5cqr4r3",
       data: [{
@@ -120,7 +117,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         633: { value: '71' },
         37: { value: 'Incomplete' },
         95: { value: formData.city },
-        96: { value: formData.state == "CA" ? "California":null },
+        96: { value: formData.state === "CA" ? "California" : null },
         97: { value: formData.zipCode },
         98: { value: formData.country },
       }],
@@ -131,7 +128,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
       setIsSubmitted(true);
-
 
     } catch (error) {
       alert("Failed sending data");
@@ -165,10 +161,10 @@ const EditModal = ({ open, onClose, data, onSave }) => {
   }, [data]);
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [e.target.name]: e.target.value,
-    });
+    }));
   };
 
   const handlePlaceSelected = (place) => {
@@ -181,10 +177,10 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         zipCode: addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '',
         country: addressComponents.find(comp => comp.types.includes('country'))?.long_name || '',
       };
-      setFormData({
-        ...formData,
+      setFormData((prevData) => ({
+        ...prevData,
         ...separatedAddress,
-      });
+      }));
     }
   };
 
@@ -202,7 +198,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
   useEffect(() => {
     const observer = new MutationObserver(adjustAutocompleteZIndex);
     const target = document.querySelector('body');
-
     const config = { childList: true, subtree: true };
 
     if (target) {
@@ -439,3 +434,9 @@ export default function NewSaleData(props) {
     </div>
   );
 }
+
+
+
+
+
+//
