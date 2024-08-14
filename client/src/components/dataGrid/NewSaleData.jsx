@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, TextField, Typography, Modal, Box, CircularProgress } from '@mui/material';
+import { Button, TextField, Typography, Modal, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { baseURL } from '../../libs/client/apiClient';
 import axios from 'axios';
 import { startOfDay, startOfWeek, startOfMonth, startOfYear, isWithinInterval } from 'date-fns';
 import Autocomplete from 'react-google-autocomplete';
 import { useCallback } from 'react';
+import PlacesAutocomplete from 'react-places-autocomplete';
 
 
 
@@ -40,8 +41,9 @@ const isThisYear = (date) => {
 
 
 
-
 const EditModal = ({ open, onClose, data, onSave }) => {
+
+
   const [formData, setFormData] = useState({
     customerFirstName: '',
     customerLastName: '',
@@ -53,18 +55,60 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     city: '',
     state: '',
     zipCode: '',
-    country: ''
+    country: '',
+    financing: ''
   });
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        customerFirstName: data.customerFirstName || '',
+        customerLastName: data.customerLastName || '',
+        customerFullName: data.customerFullName || '',
+        customerEmail: data.customerEmail || '',
+        recordID: data.recordID || '',  // Ensure recordID is correctly set
+        customerPhone: data.customerPhone || '',
+        address: data.address || '',
+        city: data.city || '',
+        state: data.state || '',
+        zipCode: data.zipCode || '',
+        country: data.country || '',
+        financing: data.financing || ''
+      });
+    }
+  }, [data]);
+
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+  
+    if (name === 'customerFullName') {
+      const [firstName, ...lastName] = value.split(' ');
+      setFormData(prevData => ({
+        ...prevData,
+        customerFullName: value,
+        customerFirstName: firstName,
+        customerLastName: lastName.join(' '),
+  
+      }));
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        [name]: value,
+      }));
+    }
+  };
+  
+
   const submitMissingData = async (e) => {
+
+    console.log("formData")
+    console.log(formData);
     e.preventDefault();
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    
     const headers = {
       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": QB_DOMAIN,
+      "QB-Realm-Hostname": "voltaic.quickbase.com",
       "Content-Type": "application/json",
     };
 
@@ -76,35 +120,47 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         44: { value: formData.customerFirstName },
         45: { value: formData.customerLastName },
         46: { value: formData.customerPhone },
-        46: { value: formData.customerPhone }, //
+        48: { value: formData.financing } // Pass the selected financing as fid 50
       }],
       fieldsToReturn: []
     };
   
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      const response = await axios.post("https://api.quickbase.com/v1/records", requestBody, { headers });
       console.log("Success!", response.data);
+      pushNewProject(e)
       setIsSubmitted(true);
 
-      // Ensure this is called properly...
-      pushNewProject(e);
+    
+
+
+
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
     }
   };
 
+
+
+
   const pushNewProject = async (e) => {
     e.preventDefault();
     const QB_DOMAIN = "voltaic.quickbase.com";
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    
+
     const headers = {
       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
 
+
+    console.log("pushing new project" , formData)
+
+
+    console.log("pushing new project" , formData)
+  
     const requestBody = {
       to: "br5cqr4r3",
       data: [{
@@ -113,108 +169,35 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         85: { value: formData.customerLastName },
         88: { value: formData.customerPhone },
         93: { value: formData.address },
-        94: { value: '' },
-        633: { value: '71' },
         37: { value: 'Incomplete' },
+        633: { value: '71' },
         95: { value: formData.city },
-        96: { value: formData.state === "CA" ? "California" : null },
+        96: { value: 'California' },
         97: { value: formData.zipCode },
         98: { value: formData.country },
       }],
       fieldsToReturn: []
     };
-  
+
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
       setIsSubmitted(true);
-
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
     }
   };
 
-  useEffect(() => {
-    if (data.ownerName) {
-      const [firstName, ...lastName] = data.ownerName.split(' ');
-      setFormData((prevState) => ({
-        ...prevState,
-        customerFirstName: firstName,
-        customerLastName: lastName.join(' '),
-        customerFullName: `${firstName} ${lastName.join(' ')}`,
-        customerEmail: data.customerEmail || '',
-        recordID: data.recordID || '',
-        customerPhone: data.customerPhone || ''
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        customerFirstName: '',
-        customerLastName: '',
-        customerFullName: '',
-        customerEmail: data.customerEmail || '',
-        recordID: data.recordID || '',
-        customerPhone: data.customerPhone || ''
-      }));
-    }
-  }, [data]);
 
-  const handleChange = (e) => {
-    setFormData((prevData) => ({
-      ...prevData,
-      [e.target.name]: e.target.value,
-    }));
-  };
 
-  const handlePlaceSelected = (place) => {
-    if (place && place.address_components) {
-      const addressComponents = place.address_components;
-      const separatedAddress = {
-        address: place.formatted_address,
-        city: addressComponents.find(comp => comp.types.includes('locality'))?.long_name || '',
-        state: addressComponents.find(comp => comp.types.includes('administrative_area_level_1'))?.short_name || '',
-        zipCode: addressComponents.find(comp => comp.types.includes('postal_code'))?.long_name || '',
-        country: addressComponents.find(comp => comp.types.includes('country'))?.long_name || '',
-      };
-      setFormData((prevData) => ({
-        ...prevData,
-        ...separatedAddress,
-      }));
-    }
-  };
 
-  const adjustAutocompleteZIndex = useCallback(() => {
-    const pacContainer = document.querySelector('.pac-container');
-    if (pacContainer) {
-      pacContainer.style.zIndex = '1600'; // Ensure the dropdown appears above the modal
-    }
-  }, []);
 
-  useEffect(() => {
-    adjustAutocompleteZIndex();
-  }, [adjustAutocompleteZIndex]);
 
-  useEffect(() => {
-    const observer = new MutationObserver(adjustAutocompleteZIndex);
-    const target = document.querySelector('body');
-    const config = { childList: true, subtree: true };
 
-    if (target) {
-      observer.observe(target, config);
-    }
 
-    return () => {
-      if (target) {
-        observer.disconnect();
-      }
-    };
-  }, [adjustAutocompleteZIndex]);
 
-  const handleSave = () => {
-    onSave(formData);
-    onClose();
-  };
+
 
   return (
     <Modal open={open} onClose={onClose}>
@@ -232,6 +215,11 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         <Typography variant="h6" component="h2" gutterBottom>
           Edit Sale Data
         </Typography>
+
+        <Typography variant="h6" component="h2" gutterBottom>
+          {formData.recordID}  
+        </Typography>
+        {/* not showing  record ID  here*/}
         <TextField
           name="customerFullName"
           label="Customer Full Name"
@@ -256,22 +244,78 @@ const EditModal = ({ open, onClose, data, onSave }) => {
           fullWidth
           margin="normal"
         />
-        <Autocomplete
-          apiKey="AIzaSyDzUn0CKCVkUOaJtzzw16qT3QTSfPTtS6Q"
-          onPlaceSelected={handlePlaceSelected}
-          options={{
-            types: ['address'],
-            componentRestrictions: { country: "us" },
+      
+ <PlacesAutocomplete
+          value={formData.address}
+          onChange={(address) => setFormData(prevData => ({ ...prevData, address }))}
+          onSelect={(address) => {
+            const addressParts = address.split(',');  // Split the address into parts
+            const streetAddress = addressParts[0]?.trim() || "";
+            const city = addressParts[1]?.trim() || "";
+            const stateZip = addressParts[2]?.trim().split(' ') || [];
+            const state = stateZip[0] || "";
+            const zipCode = stateZip[1] || "";
+            const country = addressParts[3]?.trim() || "";
+        
+            setFormData(prevData => ({
+              ...prevData,
+              address,  // Set the full address
+              city,
+              state,
+              zipCode,
+              country
+            }));
           }}
-          style={{
-            width: '100%',
-            margin: 'normal',
-            zIndex: 1500, // Ensure this is higher than the modal's zIndex
-            position: 'relative'
-          }}
-          defaultValue={formData.address || ''}
-          placeholder="Enter Address"
-        />
+        >
+          {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+            <div>
+              <TextField
+                {...getInputProps({
+                  placeholder: 'Enter Address',
+                  label: 'Address',
+                  variant: 'outlined',
+                })}
+                fullWidth
+                margin="normal"
+              />
+              <div style={{ zIndex: 3000, backgroundColor: 'white', position: 'absolute', width: '100%' }}>
+                {loading && <div>Loading...</div>}
+                {suggestions.map(suggestion => {
+                  const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
+                  const style = suggestion.active
+                    ? { backgroundColor: '#fafafa', cursor: 'pointer' }
+                    : { backgroundColor: '#ffffff', cursor: 'pointer' };
+                  return (
+                    <div
+                      {...getSuggestionItemProps(suggestion, {
+                        className,
+                        style,
+                      })}
+                    >
+                      <span>{suggestion.description}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+        </PlacesAutocomplete>
+
+
+
+        <FormControl fullWidth margin="normal">
+          <InputLabel>Financing</InputLabel>
+          <Select
+            name="financing"
+            value={formData.financing}
+            label="Financing"
+            onChange={handleChange}
+          >
+            <MenuItem value="Sunnova">Sunnova</MenuItem>
+            <MenuItem value="Lightreach">Lightreach</MenuItem>
+            <MenuItem value="Enium">Enium</MenuItem>
+          </Select>
+        </FormControl>
         <Button onClick={submitMissingData} variant="contained" color="primary" fullWidth>
           Send Welcome Call
         </Button>
@@ -279,6 +323,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     </Modal>
   );
 };
+
 
 
 export default function NewSaleData(props) {
@@ -316,20 +361,40 @@ export default function NewSaleData(props) {
   };
 
   useEffect(() => {
+
+ 
+    
     fetchNewSaleData();
   }, [recordUserId]);
 
   const handleOpenModal = (row) => {
-    setSelectedRow(row);
+
+    console.log("Selected Row:", row);  // This logs correctly, including recordID
+  
+
+  
+      alert(row.recordID)
+
     const [firstName, ...lastName] = row.ownerName.split(' ');
     setFormData({
       ...row,
-      customerFullName: `${firstName} ${lastName.join(' ')}`
+      customerFullName: `${firstName} ${lastName.join(' ')}`,
+      recordID: row.recordID || 'N/A'
+
+
     });
+
+
+    setSelectedRow(row);
+
+
+    console.log(selectedRow)
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
+
+    console.log( selectedRow)
     setOpenModal(false);
     setSelectedRow(null);
     setFormData({});
@@ -427,6 +492,7 @@ export default function NewSaleData(props) {
               onClose={handleCloseModal}
               data={selectedRow || {}}
               onSave={handleSave}
+      
             />
           </>
         )}
