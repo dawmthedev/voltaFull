@@ -156,6 +156,21 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     };
 
 
+    // const mapFinancingToValue = (financing) => {
+    //   switch (financing) {
+    //     case "Sunnova":
+    //       return "133";
+    //     case "Lightreach":
+    //       return "22";
+    //     case "Enium":
+    //       return "23";
+    //     default:
+    //       return "";  // Default value in case of an unknown option
+    //   }
+    // };
+    
+
+
     console.log("pushing new project" , formData)
 
 
