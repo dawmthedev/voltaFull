@@ -216,9 +216,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
           Edit Sale Data
         </Typography>
 
-        <Typography variant="h6" component="h2" gutterBottom>
-          {formData.recordID}  
-        </Typography>
+
         {/* not showing  record ID  here*/}
         <TextField
           name="customerFullName"
@@ -373,7 +371,7 @@ export default function NewSaleData(props) {
   
 
   
-      alert(row.recordID)
+      
 
     const [firstName, ...lastName] = row.ownerName.split(' ');
     setFormData({
