@@ -33,6 +33,7 @@ import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
 import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUser';
+import MessageForm from '../components/send-letter/SendLetter'
 
 import EmailUserForm from '../components/email-user/EmailUser';
 import { setAlert } from '../redux/slice/alertSlice';
@@ -104,6 +105,8 @@ export default function UserPage() {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isEmailModalOpen, setIsEmailModalOpen] = useState<boolean>(false);
   const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
+  const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
+
 
   const [user, setUser] = useState(initialState);
   const [newRole, setNewRole] = useState<string>('');
@@ -262,9 +265,15 @@ export default function UserPage() {
           </Button>
           
 
-          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsEmailModalOpen(true)}>
+          {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsEmailModalOpen(true)}>
             Send Email
-          </Button>
+          </Button> */}
+
+
+
+          <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsMessageModalOpen(true)}>
+        Send Message
+      </Button>
 
 
         </Stack>
@@ -276,13 +285,30 @@ export default function UserPage() {
           handleSubmit={submitRole}
           loading={roleLoading}
         >
+
+
+
+
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
    
 
 
+
+
+        <CustomModal
+        title="Send Message"
+        open={isMessageModalOpen}
+        setOpen={setIsMessageModalOpen}
+      >
+        <MessageForm onClose={() => setIsMessageModalOpen(false)} />
+      </CustomModal>
+
         <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
         <AddUserForm onClose={handleCloseModal} />
+
+
+
 
 
         </CustomModal>
