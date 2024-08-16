@@ -6,6 +6,7 @@ const MessageForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     topic: '',
     message: '',
+    headline: '',
   });
 
   const [submissionStatus, setSubmissionStatus] = useState({
@@ -39,6 +40,7 @@ const MessageForm = ({ onClose }) => {
       data: [{
         7: { value: formData.topic }, // FID 1 for Topic
         6: { value: formData.message }, // FID 2 for Message
+        8: { value: formData.headline }, // FID 2 for Message
       }],
       fieldsToReturn: [] // Specify fields to return, if any
     };
@@ -61,6 +63,16 @@ const MessageForm = ({ onClose }) => {
 
   return (
     <form onSubmit={submitData}>
+
+
+      <TextField
+        label="Headline"
+        name="headline"
+        value={formData.headline}
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />    
       <TextField
         label="Topic"
         name="topic"

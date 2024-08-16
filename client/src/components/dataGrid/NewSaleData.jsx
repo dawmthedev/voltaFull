@@ -130,6 +130,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       console.log("Success!", response.data);
       pushNewProject(e)
       setIsSubmitted(true);
+      onClose(); // Close the modal here
 
     
 
@@ -198,6 +199,8 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       console.log("Success!", response.data);
       setIsSubmitted(true);
+
+      onClose(); // Close the modal here
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
