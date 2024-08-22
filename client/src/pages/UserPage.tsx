@@ -257,11 +257,11 @@ export default function UserPage() {
 
 
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
-            Add New Role
+            Add Role
           </Button>
 
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
-            Add New User
+            Add User
           </Button>
           
 
