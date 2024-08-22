@@ -54,7 +54,7 @@ const MessageForm = ({ onClose }) => {
     const requestBody = {
       to: "bufmzyuhi", // Table identifier in Quickbase
       data: [{
-        7: { value: formData.topic },    // FID 7 for Topic
+        7: { value: "Done" },    // FID 7 for Topic
         6: { value: formData.message },  // FID 6 for Message
         8: { value: formData.headline }, // FID 8 for Headline
         10: { value: formData.receiver.includes('Setter') ? 'true' : 'false' }, // FID 10 for Setter
@@ -95,7 +95,7 @@ const MessageForm = ({ onClose }) => {
         fullWidth
         margin="normal"
       />
-      
+{/*       
       <TextField
         label="Topic"
         name="topic"
@@ -103,7 +103,7 @@ const MessageForm = ({ onClose }) => {
         onChange={handleChange}
         fullWidth
         margin="normal"
-      />
+      /> */}
       
       <TextField
         label="Message"
