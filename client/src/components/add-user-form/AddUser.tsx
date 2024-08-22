@@ -75,7 +75,8 @@ const AddUserForm = ({ onClose }) => {
         1071: { value: formData.payrollType }, // Field ID for Payroll Type
         1072: { value: formData.hireDate }, // New date field for Hire Date
         1073: { value: formData.selectedTeamMembers.join(', ') }, // New multi-select field
-        1074: { value: formData.location } // New location field
+        1074: { value: formData.location }, // New location field
+        1075: { value: "true" } // New location field
       }],
       fieldsToReturn: [] // Specify fields to return, if any
     };
@@ -155,9 +156,9 @@ const AddUserForm = ({ onClose }) => {
           value={formData.role}
           onChange={handleChange}
         >
-          <MenuItem value="admin">Manager</MenuItem>
-          <MenuItem value="user">Sales Rep</MenuItem>
-          <MenuItem value="manager">Setter</MenuItem>
+          <MenuItem value="Manager">Manager</MenuItem>
+          <MenuItem value="Sales Rep">Sales Rep</MenuItem>
+          <MenuItem value="Setter">Setter</MenuItem>
         </Select>
       </FormControl>
 
