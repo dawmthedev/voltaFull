@@ -64,7 +64,7 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+      <Box sx={{ marginLeft: '40px', px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`}
           alt="Voltaic CRM Logo"

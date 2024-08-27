@@ -202,7 +202,7 @@ const CompleteRegistration = () => {
         </Stack>
       </Stack>
 
-      {isStartVerification && (
+      {/* {isStartVerification && ( */}
         <Box>
           <Stack spacing={3} sx={{ position: 'relative', mt: 2 }}>
             <TextField
@@ -268,7 +268,7 @@ const CompleteRegistration = () => {
           {verifyCodeLoading ? <b style={{ color: '#0c71edd8', fontSize: '14px' }}>Loading...</b> : ''}
           {verifyCodeError ? <b style={{ color: 'red', fontSize: '14px' }}>{verifyCodeError}</b> : ''}
         </Box>
-      )}
+       {/* )} */}
 
       <Stack direction="row" alignItems="center" justifyItems="start" sx={{ my: 2 }}>
         <Checkbox
