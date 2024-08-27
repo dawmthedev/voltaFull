@@ -262,7 +262,7 @@ const CompleteRegistration = () => {
                 }
               }}
             >
-              Resend
+              Send Code
             </Button>
           </Stack>
           {verifyCodeLoading ? <b style={{ color: '#0c71edd8', fontSize: '14px' }}>Loading...</b> : ''}
