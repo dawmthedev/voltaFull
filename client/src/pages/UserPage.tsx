@@ -46,6 +46,7 @@ const TABLE_HEAD = [
   { id: 'email', name: 'Email', alignRight: false },
   { id: 'company', name: 'Company', alignRight: false },
   { id: 'role', name: 'Role', alignRight: false },
+  { id: 'docs', name: 'Docs', alignRight: false },
   { id: 'isSuperAdmin', name: 'Super Admin', alignRight: false },
   // { id: 'isVerified', name: 'Verified', alignRight: false },
   // { id: 'status', name: 'Status', alignRight: false },
@@ -83,6 +84,7 @@ const initialState = {
   id: '',
   name: '',
   role: '',
+  docs: '',
   isSuperAdmin: false
 };
 
@@ -127,7 +129,7 @@ export default function UserPage() {
   };
 
   const getSelectedUser = (userData) => {
-    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role, isSuperAdmin: userData.isSuperAdmin });
+    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role, isSuperAdmin: userData.isSuperAdmin , docs: userData.docs});
   };
 
   const handleCloseMenu = () => {
@@ -138,7 +140,7 @@ export default function UserPage() {
     if (!user.name) {
       return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
     }
-    const response = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin }));
+    const response = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin, docs: user.docs }));
     if (response && response.payload) {
       await dispatch(getUsers({ signal }));
     }
@@ -244,7 +246,7 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> User | Minimal UI </title>
+        <title> Users | Volta</title>
       </Helmet>
 
       <Container>
@@ -344,7 +346,7 @@ export default function UserPage() {
                 />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                    const { name, email, role, company, avatarUrl, isSuperAdmin } = row;
+                    const { name, email, role, company, avatarUrl, isSuperAdmin, docs } = row;
                     const selectedUser = selected.indexOf(name) !== -1;
 
                     return (
@@ -363,11 +365,24 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left">{email}</TableCell>
+                        {/* <TableCell align="left">{email}</TableCell> */}
                         <TableCell align="left">{company}</TableCell>
 
                         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
                           {role}
                         </TableCell>
+
+                        <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
+  {docs !== "Null" ? (
+    <a href={docs} target="_blank" rel="noopener noreferrer">
+      {docs}
+    </a>
+  ) : (
+    docs
+  )}
+</TableCell>
+
+
                         {isSuperAdmin ? (
                           <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
                             True
@@ -377,6 +392,8 @@ export default function UserPage() {
                             False
                           </TableCell>
                         )}
+
+
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 

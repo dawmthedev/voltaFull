@@ -81,6 +81,7 @@ export type AdminResponseTypes = {
   role: string;
   company: string;
   email: string;
+  docs: string;
   unlocked: string;
   recordID: string;
   twoFactorEnabled: boolean;

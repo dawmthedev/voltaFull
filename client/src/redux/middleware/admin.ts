@@ -15,9 +15,9 @@ const getUsers = createAsyncThunk('users/get', async ({ signal }: { signal: Abor
 
 const updateAdmin = createAsyncThunk(
   'users/update',
-  async ({ id, name, role, isSuperAdmin }: { id: string; name: string; role: string; isSuperAdmin: boolean }, { dispatch }) => {
+  async ({ id, name, role, isSuperAdmin, docs }: { id: string; name: string; role: string; isSuperAdmin: boolean; docs: string}, { dispatch }) => {
     try {
-      const { data } = await put('/admin', { id, name, role, isSuperAdmin });
+      const { data } = await put('/admin', { id, name, role, isSuperAdmin, docs });
       dispatch(setAlert({ message: 'User updated successfully', type: 'success' }));
       return data.data;
     } catch (error) {

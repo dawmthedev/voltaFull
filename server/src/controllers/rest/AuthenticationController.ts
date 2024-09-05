@@ -227,6 +227,7 @@ export class AuthenticationController {
         name: admin.name,
         email: admin.email,
         role: admin.role || "",
+        docs: admin.docs || "",
         recordID: admin.recordID || "",
         unlocked: admin.unlocked || "",
         twoFactorEnabled: admin.twoFactorEnabled,

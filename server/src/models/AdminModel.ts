@@ -28,6 +28,10 @@ export class AdminModel {
   @Default("admin")
   role: string;
 
+  @Property()
+  @Default("null")
+  docs: string;
+
 
   @Property()
   @Default("false")

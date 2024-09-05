@@ -43,6 +43,7 @@ export class AdminResultModel {
   @Property() public readonly id: string;
   @Property() public readonly name: string;
   @Property() public readonly role: string;
+  @Property() public readonly docs: string;
   @Property() public readonly company: string;
   @Property() public readonly email: string;
   @Property() public readonly recordID: string;
