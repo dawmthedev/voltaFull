@@ -37,6 +37,8 @@ const MainStepper = ({ activeStep, taskDates, financing }) => {
 
     return (
         <div>
+
+            <Typography> Solar Milestones</Typography>
             <Stepper sx={{ paddingLeft: '50px', backgroundColor: 'whitesmoke', borderRadius: 2 }} activeStep={activeStep} orientation="vertical">
                 {stepLabels.map((step, index) => {
                     let stepContent;
