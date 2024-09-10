@@ -261,10 +261,10 @@ export default function UserPage() {
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
             Add Role
           </Button>
-{/* 
+
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
             Add User
-          </Button> */}
+          </Button>
           
 
           {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsEmailModalOpen(true)}>
