@@ -246,12 +246,12 @@ export default function DashboardLayout() {
           One more step! Please submit your verification documents.
         </Typography>
         {/* Display the user's recordID */}
-        <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
+        {/* <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
           Your Record ID: {recordID}
         </Typography>
         <Typography variant="body2" sx={{ color: 'text.secondary', mt: 1 }}>
           Verified?: No
-        </Typography>
+        </Typography> */}
 
         <Button
           variant="contained"
