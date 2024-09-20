@@ -49,6 +49,27 @@ const RootComponent = () => {
 const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
 root.render(<RootComponent />);
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //new
 
 // If you want to enable client cache, register instead.

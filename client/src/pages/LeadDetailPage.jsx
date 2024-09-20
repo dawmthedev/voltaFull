@@ -402,6 +402,17 @@ const LeadDetailPage = () => {
   }
   
 
+
+
+
+
+
+
+
+
+
+
+  
   useEffect(() => {
     if (financing === 'Sunnova') {
       stepLabels.splice(3, 0, { label: 'Submit NTP at Permit Submit by Design', key: 'permitSubmitDate' });

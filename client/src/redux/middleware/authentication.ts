@@ -36,6 +36,10 @@ const login = createAsyncThunk('aut/login', async ({ email, password }: { email:
   }
 });
 
+
+
+
+
 const register = createAsyncThunk('auth/register', async ({ name, email, password }: { name: string; email: string; password: string }) => {
   try {
     const { data } = await post('/auth/register', { name, email, password });
