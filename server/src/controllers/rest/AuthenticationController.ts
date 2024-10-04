@@ -823,6 +823,45 @@ export class AuthenticationController {
 
 
 
+
+
+
+      BatteryPermitDate:  data["batteryPermitDate"] || null,
+      BatteryApprovalDate: data["batteryApproval"] || null,
+      OrderBatterDate:  data["orderBattery"] || null,
+      BatteryInstallDate:  data["batteryInstall"] || null,
+      FireInspectionDate: data["fireInspectionDate"] || null,
+      HVACSaleDate:  data["hvacsale"] || null,
+      HVACInstallDate:  data["hvacinstallDate"] || null,
+      HVACPermitDate: data["hvcacpermitDate"] || null,
+      MeterSpotDate: data["meterSpot"] || null,
+      MPUPermitDate:  data["mpupermitDate"] || null,
+      MPUInstallDate:  data["mpuinstall"] || null,
+      MPUInspectinoDate:  data["mpuinspection"] || null,
+      QuietCoolDate:  data["quietCoolDate"] || null,
+      InsulationDate:  data["insulationDate"] || null,
+      RoofPermitDate: data["roofPermit"] || null,
+      RoofInstallDate:  data["roofInstall"] || null,
+      RoofInspectionDate:  data["roofInspection"] || null,
+      RoofColorSelectionDate:  data["roofColorSelection"] || null,
+      ServiceInspectionDate:  data["serviceInspection"] || null,
+      ServiceDate:  data["serviceDate"] || null,
+      PlansServiceDate:  data["plansService"] || null,
+      FinalInspectionServiceDate: data["fiservice"] || null,
+      PTOServiceDate:  data["ptoservice"] || null,
+      PartnerSubmissionDate:  data["partnerSubmission"] || null,
+      InvoiceInpsectionDate: data["invoiceInspection"] || null,
+      InvociePTODate: data["invoicePTO"] || null,
+      InvoiceServiceDate:  data["invoiceService"] || null,
+      FDACPServiceDate: data["fdaserviceDate"] || null,
+      ServicePackageSubmittedDate: data["servicePackageDate"] || null,
+    
+
+
+
+
+
+
     };
 
 

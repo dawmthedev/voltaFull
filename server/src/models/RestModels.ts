@@ -124,6 +124,39 @@ export class SingleCrmDealResultModel {
   @Property() public readonly FIDate: string;
   @Property() public readonly PTODate: string;
   @Property() public readonly financing: string;
+
+
+  //Newly added
+
+  @Property() public readonly batteryPermitDate: string;
+  @Property() public readonly batteryApprovalDate: string;
+  @Property() public readonly OrderBatteryDate: string;
+  @Property() public readonly BatteryinstallDate: string;
+  @Property() public readonly FireInspectionDate: string;
+  @Property() public readonly HVACSaleDate: string;
+  @Property() public readonly HVACInstallDate: string;
+  @Property() public readonly HVACPermitDate: string;
+  @Property() public readonly MeterspotDate: string;
+  @Property() public readonly MPUPermitDate: string;
+  @Property() public readonly MPUPInstallDate: string;
+  @Property() public readonly MPUInspectionDate: string;
+  @Property() public readonly QuietCoolDate: string;
+  @Property() public readonly InsulationDate: string;
+  @Property() public readonly RoofPermitDate: string;
+  @Property() public readonly RoofInstallDate: string;
+  @Property() public readonly RoofInspectionDate: string;
+  @Property() public readonly RoofColorSelectionDate: string;
+  @Property() public readonly ServiceInspectionDate: string;
+  @Property() public readonly ServiceDate: string;
+  @Property() public readonly PlansServiceDate: string;
+  @Property() public readonly FinalInspectionServiceDate: string;
+  @Property() public readonly PTOServiceDate: string;
+  @Property() public readonly PartnerSubmissionDate: string;
+  @Property() public readonly InvoiceSerivceDate: string;
+  @Property() public readonly InvoiceInspectionDate: string;
+  @Property() public readonly InvoicePTODate: string;
+  @Property() public readonly FDACPServiceDate: string;
+  @Property() public readonly ServicePackageSubmittedDate: string;
  
   @Property() public readonly vcmessages: {
     relatedProject: string;
@@ -141,10 +174,6 @@ export class SingleCrmDealResultModel {
     status: string;
     billTo: string;
   }[]; // Define vcmessages as an array of objects
-
-
-
-
   @Property() public readonly vccommissions: {
     user: string;
     itemType: string;
@@ -169,14 +198,10 @@ export class SingleCrmDealResultModel {
     solarInstallDate: string;
     FIDate: string;
     PTODate: string;
-
-
     installer: string;
     contractAmount: string;
     dealerFee: string;
     addersTotal: string;
-
-
     email: string;
     projectID: string;
     plansReceived: string;
@@ -195,6 +220,42 @@ export class SingleCrmDealResultModel {
     datePaid: string;
     amount: string;
     address: string;
+
+
+
+
+
+    
+    BatteryPermitDate: string;
+    BatteryApprovalDate: string;
+    OrderBatterDate: string;
+    BatteryInstallDate: string;
+    FireInspectionDate: string;
+    HVACSaleDate: string;
+    HVACInstallDate: string;
+    HVACPermitDate: string;
+    MeterSpotDate: string;
+    MPUPermitDate: string;
+    MPUInstallDate: string;
+    MPUInspectinoDate: string;
+    QuietCoolDate: string;
+    InsulationDate: string;
+    RoofPermitDate: string;
+    RoofInstallDate: string;
+    RoofInspectionDate: string;
+    RoofColorSelectionDate: string;
+    ServiceInspectionDate: string;
+    ServiceDate: string;
+    PlansServiceDate: string;
+    FinalInspectionServiceDate: string;
+    PTOServiceDate: string;
+    PartnerSubmissionDate: string;
+    InvoiceInpsectionDate: string;
+    InvociePTODate: string;
+    InvoiceServiceDate: string;
+    FDACPServiceDate: string;
+    ServicePackageSubmittedDate: string;
+  
     vcmessages: {
       relatedProject: string;
       type: string;
@@ -219,6 +280,7 @@ export class SingleCrmDealResultModel {
     datePaid: string;
     amount: string;
     paidBy: string;
+
     }[]; // Define vcmessages as an array of objects
   }) {
     this.email = data.email;
@@ -264,6 +326,40 @@ export class SingleCrmDealResultModel {
     this.solarInstallDate = data.solarInstallDate;
     this.FIDate = data.FIDate; 
     this.PTODate = data.PTODate;
+
+
+    this.batteryPermitDate = data.BatteryPermitDate;
+    this.batteryApprovalDate = data.BatteryApprovalDate;
+    this.OrderBatteryDate = data.OrderBatterDate;
+    this.BatteryinstallDate = data.BatteryInstallDate;
+    this.FireInspectionDate = data.FireInspectionDate;
+    this.HVACSaleDate = data.HVACSaleDate;
+    this.HVACInstallDate = data.HVACInstallDate;
+    this.HVACPermitDate = data.HVACPermitDate;
+    this.MeterspotDate = data.MeterSpotDate;
+    this.MPUPermitDate = data.MPUPermitDate;
+    this.MPUPInstallDate = data.MPUInstallDate;
+    this.MPUInspectionDate = data.MPUInspectinoDate;
+    this.QuietCoolDate = data.QuietCoolDate;
+    this.InsulationDate = data.InsulationDate; 
+    this.RoofPermitDate = data.RoofPermitDate;
+    this.RoofInstallDate = data.RoofInstallDate;
+    this.RoofInspectionDate = data.RoofInspectionDate;
+    this.RoofColorSelectionDate = data.RoofColorSelectionDate;
+    this.ServiceInspectionDate = data.ServiceInspectionDate; 
+    this.ServiceDate = data.ServiceDate;
+    this.PlansServiceDate = data.PlansServiceDate;
+    this.FinalInspectionServiceDate = data.FinalInspectionServiceDate;
+    this.PTOServiceDate = data.PTOServiceDate;
+    this.PartnerSubmissionDate = data.PTOServiceDate;
+    this.InvoiceInspectionDate = data.InvoiceInpsectionDate;
+    this.InvoiceSerivceDate = data.InvoiceServiceDate;
+    this.InvoicePTODate = data.InvociePTODate;
+    this.FDACPServiceDate = data.FDACPServiceDate;
+    this.ServicePackageSubmittedDate = data.ServicePackageSubmittedDate;
+
+ 
+
 
  
 
