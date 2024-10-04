@@ -3,6 +3,7 @@ import { Stepper, Step, StepLabel, Typography, Modal, Box } from '@mui/material'
 
 
 //Change to front end
+//
 const stepLabels = [
     { label: 'Battery Permit', key: 'batteryPermitDate' },
     { label: 'Battery Approval', key: 'batteryApprovalDate' },
