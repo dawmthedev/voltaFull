@@ -86,6 +86,8 @@ const LeadDetailPage = () => {
         NTPDate: data.NTPDate && data.NTPDate !== "\"\"" ? data.NTPDate.replace(/^"|"$/g, '') : null,
         QcChecDate: data.QcChecDate && data.QcChecDate !== "\"\"" ? data.QcChecDate.replace(/^"|"$/g, '') : null,
         plansReceived: data.plansReceived && data.plansReceived !== "\"\"" ? data.plansReceived.replace(/^"|"$/g, '') : null,
+        fdacp: data.fdacp && data.fdacp !== "\"\"" ? data.fdacp.replace(/^"|"$/g, '') : null,
+        
         FLADate: data.FLADate && data.FLADate !== "\"\"" ? data.FLADate.replace(/^"|"$/g, '') : null,
         SolarPermitDate: data.SolarPermitDate && data.SolarPermitDate !== "\"\"" ? data.SolarPermitDate.replace(/^"|"$/g, '') : null,
         solarInstallDate: data.solarInstallDate && data.solarInstallDate !== "\"\"" ? data.solarInstallDate.replace(/^"|"$/g, '') : null,

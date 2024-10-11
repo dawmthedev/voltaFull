@@ -11,6 +11,7 @@ const stepLabels = [
     { label: 'FLA', key: 'FLADate' },
     { label: 'Solar Permit', key: 'SolarPermitDate' },
     { label: 'Solar Install', key: 'solarInstallDate' },
+    { label: 'FDA & CP', key: 'fdacp' },
     { label: 'Final Inspection', key: 'FIDate' },
     { label: 'PTO', key: 'PTODate' },
 ];

@@ -819,13 +819,7 @@ export class AuthenticationController {
       FIDate: data["fidate"] || null,
       PTODate: data["ptodate"] || null,
       financing: data["financing"] || null,
-
-
-
-
-
-
-
+      fdacp: data["fdacp"] || null,
       BatteryPermitDate:  data["batteryPermitDate"] || null,
       BatteryApprovalDate: data["batteryApproval"] || null,
       OrderBatterDate:  data["orderBattery"] || null,

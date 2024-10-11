@@ -129,6 +129,7 @@ export class SingleCrmDealResultModel {
   //Newly added
 
   @Property() public readonly batteryPermitDate: string;
+  @Property() public readonly fdacp: string;
   @Property() public readonly batteryApprovalDate: string;
   @Property() public readonly OrderBatteryDate: string;
   @Property() public readonly BatteryinstallDate: string;
@@ -220,7 +221,7 @@ export class SingleCrmDealResultModel {
     datePaid: string;
     amount: string;
     address: string;
-
+    fdacp: string;
 
 
 
@@ -300,7 +301,7 @@ export class SingleCrmDealResultModel {
     this.systemSizeFinal = data.systemSizeFinal;
     this.stage = data.stage;
     this.status = data.status;
-
+    this.fdacp = data.fdacp;
     this.installer = data.installer;
     this.contractAmount = data.contractAmount;
     this.dealerFee = data.dealerFee;
