@@ -16,7 +16,8 @@ import {
   NewSaleResultModel,
   UtilityBillResultModel,
   CrmTimelineResultModel,
-  CrmTimelineAvgResultModel
+  CrmTimelineAvgResultModel,
+  FuturePayResultModel
 } from "../../models/RestModels";
 
 import { openAIService } from "../../helper/OpenAIService";
@@ -98,6 +99,11 @@ export class AhjTimeline {
 
 class AIResponseCollection {
   @Property() public responses: AIResponseModel[];
+}
+
+
+export class UpcomginPayCollection {
+  @Property() public deals: FuturePayResultModel[];
 }
 export class CrmDealResultCollection {
   @Property() public deals: CrmDealResultModel[];
@@ -753,6 +759,7 @@ export class AuthenticationController {
   }
 
   // SINGLE CRM DEAL
+  //add heroku
 
   @Post("/crmDeal")
   @Returns(200, SuccessResult).Of(SingleCrmDealResultModel)
@@ -986,6 +993,61 @@ export class AuthenticationController {
     return new SuccessResult({ deals: results }, CrmDealResultCollection);
   }
 
+
+
+
+  @Post("/upcomingPay")
+  @Returns(200, SuccessResult).Of(FuturePayResultModel)
+  public async upcomingPay(@BodyParams() body: CrmDealsBody, @Response() res: Response) {
+    const { recordId } = body;
+    CrmPayBody;
+    if (!recordId) throw new BadRequest(MISSING_PARAMS);
+
+    const API_URL = "https://voltaicqbapi.herokuapp.com/UpcomingPay";
+
+    const requestBody = {
+      repID: recordId
+    };
+
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    console.log("Getting CRM users Upcoming Pay...");
+
+    console.log(API_URL)
+
+    const response = await axios.post(API_URL, requestBody, { headers });
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
+
+    const data = response.data;
+
+    const dataArray = Array.isArray(data) ? data : [data];
+
+    console.log(dataArray);
+
+    // Map over dataArray and transform its structure
+    const results = dataArray.map((project) => {
+      return {
+
+        recordID: project["recordID"] || null,
+        m1Date: project["m1Date"] || null,
+        m2Date: project["m2Date"] || null,
+        m3Date: project["m3Date"] || null,
+        plansReqDate: project["plansReqDate"] || null,
+        milestone: project["upcomingMilestonePayout"] || null,
+        homeownerName: project["homeownerName"] || null,
+        contractAmount: project["contractAmount"] || null,
+  
+      };
+    });
+
+    return new SuccessResult({ deals: results }, UpcomginPayCollection);
+  }
+
+
+
+
   //CRM DEALS
   @Post("/crmDeals")
   @Returns(200, SuccessResult).Of(CrmDealResultModel)
@@ -1004,7 +1066,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    console.log("Getting CRM users!!!...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");

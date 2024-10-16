@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+
 import {
   Grid, Dialog, Button, TextField, Autocomplete, Box, DialogTitle, DialogContent,
   DialogContentText, DialogActions, Typography, Paper, List, ListItem, ListItemText,
@@ -216,6 +217,64 @@ const LeadDetailPage = () => {
     }
   };
 
+
+
+
+  
+  useEffect(() => {
+    const fetchCRMUsers = async () => {
+      const API_URL = "https://api.quickbase.com/v1/records/query";
+      const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
+      const QB_DOMAIN = "voltaic.quickbase.com";
+
+      const requestBody = {
+        from: "br5cqr4wu",
+        where: "({53.EX.'Active'})",
+        
+        sortBy: [
+          { fieldId: 12, order: "ASC" },
+          { fieldId: 1049, order: "ASC" },
+          { fieldId: 52, order: "ASC" },
+          { fieldId: 10, order: "ASC" },
+          { fieldId: 602, order: "ASC" },
+        ],
+        groupBy: [
+          { fieldId: 12, grouping: "equal-values" },
+          { fieldId: 53, grouping: "equal-values" },
+          { fieldId: 1049, grouping: "equal-values" },
+          { fieldId: 10, grouping: "equal-values" },
+          { fieldId: 602, grouping: "equal-values" },
+        ],
+        options: { skip: 0, top: 0, compareWithAppLocalTime: false },
+      };
+
+      const headers = {
+        Authorization: USER_TOKEN,
+        "QB-Realm-Hostname": QB_DOMAIN,
+        "Content-Type": "application/json",
+      };
+
+      try {
+        const response = await axios.post(API_URL, requestBody, { headers });
+        if (response.data && response.data.data) {
+          const activeUsers = response.data.data
+            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
+            .map((user) => ({
+              id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
+              name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
+              email: user['10'] ? user['10'].value : 'No Email',
+            }));
+          setUsers(activeUsers);
+        }
+      } catch (error) {
+        console.error('Failed to fetch users:', error);
+      }
+    };
+
+    fetchCRMUsers();
+  }, []);
+
+
   useEffect(() => {
     if (UserData) {
       fetch(`${baseURL}/auth/crmDeal`, {
@@ -401,7 +460,7 @@ const LeadDetailPage = () => {
           <DialogContent>
             <DialogContentText>To send a message, please enter your message here.</DialogContentText>
             <TextField fullWidth margin="dense" label="Message" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
-            <Autocomplete multiple id="tags-outlined" options={users} getOptionLabel={(option) => option.email} filterSelectedOptions value={selectedUser} onChange={(event, newValue) => setSelectedUser(newValue)} renderInput={(params) => <TextField {...params} label="Tag Users" />} />
+            <Autocomplete multiple id="tags-outlined" options={users} getOptionLabel={(option) => option.name} filterSelectedOptions value={selectedUser} onChange={(event, newValue) => setSelectedUser(newValue)} renderInput={(params) => <TextField {...params} label="Tag Users" />} />
             <section {...getRootProps({ className: 'dropzone' })} style={{ border: '2px dashed #ccc', padding: '20px', textAlign: 'center', marginTop: '20px' }}>
               <input {...getInputProps()} />
               <p>Drag 'n' drop some files here, or click to select files</p>
@@ -571,7 +630,7 @@ const PayrollCard = ({ data }) => (
 
 
 //   // State for the message modal and message text
-//   const [users, setUsers] = useState([]);
+  // const [users, setUsers] = useState([]);
 //   const [selectedUser, setSelectedUser] = useState([]);
 //   const [isMessageModalOpen, setMessageModalOpen] = useState(false);
 //   const [messageText, setMessageText] = useState('');
@@ -980,65 +1039,65 @@ const PayrollCard = ({ data }) => (
 
 
   
-//   useEffect(() => {
-//     if (financing === 'Sunnova') {
-//       stepLabels.splice(3, 0, { label: 'Submit NTP at Permit Submit by Design', key: 'permitSubmitDate' });
-//     }
-//   }, [financing]);
+  // useEffect(() => {
+  //   if (financing === 'Sunnova') {
+  //     stepLabels.splice(3, 0, { label: 'Submit NTP at Permit Submit by Design', key: 'permitSubmitDate' });
+  //   }
+  // }, [financing]);
 
   
-//   useEffect(() => {
-//     const fetchCRMUsers = async () => {
-//       const API_URL = "https://api.quickbase.com/v1/records/query";
-//       const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-//       const QB_DOMAIN = "voltaic.quickbase.com";
+  // useEffect(() => {
+  //   const fetchCRMUsers = async () => {
+  //     const API_URL = "https://api.quickbase.com/v1/records/query";
+  //     const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
+  //     const QB_DOMAIN = "voltaic.quickbase.com";
 
-//       const requestBody = {
-//         from: "br5cqr4wu",
-//         where: "({53.EX.'Active'})",
+  //     const requestBody = {
+  //       from: "br5cqr4wu",
+  //       where: "({53.EX.'Active'})",
         
-//         sortBy: [
-//           { fieldId: 12, order: "ASC" },
-//           { fieldId: 1049, order: "ASC" },
-//           { fieldId: 52, order: "ASC" },
-//           { fieldId: 10, order: "ASC" },
-//           { fieldId: 602, order: "ASC" },
-//         ],
-//         groupBy: [
-//           { fieldId: 12, grouping: "equal-values" },
-//           { fieldId: 53, grouping: "equal-values" },
-//           { fieldId: 1049, grouping: "equal-values" },
-//           { fieldId: 10, grouping: "equal-values" },
-//           { fieldId: 602, grouping: "equal-values" },
-//         ],
-//         options: { skip: 0, top: 0, compareWithAppLocalTime: false },
-//       };
+  //       sortBy: [
+  //         { fieldId: 12, order: "ASC" },
+  //         { fieldId: 1049, order: "ASC" },
+  //         { fieldId: 52, order: "ASC" },
+  //         { fieldId: 10, order: "ASC" },
+  //         { fieldId: 602, order: "ASC" },
+  //       ],
+  //       groupBy: [
+  //         { fieldId: 12, grouping: "equal-values" },
+  //         { fieldId: 53, grouping: "equal-values" },
+  //         { fieldId: 1049, grouping: "equal-values" },
+  //         { fieldId: 10, grouping: "equal-values" },
+  //         { fieldId: 602, grouping: "equal-values" },
+  //       ],
+  //       options: { skip: 0, top: 0, compareWithAppLocalTime: false },
+  //     };
 
-//       const headers = {
-//         Authorization: USER_TOKEN,
-//         "QB-Realm-Hostname": QB_DOMAIN,
-//         "Content-Type": "application/json",
-//       };
+  //     const headers = {
+  //       Authorization: USER_TOKEN,
+  //       "QB-Realm-Hostname": QB_DOMAIN,
+  //       "Content-Type": "application/json",
+  //     };
 
-//       try {
-//         const response = await axios.post(API_URL, requestBody, { headers });
-//         if (response.data && response.data.data) {
-//           const activeUsers = response.data.data
-//             .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
-//             .map((user) => ({
-//               id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
-//               name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
-//               email: user['10'] ? user['10'].value : 'No Email',
-//             }));
-//           setUsers(activeUsers);
-//         }
-//       } catch (error) {
-//         console.error('Failed to fetch users:', error);
-//       }
-//     };
+  //     try {
+  //       const response = await axios.post(API_URL, requestBody, { headers });
+  //       if (response.data && response.data.data) {
+  //         const activeUsers = response.data.data
+  //           .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
+  //           .map((user) => ({
+  //             id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
+  //             name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
+  //             email: user['10'] ? user['10'].value : 'No Email',
+  //           }));
+  //         setUsers(activeUsers);
+  //       }
+  //     } catch (error) {
+  //       console.error('Failed to fetch users:', error);
+  //     }
+  //   };
 
-//     fetchCRMUsers();
-//   }, []);
+  //   fetchCRMUsers();
+  // }, []);
 
 
 

@@ -436,6 +436,27 @@ export class CrmDealRookieResultModel {
   @Property() public readonly amount: string;
 
 }
+
+
+
+export class FuturePayResultModel {
+  @Property() public readonly homeownerName: string;
+  @Property() public readonly recordID: string;
+  @Property() public readonly m1Date: string;
+  @Property() public readonly m2Date: string;
+  @Property() public readonly m3Date: string;
+  @Property() public readonly plansReqDate: string;
+  @Property() public readonly contractAmount: string;
+  @Property() public readonly milestone: string;
+  
+
+}
+
+
+
+
+
+
 export class CrmDealResultModel {
   @Property() public readonly email: string;
   @Property() public readonly projectID: string;

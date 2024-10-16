@@ -27,7 +27,7 @@ import DealerRates from './pages/DealerRates';
 import Assistant from './pages/Assistant';
 import Rookies from './pages/Rookies';
 import AvailabilityPlanner from './pages/AvailabilityPlanner';
-
+import UpcomingPayPage from './pages/UpcomingPayPge';
 import UtilitySign from './pages/UtilitySign';
 import Exam from './pages/Exam';
 
@@ -72,7 +72,8 @@ export default function Router() {
         { path: 'dynamic-leads', element: <DynamicLead /> },
         { path: 'planner', element: <Planner /> },
         { path: 'availability-planner', element: <AvailabilityPlanner /> },
-        { path: 'deals', element: <DealsPage /> }
+        { path: 'deals', element: <DealsPage /> },
+        { path: 'upcomingPay', element: <UpcomingPayPage /> }
       ]
     },
     {
