@@ -74,15 +74,15 @@ const navConfig = [
   //   icon: icon('ic_analytics'),
   //   isSuperAdmin: true
   // },
+  // {
+  //   title: 'Planner',
+  //   path: '/dashboard/planner',
+  //   icon: icon('ic_analytics'),
+  //   isSuperAdmin: true
+  // },
   {
-    title: 'Planner',
-    path: '/dashboard/planner',
-    icon: icon('ic_analytics'),
-    isSuperAdmin: true
-  },
-  {
-    title: 'Availability',
-    path: '/dashboard/availability-planner',
+    title: 'Upcoming Pay',
+    path: '/dashboard/upcomingPay',
     icon: icon('ic_analytics'),
     isSuperAdmin: true
   }
