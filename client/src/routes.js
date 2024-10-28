@@ -28,6 +28,7 @@ import Assistant from './pages/Assistant';
 import Rookies from './pages/Rookies';
 import AvailabilityPlanner from './pages/AvailabilityPlanner';
 import UpcomingPayPage from './pages/UpcomingPayPge';
+import PreviousPayPage from './pages/PreviousPay';
 import UtilitySign from './pages/UtilitySign';
 import Exam from './pages/Exam';
 
@@ -73,7 +74,8 @@ export default function Router() {
         { path: 'planner', element: <Planner /> },
         { path: 'availability-planner', element: <AvailabilityPlanner /> },
         { path: 'deals', element: <DealsPage /> },
-        { path: 'upcomingPay', element: <UpcomingPayPage /> }
+        { path: 'upcomingPay', element: <UpcomingPayPage /> },
+        { path: 'lastweekPay', element: <PreviousPayPage /> }
       ]
     },
     {

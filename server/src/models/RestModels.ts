@@ -439,6 +439,16 @@ export class CrmDealRookieResultModel {
 
 
 
+export class PreviousPayResultModel {
+  @Property() public readonly homeownerName: string;
+  @Property() public readonly upcomingMileStonePayout: string;
+  @Property() public readonly datePaid: string;
+  @Property() public readonly amount: string;
+  
+
+}
+
+
 export class FuturePayResultModel {
   @Property() public readonly homeownerName: string;
   @Property() public readonly recordID: string;
@@ -451,6 +461,7 @@ export class FuturePayResultModel {
   
 
 }
+
 
 
 

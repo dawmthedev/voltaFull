@@ -85,6 +85,12 @@ const navConfig = [
     path: '/dashboard/upcomingPay',
     icon: icon('ic_analytics'),
     isSuperAdmin: true
+  },
+  {
+    title: 'Last Weeks Pay',
+    path: '/dashboard/lastWeekPay',
+    icon: icon('ic_analytics'),
+    isSuperAdmin: true
   }
   // {
   //   title: 'Not found',

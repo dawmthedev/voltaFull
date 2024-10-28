@@ -17,8 +17,10 @@ import {
   UtilityBillResultModel,
   CrmTimelineResultModel,
   CrmTimelineAvgResultModel,
-  FuturePayResultModel
+  FuturePayResultModel,
+  PreviousPayResultModel
 } from "../../models/RestModels";
+
 
 import { openAIService } from "../../helper/OpenAIService";
 import { SuccessResult } from "../../util/entities";
@@ -101,6 +103,10 @@ class AIResponseCollection {
   @Property() public responses: AIResponseModel[];
 }
 
+
+export class PreviousPayCollection {
+  @Property() public deals: PreviousPayResultModel[];
+}
 
 export class UpcomginPayCollection {
   @Property() public deals: FuturePayResultModel[];
@@ -994,7 +1000,52 @@ export class AuthenticationController {
   }
 
 
+  @Post("/previousPay")
+  @Returns(200, SuccessResult).Of(PreviousPayResultModel)
+  public async previousPay(@BodyParams() body: CrmDealsBody, @Response() res: Response) {
+    const { recordId } = body;
+    CrmPayBody;
+    if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
+    const API_URL = "https://voltaicqbapi.herokuapp.com/PreviousPay";
+
+    const requestBody = {
+      repID: recordId
+    };
+
+    const headers = {
+      "Content-Type": "application/json"
+    };
+
+    console.log("Getting CRM users Upcoming Pay...");
+
+    console.log(API_URL)
+
+    const response = await axios.post(API_URL, requestBody, { headers });
+    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
+
+    const data = response.data;
+
+    const dataArray = Array.isArray(data) ? data : [data];
+
+    console.log(dataArray);
+
+    // Map over dataArray and transform its structure
+    const results = dataArray.map((project) => {
+      return {
+
+        homeownerName: project["homeownerName"] || null,
+        amount: project["amount"] || null,
+        upcomingMileStonePayout: project["upcomingMilestonePayout"] || null,
+        datePaid: project["datePaid"] || null,
+
+   
+  
+      };
+    });
+
+    return new SuccessResult({ deals: results }, PreviousPayCollection);
+  }
 
   @Post("/upcomingPay")
   @Returns(200, SuccessResult).Of(FuturePayResultModel)
