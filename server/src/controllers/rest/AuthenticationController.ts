@@ -1038,6 +1038,7 @@ export class AuthenticationController {
         amount: project["amount"] || null,
         upcomingMileStonePayout: project["upcomingMilestonePayout"] || null,
         datePaid: project["datePaid"] || null,
+        salesRep: project["salesRep"] || null,
 
    
   
@@ -1089,6 +1090,7 @@ export class AuthenticationController {
         milestone: project["upcomingMilestonePayout"] || null,
         homeownerName: project["homeownerName"] || null,
         contractAmount: project["contractAmount"] || null,
+        salesRep: project["salesRep"] || null,
   
       };
     });

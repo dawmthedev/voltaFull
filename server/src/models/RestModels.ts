@@ -444,6 +444,7 @@ export class PreviousPayResultModel {
   @Property() public readonly upcomingMileStonePayout: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
+  @Property() public readonly salesRep: string;
   
 
 }
@@ -452,6 +453,7 @@ export class PreviousPayResultModel {
 export class FuturePayResultModel {
   @Property() public readonly homeownerName: string;
   @Property() public readonly recordID: string;
+  @Property() public readonly salesRep: string;
   @Property() public readonly m1Date: string;
   @Property() public readonly m2Date: string;
   @Property() public readonly m3Date: string;

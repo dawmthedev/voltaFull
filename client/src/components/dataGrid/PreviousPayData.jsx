@@ -113,6 +113,13 @@ export default function PreviousgPayData(props) {
         width: 180,
         editable: false,
         type: 'text'
+      },
+      {
+        field: 'salesRep',
+        headerName: 'salesRep',
+        width: 180,
+        editable: false,
+        type: 'text'
       }
     
     ],
@@ -161,6 +168,7 @@ export default function PreviousgPayData(props) {
               amount: deal.amount.replace(/^"|"$/g, ''),
               upcomingMileStonePayout: deal.upcomingMileStonePayout.replace(/^"|"$/g, ''),
               datePaid: deal.datePaid.replace(/^"|"$/g, ''),
+              salesRep: deal.salesRep.replace(/^"|"$/g, ''),
               id: Math.random()
             };
           });

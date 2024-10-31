@@ -120,6 +120,13 @@ export default function UpcomingPayData(props) {
         editable: false,
         type: 'text'
       },
+      {
+        field: 'salesRep',
+        headerName: 'salesRep',
+        width: 180,
+        editable: false,
+        type: 'text'
+      }
     
     ],
     [data]
@@ -170,6 +177,7 @@ export default function UpcomingPayData(props) {
               plansReqDate: deal.plansReqDate.replace(/^"|"$/g, ''),
               homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
               contractAmount: deal.contractAmount.replace(/^"|"$/g, ''),
+              salesRep: deal.salesRep.replace(/^"|"$/g, ''),
               profile: 'hello',
               id: deal.recordID
             };
