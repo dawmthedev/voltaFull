@@ -84,13 +84,13 @@ const navConfig = [
     title: 'Anticipated Pay',
     path: '/dashboard/upcomingPay',
     icon: icon('ic_analytics'),
-    isSuperAdmin: true
+    isSuperAdmin: false
   },
   {
     title: 'Historical Pay',
     path: '/dashboard/lastWeekPay',
     icon: icon('ic_analytics'),
-    isSuperAdmin: true
+    isSuperAdmin: false
   }
   // {
   //   title: 'Not found',

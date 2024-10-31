@@ -47,7 +47,7 @@ export default function UpcomingPayPage() {
         <title>Deals</title>
       </Helmet>
       <Container>
-        <h2>Anticipated Pa</h2>
+        <h2>Anticipated Pay this Friday</h2>
 
         {/* Conditional rendering based on 'unlocked' flag */}
         {false ? (

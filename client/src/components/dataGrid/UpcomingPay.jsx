@@ -107,8 +107,23 @@ export default function UpcomingPayData(props) {
         type: 'text'
       },
       {
+        field: 'm1Date',
+        headerName: 'M1 Date',
+        width: 180,
+        editable: false,
+        type: 'text'
+      },
+      
+      {
         field: 'm2Date',
         headerName: 'M2 Date',
+        width: 180,
+        editable: false,
+        type: 'text'
+      },
+      {
+        field: 'm3Date',
+        headerName: 'M3 Date',
         width: 180,
         editable: false,
         type: 'text'
