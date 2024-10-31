@@ -48,7 +48,7 @@ export default function PreviousPayPage() {
         <title>Deals</title>
       </Helmet>
       <Container>
-        <h2>Last Weeks Pay</h2>
+        <h2>Historical Pay</h2>
 
         {/* Conditional rendering based on 'unlocked' flag */}
         {false ? (
