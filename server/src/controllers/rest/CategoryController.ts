@@ -13,6 +13,10 @@ import { FieldTypes } from "../../../types";
 import { LeadService } from "../../services/LeadsService";
 import mongoose, { Schema, model } from "mongoose";
 
+
+
+
+//test psuh 
 class CategoryBodyParams {
   @Required() public name: string;
   @Property() public description: string;
@@ -29,7 +33,7 @@ export class CategoryController {
   private leadsService: LeadService;
 
   @Get("/")
-  @Returns(200, SuccessArrayResult).Of(CategoryResultModel)
+  @(Returns(200, SuccessArrayResult).Of(CategoryResultModel))
   public async getCategories(@Context() context: Context) {
     const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
@@ -50,16 +54,16 @@ export class CategoryController {
   }
 
   @Get("/:id")
-  @Returns(200, SuccessResult).Of(CategoryResultModel)
+  @(Returns(200, SuccessResult).Of(CategoryResultModel))
   public async getCategory(@PathParams() { id }: IdModel, @Context() context: Context) {
     const { orgId, email } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
     const category = await this.categoryService.findCategoryById(id);
-    return new SuccessResult({ ...category?.toObject()!, id: category?._id }, CategoryResultModel);
+    return new SuccessResult({ ...category?.toObject()!, id: category?._id ?? "" }, CategoryResultModel);
   }
 
   @Post("/")
-  @Returns(200, SuccessResult).Of(CategoryResultModel)
+  @(Returns(200, SuccessResult).Of(CategoryResultModel))
   public async createCategory(@BodyParams() body: CategoryBodyParams, @Context() context: Context) {
     const { orgId, email } = await this.adminService.checkPermissions(
       { hasRole: [ADMIN, MANAGER, "CRM System Administrator"] },
@@ -83,20 +87,20 @@ export class CategoryController {
     if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
 
     const updatedCategory = await this.categoryService.addFieldsToCategory({ id: category._id, fields });
-    return new SuccessResult({ ...updatedCategory?.toObject()!, id: updatedCategory?._id }, CategoryResultModel);
+    return new SuccessResult({ ...updatedCategory?.toObject()!, id: updatedCategory?._id  ?? "" }, CategoryResultModel);
   }
 
   @Put()
-  @Returns(200, SuccessResult).Of(CategoryResultModel)
+  @(Returns(200, SuccessResult).Of(CategoryResultModel))
   public async updateCategory(@BodyParams() body: IdModel & CategoryBodyParams, @Context() context: Context) {
     const { orgId, email } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
     const category = await this.categoryService.updateCategory({ ...body });
-    return new SuccessResult({ ...category?.toObject()!, id: category?._id }, CategoryResultModel);
+    return new SuccessResult({ ...category?.toObject()!, id: category?._id ?? "" }, CategoryResultModel);
   }
 
   @Delete("/:id")
-  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async deleteCategory(@PathParams() { id }: IdModel, @Context() context: Context) {
     const { orgId, email } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!orgId) throw new BadRequest(ORG_NOT_FOUND);
@@ -104,7 +108,20 @@ export class CategoryController {
     if (!category) throw new BadRequest(CATEGORY_NOT_FOUND);
     await this.categoryService.deleteCategory(id);
     await this.leadsService.deleteLeadsByCategoryId(category._id);
-    await mongoose.connection.db.dropCollection(category.name);
+    
+    if (mongoose.connection && mongoose.connection.db) {
+      await mongoose.connection.db.dropCollection(category.name);
+    } else {
+      console.error("Database connection or db is undefined.");
+      // Optionally handle this case with a throw, custom error, or fallback action
+    }
+    
+
+
+
+
+
+
     return new SuccessResult({ success: true, message: "Category deleted successfully" }, SuccessMessageModel);
   }
 }

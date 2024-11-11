@@ -138,16 +138,18 @@ export default function BlogPostCard({ post, index }) {
             {fDate(createdAt)}
           </Typography> */}
 
-  
-          <StyledTitle
+       <StyledTitle
             color="inherit"
             variant="subtitle2"
             underline="hover"
+            to={link}
             sx={{
               ...(latestPostLarge && { typography: 'h5', height: 60 }),
               ...((latestPostLarge || latestPost) && {
                 color: 'common.white',
+                fontWeight: 'bold'
               }),
+              
             }}
           >
             {title }

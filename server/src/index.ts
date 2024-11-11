@@ -19,10 +19,13 @@ import { notifyLeads, runJob } from "./cron/reminder";
 //     // await NodemailerClient.sendEmailToPlanner({ title, email: "raza8r@gmail.com", description, action });
 //   }
 // });
-cron.schedule("*/15 * * * *", async () => {
-  console.log("Running cron job");
-//  await notifyLeads();
-});
+
+
+
+// cron.schedule("*/15 * * * *", async () => {
+//   console.log("Running cron job");
+// //  await notifyLeads();
+// });
 
 export class Application {
   private app: express.Application;

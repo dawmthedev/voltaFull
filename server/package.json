@@ -63,7 +63,7 @@
     "http": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",
     "method-override": "^3.0.0",
-    "mongoose": "^8.0.3",
+    "mongoose": "^8.8.0",
     "multer": "^1.4.5-lts.1",
     "node-cron": "^3.0.3",
     "nodemailer": "^6.9.7",
@@ -116,5 +116,10 @@
     "convention": "conv_default",
     "architecture": "arc_default",
     "packageManager": "yarn"
+  },
+  "engines": {
+  "node": "18.x" 
   }
+
+ 
 }

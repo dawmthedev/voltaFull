@@ -158,6 +158,13 @@ export default function DealsData(props) {
         width: 500,
         editable: false,
         hide: false
+      },
+      {
+        field: 'repName',
+        headerName: 'repName',
+        width: 500,
+        editable: false,
+        hide: false
       }
     
     ],

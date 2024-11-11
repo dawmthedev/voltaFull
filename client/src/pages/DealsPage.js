@@ -47,7 +47,6 @@ export default function DealsPage() {
       </Helmet>
       <Container>
         <h2>Projects</h2>
-
         {/* Conditional rendering based on 'unlocked' flag */}
         {false ? (
           // Render the modal when 'unlocked' is true
