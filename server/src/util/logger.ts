@@ -13,7 +13,7 @@ const RESET = "\x1b[0m";
 
 const HIDDEN_FIELDS = ["stack", "buffer"];
 
-function summarize(obj: any, category?: string, depth = 0): any {
+export function summarize(obj: any, category?: string, depth = 0): any {
   if (obj === null || typeof obj !== "object") return obj;
 
   if (Array.isArray(obj)) {
@@ -32,7 +32,7 @@ function summarize(obj: any, category?: string, depth = 0): any {
   return out;
 }
 
-function formatArg(arg: any, category?: string): any {
+export function formatArg(arg: any, category?: string): any {
   if (arg && typeof arg === "object") {
     return JSON.stringify(summarize(arg, category));
   }
