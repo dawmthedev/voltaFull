@@ -1,6 +1,6 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { baseURL } from '../../libs/client/apiClient';
 
@@ -9,25 +9,20 @@ const UtilityBillUploadModal = ({ open, setOpen }) => {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
     const [error, setError] = useState('');
-
     
     const onDrop = useCallback(acceptedFiles => {
         setFile(acceptedFiles[0]); // Store the file object directly
         setResult(''); // Clear previous results
         setError('');  // Clear previous errors
     }, []);
-    
     const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
-
     const handleSubmit = async () => {
         if (!file) {
             setError('No file selected.');
             return;
         }
-    
         const formData = new FormData();
         formData.append('file', file); // Ensure the key 'file' matches the expected key on the server side
-    
         setLoading(true);
         try {
             const response = await fetch(`${baseURL}/auth/uploadUtilityBill`, {
@@ -45,17 +40,12 @@ const UtilityBillUploadModal = ({ open, setOpen }) => {
             setError('Failed to process the bill. Please try again.');
         } finally {
             setLoading(false);
-        }
     };
-    
-
     const handleClose = () => {
         setOpen(false);
         setFile(null);
         setResult('');
         setError('');
-    };
-
     return (
         <Dialog open={open} onClose={handleClose} fullWidth maxWidth="sm">
             <DialogTitle>Upload Utility Bill</DialogTitle>
@@ -76,11 +66,8 @@ const UtilityBillUploadModal = ({ open, setOpen }) => {
         </Dialog>
     );
 };
-
 UtilityBillUploadModal.propTypes = {
     open: PropTypes.bool.isRequired,
     setOpen: PropTypes.func.isRequired,
     baseURL: PropTypes.string.isRequired,
-};
-
 export default UtilityBillUploadModal;

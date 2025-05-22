@@ -1,23 +1,20 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // @mui
 import PropTypes from 'prop-types';
-import { Card, Typography, CardHeader, CardContent } from '@mui/material';
 import { Timeline, TimelineDot, TimelineItem, TimelineContent, TimelineSeparator, TimelineConnector } from '@mui/lab';
 // utils
 import { fDateTime } from '../../../utils/formatTime';
 
 // ----------------------------------------------------------------------
-
 AppOrderTimeline.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
   list: PropTypes.array.isRequired,
 };
-
 export default function AppOrderTimeline({ title, subheader, list, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
-
       <CardContent
         sx={{
           '& .MuiTimelineItem-missingOppositeContent:before': {
@@ -34,9 +31,6 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
     </Card>
   );
 }
-
-// ----------------------------------------------------------------------
-
 OrderItem.propTypes = {
   isLast: PropTypes.bool,
   item: PropTypes.shape({
@@ -44,11 +38,8 @@ OrderItem.propTypes = {
     title: PropTypes.string,
     type: PropTypes.string,
   }),
-};
-
 function OrderItem({ item, isLast }) {
   const { type, title, time } = item;
-  return (
     <TimelineItem>
       <TimelineSeparator>
         <TimelineDot
@@ -62,14 +53,10 @@ function OrderItem({ item, isLast }) {
         />
         {isLast ? null : <TimelineConnector />}
       </TimelineSeparator>
-
       <TimelineContent>
         <Typography variant="subtitle2">{title}</Typography>
-
         <Typography variant="caption" sx={{ color: 'text.secondary' }}>
           {fDateTime(time)}
         </Typography>
       </TimelineContent>
     </TimelineItem>
-  );
-}

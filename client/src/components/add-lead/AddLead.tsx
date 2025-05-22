@@ -1,8 +1,7 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
-import { Box, Grid } from '@mui/material';
 
 import CustomInput from '../input/CustomInput';
-
 interface AddLeadProps {
   leadValue: {
     name: string;
@@ -11,7 +10,6 @@ interface AddLeadProps {
   }[];
   getAddLeadData: (value: string, name: string, index: number) => void;
 }
-
 const AddLead = ({ leadValue, getAddLeadData }: AddLeadProps) => {
   return (
     <Grid>
@@ -30,5 +28,4 @@ const AddLead = ({ leadValue, getAddLeadData }: AddLeadProps) => {
     </Grid>
   );
 };
-
 export default AddLead;

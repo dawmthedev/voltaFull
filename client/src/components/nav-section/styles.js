@@ -1,9 +1,7 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // @mui
-import { styled } from '@mui/material/styles';
-import { ListItemIcon, ListItemButton } from '@mui/material';
 
 // ----------------------------------------------------------------------
-
 export const StyledNavItem = styled((props) => <ListItemButton disableGutters {...props} />)(({ theme }) => ({
   ...theme.typography.body2,
   height: 48,
@@ -12,7 +10,6 @@ export const StyledNavItem = styled((props) => <ListItemButton disableGutters {.
   color: theme.palette.text.secondary,
   borderRadius: theme.shape.borderRadius,
 }));
-
 export const StyledNavItemIcon = styled(ListItemIcon)({
   width: 22,
   height: 22,

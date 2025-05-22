@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
-import Box from '@mui/material/Box';
 import { ClickAwayListener } from '@mui/base/ClickAwayListener';
 import { SxProps } from '@mui/system';
 
@@ -8,16 +8,12 @@ interface ClickAwayProps {
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
 }
-
 export default function ClickAway({ open, setOpen, children }: ClickAwayProps) {
   const handleClick = () => {
     setOpen((prev) => !prev);
   };
-
   const handleClickAway = () => {
     setOpen(false);
-  };
-
   const styles: SxProps = {
     position: 'absolute',
     top: 28,
@@ -27,8 +23,6 @@ export default function ClickAway({ open, setOpen, children }: ClickAwayProps) {
     border: '1px solid',
     p: 1,
     bgcolor: 'background.paper'
-  };
-
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <Box sx={{ position: 'relative' }}>
@@ -39,4 +33,3 @@ export default function ClickAway({ open, setOpen, children }: ClickAwayProps) {
       </Box>
     </ClickAwayListener>
   );
-}

@@ -1,6 +1,6 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Box, Card, Container } from '@mui/material';
 import PayrollData from '../components/dataGrid/PayrollData';
 import LeadGenPay from '../components/dataGrid/LeadGenPay';
 import { useAppSelector } from '../hooks/hooks';
@@ -26,14 +26,12 @@ export default function PayPage() {
             <LeadGenPay recordUserId={recordId} />
           </Card>
         </Box>
-
         {/* <h1>Lead generation Commissions</h1>
           <LeadGenPay recordUserId={recordId} /> */}
       </Container>
     </Fragment>
   );
 }
-
 // export default function PayPage() {
 //   return (
 //     <Box
@@ -43,13 +41,11 @@ export default function PayPage() {
 //         justifyContent: 'center',
 //         alignContent: 'center',
 //         backgroundColor: 'rgba(145, 158, 171, 0.16)',
-
 //       }}
 //     >
 //       <Helmet>
 //         <title> Payroll </title>
 //       </Helmet>
-
 //       <Box
 //         sx={{
 //           width: '100vw',
@@ -64,7 +60,6 @@ export default function PayPage() {
 //           <h1>Sales Commissions</h1>
 //           <PayrollData />
 //           <h1>Lead generation Commissions</h1>
-//           <PayrollData />
 //         </Box>
 //       </Box>
 //     </Box>

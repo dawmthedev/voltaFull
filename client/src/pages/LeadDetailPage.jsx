@@ -1,13 +1,10 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState, useEffect, useCallback } from 'react';
 
 import {
   Grid, Dialog, Button, TextField, Autocomplete, Box, DialogTitle, DialogContent,
   DialogContentText, DialogActions, Typography, Paper, List, ListItem, ListItemText,
   ListItemIcon, LinearProgress, CircularProgress
-} from '@mui/material';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
-import EmailIcon from '@mui/icons-material/Email';
-import PersonIcon from '@mui/icons-material/Person';
 import { v4 as uuidv4 } from "uuid";
 import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
@@ -16,7 +13,6 @@ import { authSelector } from '../redux/slice/authSlice';
 import { baseURL } from '../libs/client/apiClient';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from 'axios';
-
 import MainStepper from '../components/MainStepper';
 import BatteryStepper from '../components/BatteryStepper';
 import HvacStepper from '../components/HVACStepper';
@@ -25,7 +21,6 @@ import QuietCoolStepper from '../components/QuietCoolStepper';
 import InsulationStepper from '../components/InsulationStepper';
 import RoofStepper from '../components/RoofStepper';
 import ServiceStepper from '../components/ServiceStepper';
-
 const LeadDetailPage = () => {
   const styles = {
     stickyBanner: {
@@ -34,7 +29,6 @@ const LeadDetailPage = () => {
       fontSize: '20px', fontWeight: 'bold'
     }
   };
-
   const UserData = useAppSelector(authSelector)?.data;
   const userName = UserData?.name;
   const { id } = useParams();
@@ -73,10 +67,6 @@ const LeadDetailPage = () => {
   const [ppwFinal, setPPWFinal] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
-
-
-
-
     // Function to update stages
     const updateStages = (data) => {
       setTaskDates({
@@ -94,43 +84,30 @@ const LeadDetailPage = () => {
         FIDate: data.FIDate && data.FIDate !== "\"\"" ? data.FIDate.replace(/^"|"$/g, '') : null,
         PTODate: data.PTODate && data.PTODate !== "\"\"" ? data.PTODate.replace(/^"|"$/g, '') : null,
       });
-  
       setBatteryTaskDates({
         batteryPermitDate: data.batteryPermitDate ? data.batteryPermitDate.replace(/^"|"$/g, '') : null,
         batteryApprovalDate: data.batteryApprovalDate ? data.batteryApprovalDate.replace(/^"|"$/g, '') : null,
         orderBatteryDate: data.OrderBatteryDate ? data.OrderBatteryDate.replace(/^"|"$/g, '') : null,
         BatteryinstallDate: data.BatteryinstallDate && data.BatteryinstallDate !== "\"\"" ? data.BatteryinstallDate.replace(/^"|"$/g, '') : null,
         FireInspectionDate: data.FireInspectionDate && data.FireInspectionDate !== "\"\"" ? data.FireInspectionDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setHVACTaskDates({
         HVACSaleDate: data.HVACSaleDate && data.HVACSaleDate !== "\"\"" ? data.HVACSaleDate.replace(/^"|"$/g, '') : null,
         HVACInstallDate: data.HVACInstallDate && data.HVACInstallDate !== "\"\"" ? data.HVACInstallDate.replace(/^"|"$/g, '') : null,
         HVACPermitDate: data.HVACPermitDate && data.HVACPermitDate !== "\"\"" ? data.HVACPermitDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setMPUTaskDates({
         MeterspotDate: data.MeterspotDate && data.MeterspotDate !== "\"\"" ? data.MeterspotDate.replace(/^"|"$/g, '') : null,
         MPUPermitDate: data.MPUPermitDate && data.MPUPermitDate !== "\"\"" ? data.MPUPermitDate.replace(/^"|"$/g, '') : null,
         MPUInstallDate: data.MPUPInstallDate && data.MPUPInstallDate !== "\"\"" ? data.MPUPInstallDate.replace(/^"|"$/g, '') : null,
         MPUInspectionDate: data.MPUInspectionDate && data.MPUInspectionDate !== "\"\"" ? data.MPUInspectionDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setQuietCoolTaskDates({
         QuietCoolDate: data.QuietCoolDate && data.QuietCoolDate !== "\"\"" ? data.QuietCoolDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setInsulationTaskDates({
         InsulationDate: data.InsulationDate && data.InsulationDate !== "\"\"" ? data.InsulationDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setRoofTaskDates({
         RoofPermitDate: data.RoofPermitDate && data.RoofPermitDate !== "\"\"" ? data.RoofPermitDate.replace(/^"|"$/g, '') : null,
         RoofInstallDate: data.RoofInstallDate && data.RoofInstallDate !== "\"\"" ? data.RoofInstallDate.replace(/^"|"$/g, '') : null,
         RoofInspectionDate: data.RoofInspectionDate && data.RoofInspectionDate !== "\"\"" ? data.RoofInspectionDate.replace(/^"|"$/g, '') : null,
         RoofColorSelectionDate: data.RoofColorSelectionDate && data.RoofColorSelectionDate !== "\"\"" ? data.RoofColorSelectionDate.replace(/^"|"$/g, '') : null,
-      });
-  
       setServiceTaskDates({
         ServiceInspectionDate: data.ServiceInspectionDate && data.ServiceInspectionDate !== "\"\"" ? data.ServiceInspectionDate.replace(/^"|"$/g, '') : null,
         ServiceDate: data.ServiceDate && data.ServiceDate !== "\"\"" ? data.ServiceDate.replace(/^"|"$/g, '') : null,
@@ -143,12 +120,7 @@ const LeadDetailPage = () => {
         InvoicePTODate: data.InvoicePTODate && data.InvoicePTODate !== "\"\"" ? data.InvoicePTODate.replace(/^"|"$/g, '') : null,
         FDACPServiceDate: data.FDACPServiceDate && data.FDACPServiceDate !== "\"\"" ? data.FDACPServiceDate.replace(/^"|"$/g, '') : null,
         ServicePackageSubmittedDate: data.ServicePackageSubmittedDate && data.ServicePackageSubmittedDate !== "\"\"" ? data.ServicePackageSubmittedDate.replace(/^"|"$/g, '') : null,
-      });
     };
-  
-
-
-
   const handleOpenMessageModal = () => setMessageModalOpen(true);
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
@@ -156,18 +128,13 @@ const LeadDetailPage = () => {
     setFiles([]);
     setFileUrls([]);
     setUploadProgress({});
-  };
-
   const submitNewMessage = async ({ Message, relatedProject, TaggedUsers, from }) => {
-
     const requestBody = {
       message: Message,
       relatedProject,
       taggedUsers: TaggedUsers,
       from,
       attachments: fileUrls
-    };
-
     try {
       await axios.post(`${baseURL}/messages`, requestBody);
       setMessageText('');
@@ -177,40 +144,22 @@ const LeadDetailPage = () => {
       setFileUrls([]);
     } catch (error) {
       console.error("Failed to send message:", error);
-    }
-  };
-
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0];
     if (file) {
       const preUri = `images/utility${uuidv4()}.jpg`;
       const pathReference = ref(getStorage(), preUri);
-
       uploadBytes(pathReference, file).then(() => {
         getDownloadURL(ref(getStorage(), preUri)).then((url) => setFileUrls((prev) => [...prev, url]));
       }).catch(error => console.error("Upload error:", error));
-    }
   }, []);
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
   const handleSendMessage = async () => {
     const taggedUserEmails = selectedUser.map(user => user.email).join('; ');
-    try {
       await submitNewMessage({ Message: messageText, relatedProject: id, TaggedUsers: taggedUserEmails, from: UserData?.name });
-    } catch (error) {
       console.error('Failed to send message:', error);
-    }
-  };
-
-
-
-
-
-  
   useEffect(() => {
     const fetchCRMUsers = async () => {
-
       try {
         const response = await axios.get(`${baseURL}/users`);
         if (response.data && Array.isArray(response.data.users)) {
@@ -224,13 +173,7 @@ const LeadDetailPage = () => {
       } catch (error) {
         console.error('Failed to fetch users:', error);
       }
-    };
-
     fetchCRMUsers();
-  }, []);
-
-
-  useEffect(() => {
     if (UserData) {
       fetch(`${baseURL}/auth/crmDeal`, {
         method: 'POST',
@@ -266,9 +209,7 @@ const LeadDetailPage = () => {
           setDealsError(error);
           setLoading(false);
         });
-    }
   }, [id, UserData]);
-
   if (isLoading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="80vh">
@@ -276,15 +217,10 @@ const LeadDetailPage = () => {
       </Box>
     );
   }
-
   if (dealsError) {
     return <p>Error loading data: {dealsError.message}</p>;
-  }
-
   return (
     <Grid container spacing={2} sx={{ overflow: 'hidden', padding: 2 }}>
-
-
       <Grid item xs={12}>
         <Box sx={{ position: 'relative', width: '100%', display: 'inline-flex', alignItems: 'center' }}>
           <LinearProgress variant="determinate" value={progress * 100} sx={{ width: '100%', height: 20, borderRadius: 2 }} />
@@ -293,18 +229,11 @@ const LeadDetailPage = () => {
           </Typography>
         </Box>
       </Grid>
-
   <Grid item xs={12}>
-        <Box sx={{ position: 'relative', width: '100%', display: 'inline-flex', alignItems: 'center' }}>
         {status.replace(/^"|"$/g, '') !== 'Active' && (
         <div style={styles.stickyBanner}>Project Status: {status.replace(/^"|"$/g, '')}</div>
-        
       )}
-        </Box>
-      </Grid>
-
    
-
       <Grid container spacing={2}>
         <Grid item xs={12} md={4}>
           <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status.replace(/^"|"$/g, '') === 'Active' ? 'lightgreen' : 'red' }}>
@@ -314,58 +243,22 @@ const LeadDetailPage = () => {
                 <ListItemIcon><PersonIcon color="primary" /></ListItemIcon>
                 <ListItemText primary={homeownerData} secondary="Homeowner Name" />
               </ListItem>
-              <ListItem>
-                <ListItemIcon><PersonIcon color="primary" /></ListItemIcon>
                 <ListItemText primary={addressData} secondary="Address" />
-              </ListItem>
-              <ListItem>
                 <ListItemIcon><EmailIcon color="primary" /></ListItemIcon>
                 <ListItemText primary={emailData} secondary="Email" />
-              </ListItem>
             </List>
           </Paper>
         </Grid>
-
         {/* Economics Section */}
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status.replace(/^"|"$/g, '') === 'Active' ? 'lightgreen' : 'red' }}>
             <Typography variant="h6" gutterBottom sx={{ color: 'whitesmoke' }}>Economics</Typography>
-            <List>
-              <ListItem>
                 <ListItemText primary={financing.replace(/^"|"$/g, '')} secondary="Financing" />
-              </ListItem>
-              <ListItem>
                 <ListItemText primary={`$ ${addersTotal}`} secondary="Adders Total" />
-              </ListItem>
-              <ListItem>
                 <ListItemText primary={`$ ${dealerFee}`} secondary="Dealer Fee" />
-              </ListItem>
-              <ListItem>
                 <ListItemText primary={`$ ${contractAmount}`} secondary="Contract Amount" />
-              </ListItem>
-              <ListItem>
                 <ListItemText primary={`$ ${ppwFinal}`} secondary="PPW Final" />
-              </ListItem>
-            </List>
-          </Paper>
-        </Grid>
-
         {/* Products Section */}
-        <Grid item xs={12} md={4}>
-          <Paper elevation={3} sx={{ p: 2, margin: 2, backgroundColor: status.replace(/^"|"$/g, '') === 'Active' ? 'lightgreen' : 'red' }}>
             <Typography variant="h6" gutterBottom sx={{ color: 'whitesmoke' }}>Products</Typography>
-            <List>
-              <ListItem>
                 <ListItemText primary={products} secondary="Products" />
-              </ListItem>
-            </List>
-          </Paper>
-        </Grid>
-      </Grid>
-
-
-
-
       <Grid item xs={12} md={8}>
         <div style={{ minHeight: '100px', maxHeight: '400px', overflowY: 'auto' }}>
           {products.includes("Solar") && (
@@ -373,45 +266,30 @@ const LeadDetailPage = () => {
           )}
           {products.includes("Battery") && (
             <BatteryStepper activeStep={activeStep} taskDates={BatteryTaskDates} financing={financing} />
-          )}
           {products.includes("HVAC") && (
             <HvacStepper activeStep={activeStep} taskDates={HVACTaskDates} financing={financing} />
-          )}
           {products.includes("MPU") && (
             <MPUStepper activeStep={activeStep} taskDates={MPUTaskDates} financing={financing} />
-          )}
           {products.includes("Quiet Cool") && (
             <QuietCoolStepper activeStep={activeStep} taskDates={QuietCoolTaskDates} financing={financing} />
-          )}
           {products.includes("Insulation") && (
             <InsulationStepper activeStep={activeStep} taskDates={InsulationTaskDates} financing={financing} />
-          )}
           {products.includes("Roof") && (
             <RoofStepper activeStep={activeStep} taskDates={RoofTaskDates} financing={financing} />
-          )}
           {products.includes("Service") && (
             <ServiceStepper activeStep={activeStep} taskDates={ServiceTaskDates} financing={financing} />
-          )}
         </div>
-
         {/* Payroll Section */}
         <Grid item sx={{ p: 2, backgroundColor: 'whitesmoke', borderRadius: 2, mt: 2 }}>
           <Typography variant="h6" sx={{ color: 'brown', fontWeight: 'bold' }}>Payroll</Typography>
           {payrollData.map((payrollItem) => (
             <PayrollCard key={payrollItem.id} data={payrollItem} getItem={null} />
           ))}
-        </Grid>
-
         {/* Adders Section */}
-        <Grid item sx={{ p: 2, backgroundColor: 'whitesmoke', borderRadius: 2, mt: 2 }}>
           <Typography variant="h6" sx={{ color: 'brown', fontWeight: 'bold' }}>Adders</Typography>
           {addersData.map((adder) => (
             <AddersCard key={adder.id} data={adder} getItem={null} />
-          ))}
-        </Grid>
-
         {/* Messages Section */}
-        <Grid item sx={{ p: 2, backgroundColor: 'whitesmoke', borderRadius: 2, mt: 2 }}>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="h6" sx={{ color: 'brown', fontWeight: 'bold' }}>Messages</Typography>
             <Button onClick={handleOpenMessageModal} sx={{
@@ -422,9 +300,6 @@ const LeadDetailPage = () => {
           </Box>
           {messageData.map((msg) => (
             <Card key={msg.id} data={msg} from={msg.from} />
-          ))}
-        </Grid>
-
         {/* Message Modal */}
         <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
           <DialogTitle>New Message</DialogTitle>
@@ -453,13 +328,10 @@ const LeadDetailPage = () => {
             <Button onClick={handleSendMessage}>Send</Button>
           </DialogActions>
         </Dialog>
-      </Grid>
     </Grid>
   );
 };
-
 export default LeadDetailPage;
-
 const AddersCard = ({ data }) => (
   <Box sx={{ 
     boxShadow: '0px 0px 10px #e3e3e3', 
@@ -478,13 +350,9 @@ const AddersCard = ({ data }) => (
       </Typography>
       <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
         <strong>Price:</strong> ${data.price || '0.00'}
-      </Typography>
     </Box>
   </Box>
 );
-
-
-
 const formatDate = (timestamp) => {
   const date = new Date(timestamp);
   return date.toLocaleString('en-US', {
@@ -495,66 +363,20 @@ const formatDate = (timestamp) => {
     minute: 'numeric',
     hour12: true
   });
-};
-
-
 const Card = ({ data, from }) => (
-
-  
-  <Box sx={{ 
-    boxShadow: '0px 0px 10px #e3e3e3', 
-    marginTop: '16px', 
-    padding: '16px', 
     borderRadius: '8px', 
     backgroundColor: '#fff', 
-    cursor: 'pointer'
-  }}>
     <Typography variant="subtitle2" sx={{ color: 'black', fontWeight: 'bold', marginBottom: '8px' }}>
       {from.replace(/^"|"$/g, '')}:
-    </Typography>
-    <Box sx={{ marginLeft: '16px' }}>
       <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', marginBottom: '8px' }}>
         {data.text.replace(/["]/g, '').replace(/\r?\n|\r/g, ' ')} {/* Removes quotes and newlines */}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
       <strong>Created At:</strong> {formatDate(data.createdAt.replace(/^"|"$/g, ''))}
     
-      </Typography>
-    </Box>
-  </Box>
-);
-
-
 const PayrollCard = ({ data }) => (
-  <Box sx={{ 
-    boxShadow: '0px 0px 10px #e3e3e3', 
-    marginTop: '16px', 
-    padding: '16px', 
-    borderRadius: '8px', // Adds rounded corners
-    backgroundColor: '#fff', // Ensure background stands out
     cursor: 'pointer' 
-  }}>
     <Typography variant="subtitle2" sx={{ fontWeight: 'bold', marginBottom: '8px', color: 'black' }}>
       {data.milestone.replace(/^"|"$/g, '')}
-    </Typography>
-    <Box sx={{ marginLeft: '16px' }}>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', marginBottom: '4px' }}>
         <strong>User:</strong> {data.user.replace(/^"|"$/g, '')}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', marginBottom: '4px' }}>
         <strong>Amount:</strong> {data.amount.replace(/^"|"$/g, '')}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', marginBottom: '4px' }}>
         <strong>Status:</strong> {data.status.replace(/^"|"$/g, '')}
-      </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
         <strong>Date Paid:</strong> {data.datePaid.replace(/^"|"$/g, '')}
-      </Typography>
-    </Box>
-  </Box>
-);
-
-
-
-
-

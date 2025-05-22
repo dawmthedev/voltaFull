@@ -1,10 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogTitle from '@mui/material/DialogTitle';
-import CircularProgress from '@mui/material/CircularProgress';
 
 interface CustomModalProps {
   title?: string;
@@ -21,7 +16,6 @@ const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm
     setOpen(false);
     setIsEdit && setIsEdit(false);
   };
-
   return (
     <div>
       <Dialog
@@ -46,7 +40,6 @@ const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm
             ) : (
               <Button onClick={handleSubmit} autoFocus>
                 Submit
-              </Button>
             )}
           </DialogActions>
         )}
@@ -54,5 +47,4 @@ const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm
     </div>
   );
 };
-
 export default CustomModal;

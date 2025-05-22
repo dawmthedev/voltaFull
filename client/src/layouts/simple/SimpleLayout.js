@@ -1,12 +1,10 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { Outlet } from 'react-router-dom';
 // @mui
-import { styled } from '@mui/material/styles';
 // components
 import Logo from '../../components/logo';
-import { Box } from '@mui/material';
 
 // ----------------------------------------------------------------------
-
 const StyledHeader = styled('header')(({ theme }) => ({
   top: 0,
   left: 0,
@@ -18,16 +16,11 @@ const StyledHeader = styled('header')(({ theme }) => ({
     padding: theme.spacing(5, 5, 0),
   },
 }));
-
-// ----------------------------------------------------------------------
-
 export default function SimpleLayout() {
   return (
     <>
       <StyledHeader>
         {/* <Logo /> */}
-
-
         <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
     <img
       src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`} 
@@ -42,7 +35,6 @@ export default function SimpleLayout() {
     />
   </Box>
       </StyledHeader>
-
       <Outlet />
     </>
   );

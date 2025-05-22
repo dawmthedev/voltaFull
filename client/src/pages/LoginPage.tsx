@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
-import { Checkbox, FormControlLabel, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
@@ -14,12 +14,9 @@ const LoginPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const { loading } = useAppSelector(authSelector);
-
   const [showPassword, setShowPassword] = useState(false);
-
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
   const handleClick = async () => {
     try {
       if (!email || !password) return dispatch(setAlert({ message: 'Please fill all fields', type: 'error' }));
@@ -34,13 +31,8 @@ const LoginPage = () => {
         return;
       }
       if (response && response.payload) {
-        dispatch(
-          setAlert({
             message: 'Login successful',
             type: 'success'
-          })
-        );
-      }
       navigate('/dashboard/deals', { replace: true });
     } catch (error) {
       dispatch(
@@ -72,17 +64,13 @@ const LoginPage = () => {
           }}
         />
       </Stack>
-
       <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
         <FormControlLabel value="remember" control={<Checkbox />} label="Remember me" labelPlacement="end" />
         <Link to="/verify-email">Forgot password?</Link>
-      </Stack>
-
       <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick} loading={loading}>
         Login
       </LoadingButton>
     </AuthenticationLayout>
   );
 };
-
 export default LoginPage;

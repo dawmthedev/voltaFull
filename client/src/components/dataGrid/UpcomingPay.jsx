@@ -1,36 +1,24 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
 
-import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
-
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
-import { styled, darken, lighten } from '@mui/material/styles';
 import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
-
 export default function UpcomingPayData(props) {
-
-
-
   const navigate = useNavigate();
   const { recordUserId } = props;
-
   // Add redux user info here:
   // const { user } = useSelector((state) => state.auth);
-
   const [sortModel, setSortModel] = useState([{ field: 'saleDate', sort: 'desc' }]);
   const [sort, setSort] = useState('');
   const [column, setColumn] = useState('');
-
   const [categories, setCategories] = useState([]);
-
   const [columnsToShow, setColumnsToShow] = useState([]);
   const [gridRef] = useState({});
-
   const [rowSelectedUsers] = useState(['dominiqmartinez13@gmail.com', 'unhashlabs@gmail.com']);
   const [take, setTake] = useState('10');
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,26 +28,19 @@ export default function UpcomingPayData(props) {
   const [pageSize, setPageSize] = React.useState(10);
   const [skip, setSkip] = React.useState(0);
   // const [isLoading, setIsLoading] = useState(true);
-
   const [data, setData] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
-
   // Provide a default value if UserData or recordID is undefined
-
   //  const repIDValue = UserData.recordID; // Replace this with the actual repID value you want to send
-
   //STYLES:
-
   const gridStyles = {
     height: '75vh',
     maxWidth: '100%', // ensure the grid does not exceed the width of its container
     overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
     backgroundColor: 'none'
   };
-
   const apiRef = React.useRef(null);
-
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
@@ -82,101 +63,53 @@ export default function UpcomingPayData(props) {
           );
         }
       },
-      {
         field: 'homeownerName',
         headerName: 'Homeowner',
         width: 180,
         editable: false,
         type: 'text'
-      },
-      {
         field: 'milestone',
         headerName: 'MileStone',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
-
     
-      {
         field: 'plansReqDate',
         headerName: 'Plans Requeated Date',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
-      {
         field: 'm1Date',
         headerName: 'M1 Date',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
       
-      {
         field: 'm2Date',
         headerName: 'M2 Date',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
-      {
         field: 'm3Date',
         headerName: 'M3 Date',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
-      {
         field: 'contractAmount',
         headerName: 'ContractAmount',
-        width: 180,
-        editable: false,
-        type: 'text'
-      },
-      {
         field: 'salesRep',
         headerName: 'salesRep',
-        width: 180,
-        editable: false,
-        type: 'text'
       }
-    
     ],
     [data]
   );
-
   function truncateDecimals(number, decimalPlaces) {
     const multiplier = Math.pow(10, decimalPlaces);
     return Math.floor(number * multiplier) / multiplier;
   }
-
   //EDIT THE LEAD ROWS HERE:
   // Make the API call
-
   //=============================
   // get columns where hide is false
   const visible = [];
   columns.forEach((column) => {
     visible.push(column.field);
   });
-
   // go over columns and get colums that does not have hide:true
   const visibleColumns = [];
-  columns.forEach((column) => {
     if (!column.hide) {
       visibleColumns.push(column.field);
     }
-  });
-
-
-
   useEffect(() => {
     fetch(`${baseURL}/auth/upcomingPay`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
-      },
       body: JSON.stringify({ recordId: recordUserId })
     })
       .then((response) => response.json())
@@ -197,30 +130,16 @@ export default function UpcomingPayData(props) {
             };
           });
           setData(dealsData);
-        }
         setLoading(false);
       })
       .catch((error) => {
         setDealsError(error);
-        setLoading(false);
       });
   }, [recordUserId]);
-
   
-
-
-
-
-
-
-
-
   const leadsRows = data || [];
-
   const filteredRows = leadsRows.filter((row) =>
     Object.values(row).some((value) => typeof value === 'string' && value.toLowerCase().includes(searchQuery.toLowerCase()))
-  );
-
   const handleSearchInputChange = (event) => {
     const input = event.target.value;
     setSearchQuery(input);
@@ -228,16 +147,10 @@ export default function UpcomingPayData(props) {
       setFilter('');
       setTake('10');
       setFilterModel({});
-    }
-  };
-
   const handleKeyPress = async (e) => {
     if (e.key === 'Enter') {
       setFilter(searchQuery);
       setCategories([]);
-    }
-  };
-
   // fiter mui data grid pro with db
   function handleFilterModelChange(newFilterModel) {
     setSort('');
@@ -248,29 +161,20 @@ export default function UpcomingPayData(props) {
     )
       return;
     setFilterModel(newFilterModel.items[0]);
-  }
-
   // sorting
   function handleSortModelChange(newSortModel) {
     if (!newSortModel.length) return;
     setSort(newSortModel[0].sort);
     setColumn(newSortModel[0].field);
     setSortModel(newSortModel);
-
     setSkip(0);
     setPage(0);
     // setPageSize(10);
-  }
-
   let selectIds = [];
-
   const handleSelectionModelChange = async (newSelection) => {
     selectIds = newSelection;
-  };
-
   // disable eslint for now
   // eslint-disable-next-line no-unused-vars
-
   return (
     <div
       style={{
@@ -282,7 +186,6 @@ export default function UpcomingPayData(props) {
       }}
     >
       {/* filter lead modal */}
-
       <div style={{ height: '75vh', overflow: 'auto' }}>
         <Box
           sx={{
@@ -297,7 +200,6 @@ export default function UpcomingPayData(props) {
               alignItems: 'center',
               justifyContent: 'flex-end',
               position: 'relative',
-
               right: '16px',
               zIndex: '2',
               width: '60%',
@@ -310,7 +212,6 @@ export default function UpcomingPayData(props) {
             </Typography> */}
             <TextField
               size="small"
-              variant="outlined"
               type={'search'}
               label="Search"
               value={searchQuery}
@@ -319,7 +220,6 @@ export default function UpcomingPayData(props) {
               sx={{ my: '0.5rem' }}
             />
           </Box>
-
           {isLoading ? (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
               <CircularProgress />
@@ -347,7 +247,6 @@ export default function UpcomingPayData(props) {
                 filterPanel: {
                   disableAddFilterButton: true
                 }
-              }}
               rowsPerPageOptions={[10, 25, 50, 100, 200]}
               pagination="true" // enable pagination
               pageSize={pageSize} // set the page size to 10
@@ -365,17 +264,13 @@ export default function UpcomingPayData(props) {
               //   }
               //   return '';
               // }}
-            />
           )}
         </Box>
       </div>
     </div>
-  );
 }
-
 // Stage Mapping
 //Color Row Status
-
 const getColorForPercentage = (percentage) => {
   if (percentage >= 0 && percentage <= 30) {
     return 'skyblue';
@@ -385,10 +280,8 @@ const getColorForPercentage = (percentage) => {
     return 'lightgreen';
   } else if (percentage > 90) {
     return 'darkgreen';
-  }
   return 'gray'; // default case
 };
-
 const stageToPercentMapping = {
   'New Sale': 0,
   'Welcome Call': 5,
@@ -404,18 +297,10 @@ const stageToPercentMapping = {
   'Final Inspection': 90,
   PTO: 95,
   Complete: 100
-};
-
 const ProgressBar = ({ percentage, status }) => {
   const color = getColorForPercentage(percentage);
-  return (
-    <div
-      style={{
-        width: '100%',
         borderRadius: '4px',
         position: 'relative'
-      }}
-    >
       <div
         style={{
           width: `${percentage}%`,
@@ -429,7 +314,6 @@ const ProgressBar = ({ percentage, status }) => {
         }}
       ></div>
       <p
-        style={{
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -439,22 +323,13 @@ const ProgressBar = ({ percentage, status }) => {
           position: 'relative',
           border: '1px solid grey',
           borderRadius: '4px'
-        }}
       >
         {status}
       </p>
-    </div>
-  );
-};
-
 const getBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.7) : lighten(color, 0.7));
-
 const getHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.6) : lighten(color, 0.6));
-
 const getSelectedBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.5) : lighten(color, 0.5));
-
 const getSelectedHoverBackgroundColor = (color, mode) => (mode === 'dark' ? darken(color, 0.4) : lighten(color, 0.4));
-
 const StyledDataGrid = styled(DataGridPro)(({ theme }) => ({
   '& .retention-cell': {
     backgroundColor: getBackgroundColor(theme.palette.warning.main, theme.palette.mode), // using warning palette (yellow) for retention
@@ -465,33 +340,15 @@ const StyledDataGrid = styled(DataGridPro)(({ theme }) => ({
       backgroundColor: getSelectedBackgroundColor(theme.palette.warning.main, theme.palette.mode),
       '&:hover': {
         backgroundColor: getSelectedHoverBackgroundColor(theme.palette.warning.main, theme.palette.mode)
-      }
-    }
   },
-
   '& .active-cell': {
     backgroundColor: getBackgroundColor(theme.palette.success.main, theme.palette.mode),
-    '&:hover': {
       backgroundColor: getHoverBackgroundColor(theme.palette.success.main, theme.palette.mode)
-    },
-    '&.Mui-selected': {
       backgroundColor: getSelectedBackgroundColor(theme.palette.success.main, theme.palette.mode),
-      '&:hover': {
         backgroundColor: getSelectedHoverBackgroundColor(theme.palette.success.main, theme.palette.mode)
-      }
-    }
-  },
-
   '& .inactive-cell': {
     backgroundColor: getBackgroundColor(theme.palette.error.main, theme.palette.mode),
-    '&:hover': {
       backgroundColor: getHoverBackgroundColor(theme.palette.error.main, theme.palette.mode)
-    },
-    '&.Mui-selected': {
       backgroundColor: getSelectedBackgroundColor(theme.palette.error.main, theme.palette.mode),
-      '&:hover': {
         backgroundColor: getSelectedHoverBackgroundColor(theme.palette.error.main, theme.palette.mode)
-      }
-    }
-  }
 }));

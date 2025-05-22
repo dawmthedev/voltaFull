@@ -1,7 +1,6 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
-import Box from '@mui/material/Box';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
-import { Button } from '@mui/material';
 
 interface CustomTableProps {
   data: any[];
@@ -14,29 +13,21 @@ interface CustomTableProps {
   onDeleteClick?: (e: any, row: any) => void;
   loading?: boolean;
 }
-
 export default function CustomTable({ data, headLabel, loading, onEditClick, onDeleteClick }: CustomTableProps) {
   const [clickedRow, setClickedRow] = React.useState();
-
   const onButtonClick = (e, row) => {
     e.stopPropagation();
     setClickedRow(row);
   };
-
   // handle page changes
   const handlePageChange = async (newPage) => {
     // call api
-  };
   const handlePageSizeChange = async (newPageSize) => {
-    // call api
-  };
-
   const columnFields = headLabel.map((headCell) => ({
     field: headCell.name,
     headerName: headCell.name.charAt(0).toUpperCase() + headCell.name.slice(1),
     width: 200
   }));
-
   const tableHeader = [
     ...columnFields,
     {
@@ -53,19 +44,15 @@ export default function CustomTable({ data, headLabel, loading, onEditClick, onD
             </Button>
             <Button onClick={(e) => onEditClick(e, params.row)} variant="contained">
               Edit
-            </Button>
           </Box>
         );
       }
     }
   ];
-
   const columns = tableHeader.map((column) => ({
     ...column,
     disableClickEventBubbling: true,
     editable: column.field === 'actions' ? false : true
-  }));
-
   return (
     <Box
       sx={{
@@ -93,4 +80,3 @@ export default function CustomTable({ data, headLabel, loading, onEditClick, onD
       />
     </Box>
   );
-}

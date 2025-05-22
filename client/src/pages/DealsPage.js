@@ -1,43 +1,31 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react'; // Import React as a whole without destructuring
 import { Helmet } from 'react-helmet-async';
-import { Container, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Card } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import DealsData from '../components/dataGrid/DealsData'; // Assuming this is your chart
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
-
 export default function DealsPage() {
   const { data, unlocked } = useAppSelector(authSelector); // Assuming `unlocked` controls the modal vs chart view
   const recordId = data?.recordID;
-
   // Modal state management
   const [isMessageModalOpen, setMessageModalOpen] = React.useState(false);
   const [messageText, setMessageText] = React.useState('');
   const [fileUrls, setFileUrls] = React.useState([]);
-
   const handleOpenMessageModal = () => {
     setMessageModalOpen(true);
   };
-
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
     setFileUrls([]); // Reset file URLs when closing the modal
-  };
-
   const onDrop = (acceptedFiles) => {
     const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
     setFileUrls(urls); // Store the local URLs of uploaded files
-  };
-
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
   const handleSendMessage = () => {
     // Handle message submission logic here
     handleCloseMessageModal();
-  };
-
   return (
     <React.Fragment>
       <Helmet>
@@ -111,11 +99,9 @@ export default function DealsPage() {
       </Button>
       <Button onClick={handleSendMessage} sx={{ backgroundColor: '#1976d2', color: '#fff', '&:hover': { backgroundColor: '#1565c0' } }}>
         Submit
-      </Button>
     </DialogActions>
   </Dialog>
 </>
-
         ) : (
           // Render the DealsData (chart) when 'unlocked' is false
           <Card sx={{ p: '1rem' }}>
@@ -126,23 +112,16 @@ export default function DealsPage() {
     </React.Fragment>
   );
 }
-
-
 // import * as React from 'react';
 // import { Helmet } from 'react-helmet-async';
-// import { Box, Card, Container } from '@mui/material';
-
 // import DealsData from '../components/dataGrid/DealsData';
 // import { useAppSelector } from '../hooks/hooks';
 // import { authSelector } from '../redux/slice/authSlice';
-
 // import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
 // import { Fragment } from 'react';
-
 // export default function DealsPage() {
 //   const { data } = useAppSelector(authSelector);
 //   const recordId = data?.recordID;
-
 //   return (
 //     <Fragment>
 //       <Helmet>

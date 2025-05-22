@@ -1,4 +1,4 @@
-import { Container } from '@mui/material';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
 import AvailabilityCalendar from '../components/calendar/AvailabilityCalender';
 
@@ -10,5 +10,4 @@ const AvaiabilityPlanner = () => {
     </Container>
   );
 };
-
 export default AvaiabilityPlanner;

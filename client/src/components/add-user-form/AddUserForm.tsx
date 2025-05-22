@@ -1,4 +1,4 @@
-import { FormControl, InputLabel, Checkbox, MenuItem, Select, SelectChangeEvent, FormControlLabel } from '@mui/material';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import CustomInput from '../input/CustomInput';
 import { RoleDataTypes } from '../../types';
@@ -12,13 +12,11 @@ interface AddNewUserProps {
   getUsersData: (value: string, name: string) => void;
   roles: RoleDataTypes[];
 }
-
 const AddUserForm = ({ user, getUsersData, roles }: AddNewUserProps) => {
   const [isChecked, setIsChecked] = useState(user.isSuperAdmin);
   const handleOnChange = (e) => {
     setIsChecked(!isChecked);
     getUsersData(e.target.checked, 'isSuperAdmin');
-  };
   return (
     <div>
       <CustomInput value={user.name} onChange={(e) => getUsersData(e.target.value, e.target.name)} name="name" label="Name" />
@@ -43,5 +41,4 @@ const AddUserForm = ({ user, getUsersData, roles }: AddNewUserProps) => {
     </div>
   );
 };
-
 export default AddUserForm;

@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, TextField, Typography, Modal, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { baseURL } from '../../libs/client/apiClient';
 import axios from 'axios';
@@ -8,42 +8,19 @@ import Autocomplete from 'react-google-autocomplete';
 import { useCallback } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
 
-
-
-
 const isToday = (date) => {
   return isWithinInterval(new Date(date), {
     start: startOfDay(new Date()),
     end: new Date(),
   });
 };
-
 const isThisWeek = (date) => {
-  return isWithinInterval(new Date(date), {
     start: startOfWeek(new Date()),
-    end: new Date(),
-  });
-};
-
 const isThisMonth = (date) => {
-  return isWithinInterval(new Date(date), {
     start: startOfMonth(new Date()),
-    end: new Date(),
-  });
-};
-
 const isThisYear = (date) => {
-  return isWithinInterval(new Date(date), {
     start: startOfYear(new Date()),
-    end: new Date(),
-  });
-};
-
-
-
 const EditModal = ({ open, onClose, data, onSave }) => {
-
-
   const [formData, setFormData] = useState({
     customerFirstName: '',
     customerLastName: '',
@@ -57,8 +34,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     zipCode: '',
     country: '',
     financing: ''
-  });
-
   useEffect(() => {
     if (data) {
       setFormData({
@@ -77,9 +52,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       });
     }
   }, [data]);
-
   const [isSubmitted, setIsSubmitted] = useState(false);
-
   const handleChange = (e) => {
     const { name, value } = e.target;
   
@@ -90,21 +63,12 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         customerFullName: value,
         customerFirstName: firstName,
         customerLastName: lastName.join(' '),
-  
       }));
     } else {
-      setFormData(prevData => ({
-        ...prevData,
         [name]: value,
-      }));
-    }
   };
-  
-
   const submitMissingData = async (e) => {
-
     e.preventDefault();
-
     const requestBody = {
       recordID: formData.recordID,
       customerEmail: formData.customerEmail,
@@ -113,31 +77,16 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       customerPhone: formData.customerPhone,
       financing: formData.financing
     };
-
     try {
       const response = await axios.post(`${baseURL}/new-sale/missing`, requestBody);
       pushNewProject(e)
       setIsSubmitted(true);
       onClose(); // Close the modal here
-
     
-
-
-
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
-    }
-  };
-
-
-
-
   const pushNewProject = async (e) => {
-    e.preventDefault();
-
-
-
     // const mapFinancingToValue = (financing) => {
     //   switch (financing) {
     //     case "Sunnova":
@@ -150,45 +99,12 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     //       return "";  // Default value in case of an unknown option
     //   }
     // };
-    
-
-
-
-
-  
-    const requestBody = {
-      customerEmail: formData.customerEmail,
-      customerFirstName: formData.customerFirstName,
-      customerLastName: formData.customerLastName,
-      customerPhone: formData.customerPhone,
       address: formData.address,
       city: formData.city,
       state: 'California',
       zipCode: formData.zipCode,
       country: formData.country
-    };
-
-    try {
       const response = await axios.post(`${baseURL}/new-sale`, requestBody);
-      setIsSubmitted(true);
-
-      onClose(); // Close the modal here
-    } catch (error) {
-      alert("Failed sending data");
-      console.error("Failed to send data:", error);
-    }
-  };
-
-
-
-
-
-
-
-
-
-
-
   return (
     <Modal open={open} onClose={onClose}>
       <Box sx={{
@@ -205,8 +121,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
         <Typography variant="h6" component="h2" gutterBottom>
           Edit Sale Data
         </Typography>
-
-
         {/* not showing  record ID  here*/}
         <TextField
           name="customerFullName"
@@ -216,22 +130,12 @@ const EditModal = ({ open, onClose, data, onSave }) => {
           fullWidth
           margin="normal"
         />
-        <TextField
           name="customerEmail"
           label="Customer Email"
           value={formData.customerEmail || ''}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
           name="customerPhone"
           label="Customer Phone"
           value={formData.customerPhone || ''}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
       
  <PlacesAutocomplete
           value={formData.address}
@@ -283,14 +187,10 @@ const EditModal = ({ open, onClose, data, onSave }) => {
                       <span>{suggestion.description}</span>
                     </div>
                   );
-                })}
               </div>
             </div>
           )}
         </PlacesAutocomplete>
-
-
-
         <FormControl fullWidth margin="normal">
           <InputLabel>Financing</InputLabel>
           <Select
@@ -310,27 +210,19 @@ const EditModal = ({ open, onClose, data, onSave }) => {
       </Box>
     </Modal>
   );
-};
-
-
-
 export default function NewSaleData(props) {
   const { recordUserId } = props;
-
   const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [openModal, setOpenModal] = useState(false);
   const [selectedRow, setSelectedRow] = useState(null);
   const [formData, setFormData] = useState({});
-
   const fetchNewSaleData = async () => {
-    try {
       const response = await fetch(`${baseURL}/auth/crmNewSales`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ recordId: "0000" })
-      });
       const result = await response.json();
       if (response.ok && result.data && result.data.newSaleData) {
         const enrichedData = result.data.newSaleData.map((item, index) => ({
@@ -345,52 +237,26 @@ export default function NewSaleData(props) {
       setError(err.message);
     } finally {
       setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-
  
-    
     fetchNewSaleData();
   }, [recordUserId]);
-
   const handleOpenModal = (row) => {
-
-  
-
-  
-      
-
     const [firstName, ...lastName] = row.ownerName.split(' ');
     setFormData({
       ...row,
       customerFullName: `${firstName} ${lastName.join(' ')}`,
       recordID: row.recordID || 'N/A'
-
-
     });
-
-
     setSelectedRow(row);
-
-
     setOpenModal(true);
-  };
-
   const handleCloseModal = () => {
-
     setOpenModal(false);
     setSelectedRow(null);
     setFormData({});
-  };
-
   const handleSave = (formData) => {
     // Save the updated data
     const updatedData = data.map(item => item.id === formData.id ? formData : item);
     setData(updatedData);
-  };
-
   const columns = useMemo(() => [
     {
       field: 'action',
@@ -399,7 +265,6 @@ export default function NewSaleData(props) {
       renderCell: (params) => (
         <Button variant="contained" color="primary" onClick={() => handleOpenModal(params.row)}>
           Welcome Call
-        </Button>
       )
     },
     { field: 'installer', headerName: 'Installer', width: 180 },
@@ -432,35 +297,26 @@ export default function NewSaleData(props) {
     { field: 'batteryPlacementNotes', headerName: 'Battery Placement Notes', width: 200 },
     { field: 'inverter', headerName: 'Inverter', width: 150 },
   ], []);
-
   const calculateCounts = () => {
     const today = data.filter((item) => isToday(item.salesRep)).length;
     const thisWeek = data.filter((item) => isThisWeek(item.salesRep)).length;
     const thisMonth = data.filter((item) => isThisMonth(item.salesRep)).length;
     const thisYear = data.filter((item) => isThisYear(item.salesRep)).length;
-
     return { today, thisWeek, thisMonth, thisYear };
-  };
-
   const counts = calculateCounts();
-
-  return (
     <div>
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2, p: 2, border: '1px solid #ccc', borderRadius: '4px', background: '#f9f9f9' }}>
         <Typography variant="body1">Submitted Today: {counts.today}</Typography>
         <Typography variant="body1">Submitted This Week: {counts.thisWeek}</Typography>
         <Typography variant="body1">Submitted This Month: {counts.thisMonth}</Typography>
         <Typography variant="body1">Submitted This Year: {counts.thisYear}</Typography>
-      </Box>
       <div style={{ height: 400, width: '100%' }}>
         {isLoading ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <CircularProgress />
           </Box>
         ) : error ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <Typography color="error">{error}</Typography>
-          </Box>
         ) : (
           <>
             <DataGridPro
@@ -477,17 +333,9 @@ export default function NewSaleData(props) {
               onClose={handleCloseModal}
               data={selectedRow || {}}
               onSave={handleSave}
-      
-            />
           </>
         )}
       </div>
     </div>
-  );
 }
-
-
-
-
-
 //

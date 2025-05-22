@@ -1,8 +1,7 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Box, Stack, AppBar, Toolbar, IconButton, Button } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // components
@@ -15,11 +14,8 @@ import NotificationsPopover from './NotificationsPopover';
 import UtilityBillUploadModal from '../../../components/modals/Utility';
 
 const NAV_WIDTH = 280;
-
 const HEADER_MOBILE = 64;
-
 const HEADER_DESKTOP = 92;
-
 const StyledRoot = styled(AppBar)(({ theme }) => ({
   ...bgBlur({ color: theme.palette.background.default }),
   boxShadow: 'none',
@@ -27,22 +23,15 @@ const StyledRoot = styled(AppBar)(({ theme }) => ({
     width: `calc(100% - ${NAV_WIDTH + 1}px)`,
   },
 }));
-
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: HEADER_MOBILE,
-  [theme.breakpoints.up('lg')]: {
     minHeight: HEADER_DESKTOP,
     padding: theme.spacing(0, 5),
-  },
-}));
-
 Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
-
 export default function Header({ onOpenNav }) {
   const [isUtilityBillModalOpen, setUtilityBillModalOpen] = useState(false);
-
   return (
     <StyledRoot>
       <StyledToolbar>
@@ -56,17 +45,13 @@ export default function Header({ onOpenNav }) {
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
-
         <Searchbar />
         <Box sx={{ flexGrow: 1 }} />
-
         <Button onClick={() => setUtilityBillModalOpen(true)} sx={{ mr: 2 }}>
           Upload Bill
         </Button>
-
         <AccountPopover />
       </StyledToolbar>
-
       <UtilityBillUploadModal open={isUtilityBillModalOpen} setOpen={setUtilityBillModalOpen} />
     </StyledRoot>
   );

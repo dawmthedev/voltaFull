@@ -1,11 +1,9 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // @mui
-import { styled } from '@mui/material/styles';
-import { Badge } from '@mui/material';
 // component
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
-
 const StyledRoot = styled('div')(({ theme }) => ({
   zIndex: 999,
   right: 0,
@@ -26,9 +24,6 @@ const StyledRoot = styled('div')(({ theme }) => ({
   transition: theme.transitions.create('opacity'),
   '&:hover': { opacity: 0.72 },
 }));
-
-// ----------------------------------------------------------------------
-
 export default function CartWidget() {
   return (
     <StyledRoot>

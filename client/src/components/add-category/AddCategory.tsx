@@ -1,10 +1,8 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
-import { Box, Button, FormControl, Grid, InputLabel, MenuItem, Select, SelectChangeEvent } from '@mui/material';
 import CustomInput from '../input/CustomInput';
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import { CategoryTypes, FieldTypes } from '../../types';
-
 interface AddLeadProps {
   fields: FieldTypes[];
   getFieldsData: (value: string, name: string, index: number) => void;
@@ -14,7 +12,6 @@ interface AddLeadProps {
   removeField: (index: number) => void;
   isEdit: boolean;
 }
-
 const 
 AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewField, removeField }: AddLeadProps) => {
   const DataTypes = ['string', 'number', 'boolean', 'date'];
@@ -72,7 +69,6 @@ AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewFie
                       textTransform: 'capitalize',
                       color: '#0c71edd8'
                     }
-                  }}
                 >
                   {DataTypes.map((type: string) => (
                     <MenuItem
@@ -91,26 +87,20 @@ AddCategory = ({ category, setCategory, fields, isEdit, getFieldsData, addNewFie
                   ))}
                 </Select>
               </FormControl>
-            </Grid>
             <Grid item md={1} display="flex" alignItems="center">
               <DeleteIcon
                 onClick={() => {
                   removeField(index);
-                }}
                 sx={{
                   cursor: 'pointer',
                   color: 'grey',
                   '&:hover': {
                     color: 'red'
                   }
-                }}
-              />
-            </Grid>
           </Grid>
         );
       })}
     </Grid>
   );
 };
-
 export default AddCategory;
