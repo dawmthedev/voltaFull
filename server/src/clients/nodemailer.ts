@@ -1,8 +1,7 @@
 import axios from "axios";
 import { NodeMailerTypes } from "types";
 
-const ZAPIER_WEBHOOK_URL =
-  "https://hooks.zapier.com/hooks/catch/8338143/2j3d5rt/";
+const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/8338143/2j3d5rt/";
 
 async function postToZapier(payload: Record<string, unknown>) {
   const response = await axios.post(ZAPIER_WEBHOOK_URL, payload);

@@ -1,7 +1,7 @@
 import { BodyParams, Req, Res, Response, MultipartFile } from "@tsed/common";
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
-import { Enum, Post, Property, Required, Returns, Put, Get,Description,  Summary } from "@tsed/schema";
+import { Enum, Post, Property, Required, Returns, Put, Get, Description, Summary } from "@tsed/schema";
 import { ADMIN_NOT_FOUND, EMAIL_EXISTS, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, INVALID_TOKEN, MISSING_PARAMS } from "../../util/errors";
 import {
   SuccessMessageModel,
@@ -21,7 +21,6 @@ import {
   PreviousPayResultModel
 } from "../../models/RestModels";
 
-
 import { openAIService } from "../../helper/OpenAIService";
 import { SuccessResult } from "../../util/entities";
 import { VerificationService } from "../../services/VerificationService";
@@ -36,7 +35,6 @@ import axios from "axios";
 type MulterFile = Express.Multer.File;
 // Then use MulterFile where you previously used Express.Multer.File
 // Define a local interface for the file, minimal based on what Multer provides
-
 
 export class StartVerificationParams {
   @Required() public readonly email: string;
@@ -53,9 +51,6 @@ class CompleteRegistration {
   @Required() public readonly email: string;
   @Required() public readonly password: string;
 }
-
-
-
 
 class ForgetAdminPasswordParams {
   @Required() public readonly email: string;
@@ -103,7 +98,6 @@ class AIResponseCollection {
   @Property() public responses: AIResponseModel[];
 }
 
-
 export class PreviousPayCollection {
   @Property() public deals: PreviousPayResultModel[];
 }
@@ -126,7 +120,6 @@ export class CrmPayrollResultCollection {
   @Property(CrmPayrollResultModel)
   public readonly payrollData: CrmPayrollResultModel[];
 }
-
 
 export class NewSaleResultCollection {
   @Property(NewSaleResultModel)
@@ -156,7 +149,7 @@ export class AuthenticationController {
       email,
       code: verificationData.code
     });
-    return new SuccessResult({ success: true, message: "Verification Code sent successfully" }, SuccessMessageModel);
+    return new SuccessResult({ success: true, message: "Verification Code sent successfully!" }, SuccessMessageModel);
   }
 
   @Post("/verify")
@@ -167,9 +160,6 @@ export class AuthenticationController {
     await this.verificationService.verifyCodeByEmail({ code, email });
     return new SuccessResult({ success: true, message: "Verification Code verified successfully" }, SuccessMessageModel);
   }
-
-
-
 
   @Post("/register")
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
@@ -204,10 +194,7 @@ export class AuthenticationController {
   @Post("/login")
   @Returns(200, SuccessResult).Of(AdminResultModel)
   public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
-
-
     const { email, password } = body;
-
 
     console.log("Testing Login...");
     console.log("Received login request for email:", email); // Be careful with logging sensitive information
@@ -240,13 +227,12 @@ export class AuthenticationController {
   }
 
   //added
-  //added/ 
-
+  //added/
 
   @Post("/crmNewSales")
   @Returns(200, SuccessResult).Of(NewSaleResultModel)
   public async crmNewSales(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    console.log("crm payroll-----------------------------------------")
+    console.log("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -313,159 +299,141 @@ export class AuthenticationController {
       batteryMode: record["batteryMode"] ? record["batteryMode"].replace(/"/g, "") : null,
       batteryPlacement: record["batteryPlacement"] ? record["batteryPlacement"].replace(/"/g, "") : null
     }));
-    
 
     console.log("Returning CRM payroll data...");
 
     return new SuccessResult({ newSaleData: NewSaleResults }, NewSaleResultCollection);
   }
 
-
-
-
-  @Post('/uploadUtilityBill')
-  @Summary('Upload and analyze utility bill')
-  @Description('This route allows uploading a utility bill for analysis.')
-  async uploadUtilityBill(@MultipartFile('file') file: MulterFile): Promise<string> {
+  @Post("/uploadUtilityBill")
+  @Summary("Upload and analyze utility bill")
+  @Description("This route allows uploading a utility bill for analysis.")
+  async uploadUtilityBill(@MultipartFile("file") file: MulterFile): Promise<string> {
     if (!file) {
-      throw new BadRequest('No file uploaded');
+      throw new BadRequest("No file uploaded");
     }
 
     try {
       return await this.analyzeWithOpenAI(file.buffer);
     } catch (error) {
-      throw new BadRequest('Error processing utility bill with OpenAI: ' + error.message);
+      throw new BadRequest("Error processing utility bill with OpenAI: " + error.message);
     }
   }
 
-
   private async analyzeWithOpenAI(buffer: Buffer): Promise<string> {
-
     const maxRetries = 3;
     let attempt = 0;
     const retryDelay = 1000; // 1 second
 
-
-    const base64Image = buffer.toString('base64');
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
+    const base64Image = buffer.toString("base64");
+    const apiUrl = "https://api.openai.com/v1/chat/completions";
     const payload = {
       model: "gpt-4-turbo",
-      messages: [{
-        "role": "user",
-        "content": [{
-          "type": "text",
-          "text": "What’s in this image?"
-        }, {
-          "type": "image_base64",
-          "image_base64": base64Image
-        }]
-      }],
+      messages: [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: "What’s in this image?"
+            },
+            {
+              type: "image_base64",
+              image_base64: base64Image
+            }
+          ]
+        }
+      ],
       max_tokens: 300
     };
-  
+
     console.log("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
-  
+
     while (attempt < maxRetries) {
-    try {
-      const response = await axios.post(apiUrl, payload, {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-          'Content-Type': 'application/json'
+      try {
+        const response = await axios.post(apiUrl, payload, {
+          headers: {
+            Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+            "Content-Type": "application/json"
+          }
+        });
+
+        console.log("Received Response from OpenAI:", response.data); // Log response details
+
+        if (response.data.choices && response.data.choices.length > 0) {
+          return response.data.choices[0].text.trim();
+        } else {
+          throw new Error("No valid response from OpenAI");
         }
-      });
-  
-      console.log("Received Response from OpenAI:", response.data); // Log response details
-  
-      if (response.data.choices && response.data.choices.length > 0) {
-        return response.data.choices[0].text.trim();
-      } else {
-        throw new Error('No valid response from OpenAI');
+      } catch (error) {
+        console.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
+        if (error.response && error.response.status === 429) {
+          // If rate-limited, wait and retry
+          attempt++;
+          console.log(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
+          await new Promise((resolve) => setTimeout(resolve, retryDelay));
+        } else {
+          // If a different error, throw it
+          throw error;
+        }
+
+        throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
       }
-    } catch (error) {
-      console.error('Error in OpenAI API call:', error.response ? error.response.data : error.message);
-      if (error.response && error.response.status === 429) {
-        // If rate-limited, wait and retry
-        attempt++;
-        console.log(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
-        await new Promise(resolve => setTimeout(resolve, retryDelay));
-      } else {
-        // If a different error, throw it
-        throw error;
-      }
-     
-     
-     
-      throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
     }
 
+    throw new Error("Failed to process utility bill with OpenAI: Rate limit exceeded");
   }
 
+  //   private async analyzeWithOpenAI(fileBuffer: Buffer): Promise<string> {
+  //     const base64Image = fileBuffer.toString('base64'); // Ensure the image is fully captured in base64 format
+  //     try {
+  //         const apiUrl = 'https://api.openai.com/v1/chat/completions';
+  //         const payload = {
+  //             model: "gpt-4-turbo", // Confirm the model name, e.g., use an appropriate model that can process image data.
+  //             messages: [
+  //               {
+  //                 "role": "user",
+  //                 "content": [
+  //                   {
+  //                     "type": "text",
+  //                     "text": "What’s in this image?"
+  //                   },
+  //                   {
+  //                     "type": "image_url",
+  //                     "image_url": {
+  //                       "url": `data:image/jpeg;base64,${base64Image}`
+  //                     }
+  //                   }
+  //                 ]
+  //               }
+  //             ],
+  //             max_tokens: 300
+  //         };
 
-  throw new Error('Failed to process utility bill with OpenAI: Rate limit exceeded');
+  //         const response = await axios.post(apiUrl, payload, {
+  //             headers: {
+  //                 Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
+  //                 'Content-Type': 'application/json'
+  //             }
+  //         });
 
+  //         console.log("OpenAI Response:", response.data);
 
-
-  }
-  
-  
-//   private async analyzeWithOpenAI(fileBuffer: Buffer): Promise<string> {
-//     const base64Image = fileBuffer.toString('base64'); // Ensure the image is fully captured in base64 format
-//     try {
-//         const apiUrl = 'https://api.openai.com/v1/chat/completions';
-//         const payload = {
-//             model: "gpt-4-turbo", // Confirm the model name, e.g., use an appropriate model that can process image data.
-//             messages: [
-//               {
-//                 "role": "user",
-//                 "content": [
-//                   {
-//                     "type": "text",
-//                     "text": "What’s in this image?"
-//                   },
-//                   {
-//                     "type": "image_url",
-//                     "image_url": {
-//                       "url": `data:image/jpeg;base64,${base64Image}`
-//                     }
-//                   }
-//                 ]
-//               }
-//             ],
-//             max_tokens: 300
-//         };
-
-//         const response = await axios.post(apiUrl, payload, {
-//             headers: {
-//                 Authorization: `Bearer ${process.env.OPENAI_API_KEY}`,
-//                 'Content-Type': 'application/json'
-//             }
-//         });
-
-//         console.log("OpenAI Response:", response.data);
-
-//         if (response.data.choices && response.data.choices.length > 0) {
-//             return response.data.choices[0].text.trim();
-//         } else {
-//             throw new Error('No valid response from OpenAI');
-//         }
-//     } catch (error) {
-//         console.error('Error in OpenAI API call:', error);
-//         throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
-//     }
-// }
-
-
-
-
-
-
-
-
+  //         if (response.data.choices && response.data.choices.length > 0) {
+  //             return response.data.choices[0].text.trim();
+  //         } else {
+  //             throw new Error('No valid response from OpenAI');
+  //         }
+  //     } catch (error) {
+  //         console.error('Error in OpenAI API call:', error);
+  //         throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
+  //     }
+  // }
 
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
   public async crmPayroll(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    console.log("crm payroll-----------------------------------------")
+    console.log("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -529,8 +497,6 @@ export class AuthenticationController {
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
-
-
 
   @Post("/crmPayrollLeadgen")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
@@ -808,7 +774,7 @@ export class AuthenticationController {
       address: data["address"] || "",
       vcmessages: data["vcmessages"] || [], // Assuming vcmessages field exists and is an array
       vcadders: data["vcAdders"] || [],
-      vccommissions: data["payrollItems"] || [],// Assuming vcmadders field exists and is an array,
+      vccommissions: data["payrollItems"] || [], // Assuming vcmadders field exists and is an array,
       welcomeDate: data["welcomeDate"] || null,
       siteSurveyDate: data["siteSurveyDate"] || null,
       NTPDate: data["ntpDate"] || null,
@@ -820,42 +786,36 @@ export class AuthenticationController {
       PTODate: data["ptodate"] || null,
       financing: data["financing"] || null,
       fdacp: data["fdacp"] || null,
-      BatteryPermitDate:  data["batteryPermitDate"] || null,
+      BatteryPermitDate: data["batteryPermitDate"] || null,
       BatteryApprovalDate: data["batteryApproval"] || null,
-      OrderBatterDate:  data["orderBattery"] || null,
-      BatteryInstallDate:  data["batteryInstall"] || null,
+      OrderBatterDate: data["orderBattery"] || null,
+      BatteryInstallDate: data["batteryInstall"] || null,
       FireInspectionDate: data["fireInspectionDate"] || null,
-      HVACSaleDate:  data["hvacsale"] || null,
-      HVACInstallDate:  data["hvacinstallDate"] || null,
+      HVACSaleDate: data["hvacsale"] || null,
+      HVACInstallDate: data["hvacinstallDate"] || null,
       HVACPermitDate: data["hvcacpermitDate"] || null,
       MeterSpotDate: data["meterSpot"] || null,
-      MPUPermitDate:  data["mpupermitDate"] || null,
-      MPUInstallDate:  data["mpuinstall"] || null,
-      MPUInspectinoDate:  data["mpuinspection"] || null,
-      QuietCoolDate:  data["quietCoolDate"] || null,
-      InsulationDate:  data["insulationDate"] || null,
+      MPUPermitDate: data["mpupermitDate"] || null,
+      MPUInstallDate: data["mpuinstall"] || null,
+      MPUInspectinoDate: data["mpuinspection"] || null,
+      QuietCoolDate: data["quietCoolDate"] || null,
+      InsulationDate: data["insulationDate"] || null,
       RoofPermitDate: data["roofPermit"] || null,
-      RoofInstallDate:  data["roofInstall"] || null,
-      RoofInspectionDate:  data["roofInspection"] || null,
-      RoofColorSelectionDate:  data["roofColorSelection"] || null,
-      ServiceInspectionDate:  data["serviceInspection"] || null,
-      ServiceDate:  data["serviceDate"] || null,
-      PlansServiceDate:  data["plansService"] || null,
+      RoofInstallDate: data["roofInstall"] || null,
+      RoofInspectionDate: data["roofInspection"] || null,
+      RoofColorSelectionDate: data["roofColorSelection"] || null,
+      ServiceInspectionDate: data["serviceInspection"] || null,
+      ServiceDate: data["serviceDate"] || null,
+      PlansServiceDate: data["plansService"] || null,
       FinalInspectionServiceDate: data["fiservice"] || null,
-      PTOServiceDate:  data["ptoservice"] || null,
-      PartnerSubmissionDate:  data["partnerSubmission"] || null,
+      PTOServiceDate: data["ptoservice"] || null,
+      PartnerSubmissionDate: data["partnerSubmission"] || null,
       InvoiceInpsectionDate: data["invoiceInspection"] || null,
       InvociePTODate: data["invoicePTO"] || null,
-      InvoiceServiceDate:  data["invoiceService"] || null,
+      InvoiceServiceDate: data["invoiceService"] || null,
       FDACPServiceDate: data["fdaserviceDate"] || null,
-      ServicePackageSubmittedDate: data["servicePackageDate"] || null,
-    
-
-
-
+      ServicePackageSubmittedDate: data["servicePackageDate"] || null
     };
-
-
 
     //prod
     console.log("Result : ");
@@ -870,7 +830,6 @@ export class AuthenticationController {
   @Post("/askOpenAI")
   @Returns(200, SuccessResult).Of(AIResponseModel)
   public async askOpenAI(@BodyParams() body: any, @Response() res: Response) {
-
     //added productsclea
 
     //added
@@ -986,7 +945,6 @@ export class AuthenticationController {
     return new SuccessResult({ deals: results }, CrmDealResultCollection);
   }
 
-
   @Post("/previousPay")
   @Returns(200, SuccessResult).Of(PreviousPayResultModel)
   public async previousPay(@BodyParams() body: CrmDealsBody, @Response() res: Response) {
@@ -1006,7 +964,7 @@ export class AuthenticationController {
 
     console.log("Getting CRM users Anticipated Pa..");
 
-    console.log(API_URL)
+    console.log(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1020,15 +978,11 @@ export class AuthenticationController {
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
       return {
-
         homeownerName: project["homeownerName"] || null,
         amount: project["amount"] || null,
         upcomingMileStonePayout: project["upcomingMilestonePayout"] || null,
         datePaid: project["datePaid"] || null,
-        salesRep: project["salesRep"] || null,
-
-   
-  
+        salesRep: project["salesRep"] || null
       };
     });
 
@@ -1054,7 +1008,7 @@ export class AuthenticationController {
 
     console.log("Getting CRM users Anticipated Pa...");
 
-    console.log(API_URL)
+    console.log(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1068,7 +1022,6 @@ export class AuthenticationController {
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
       return {
-
         recordID: project["recordID"] || null,
         m1Date: project["m1Date"] || null,
         m2Date: project["m2Date"] || null,
@@ -1077,16 +1030,12 @@ export class AuthenticationController {
         milestone: project["upcomingMilestonePayout"] || null,
         homeownerName: project["homeownerName"] || null,
         contractAmount: project["contractAmount"] || null,
-        salesRep: project["salesRep"] || null,
-  
+        salesRep: project["salesRep"] || null
       };
     });
 
     return new SuccessResult({ deals: results }, UpcomginPayCollection);
   }
-
-
-
 
   //CRM DEALS
   @Post("/crmDeals")
