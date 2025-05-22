@@ -1,6 +1,5 @@
 import { Inject, Injectable } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
-import { NodemailerClient } from "../clients/nodemailer";
 import { PlannerDataTypes } from "../../types";
 import { PlannerModel } from "../models/PlannerModel";
 
