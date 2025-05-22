@@ -32,8 +32,8 @@ const UpdateConfirmationPage = () => {
 
     const response = await axios.post('https://api.quickbase.com/v1/records', recordData, {
       headers: {
-        Authorization: "Bearer your_quickbase_user_token_here",
-        "QB-Realm-Hostname": "your_quickbase_domain_here",
+        Authorization: process.env.REACT_APP_QB_USER_TOKEN,
+        "QB-Realm-Hostname": process.env.REACT_APP_QB_DOMAIN,
         "Content-Type": "application/json",
       }
     });

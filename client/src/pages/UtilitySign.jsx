@@ -10,11 +10,11 @@ function UtilitySign() {
 
   const submitNewUtilityAFD = async (e) => {
     e.preventDefault();
-    const QB_DOMAIN = "voltaic.quickbase.com";
+    const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
     
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: process.env.REACT_APP_QB_USER_TOKEN,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };

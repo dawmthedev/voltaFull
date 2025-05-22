@@ -79,8 +79,8 @@ export default function DashboardLayout() {
   const fetchCRMVerification = async () => {
     setLoading(true); // Set loading to true before the request
     const API_URL = "https://api.quickbase.com/v1/records/query";
-    const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-    const QB_DOMAIN = "voltaic.quickbase.com";
+    const USER_TOKEN = process.env.REACT_APP_QB_USER_TOKEN;
+    const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
 
     const requestBody = {
       from: "br5cqr4wu",
@@ -173,11 +173,11 @@ export default function DashboardLayout() {
     const socialSecurityURL = fileUrls["Social Security"] || null;
     const passportURL = fileUrls["US Passport"] || null;
 
-    const QB_DOMAIN = "voltaic.quickbase.com";
+    const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: process.env.REACT_APP_QB_USER_TOKEN,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };

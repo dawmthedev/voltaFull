@@ -162,8 +162,8 @@ const LeadDetailPage = () => {
   const submitNewMessage = async ({ Message, relatedProject, TaggedUsers, from }) => {
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": "voltaic.quickbase.com",
+      Authorization: process.env.REACT_APP_QB_USER_TOKEN,
+      "QB-Realm-Hostname": process.env.REACT_APP_QB_DOMAIN,
       "Content-Type": "application/json",
     };
 
@@ -225,8 +225,8 @@ const LeadDetailPage = () => {
   useEffect(() => {
     const fetchCRMUsers = async () => {
       const API_URL = "https://api.quickbase.com/v1/records/query";
-      const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-      const QB_DOMAIN = "voltaic.quickbase.com";
+      const USER_TOKEN = process.env.REACT_APP_QB_USER_TOKEN;
+      const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
 
       const requestBody = {
         from: "br5cqr4wu",
