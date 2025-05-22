@@ -106,28 +106,19 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     console.log("formData")
     console.log(formData);
     e.preventDefault();
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": "voltaic.quickbase.com",
-      "Content-Type": "application/json",
-    };
 
     const requestBody = {
-      to: "bs9fegk3x",
-      data: [{
-        3: { value: formData.recordID },
-        40: { value: formData.customerEmail },
-        44: { value: formData.customerFirstName },
-        45: { value: formData.customerLastName },
-        46: { value: formData.customerPhone },
-        48: { value: formData.financing } // Pass the selected financing as fid 50
-      }],
-      fieldsToReturn: []
+      recordID: formData.recordID,
+      customerEmail: formData.customerEmail,
+      customerFirstName: formData.customerFirstName,
+      customerLastName: formData.customerLastName,
+      customerPhone: formData.customerPhone,
+      financing: formData.financing
     };
-  
+
     try {
-      const response = await axios.post("https://api.quickbase.com/v1/records", requestBody, { headers });
-      console.log("Success!", response.data);
+      const response = await axios.post(`${baseURL}/new-sale/missing`, requestBody);
+      console.log('Success!', response.data);
       pushNewProject(e)
       setIsSubmitted(true);
       onClose(); // Close the modal here
@@ -147,14 +138,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
   const pushNewProject = async (e) => {
     e.preventDefault();
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
 
 
     // const mapFinancingToValue = (financing) => {
@@ -178,26 +161,20 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     console.log("pushing new project" , formData)
   
     const requestBody = {
-      to: "br5cqr4r3",
-      data: [{
-        90: { value: formData.customerEmail },
-        84: { value: formData.customerFirstName },
-        85: { value: formData.customerLastName },
-        88: { value: formData.customerPhone },
-        93: { value: formData.address },
-        37: { value: 'Incomplete' },
-        633: { value: '71' },
-        95: { value: formData.city },
-        96: { value: 'California' },
-        97: { value: formData.zipCode },
-        98: { value: formData.country },
-      }],
-      fieldsToReturn: []
+      customerEmail: formData.customerEmail,
+      customerFirstName: formData.customerFirstName,
+      customerLastName: formData.customerLastName,
+      customerPhone: formData.customerPhone,
+      address: formData.address,
+      city: formData.city,
+      state: 'California',
+      zipCode: formData.zipCode,
+      country: formData.country
     };
 
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      const response = await axios.post(`${baseURL}/new-sale`, requestBody);
+      console.log('Success!', response.data);
       setIsSubmitted(true);
 
       onClose(); // Close the modal here

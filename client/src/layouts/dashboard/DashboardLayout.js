@@ -8,6 +8,7 @@ import Nav from './nav';
 import { useAppSelector } from '../../hooks/hooks';  // For accessing user authentication state
 import { authSelector } from '../../redux/slice/authSlice';
 import axios from 'axios';
+import { baseURL } from '../../libs/client/apiClient';
 import { Button, Card, Typography, Dialog, DialogTitle, DialogContent, DialogActions, TextField, MenuItem, CircularProgress, IconButton, List, ListItem, ListItemText, ListItemSecondaryAction } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -77,39 +78,18 @@ export default function DashboardLayout() {
 
   // Fetch verification status
   const fetchCRMVerification = async () => {
-    setLoading(true); // Set loading to true before the request
-    const API_URL = "https://api.quickbase.com/v1/records/query";
-    const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-    const QB_DOMAIN = "voltaic.quickbase.com";
-
-    const requestBody = {
-      from: "br5cqr4wu",
-      where: `({3.EX.'${recordID}'})`,
-      sortBy: [{ fieldId: 1083, order: "ASC" }],
-      groupBy: [{ fieldId: 1083, grouping: "equal-values" }],
-      options: { skip: 0, top: 1, compareWithAppLocalTime: false }
-    };
-
-    const headers = {
-      Authorization: USER_TOKEN,
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
-
+    setLoading(true);
     try {
-      const response = await axios.post(API_URL, requestBody, { headers });
-      if (response.data && response.data.data) {
-        const user = response.data.data[0];
-        if (user && user['1083'] && user['1083'].value === true) {
-          setIsVerified(true);
-        } else {
-          setIsVerified(false);
-        }
+      const response = await axios.post(`${baseURL}/user/doc-status`, { recordID });
+      if (response.data && typeof response.data.verified === 'boolean') {
+        setIsVerified(response.data.verified);
+      } else {
+        setIsVerified(false);
       }
     } catch (error) {
       console.error('Failed to fetch verification status:', error);
     }
-    setLoading(false); // Set loading to false after the request completes
+    setLoading(false);
   };
 
   useEffect(() => {
@@ -173,29 +153,16 @@ export default function DashboardLayout() {
     const socialSecurityURL = fileUrls["Social Security"] || null;
     const passportURL = fileUrls["US Passport"] || null;
 
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
-
     const requestBody = {
-      to: "br5cqr4wu", // Table identifier in Quickbase
-      data: [{
-        3: { value: recordID },
-        1081: { value: driversLicenseURL },
-        1080: { value: socialSecurityURL },
-        1082: { value: passportURL },
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
+      recordID,
+      driversLicenseURL,
+      socialSecurityURL,
+      passportURL,
     };
 
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      const response = await axios.post(`${baseURL}/user/documents`, requestBody);
+      console.log('Success!', response.data);
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
       }, 2000);

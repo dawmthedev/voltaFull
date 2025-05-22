@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
 import axios from 'axios';
+import { baseURL } from '../../libs/client/apiClient';
 import { DatePicker } from '@mui/x-date-pickers';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { MultiSelect } from 'react-multi-select-component';
@@ -59,35 +60,22 @@ const AddUserForm = ({ onClose }) => {
       return; // Prevent form submission if validation fails
     }
 
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
-
     const requestBody = {
-      to: "br5cqr4wu", // Table identifier in Quickbase
-      data: [{
-        10: { value: formData.email },
-        6: { value: formData.firstName },
-        7: { value: formData.lastName },
-        14: { value: formData.phone },
-        796: { value: formData.hisLicense }, // Assuming field ID for HIS License
-        931: { value: formData.role }, // Assuming field ID for Role
-        1071: { value: formData.payrollType }, // Field ID for Payroll Type
-        1072: { value: formData.hireDate }, // New date field for Hire Date
-        1073: { value: formData.selectedTeamMembers.join(', ') }, // New multi-select field
-        1074: { value: formData.location }, // New location field
-        1075: { value: "true" } // New location field
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
+      email: formData.email,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phone: formData.phone,
+      hisLicense: formData.hisLicense,
+      role: formData.role,
+      payrollType: formData.payrollType,
+      hireDate: formData.hireDate,
+      selectedTeamMembers: formData.selectedTeamMembers.join(', '),
+      location: formData.location,
+      active: true
     };
 
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      const response = await axios.post(`${baseURL}/users`, requestBody);
       console.log("Success!", response.data);
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
@@ -368,11 +356,8 @@ export default AddUserForm;
 //       return;
 //     }
 
-//     const QB_DOMAIN = "voltaic.quickbase.com";
-//     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
 //     const headers = {
-//       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };
@@ -727,11 +712,8 @@ export default AddUserForm;
 //       return;
 //     }
 
-//     const QB_DOMAIN = "voltaic.quickbase.com";
-//     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
 //     const headers = {
-//       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };

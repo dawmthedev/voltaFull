@@ -160,30 +160,16 @@ const LeadDetailPage = () => {
   };
 
   const submitNewMessage = async ({ Message, relatedProject, TaggedUsers, from }) => {
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": "voltaic.quickbase.com",
-      "Content-Type": "application/json",
-    };
-
     const requestBody = {
-      to: "br5cqr42m",
-      data: [{
-        6: { value: Message },
-        26: { value: relatedProject },
-        61: { value: 'Project Manager' },
-        62: { value: TaggedUsers },
-        82: { value: from },
-        83: { value: fileUrls[0] || null },
-        84: { value: fileUrls[1] || null },
-        85: { value: fileUrls[2] || null },
-        86: { value: fileUrls[3] || null }
-      }]
+      message: Message,
+      relatedProject,
+      taggedUsers: TaggedUsers,
+      from,
+      attachments: fileUrls
     };
 
     try {
-      await axios.post(API_ENDPOINT, requestBody, { headers });
+      await axios.post(`${baseURL}/messages`, requestBody);
       setMessageText('');
       setMessageModalOpen(false);
       setSelectedUser([]);
@@ -224,47 +210,14 @@ const LeadDetailPage = () => {
   
   useEffect(() => {
     const fetchCRMUsers = async () => {
-      const API_URL = "https://api.quickbase.com/v1/records/query";
-      const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-      const QB_DOMAIN = "voltaic.quickbase.com";
-
-      const requestBody = {
-        from: "br5cqr4wu",
-        where: "({53.EX.'Active'})",
-        
-        sortBy: [
-          { fieldId: 12, order: "ASC" },
-          { fieldId: 1049, order: "ASC" },
-          { fieldId: 52, order: "ASC" },
-          { fieldId: 10, order: "ASC" },
-          { fieldId: 602, order: "ASC" },
-        ],
-        groupBy: [
-          { fieldId: 12, grouping: "equal-values" },
-          { fieldId: 53, grouping: "equal-values" },
-          { fieldId: 1049, grouping: "equal-values" },
-          { fieldId: 10, grouping: "equal-values" },
-          { fieldId: 602, grouping: "equal-values" },
-        ],
-        options: { skip: 0, top: 0, compareWithAppLocalTime: false },
-      };
-
-      const headers = {
-        Authorization: USER_TOKEN,
-        "QB-Realm-Hostname": QB_DOMAIN,
-        "Content-Type": "application/json",
-      };
-
       try {
-        const response = await axios.post(API_URL, requestBody, { headers });
-        if (response.data && response.data.data) {
-          const activeUsers = response.data.data
-            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
-            .map((user) => ({
-              id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
-              name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
-              email: user['10'] ? user['10'].value : 'No Email',
-            }));
+        const response = await axios.get(`${baseURL}/users`);
+        if (response.data && Array.isArray(response.data.users)) {
+          const activeUsers = response.data.users.map((user) => ({
+            id: user.id,
+            name: user.name,
+            email: user.email,
+          }));
           setUsers(activeUsers);
         }
       } catch (error) {
