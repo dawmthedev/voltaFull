@@ -146,10 +146,13 @@ export class AuthenticationController {
     const findAdmin = await this.adminService.findAdminByEmail(email);
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
     const verificationData = await this.verificationService.generateVerification({ email, type });
+
     const maskedCode = verificationData.code
       ? `${verificationData.code.substring(0, 2)}***`
       : "";
     $log.info("Generated verification code", { code: maskedCode });
+    
+  
     try {
       await NodemailerClient.sendVerificationEmail({
         title: type || "Email",
