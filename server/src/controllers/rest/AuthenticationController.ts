@@ -128,6 +128,8 @@ export class NewSaleResultCollection {
 }
 
 const isSecure = process.env.NODE_ENV === "production";
+const QUICKBASE_API_BASE_URL = process.env.QUICKBASE_API_BASE_URL || "";
+const OPENAI_COMPLETION_URL = process.env.OPENAI_COMPLETION_URL || "";
 @Controller("/auth")
 export class AuthenticationController {
   @Inject()
@@ -252,7 +254,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/NewSales";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/NewSales`;
 
     const requestBody = {
       repID: recordId
@@ -341,7 +343,7 @@ export class AuthenticationController {
     const retryDelay = 1000; // 1 second
 
     const base64Image = buffer.toString("base64");
-    const apiUrl = "https://api.openai.com/v1/chat/completions";
+    const apiUrl = OPENAI_COMPLETION_URL;
     const payload = {
       model: "gpt-4-turbo",
       messages: [
@@ -453,7 +455,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMPayroll";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMPayroll`;
 
     const requestBody = {
       repID: recordId
@@ -520,7 +522,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMPayrollLeadGen";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMPayrollLeadGen`;
 
     const requestBody = {
       repID: recordId
@@ -583,7 +585,7 @@ export class AuthenticationController {
   @Post("/crmDealsRookieLedgen")
   @Returns(200, SuccessResult).Of(CrmDealResultModel)
   public async crmDealsRookieLedgens(@Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDealsRookieLeadgen";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDealsRookieLeadgen`;
 
     const headers = {
       "Content-Type": "application/json"
@@ -631,7 +633,7 @@ export class AuthenticationController {
   @Post("/crmDealsRookie")
   @Returns(200, SuccessResult).Of(CrmDealResultModel)
   public async crmDealsRookie(@Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDealsRookie";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDealsRookie`;
 
     const headers = {
       "Content-Type": "application/json"
@@ -683,7 +685,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDealsLeadgen";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDealsLeadgen`;
 
     const requestBody = {
       repID: recordId
@@ -742,7 +744,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDeal";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDeal`;
 
     ///Deal ID changed here!
     const requestBody = {
@@ -871,7 +873,7 @@ export class AuthenticationController {
   @Post("/crmRatesInActive")
   @Returns(200, SuccessResult).Of(CrmRateResultModel)
   public async crmRatesInActive(@Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMRatesInActive";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMRatesInActive`;
 
     const headers = {
       "Content-Type": "application/json"
@@ -911,7 +913,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDealsReport";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDealsReport`;
 
     const requestBody = {
       repID: recordId
@@ -967,7 +969,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/PreviousPay";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/PreviousPay`;
 
     const requestBody = {
       repID: recordId
@@ -1011,7 +1013,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/UpcomingPay";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/UpcomingPay`;
 
     const requestBody = {
       repID: recordId
@@ -1060,7 +1062,7 @@ export class AuthenticationController {
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
 
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMDeals";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMDeals`;
 
     const requestBody = {
       repID: recordId
@@ -1145,7 +1147,7 @@ export class AuthenticationController {
   @Post("/crmRatesActive")
   @Returns(200, SuccessResult).Of(CrmRateResultModel)
   public async crmRatesActive(@Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMRatesActive";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMRatesActive`;
 
     const headers = {
       "Content-Type": "application/json"
@@ -1182,7 +1184,7 @@ export class AuthenticationController {
   @Post("/crmAvgTimelines")
   @Returns(200, SuccessResult).Of(CrmTimelineResultModel)
   public async crmAvgTimelines(@BodyParams() body: timelineBody, @Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMTimelines";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMTimelines`;
 
     const requestBody = {
       repID: body.repId
@@ -1230,7 +1232,7 @@ export class AuthenticationController {
   @Post("/crmAHJTimelines")
   @Returns(200, SuccessResult).Of(CrmTimelineResultModel)
   public async crmAHJTimelines(@BodyParams() body: timelineBody, @Response() res: Response) {
-    const API_URL = "https://voltaicqbapi.herokuapp.com/CRMTimelinesByAHJ";
+    const API_URL = `${QUICKBASE_API_BASE_URL}/CRMTimelinesByAHJ`;
 
     const requestBody = {
       repID: body.repId
