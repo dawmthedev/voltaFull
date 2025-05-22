@@ -30,7 +30,6 @@ const UpdateConfirmationPage = () => {
 
 
 
-    console.log(response.data);
     handleClose(); // Close the dialog after updating
   };
 

@@ -213,8 +213,8 @@ export class AuthenticationController {
   public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
     const { email, password } = body;
 
-    console.log("Testing Login...");
-    console.log("Received login request for email:", email); // Be careful with logging sensitive information
+    $log.info("Testing Login...");
+    $log.info("Received login request for email:", email); // Be careful with logging sensitive information
 
     if (!email || !password) throw new BadRequest(MISSING_PARAMS);
     const admin = await this.adminService.findAdminByEmail(email);
@@ -249,7 +249,7 @@ export class AuthenticationController {
   @Post("/crmNewSales")
   @Returns(200, SuccessResult).Of(NewSaleResultModel)
   public async crmNewSales(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    console.log("crm payroll-----------------------------------------");
+    $log.info("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -264,11 +264,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM Payroll...");
-    console.log(recordId);
+    $log.info("Getting CRM Payroll...");
+    $log.info(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-    console.log("response--------", response);
+    $log.info("response--------", response);
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
@@ -317,7 +317,7 @@ export class AuthenticationController {
       batteryPlacement: record["batteryPlacement"] ? record["batteryPlacement"].replace(/"/g, "") : null
     }));
 
-    console.log("Returning CRM payroll data...");
+    $log.info("Returning CRM payroll data...");
 
     return new SuccessResult({ newSaleData: NewSaleResults }, NewSaleResultCollection);
   }
@@ -364,7 +364,7 @@ export class AuthenticationController {
       max_tokens: 300
     };
 
-    console.log("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
+    $log.info("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
 
     while (attempt < maxRetries) {
       try {
@@ -375,7 +375,7 @@ export class AuthenticationController {
           }
         });
 
-        console.log("Received Response from OpenAI:", response.data); // Log response details
+        $log.info("Received Response from OpenAI:", response.data); // Log response details
 
         if (response.data.choices && response.data.choices.length > 0) {
           return response.data.choices[0].text.trim();
@@ -383,11 +383,11 @@ export class AuthenticationController {
           throw new Error("No valid response from OpenAI");
         }
       } catch (error) {
-        console.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
+        $log.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
         if (error.response && error.response.status === 429) {
           // If rate-limited, wait and retry
           attempt++;
-          console.log(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
+          $log.info(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
           await new Promise((resolve) => setTimeout(resolve, retryDelay));
         } else {
           // If a different error, throw it
@@ -434,7 +434,6 @@ export class AuthenticationController {
   //             }
   //         });
 
-  //         console.log("OpenAI Response:", response.data);
 
   //         if (response.data.choices && response.data.choices.length > 0) {
   //             return response.data.choices[0].text.trim();
@@ -442,7 +441,7 @@ export class AuthenticationController {
   //             throw new Error('No valid response from OpenAI');
   //         }
   //     } catch (error) {
-  //         console.error('Error in OpenAI API call:', error);
+  //         $log.error('Error in OpenAI API call:', error);
   //         throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
   //     }
   // }
@@ -450,7 +449,7 @@ export class AuthenticationController {
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
   public async crmPayroll(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    console.log("crm payroll-----------------------------------------");
+    $log.info("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -465,11 +464,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM Payroll...");
-    console.log(recordId);
+    $log.info("Getting CRM Payroll...");
+    $log.info(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-    console.log("response--------", response);
+    $log.info("response--------", response);
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
@@ -510,7 +509,7 @@ export class AuthenticationController {
       amount: record["amount"] ? record["amount"] : null
     }));
 
-    console.log("Returning CRM payroll data...");
+    $log.info("Returning CRM payroll data...");
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
@@ -532,14 +531,14 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM Payroll...");
-    console.log(recordId);
+    $log.info("Getting CRM Payroll...");
+    $log.info(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
-    console.log(typeof data);
+    $log.info(typeof data);
 
     // const payrollResults = dataArray.map((record) => ({
     //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
@@ -577,7 +576,7 @@ export class AuthenticationController {
       amount: record["amount"] ? record["amount"] : null
     }));
 
-    console.log("Returning CRM payroll data...");
+    $log.info("Returning CRM payroll data...");
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
@@ -591,7 +590,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -600,7 +599,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -639,7 +638,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -648,7 +647,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -695,7 +694,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -704,7 +703,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -755,13 +754,13 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM deal...");
+    $log.info("Getting CRM deal...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
 
     const data = response.data;
-    console.log(data);
+    $log.info(data);
 
     // Transform the structure as needed
     const result = {
@@ -835,9 +834,9 @@ export class AuthenticationController {
     };
 
     //prod
-    console.log("Result : ");
+    $log.info("Result : ");
 
-    console.log(result);
+    $log.info(result);
 
     const singleCrmDealResultModel = new SingleCrmDealResultModel(result); // Pass the result object as a single parameter
 
@@ -865,7 +864,7 @@ export class AuthenticationController {
       // Pass the instance and the class (constructor) for serialization
       return new SuccessResult(responseModel, AIResponseModel);
     } catch (error) {
-      console.error(error);
+      $log.error(error);
       throw new BadRequest("Error processing your question");
     }
   }
@@ -879,7 +878,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -888,7 +887,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -923,7 +922,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -932,7 +931,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -979,9 +978,9 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users Anticipated Pa..");
+    $log.info("Getting CRM users Anticipated Pa..");
 
-    console.log(API_URL);
+    $log.info(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -990,7 +989,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1023,9 +1022,9 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users Anticipated Pa...");
+    $log.info("Getting CRM users Anticipated Pa...");
 
-    console.log(API_URL);
+    $log.info(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1034,7 +1033,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1072,7 +1071,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users!!!...");
+    $log.info("Getting CRM users!!!...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1081,7 +1080,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1153,7 +1152,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1162,7 +1161,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    console.log(dataArray);
+    $log.info(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1194,18 +1193,18 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
 
-    console.log(response);
+    $log.info(response);
     const data = response.data;
 
     const item = data; // Assuming data is the object you are working with
 
     // Check if data is not an array or empty
     // Log the original item for debugging
-    console.log("Original Item:", item);
+    $log.info("Original Item:", item);
 
     // Check if item is not an object or is empty
     if (typeof item !== "object" || Object.keys(item).length === 0) {
@@ -1242,11 +1241,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    console.log("Getting CRM users...");
+    $log.info("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
 
-    console.log(response);
+    $log.info(response);
     const data = response.data;
 
     if (!Array.isArray(data)) {
@@ -1288,16 +1287,11 @@ export class AuthenticationController {
   //     "Content-Type": "application/json",
   //   };
 
-  //   console.log("Getting CRM users...");
 
   //   const response = await axios.post(API_URL, requestBody, { headers });
 
-  //   console.log(response)
   //   const data = response.data;
-  //   console.log("Data");
-  //   console.log(data);
 
-  //   console.log(typeof data);
 
   //   // Instead of checking if the data is an array, just convert it to the Timeline format
   //   const timeline = {

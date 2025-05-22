@@ -1,5 +1,6 @@
 import express from "express";
 import { PlatformBuilder } from "@tsed/common";
+import { $log } from "@tsed/logger";
 import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./Server";
 import mongoose from "mongoose";
@@ -10,7 +11,6 @@ import { notifyLeads, runJob } from "./cron/reminder";
 
 // Schedule the cron job to run every 5 minutes
 // cron.schedule("*/15 * * * *", async () => {
-//   console.log("Running cron job");
 //   const planners = await runJob();
 //   for (let i = 0; i < planners.length; i++) {
 //     const planner = planners[i];
@@ -21,8 +21,7 @@ import { notifyLeads, runJob } from "./cron/reminder";
 
 
 // cron.schedule("*/15 * * * *", async () => {
-//   console.log("Running cron job");
-// //  await notifyLeads();
+//   await notifyLeads();
 // });
 
 export class Application {
@@ -41,16 +40,16 @@ export class Application {
         express: { app: this.app }
       });
     } catch (error) {
-      console.log(error);
+      $log.error(error);
     }
   }
 
   public async startServer() {
     try {
       await this.platform.listen();
-      console.log("Server started...");
+      $log.info("Server started...");
     } catch (error) {
-      console.log(error);
+      $log.error(error);
     }
   }
 }

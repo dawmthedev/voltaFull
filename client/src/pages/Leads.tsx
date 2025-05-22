@@ -126,7 +126,6 @@ export default function Leads() {
       try {
         await dispatch(getLeads({ categoryId: categories[0].id, signal }));
       } catch (error) {
-        console.log('Error:(', error);
       }
     })();
     return () => {
@@ -139,7 +138,6 @@ export default function Leads() {
       await axios.post(`${baseURL}/lead`, lead);
       setIsModalOpen(false);
     } catch (error) {
-      console.log('Error:(', error);
     }
   };
   const submitCategory = async () => {
@@ -147,7 +145,6 @@ export default function Leads() {
       await axios.post(`${baseURL}/category`, category);
       setIsCategoryModalOpen(false);
     } catch (error) {
-      console.log('Error:(', error);
     }
   };
 
@@ -159,7 +156,6 @@ export default function Leads() {
         setIsCsvModalOpen(false);
       }
     } catch (error) {
-      console.log('Error:(', error);
     }
   };
 

@@ -141,9 +141,7 @@ export default function InActiveRates(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.data.rates);
 
-        console.log('responseData.data.payrollData:', responseData.data.rates);
 
         if (responseData.success && responseData.data.rates) {
           const RateData = responseData.data.rates.map((feeRateItem, index) => {

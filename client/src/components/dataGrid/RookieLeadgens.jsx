@@ -17,7 +17,6 @@ export default function RookieDataLead(props) {
 
   // Add redux user info here:
   // const { user } = useSelector((state) => state.auth);
-  // console.log("User" , user)
 
   const [sortModel, setSortModel] = useState([{ field: 'name', sort: 'asc' }]);
   const [sort, setSort] = useState('');

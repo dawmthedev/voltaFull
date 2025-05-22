@@ -79,7 +79,6 @@ const LeadDetailPage = () => {
 
     // Function to update stages
     const updateStages = (data) => {
-      console.log("Updating stages with data:", data);
       setTaskDates({
         saleDate: data.saleDate ? data.saleDate.replace(/^"|"$/g, '') : null,
         welcomeDate: data.welcomeDate ? data.welcomeDate.replace(/^"|"$/g, '') : null,

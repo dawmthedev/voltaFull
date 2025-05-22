@@ -35,7 +35,6 @@ const RegisterPage = () => {
         setIsCodeSent(true);
       }
     } catch (error) {
-      console.log(error);
     }
   };
   const handleRegister = async () => {
@@ -47,13 +46,11 @@ const RegisterPage = () => {
         password: register.password,
         verificationToken: register.verifyCode
       });
-      console.log(response);
 
       if (response.status === 200) {
         navigate('/login');
       }
     } catch (error) {
-      console.log(error);
     }
   };
   return (

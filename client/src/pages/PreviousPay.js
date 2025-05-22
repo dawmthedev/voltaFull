@@ -36,8 +36,6 @@ export default function PreviousPayPage() {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleSendMessage = () => {
-    console.log('Message to send:', messageText);
-    console.log('File URLs:', fileUrls);
     // Handle message submission logic here
     handleCloseMessageModal();
   };

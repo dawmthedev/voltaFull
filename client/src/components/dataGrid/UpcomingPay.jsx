@@ -21,7 +21,6 @@ export default function UpcomingPayData(props) {
 
   // Add redux user info here:
   // const { user } = useSelector((state) => state.auth);
-  // console.log("User" , user)
 
   const [sortModel, setSortModel] = useState([{ field: 'saleDate', sort: 'desc' }]);
   const [sort, setSort] = useState('');
