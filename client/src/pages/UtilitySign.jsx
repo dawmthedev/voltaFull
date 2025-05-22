@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { baseURL } from '../libs/client/apiClient';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 
@@ -10,26 +11,14 @@ function UtilitySign() {
 
   const submitNewUtilityAFD = async (e) => {
     e.preventDefault();
-    const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    
-    const headers = {
-      Authorization: process.env.REACT_APP_QB_USER_TOKEN,
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
-  
+
     const requestBody = {
-      to: "btc8mr5x9", // Table identifier in Quickbase
-      data: [{
-         7: { value: email },
-         62: { value: UserData?.id },
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
+      email,
+      userId: UserData?.id,
     };
-  
+
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      const response = await axios.post(`${baseURL}/utility-affidavit`, requestBody);
       console.log("Success!", response.data);
       setIsSubmitted(true); // Set the submission status to true upon success
     } catch (error) {

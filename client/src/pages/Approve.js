@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
+import { baseURL } from '../libs/client/apiClient';
 
 const UpdateConfirmationPage = () => {
   const { id } = useParams(); // Assumes the ID is passed via the URL
@@ -23,20 +24,11 @@ const UpdateConfirmationPage = () => {
   const handleUpdate = async () => {
     const fieldValue = confirmation.endsWith('1') ? '135' : '165';
     const recordData = {
-      to: "your_table_id_here",
-      data: [{
-        3: { value: id }, // The ID passed in the router
-        1456: { value: fieldValue }
-      }],
+      id,
+      value: fieldValue
     };
 
-    const response = await axios.post('https://api.quickbase.com/v1/records', recordData, {
-      headers: {
-        Authorization: process.env.REACT_APP_QB_USER_TOKEN,
-        "QB-Realm-Hostname": process.env.REACT_APP_QB_DOMAIN,
-        "Content-Type": "application/json",
-      }
-    });
+
 
     console.log(response.data);
     handleClose(); // Close the dialog after updating

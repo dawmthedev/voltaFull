@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
 import axios from 'axios';
+import { baseURL } from '../../libs/client/apiClient';
 
 const MessageForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -42,34 +43,16 @@ const MessageForm = ({ onClose }) => {
   const submitData = async (e) => {
     e.preventDefault();
 
-    const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-    const headers = {
-      Authorization: process.env.REACT_APP_QB_USER_TOKEN,
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
 
     const requestBody = {
-      to: "bufmzyuhi", // Table identifier in Quickbase
-      data: [{
-        7: { value: "Done" },    // FID 7 for Topic
-        6: { value: formData.message },  // FID 6 for Message
-        8: { value: formData.headline }, // FID 8 for Headline
-        10: { value: formData.receiver.includes('Setter') ? 'true' : 'false' }, // FID 10 for Setter
-        11: { value: formData.receiver.includes('Sales Rep') ? 'true' : 'false' }, // FID 11 for Sales Rep
-        12: { value: formData.receiver.includes('Manager') ? 'true' : 'false' }, // FID 12 for Manager
-        13: { value: formData.receiver.includes('1099') ? 'true' : 'false' }, // FID 13 for 1099
-        14: { value: formData.receiver.includes('W2') ? 'true' : 'false' }, // FID 14 for W2
-        15: { value: formData.receiver.includes('Construction') ? 'true' : 'false' }, // FID 15 for Construction
-        16: { value: formData.receiver.includes('All Users') ? 'true' : 'false' }, // FID 16 for All Users
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
+      topic: 'Done',
+      message: formData.message,
+      headline: formData.headline,
+      receiver: formData.receiver
     };
 
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
+      const response = await axios.post(`${baseURL}/messages`, requestBody);
       console.log("Success!", response.data);
       setSubmissionStatus({
         success: true,
@@ -216,45 +199,7 @@ export default MessageForm;
 //     });
 //   };
 
-//   const submitData = async (e) => {
-//     e.preventDefault();
 
-//     const QB_DOMAIN = process.env.REACT_APP_QB_DOMAIN;
-//     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-//     const headers = {
-//       Authorization: process.env.REACT_APP_QB_USER_TOKEN,
-//       "QB-Realm-Hostname": QB_DOMAIN,
-//       "Content-Type": "application/json",
-//     };
-
-//     // Request body to pass the topic, message, headline, and receiver (FID 9)
-//     const requestBody = {
-//       to: "bufmzyuhi", // Table identifier in Quickbase
-//       data: [{
-//         7: { value: formData.topic }, // FID 7 for Topic
-//         6: { value: formData.message }, // FID 6 for Message
-//         8: { value: formData.headline }, // FID 8 for Headline
-//         9: { value: formData.receiver }, // FID 9 for Receiver (new field)
-//       }],
-//       fieldsToReturn: [] // Specify fields to return, if any
-//     };
-
-//     try {
-//       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-//       console.log("Success!", response.data);
-//       setSubmissionStatus({
-//         success: true,
-//         message: 'Message, Topic, and Receiver sent successfully!',
-//       });
-//       setTimeout(() => {
-//         onClose(); // Close the modal after 2 seconds
-//       }, 2000);
-//     } catch (error) {
-//       alert("Failed sending data");
-//       console.error("Failed to send data:", error);
-//     }
-//   };
 
 //   return (
 //     <form onSubmit={submitData}>
