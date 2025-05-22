@@ -1,3 +1,4 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import {
   Grid,
@@ -8,7 +9,6 @@ import {
   DialogContent,
   DialogContentText,
   DialogTitle,
-} from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { baseURL } from '../libs/client/apiClient';
@@ -17,22 +17,16 @@ const UpdateConfirmationPage = () => {
   const { id } = useParams(); // Assumes the ID is passed via the URL
   const [open, setOpen] = useState(false);
   const [confirmation, setConfirmation] = useState('');
-
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-
   const handleUpdate = async () => {
     const fieldValue = confirmation.endsWith('1') ? '135' : '165';
     const recordData = {
       id,
       value: fieldValue
     };
-
-
-
     handleClose(); // Close the dialog after updating
   };
-
   return (
     <Grid container spacing={2} justifyContent="center">
       <Grid item xs={12}>
@@ -44,12 +38,9 @@ const UpdateConfirmationPage = () => {
           onChange={(e) => setConfirmation(e.target.value)}
         />
       </Grid>
-      <Grid item xs={12}>
         <Button variant="contained" color="primary" onClick={handleOpen}>
           Confirm Update
         </Button>
-      </Grid>
-
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>{"Confirm Your Action"}</DialogTitle>
         <DialogContent>
@@ -63,11 +54,9 @@ const UpdateConfirmationPage = () => {
           </Button>
           <Button onClick={handleUpdate} color="primary" autoFocus>
             Confirm
-          </Button>
         </DialogActions>
       </Dialog>
     </Grid>
   );
 };
-
 export default UpdateConfirmationPage;

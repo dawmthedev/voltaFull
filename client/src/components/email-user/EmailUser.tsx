@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
 
 const EmailUserForm = () => {
@@ -8,21 +8,16 @@ const EmailUserForm = () => {
     content: '',
     email: ''
   });
-
   const submitEmailData = async (e) => {
     e.preventDefault();
     const API_ENDPOINT = "/sendEmailAlert"; // Your email sending endpoint
-
     const headers = {
       "Content-Type": "application/json",
     };
-
     const requestBody = {
       subject: formData.subject,
       letterContent: formData.content,
       email: formData.email,
-    };
-
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
       // Add any additional actions on success here
@@ -31,15 +26,12 @@ const EmailUserForm = () => {
       console.error("Failed to send email:", error);
     }
   };
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
       [name]: value,
     });
-  };
-
   return (
     <form onSubmit={submitEmailData}>
       <TextField
@@ -50,29 +42,18 @@ const EmailUserForm = () => {
         fullWidth
         margin="normal"
       />
-      <TextField
         label="Content"
         name="content"
         value={formData.content}
-        onChange={handleChange}
-        fullWidth
         multiline
         rows={4}
-        margin="normal"
-      />
-      <TextField
         label="Email"
         name="email"
         value={formData.email}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
-      />
       <Button type="submit" variant="contained" color="primary" fullWidth>
         Submit
       </Button>
     </form>
   );
 };
-
 export default EmailUserForm;

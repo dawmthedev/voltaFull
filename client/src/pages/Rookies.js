@@ -1,15 +1,12 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Box } from '@mui/material';
 
 import RookieData from '../components/dataGrid/RookiesData';
 import RookieDataLead from '../components/dataGrid/RookieLeadgens';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
-
-
 import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
-
 export default function Rookies() {
  
   const { data } = useAppSelector(authSelector);
@@ -31,7 +28,6 @@ export default function Rookies() {
       <Helmet>
         <title> Deals </title>
       </Helmet>
-
       <Box
         sx={{
           width: '100vw',
@@ -47,13 +43,8 @@ export default function Rookies() {
           {/* <DataGridProCSV /> */}
           <h4>Rookie Sales Deals</h4>
           <RookieData recordUserId={recordId}/>
-
-
           <h4>Rookie Leadgen Deals</h4>
-
-
           <RookieDataLead recordUserId={recordId}/>
-
         </Box>
       </Box>
     </Box>

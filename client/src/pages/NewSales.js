@@ -1,6 +1,6 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Box, Card, Container } from '@mui/material';
 import PayrollData from '../components/dataGrid/PayrollData';
 import NewSalelData from '../components/dataGrid/NewSaleData'
 import LeadGenPay from '../components/dataGrid/LeadGenPay';
@@ -22,7 +22,6 @@ export default function NewSalePage() {
           <NewSalelData recordUserId={recordId} />
         </Card>
     
-
         {/* <h1>Lead generation Commissions</h1>
           <LeadGenPay recordUserId={recordId} /> */}
       </Container>

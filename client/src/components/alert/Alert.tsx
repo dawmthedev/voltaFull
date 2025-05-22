@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from '@mui/material';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '../../hooks/hooks';
@@ -25,7 +25,6 @@ export const Alerts = () => {
         }}
         onClose={() => {
           dispatch(closeAlert());
-        }}
       >
         {message}
       </Alert>

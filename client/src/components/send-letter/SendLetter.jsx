@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
-import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
 import axios from 'axios';
 import { baseURL } from '../../libs/client/apiClient';
 
@@ -10,15 +10,10 @@ const MessageForm = ({ onClose }) => {
     headline: '',
     receiver: [],  // Holds selected roles
   });
-
   const [submissionStatus, setSubmissionStatus] = useState({
     success: false,
-    message: '',
-  });
-
   const handleChange = (e) => {
     const { name, value } = e.target;
-
     if (name === 'receiver') {
       // If "All Users" is selected, only allow that option and disable the others
       if (value.includes('All Users')) {
@@ -27,10 +22,7 @@ const MessageForm = ({ onClose }) => {
           receiver: ['All Users'],  // Deselect all other options when "All Users" is selected
         });
       } else {
-        setFormData({
-          ...formData,
           [name]: value, // Update the receiver array normally if "All Users" is not selected
-        });
       }
     } else {
       setFormData({
@@ -39,36 +31,27 @@ const MessageForm = ({ onClose }) => {
       });
     }
   };
-
   const submitData = async (e) => {
     e.preventDefault();
-
-
     const requestBody = {
       topic: 'Done',
       message: formData.message,
       headline: formData.headline,
       receiver: formData.receiver
     };
-
     try {
       const response = await axios.post(`${baseURL}/messages`, requestBody);
       setSubmissionStatus({
         success: true,
         message: 'Message, Topic, and Receiver roles sent successfully!',
-      });
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
       }, 2000);
     } catch (error) {
       alert("Failed sending data");
       console.error("Failed to send data:", error);
-    }
-  };
-
   return (
     <form onSubmit={submitData}>
-
       <TextField
         label="Headline"
         name="headline"
@@ -78,26 +61,16 @@ const MessageForm = ({ onClose }) => {
         margin="normal"
       />
 {/*       
-      <TextField
         label="Topic"
         name="topic"
         value={formData.topic}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
       /> */}
       
-      <TextField
         label="Message"
         name="message"
         value={formData.message}
-        onChange={handleChange}
-        fullWidth
-        margin="normal"
         multiline
         rows={4}
-      />
-
       {/* Multi-select dropdown for receiver */}
       <FormControl fullWidth margin="normal">
         <InputLabel id="receiver-label">Receiver</InputLabel>
@@ -116,67 +89,37 @@ const MessageForm = ({ onClose }) => {
           <MenuItem value="Setter" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('Setter') > -1} />
             <ListItemText primary="Setter" />
-          </MenuItem>
           <MenuItem value="Manager" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('Manager') > -1} />
             <ListItemText primary="Manager" />
-          </MenuItem>
           <MenuItem value="Sales Rep" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('Sales Rep') > -1} />
             <ListItemText primary="Sales Rep" />
-          </MenuItem>
           <MenuItem value="W2" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('W2') > -1} />
             <ListItemText primary="W2" />
-          </MenuItem>
           <MenuItem value="1099" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('1099') > -1} />
             <ListItemText primary="1099" />
-          </MenuItem>
           <MenuItem value="Construction" disabled={formData.receiver.includes('All Users')}>
             <Checkbox checked={formData.receiver.indexOf('Construction') > -1} />
             <ListItemText primary="Construction" />
-          </MenuItem>
         </Select>
       </FormControl>
-
       {submissionStatus.success && (
         <div style={{ margin: '16px 0', color: 'green' }}>
           {submissionStatus.message}
         </div>
       )}
-
       <Button type="submit" variant="contained" color="primary" fullWidth>
         Submit
       </Button>
     </form>
   );
 };
-
 export default MessageForm;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 // import React, { useState } from 'react';
-// import { TextField, Button, MenuItem, Select, InputLabel, FormControl } from '@mui/material';
 // import axios from 'axios';
-
 // const MessageForm = ({ onClose }) => {
 //   const [formData, setFormData] = useState({
 //     topic: '',
@@ -184,12 +127,8 @@ export default MessageForm;
 //     headline: '',
 //     receiver: '',  // New state for the dropdown
 //   });
-
 //   const [submissionStatus, setSubmissionStatus] = useState({
 //     success: false,
-//     message: '',
-//   });
-
 //   const handleChange = (e) => {
 //     const { name, value } = e.target;
 //     setFormData({
@@ -197,12 +136,8 @@ export default MessageForm;
 //       [name]: value,
 //     });
 //   };
-
-
-
 //   return (
 //     <form onSubmit={submitData}>
-
 //       <TextField
 //         label="Headline"
 //         name="headline"
@@ -211,27 +146,14 @@ export default MessageForm;
 //         fullWidth
 //         margin="normal"
 //       />
-      
-//       <TextField
 //         label="Topic"
 //         name="topic"
 //         value={formData.topic}
-//         onChange={handleChange}
-//         fullWidth
-//         margin="normal"
-//       />
-      
-//       <TextField
 //         label="Message"
 //         name="message"
 //         value={formData.message}
-//         onChange={handleChange}
-//         fullWidth
-//         margin="normal"
 //         multiline
 //         rows={4}
-//       />
-
 //       {/* Dropdown for receiver */}
 //       <FormControl fullWidth margin="normal">
 //         <InputLabel id="receiver-label">Receiver</InputLabel>
@@ -250,24 +172,15 @@ export default MessageForm;
 //           <MenuItem value="1099">1099</MenuItem>
 //         </Select>
 //       </FormControl>
-
 //       {submissionStatus.success && (
 //         <div style={{ margin: '16px 0', color: 'green' }}>
 //           {submissionStatus.message}
 //         </div>
 //       )}
-
 //       <Button type="submit" variant="contained" color="primary" fullWidth>
 //         Submit
 //       </Button>
 //     </form>
 //   );
 // };
-
 // export default MessageForm;
-
-
-
-
-
-

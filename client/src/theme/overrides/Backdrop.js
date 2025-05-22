@@ -1,7 +1,6 @@
-import { alpha } from '@mui/material/styles';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 
 // ----------------------------------------------------------------------
-
 export default function Backdrop(theme) {
   return {
     MuiBackdrop: {
@@ -11,7 +10,6 @@ export default function Backdrop(theme) {
         },
         invisible: {
           background: 'transparent',
-        },
       },
     },
   };

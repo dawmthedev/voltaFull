@@ -1,4 +1,4 @@
-import { Box, TextField, Typography } from '@mui/material';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
 
 interface CustomInputProps {
@@ -10,7 +10,6 @@ interface CustomInputProps {
   size?: 'small' | 'medium';
   error?: string;
 }
-
 const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error, onChange }: CustomInputProps) => {
   return (
     <Box>
@@ -28,5 +27,4 @@ const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error
     </Box>
   );
 };
-
 export default CustomInput;

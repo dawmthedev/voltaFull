@@ -1,8 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 interface CustomSelectFieldProps {
   value: string;
@@ -12,20 +9,14 @@ interface CustomSelectFieldProps {
   open: boolean;
   setOpen: (open: boolean) => void;
 }
-
 export default function CustomSelectField({ label, value, onChange, items, open, setOpen }: CustomSelectFieldProps) {
   const handleChange = (event) => {
     onChange(event);
   };
-
   const handleClose = () => {
     setOpen(false);
-  };
-
   const handleOpen = () => {
     setOpen(true);
-  };
-
   return (
     <FormControl sx={{ my: 1, minWidth: 120, width: '100%' }}>
       <InputLabel id="demo-controlled-open-select-label">{label || 'Select'}</InputLabel>
@@ -50,4 +41,3 @@ export default function CustomSelectField({ label, value, onChange, items, open,
       </Select>
     </FormControl>
   );
-}

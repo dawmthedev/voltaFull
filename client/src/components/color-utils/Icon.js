@@ -1,18 +1,15 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 // @mui
-import { alpha } from '@mui/material/styles';
-import { Box } from '@mui/material';
 //
 import Iconify from '../iconify';
 
 // ----------------------------------------------------------------------
-
 Icon.propTypes = {
   sx: PropTypes.object,
   checked: PropTypes.bool,
   whiteColor: PropTypes.bool,
 };
-
 export default function Icon({ checked, whiteColor, sx, ...other }) {
   const shadow = (
     <Box
@@ -26,11 +23,9 @@ export default function Icon({ checked, whiteColor, sx, ...other }) {
       }}
     />
   );
-
   const icon = (
     <Iconify
       icon="eva:checkmark-fill"
-      sx={{
         opacity: 0,
         ...(checked && {
           opacity: 1,
@@ -39,17 +34,10 @@ export default function Icon({ checked, whiteColor, sx, ...other }) {
             color: 'common.black',
           }),
         }),
-      }}
-    />
-  );
-
   return (
-    <Box
-      sx={{
         width: 20,
         height: 20,
         display: 'flex',
-        borderRadius: '50%',
         position: 'relative',
         alignItems: 'center',
         justifyContent: 'center',
@@ -57,21 +45,14 @@ export default function Icon({ checked, whiteColor, sx, ...other }) {
         transition: (theme) =>
           theme.transitions.create('all', {
             duration: theme.transitions.duration.shortest,
-          }),
         ...(whiteColor && {
           border: (theme) => `solid 1px ${theme.palette.divider}`,
           boxShadow: (theme) => `4px 4px 8px 0 ${alpha(theme.palette.grey[500], 0.24)}`,
-        }),
-        ...(checked && {
           transform: 'scale(1.4)',
-        }),
         ...sx,
-      }}
       {...other}
     >
       {checked && shadow}
-
       {icon}
     </Box>
-  );
 }

@@ -1,17 +1,14 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { useState } from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
-import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
 // utils
 import { bgBlur } from '../../../utils/cssStyles';
 // component
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
-
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
-
 const StyledSearchbar = styled('div')(({ theme }) => ({
   ...bgBlur({ color: theme.palette.background.default }),
   top: 0,
@@ -29,20 +26,13 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
     padding: theme.spacing(0, 5),
   },
 }));
-
-// ----------------------------------------------------------------------
-
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
-
   const handleOpen = () => {
     setOpen(!open);
   };
-
   const handleClose = () => {
     setOpen(false);
-  };
-
   return (
     <ClickAwayListener onClickAway={handleClose}>
       <div>
@@ -51,7 +41,6 @@ export default function Searchbar() {
             <Iconify icon="eva:search-fill" />
           </IconButton>
         )}
-
         <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
             <Input

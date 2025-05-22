@@ -1,14 +1,12 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 // @mui
-import { Grid } from '@mui/material';
 import ShopProductCard from './ProductCard';
 
 // ----------------------------------------------------------------------
-
 ProductList.propTypes = {
   products: PropTypes.array.isRequired,
 };
-
 export default function ProductList({ products, ...other }) {
   return (
     <Grid container spacing={3} {...other}>

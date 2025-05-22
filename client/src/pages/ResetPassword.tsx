@@ -1,6 +1,6 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { IconButton, InputAdornment, Stack, TextField } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import CustomInput from '../components/input/CustomInput';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
@@ -12,11 +12,9 @@ import { setAlert } from '../redux/slice/alertSlice';
 const ResetPasswordPage = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
-
   const [verificationCode, setVerificationCode] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [showPassword, setShowPassword] = useState<boolean>(false);
-
   const handleResetPassword = async () => {
     const response: any = await dispatch(forgotPassword({ code: verificationCode, password: password }));
     if (response && response.error && response.error.message) {
@@ -28,18 +26,11 @@ const ResetPasswordPage = () => {
       );
       return;
     }
-
     if (response && response.payload) {
       navigate('/login');
-      dispatch(
-        setAlert({
           message: 'User updated successfully',
           type: 'success'
-        })
-      );
-    }
   };
-
   return (
     <AuthenticationLayout
       title={'Reset Password'}
@@ -70,7 +61,6 @@ const ResetPasswordPage = () => {
               </InputAdornment>
             )
           }}
-        />
       </Stack>
       <LoadingButton fullWidth size="large" type="submit" variant="contained" sx={{ my: 3 }} onClick={handleResetPassword}>
         Reset Password
@@ -78,5 +68,4 @@ const ResetPasswordPage = () => {
     </AuthenticationLayout>
   );
 };
-
 export default ResetPasswordPage;

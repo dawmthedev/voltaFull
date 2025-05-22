@@ -1,24 +1,21 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 // @mui
-import { Box, Checkbox } from '@mui/material';
 //
 import Icon from './Icon';
 
 // ----------------------------------------------------------------------
-
 ColorMultiPicker.propTypes = {
   sx: PropTypes.object,
   colors: PropTypes.array,
   onChangeColor: PropTypes.func,
   selected: PropTypes.arrayOf(PropTypes.string),
 };
-
 export default function ColorMultiPicker({ colors, selected, onChangeColor, sx, ...other }) {
   return (
     <Box sx={sx}>
       {colors.map((color) => {
         const whiteColor = color === '#FFFFFF' || color === 'white';
-
         return (
           <Checkbox
             key={color}

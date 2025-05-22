@@ -1,5 +1,5 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { LoadingButton } from '@mui/lab';
-import { Stack } from '@mui/material';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CustomInput from '../components/input/CustomInput';
@@ -12,11 +12,9 @@ const VerifyEmail = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const [email, setEmail] = useState<string>('');
-
   const handleVerifyEmail = async () => {
     const response: any = dispatch(startVerification({ email, type: 'password' }));
     navigate('/reset-password');
-
     if (response && response.error && response.error.message) {
       dispatch(
         setAlert({
@@ -26,17 +24,10 @@ const VerifyEmail = () => {
       );
       return;
     }
-
     if (response && response.payload) {
-      dispatch(
-        setAlert({
           message: 'User updated successfully',
           type: 'success'
-        })
-      );
-    }
   };
-
   return (
     <AuthenticationLayout title="Verify Email" link={{ text: 'Login', to: '/login' }}>
       <Stack spacing={3}>
@@ -48,5 +39,4 @@ const VerifyEmail = () => {
     </AuthenticationLayout>
   );
 };
-
 export default VerifyEmail;

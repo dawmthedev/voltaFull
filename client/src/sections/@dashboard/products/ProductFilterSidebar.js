@@ -1,3 +1,4 @@
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 // @mui
 import {
@@ -14,14 +15,12 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
-} from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import { ColorMultiPicker } from '../../../components/color-utils';
 
 // ----------------------------------------------------------------------
-
 export const SORT_BY_OPTIONS = [
   { value: 'featured', label: 'Featured' },
   { value: 'newest', label: 'Newest' },
@@ -35,7 +34,6 @@ export const FILTER_PRICE_OPTIONS = [
   { value: 'below', label: 'Below $25' },
   { value: 'between', label: 'Between $25 - $75' },
   { value: 'above', label: 'Above $75' },
-];
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
   '#000000',
@@ -45,23 +43,17 @@ export const FILTER_COLOR_OPTIONS = [
   '#1890FF',
   '#94D82D',
   '#FFC107',
-];
-
-// ----------------------------------------------------------------------
-
 ShopFilterSidebar.propTypes = {
   openFilter: PropTypes.bool,
   onOpenFilter: PropTypes.func,
   onCloseFilter: PropTypes.func,
 };
-
 export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFilter }) {
   return (
     <>
       <Button disableRipple color="inherit" endIcon={<Iconify icon="ic:round-filter-list" />} onClick={onOpenFilter}>
         Filters&nbsp;
       </Button>
-
       <Drawer
         anchor="right"
         open={openFilter}
@@ -78,9 +70,7 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
             <Iconify icon="eva:close-fill" />
           </IconButton>
         </Stack>
-
         <Divider />
-
         <Scrollbar>
           <Stack spacing={3} sx={{ p: 3 }}>
             <div>
@@ -93,22 +83,12 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
                 ))}
               </FormGroup>
             </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
                 Category
-              </Typography>
               <RadioGroup>
                 {FILTER_CATEGORY_OPTIONS.map((item) => (
                   <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
-                ))}
               </RadioGroup>
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
                 Colors
-              </Typography>
               <ColorMultiPicker
                 name="colors"
                 selected={[]}
@@ -116,24 +96,10 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
                 onChangeColor={(color) => [].includes(color)}
                 sx={{ maxWidth: 38 * 4 }}
               />
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
                 Price
-              </Typography>
-              <RadioGroup>
                 {FILTER_PRICE_OPTIONS.map((item) => (
                   <FormControlLabel key={item.value} value={item.value} control={<Radio />} label={item.label} />
-                ))}
-              </RadioGroup>
-            </div>
-
-            <div>
-              <Typography variant="subtitle1" gutterBottom>
                 Rating
-              </Typography>
-              <RadioGroup>
                 {FILTER_RATING_OPTIONS.map((item, index) => (
                   <FormControlLabel
                     key={item}
@@ -156,12 +122,8 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
                       '&:hover': { opacity: 0.48 },
                     }}
                   />
-                ))}
-              </RadioGroup>
-            </div>
           </Stack>
         </Scrollbar>
-
         <Box sx={{ p: 3 }}>
           <Button
             fullWidth

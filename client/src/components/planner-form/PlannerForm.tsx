@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
 import CustomInput from '../input/CustomInput';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -18,10 +18,8 @@ interface PlannerProps {
   error: { title: string; description: string };
   getFormData: ({ name, value }: { name: string; value: string | Dayjs }) => void;
 }
-
 const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) => {
   const [isCustomFieldOpen, setIsCustomFieldOpen] = React.useState(false);
-
   return (
     <Box>
       <CustomSelectField
@@ -38,14 +36,10 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
         onChange={(e) => getFormData({ name: e.target.name, value: e.target.value })}
         value={state.title}
         error={error.title}
-      />
-      <CustomInput
         label="Description"
         name={'description'}
-        onChange={(e) => getFormData({ name: e.target.name, value: e.target.value })}
         value={state.description}
         error={error.description}
-      />
       <Box mt={1.5}>
         <LocalizationProvider dateAdapter={AdapterDayjs}>
           <DemoContainer components={['DateTimePicker', 'DatePicker', 'TimeClock']}>
@@ -74,5 +68,4 @@ const PlannerForm = ({ state, error, getFormData, categories }: PlannerProps) =>
     </Box>
   );
 };
-
 export default PlannerForm;
