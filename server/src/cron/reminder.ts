@@ -1,7 +1,7 @@
 import { model, Schema } from "mongoose";
 import { categoryModel, plannerModel } from "./model";
 import { NodemailerClient } from "../clients/nodemailer";
-import { $log } from "@tsed/logger";
+import { logger } from "../util/logger";
 
 export const runJob = async () => {
   const planners = await plannerModel.find();
@@ -20,7 +20,7 @@ export const notifyLeads = async () => {
     return timeOfExecution <= currentDate.getTime() && _startDate == _currentDate;
   });
 
-  $log.info("filteredPlanners-------------**", filteredPlanners);
+   logger.retry("filteredPlanners-------------**", filteredPlanners);
 
   const planners = await plannerModel.find({
     timeOfExecution: { $lte: new Date().getTime().toString(), 
@@ -28,15 +28,15 @@ export const notifyLeads = async () => {
     startDate: { $eq: new Date().toISOString().split("T")[0] }
     }
   });
-  $log.info("planners-------------", planners);
+   logger.retry("planners-------------", planners);
   const categories = await categoryModel.find({
     _id: { $in: planners.map((planner) => planner.categoryId) }
   });
-  $log.info("categories-------------", categories);
+   logger.retry("categories-------------", categories);
   filteredPlanners.forEach(async (planner) => {
     // const category = categories.find((category) => category._id === planner.categoryId);
     const category = await categoryModel.findById(planner.categoryId);
-    $log.info("category-------------", category);
+     logger.retry("category-------------", category);
     if (!category) return;
     let dynamicModel: any;
     try {
@@ -46,7 +46,7 @@ export const notifyLeads = async () => {
       dynamicModel = model(category.name, ProductSchema);
     }
     const leads = await dynamicModel.find();
-    $log.info("leads-------------", leads);
+     logger.retry("leads-------------", leads);
     leads.forEach(async (lead: any) => {
       try {
         await NodemailerClient.sendEmailToPlanner({
@@ -57,7 +57,7 @@ export const notifyLeads = async () => {
         });
         await dynamicModel.updateOne({ _id: lead._id }, { isNotify: false });
       } catch (error) {
-        $log.info("error", error);
+         logger.retry("error", error);
       }
     });
   });

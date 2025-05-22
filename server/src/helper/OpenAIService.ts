@@ -2,7 +2,7 @@
 import OpenAI from 'openai';
 import axios from 'axios';
 import { BadRequest, Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
-import { $log } from "@tsed/logger";
+import { logger } from "../util/logger";
 
 export class OpenAIService {
 
@@ -35,7 +35,7 @@ export class OpenAIService {
       
         const dataArray = Array.isArray(data) ? data : [data];
       
-        $log.info(dataArray);
+         logger.success(dataArray);
       
         // Map over dataArray and transform its structure
         const results = dataArray.map((project) => {
@@ -77,11 +77,11 @@ export class OpenAIService {
           question += `\n\nAPI Data: ${apiData}`;
 
 
-          $log.info(question)
+           logger.success(question)
         }
 
 
-      $log.info("Launching Assistant")
+       logger.success("Launching Assistant")
       const assistant = await this.openai.beta.assistants.create({
         name: "Construction Company Project Concierge",
         instructions: "You are a personal concierge assistant for a construction company overseeing all project data. Use any resources available to you to consult users about their projects.",
@@ -90,38 +90,38 @@ export class OpenAIService {
       });
 
 
-      $log.info("Creating Thread")
+       logger.success("Creating Thread")
       // Create a thread
       const thread = await this.openai.beta.threads.create();
-      $log.info("Passing the user question into thread")
+       logger.success("Passing the user question into thread")
       // Pass in the user question into the existing thread
       await this.openai.beta.threads.messages.create(thread.id, {
         role: "user",
         content: question,
       });
-      $log.info("Starting assistant and waiting for response...")
+       logger.success("Starting assistant and waiting for response...")
       // Start the assistant and wait for the response
       const run = await this.openai.beta.threads.runs.create(thread.id, {
         assistant_id: assistant.id,
       });
 
-      $log.info("Poll for the run status until it is completed")
+       logger.success("Poll for the run status until it is completed")
 
       // Poll for the run status until it's completed
       let runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
 
 
-      $log.info("...run status began...")
+       logger.success("...run status began...")
       while (runStatus.status !== "completed") {
         await new Promise(resolve => setTimeout(resolve, 2000));
         runStatus = await this.openai.beta.threads.runs.retrieve(thread.id, run.id);
       }
 
 
-      $log.info("Returning Messages...")
+       logger.success("Returning Messages...")
       const messages = await this.openai.beta.threads.messages.list(thread.id);
 
-      $log.info("Last Message for run...")
+       logger.success("Last Message for run...")
       const lastMessageForRun = messages.data
         .filter(message => message.run_id === run.id && message.role === "assistant")
         .pop();
@@ -132,7 +132,7 @@ export class OpenAIService {
         return "Response format not recognized or no response from assistant";
       }
     } catch (error) {
-      $log.error(error);
+       logger.error(error);
       throw new Error("Error communicating with OpenAI");
     }
   }

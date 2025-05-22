@@ -1,6 +1,6 @@
 import express from "express";
 import { PlatformBuilder } from "@tsed/common";
-import { $log } from "@tsed/logger";
+import { logger } from "./util/logger";
 import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./Server";
 import mongoose from "mongoose";
@@ -40,16 +40,16 @@ export class Application {
         express: { app: this.app }
       });
     } catch (error) {
-      $log.error(error);
+      logger.error(error);
     }
   }
 
   public async startServer() {
     try {
       await this.platform.listen();
-      $log.info("Server started...");
+      logger.success("Server started...");
     } catch (error) {
-      $log.error(error);
+      logger.error(error);
     }
   }
 }
