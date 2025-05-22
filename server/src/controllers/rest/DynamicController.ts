@@ -14,6 +14,7 @@ import { LeadStatusEnum } from "../../../types";
 import { AvailabilityService } from "../../services/AvailabilityService";
 import { SaleRepService } from "../../services/SaleRepService";
 import { LeadModel } from "../../models/LeadsModel";
+import { $log } from "@tsed/logger";
 
 // fields types
 
@@ -89,7 +90,7 @@ export class DynamicController {
   @Returns(200, SuccessResult).Of(Object)
   async insertManyDynamicModel(@BodyParams() body: any, @Context() context: Context) {
     const { tableName, fields, data } = body;
-    console.log("tableName", tableName, fields, data);
+    $log.info("tableName", tableName, fields, data);
     const { orgId, email } = await this.adminService.checkPermissions(
       { hasRole: [ADMIN, MANAGER, "CRM System Administrator"] },
       context.get("user")
@@ -228,11 +229,11 @@ export class DynamicController {
   @Get("/claim/leads")
   @Returns(200, SuccessResult).Of(Object)
   async getClaimLeads(@Context() context: Context) {
-    console.log("claim-leads--------------------------------------");
+    $log.info("claim-leads--------------------------------------");
     const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN, MANAGER] }, context.get("user"));
     if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
     const allLeads = await this.leadsService.getOpenLeadsByAdminId({ adminId, status: LeadStatusEnum.open });
-    console.log("allLeads--------------------------------------", allLeads);
+    $log.info("allLeads--------------------------------------", allLeads);
     // query for all the leads which are not claimed and status is open without category directly from lead model
     // let filteredLeads: any = [];
     const filterLeadFun = async (allLeads: LeadModel[]) => {
@@ -240,7 +241,7 @@ export class DynamicController {
       for (let i = 0; i < allLeads.length; i++) {
         const lead = allLeads[i];
         const salesRep = await this.saleRepService.findSaleRepBySourceAvailability(lead.leadId);
-        console.log("salesRep--------------------------------------", salesRep);
+        $log.info("salesRep--------------------------------------", salesRep);
         if (!salesRep) return;
         const category = await this.categoryServices.findCategoryById(lead.categoryId);
         if (!category) return;
@@ -258,9 +259,8 @@ export class DynamicController {
       return filteredLeads;
     };
     const result = await filterLeadFun(allLeads);
-    console.log("result--------------------------------------", result);
+    $log.info("result--------------------------------------", result);
 
-    // console.log("filteredLeads--------------------------------------", filteredLeads);
     return new SuccessResult(result, Object);
   }
 
@@ -270,7 +270,7 @@ export class DynamicController {
   async claimNextLead(@Context() context: Context) {
     // find lead which are not claimed and status is open
     const leads = await this.leadsService.getOpenLeads({ status: LeadStatusEnum.open });
-    console.log("leads--------------------------------------**", leads);
+    $log.info("leads--------------------------------------**", leads);
     if (!leads.length) return;
     // const salesRep = await this.saleRepService.findSaleRepByLeadIds(leadIds);
     // now assign these leads to that sale rep
@@ -278,17 +278,16 @@ export class DynamicController {
       let updatedLeads: any = [];
       for (let i = 0; i < leads.length; i++) {
         const lead = leads[i];
-        // console.log("lead---------", lead)
         const saleRep = await this.saleRepService.findSaleRepByLeadId(lead._id);
-        console.log("saleRep---------", saleRep);
+        $log.info("saleRep---------", saleRep);
         if (!saleRep) {
-          console.log("saleRep--------------------init");
+          $log.info("saleRep--------------------init");
           await this.leadsService.updateLeadStatus({ leadId: lead._id, status: LeadStatusEnum.pending, adminId: "" });
           return updatedLeads.push([]);
         }
         const updateLead = await this.leadsService.updateLead({ leadId: lead._id, adminId: saleRep.adminId });
 
-        console.log("updateLead--------------------------------------", updateLead);
+        $log.info("updateLead--------------------------------------", updateLead);
         let dynamicModel;
         try {
           dynamicModel = model(lead.source.toLocaleLowerCase());
@@ -304,13 +303,13 @@ export class DynamicController {
           id: saleRep._id,
           leadId: lead._id
         });
-        console.log("response--------------------------------------", response);
+        $log.info("response--------------------------------------", response);
         updatedLeads = [...updatedLeads, updateLead];
       }
       return updatedLeads;
     };
     const updatedLeads = await updateLeads(leads);
-    console.log("updatedLeads--------------------------------------", updatedLeads);
+    $log.info("updatedLeads--------------------------------------", updatedLeads);
 
     return new SuccessResult({ success: true, data: updatedLeads }, Object);
   }

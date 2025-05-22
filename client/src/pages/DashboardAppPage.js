@@ -106,7 +106,6 @@ export default function DashboardAppPage() {
           const month = saleDate.getMonth();
           const year = saleDate.getFullYear();
 
-          console.log(year);
           /// alert("year")
           const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
 
@@ -123,7 +122,6 @@ export default function DashboardAppPage() {
           data: item.data
         }));
 
-        console.log(chartData);
         setDealsData(chartData);
       }
 
@@ -154,7 +152,6 @@ export default function DashboardAppPage() {
           value: parseFloat(value) || 0
         }));
 
-        console.log(chartData);
         setDealsAvgData(chartData);
       }
 

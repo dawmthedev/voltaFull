@@ -13,7 +13,6 @@ export class SaleRepService {
       .find({ leads: { $ne: leadId } })
       .sort({ score: -1 })
       .limit(1);
-    console.log("saleRep-------------------------", saleRep);
     if (!saleRep.length) return false;
     const availability = this.availabilityService.findAvailabilityByDateAndRep(saleRep[0].id);
     if (!availability) return false;
@@ -31,7 +30,6 @@ export class SaleRepService {
 
   // create sale rep
   public async createSaleRep({ adminId }: { adminId: string }) {
-    console.log("adminId-----------------", adminId);
     return this.saleRep.create({
       adminId,
       score: 5
@@ -50,7 +48,6 @@ export class SaleRepService {
 
   // find that sale rep that has not leadIds in leads
   public async findSaleRepByLeadIds(leadIds: string[]) {
-    console.log("leadIds-----------------", leadIds);
     // get sale rep that has not leadIds in leads array field  $nin does not work in my case
     const response = await this.saleRep.find().sort({ score: -1 });
     const saleRep = response.filter((rep) => {
@@ -62,20 +59,16 @@ export class SaleRepService {
       }
     });
 
-    console.log("response-----------------)))))))", saleRep[0]);
     return saleRep;
   }
 
   public async findSaleRepByLeadId(leadId: string) {
     const response = await this.saleRep.find().sort({ score: -1 });
 
-    console.log("leadId-----------------", leadId);
     // for (let i = 0; i < response.length; i++) {
     //   const rep = response[i];
-    //   // console.log("rep-----------------", rep);
     //   const sRep = rep.leads?.includes(leadId);
     //   const availability = await this.availabilityService.findAvailabilityByDateAndRep(rep.id);
-    //   console.log("availability-----------------", availability);
     //   if (!availability) return;
     //   if (sRep) return;
     //   return rep;
@@ -87,7 +80,6 @@ export class SaleRepService {
       if (sRep) return;
       return rep;
     });
-    console.log("filter-----------------", filter[0]);
     const saleRep = filter[0];
 
     return saleRep;

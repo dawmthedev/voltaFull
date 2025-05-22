@@ -103,8 +103,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
   const submitMissingData = async (e) => {
 
-    console.log("formData")
-    console.log(formData);
     e.preventDefault();
 
     const requestBody = {
@@ -118,7 +116,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
     try {
       const response = await axios.post(`${baseURL}/new-sale/missing`, requestBody);
-      console.log('Success!', response.data);
       pushNewProject(e)
       setIsSubmitted(true);
       onClose(); // Close the modal here
@@ -156,10 +153,8 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     
 
 
-    console.log("pushing new project" , formData)
 
 
-    console.log("pushing new project" , formData)
   
     const requestBody = {
       customerEmail: formData.customerEmail,
@@ -175,7 +170,6 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
     try {
       const response = await axios.post(`${baseURL}/new-sale`, requestBody);
-      console.log('Success!', response.data);
       setIsSubmitted(true);
 
       onClose(); // Close the modal here
@@ -363,7 +357,6 @@ export default function NewSaleData(props) {
 
   const handleOpenModal = (row) => {
 
-    console.log("Selected Row:", row);  // This logs correctly, including recordID
   
 
   
@@ -382,13 +375,11 @@ export default function NewSaleData(props) {
     setSelectedRow(row);
 
 
-    console.log(selectedRow)
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
 
-    console.log( selectedRow)
     setOpenModal(false);
     setSelectedRow(null);
     setFormData({});

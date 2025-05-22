@@ -77,7 +77,6 @@ const AddUserForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(`${baseURL}/users`, requestBody);
-      console.log("Success!", response.data);
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
       }, 2000);
@@ -382,7 +381,6 @@ export default AddUserForm;
 
 //     try {
 //       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-//       console.log("Success!", response.data);
 //       setSubmissionStatus({
 //         success: true,
 //         message: 'User added successfully!',
@@ -733,7 +731,6 @@ export default AddUserForm;
 
 //     try {
 //       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-//       console.log("Success!", response.data);
 //       setSubmissionStatus({
 //         success: true,
 //         message: 'User added successfully!',

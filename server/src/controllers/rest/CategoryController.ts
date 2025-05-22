@@ -8,6 +8,7 @@ import { ADMIN, MANAGER } from "../../util/constants";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 import { ADMIN_NOT_FOUND, CATEGORY_ALREADY_EXISTS, CATEGORY_NOT_FOUND, ORG_NOT_FOUND } from "../../util/errors";
 import { BadRequest } from "@tsed/exceptions";
+import { $log } from "@tsed/logger";
 import { CategoryFieldType } from "../../models/CategoryModel";
 import { FieldTypes } from "../../../types";
 import { LeadService } from "../../services/LeadsService";
@@ -112,7 +113,7 @@ export class CategoryController {
     if (mongoose.connection && mongoose.connection.db) {
       await mongoose.connection.db.dropCollection(category.name);
     } else {
-      console.error("Database connection or db is undefined.");
+      $log.error("Database connection or db is undefined.");
       // Optionally handle this case with a throw, custom error, or fallback action
     }
     

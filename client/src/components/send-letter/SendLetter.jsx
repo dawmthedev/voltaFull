@@ -53,7 +53,6 @@ const MessageForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(`${baseURL}/messages`, requestBody);
-      console.log("Success!", response.data);
       setSubmissionStatus({
         success: true,
         message: 'Message, Topic, and Receiver roles sent successfully!',
