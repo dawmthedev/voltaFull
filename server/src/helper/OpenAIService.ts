@@ -3,7 +3,7 @@ import OpenAI from 'openai';
 import axios from 'axios';
 import { BadRequest, Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
 
-class OpenAIService {
+export class OpenAIService {
 
 
 
@@ -137,4 +137,4 @@ class OpenAIService {
   }
 }
 
-export const openAIService = new OpenAIService();
+// export const openAIService = new OpenAIService();

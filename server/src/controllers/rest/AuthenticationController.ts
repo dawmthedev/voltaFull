@@ -21,7 +21,7 @@ import {
   PreviousPayResultModel
 } from "../../models/RestModels";
 
-import { openAIService } from "../../helper/OpenAIService";
+import { OpenAIService } from "../../helper/OpenAIService";
 import { SuccessResult } from "../../util/entities";
 import { VerificationService } from "../../services/VerificationService";
 import { AdminService } from "../../services/AdminService";
@@ -852,8 +852,8 @@ export class AuthenticationController {
       // Extract the question from the request body
       const userQuestion = body.question;
 
-      // Assuming openAIService.askQuestion is correctly implemented
-      const aiResponseText = await openAIService.askQuestion(userQuestion);
+        const openAIService = new OpenAIService();
+        const aiResponseText = await openAIService.askQuestion(userQuestion);
 
       // Create an instance of AIResponseModel
       const responseModel = new AIResponseModel();
