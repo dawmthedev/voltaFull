@@ -1,43 +1,26 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
-import * as React from 'react';
+import React from 'react';
 
-interface CustomSelectFieldProps {
-  value: string;
-  onChange: (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
-  items: string[];
+export interface Option {
   label: string;
-  open: boolean;
-  setOpen: (open: boolean) => void;
+  value: string;
 }
-export default function CustomSelectField({ label, value, onChange, items, open, setOpen }: CustomSelectFieldProps) {
-  const handleChange = (event) => {
-    onChange(event);
-  };
-  const handleClose = () => {
-    setOpen(false);
-  const handleOpen = () => {
-    setOpen(true);
+
+export interface CustomSelectFieldProps {
+  options: Option[];
+  value: string;
+  onChange?: (value: string) => void;
+}
+
+const CustomSelectField: React.FC<CustomSelectFieldProps> = ({ options, value, onChange }) => {
   return (
-    <FormControl sx={{ my: 1, minWidth: 120, width: '100%' }}>
-      <InputLabel id="demo-controlled-open-select-label">{label || 'Select'}</InputLabel>
-      <Select
-        labelId="demo-controlled-open-select-label"
-        id="demo-controlled-open-select"
-        open={open}
-        onClose={handleClose}
-        onOpen={handleOpen}
-        value={value}
-        label={label || 'Select'}
-        onChange={handleChange}
-      >
-        <MenuItem value="">
-          <em>Select</em>
-        </MenuItem>
-        {items.map((item) => (
-          <MenuItem key={item} value={item}>
-            {item}
-          </MenuItem>
-        ))}
-      </Select>
-    </FormControl>
+    <select value={value} onChange={(e) => onChange && onChange(e.target.value)}>
+      {options.map((o) => (
+        <option key={o.value} value={o.value}>
+          {o.label}
+        </option>
+      ))}
+    </select>
   );
+};
+
+export default CustomSelectField;

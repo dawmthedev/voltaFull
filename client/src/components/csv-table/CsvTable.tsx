@@ -1,29 +1,23 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
 
-import { DataGridPro } from '@mui/x-data-grid-pro';
-interface CsvTableProps {
-  data: any;
-  headLabel: {
-    name: string;
-    type?: string;
-    alignRight?: boolean;
-  }[];
+export interface CsvTableProps {
+  rows: Array<Record<string, string>>;
 }
-const CsvTable = ({ data, headLabel }: CsvTableProps) => {
-  const columns = headLabel.map((headCell) => ({
-    field: headCell.name,
-    headerName: headCell.name.charAt(0).toUpperCase() + headCell.name.slice(1),
-    width: 200,
-    textAlign: 'center'
-  }));
-  const rows = data.map((row) => ({
-    id: Object.values(row)[0] || Math.random() * 1000,
-    ...row
+
+const CsvTable: React.FC<CsvTableProps> = ({ rows }) => {
   return (
-    <Box sx={{ height: '60vh', width: '100%' }}>
-      <DataGridPro rows={rows} columns={columns} />
-    </Box>
+    <table>
+      <tbody>
+        {rows.map((row, idx) => (
+          <tr key={idx}>
+            {Object.values(row).map((value, i) => (
+              <td key={i}>{value}</td>
+            ))}
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 };
+
 export default CsvTable;

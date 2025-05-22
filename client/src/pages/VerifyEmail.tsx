@@ -1,42 +1,12 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
-import { LoadingButton } from '@mui/lab';
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import CustomInput from '../components/input/CustomInput';
-import { useAppDispatch } from '../hooks/hooks';
+import React from 'react';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
-import { startVerification } from '../redux/middleware/authentication';
-import { setAlert } from '../redux/slice/alertSlice';
 
-const VerifyEmail = () => {
-  const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const [email, setEmail] = useState<string>('');
-  const handleVerifyEmail = async () => {
-    const response: any = dispatch(startVerification({ email, type: 'password' }));
-    navigate('/reset-password');
-    if (response && response.error && response.error.message) {
-      dispatch(
-        setAlert({
-          message: response.error.message,
-          type: 'error'
-        })
-      );
-      return;
-    }
-    if (response && response.payload) {
-          message: 'User updated successfully',
-          type: 'success'
-  };
+const VerifyEmail: React.FC = () => {
   return (
-    <AuthenticationLayout title="Verify Email" link={{ text: 'Login', to: '/login' }}>
-      <Stack spacing={3}>
-        <CustomInput value={email} onChange={(e) => setEmail(e.target.value)} name="email" label="Email" />
-      </Stack>
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" sx={{ my: 3 }} onClick={handleVerifyEmail}>
-        Send Verification Code
-      </LoadingButton>
+    <AuthenticationLayout title="Verify Email">
+      <div>Verify Email</div>
     </AuthenticationLayout>
   );
 };
+
 export default VerifyEmail;
