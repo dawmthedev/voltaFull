@@ -31,6 +31,7 @@ import { OrganizationService } from "../../services/OrganizationService";
 import { createPasswordHash } from "../../util";
 import { VerificationEnum } from "../../../types";
 import axios from "axios";
+import { $log } from "@tsed/logger";
 
 type MulterFile = Express.Multer.File;
 // Then use MulterFile where you previously used Express.Multer.File
@@ -140,15 +141,23 @@ export class AuthenticationController {
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
   public async startVerification(@BodyParams() body: StartVerificationParams) {
     const { email, type } = body;
+    $log.info("Starting verification", { email, type });
     if (!email || !type) throw new BadRequest(MISSING_PARAMS);
     const findAdmin = await this.adminService.findAdminByEmail(email);
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
     const verificationData = await this.verificationService.generateVerification({ email, type });
-    await NodemailerClient.sendVerificationEmail({
-      title: type || "Email",
-      email,
-      code: verificationData.code
-    });
+    $log.info("Generated verification code", { code: verificationData.code });
+    try {
+      await NodemailerClient.sendVerificationEmail({
+        title: type || "Email",
+        email,
+        code: verificationData.code
+      });
+      $log.info("Verification email sent");
+    } catch (error) {
+      $log.error("Failed to send verification email", error);
+      throw error;
+    }
     return new SuccessResult({ success: true, message: "Verification Code sent successfully!" }, SuccessMessageModel);
   }
 
