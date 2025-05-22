@@ -6,6 +6,7 @@ import { CategoryModel } from "./CategoryModel";
 import { PlannerModel } from "./PlannerModel";
 import { AvailabilityModel } from "./AvailabilityModel";
 import { SaleRepModel } from "./SaleRepModel";
+import { generateRandomId } from "../util";
 
 @Model({ name: "admin" })
 export class AdminModel {
@@ -22,6 +23,7 @@ export class AdminModel {
   password: string;
 
   @Property()
+  @Default(() => generateRandomId())
   recordID: string;
 
   @Property()

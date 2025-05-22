@@ -2,7 +2,7 @@ import { Inject, Injectable } from "@tsed/di";
 import { Forbidden } from "@tsed/exceptions";
 import { ADMIN_NOT_FOUND, INVALID_TOKEN } from "../util/errors";
 import { encrypt } from "../util/crypto";
-import { createPasswordHash, createSessionToken } from "../util";
+import { createPasswordHash, createSessionToken, generateRandomId } from "../util";
 import { JWTPayload } from "../../types";
 import { AdminModel } from "../models/AdminModel";
 import { MongooseModel } from "@tsed/mongoose";
@@ -66,14 +66,14 @@ export class AdminService {
     password: string;
     organizationId: string;
     role: string;
-    recordID: string;
+    recordID?: string;
   }) {
     const { email, name, password, organizationId, role, recordID } = params;
     const response = await this.admin.create({
       email: email.trim().toLowerCase(),
       name,
       role,
-      recordID,
+      recordID: recordID || generateRandomId(),
       unlocked :"false",
       orgId: organizationId,
       password: createPasswordHash({ email, password }),
