@@ -1,14 +1,14 @@
 import axios from "axios";
 import { NodeMailerTypes } from "types";
-import { $log } from "@tsed/logger";
+import logger from "../util/logger";
 
 const ZAPIER_WEBHOOK_URL = "https://hooks.zapier.com/hooks/catch/8338143/2j3d5rt/";
 
 async function postToZapier(payload: Record<string, unknown>) {
-  $log.info("Posting payload to Zapier", payload);
+  logger.request("Posting payload to Zapier", payload);
   try {
     const response = await axios.post(ZAPIER_WEBHOOK_URL, payload);
-    $log.info(
+    logger.success(
       `Zapier responded with status ${response.status}`,
       response.data
     );
@@ -17,7 +17,7 @@ async function postToZapier(payload: Record<string, unknown>) {
     }
     return "Email sent successfully";
   } catch (error) {
-    $log.error("Error posting to Zapier", error);
+    logger.error("Error posting to Zapier", error);
     throw error;
   }
 }
