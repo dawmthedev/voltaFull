@@ -160,6 +160,7 @@ const LeadDetailPage = () => {
   };
 
   const submitNewMessage = async ({ Message, relatedProject, TaggedUsers, from }) => {
+
     const requestBody = {
       message: Message,
       relatedProject,
@@ -210,6 +211,7 @@ const LeadDetailPage = () => {
   
   useEffect(() => {
     const fetchCRMUsers = async () => {
+
       try {
         const response = await axios.get(`${baseURL}/users`);
         if (response.data && Array.isArray(response.data.users)) {

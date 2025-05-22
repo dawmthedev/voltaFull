@@ -140,6 +140,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     e.preventDefault();
 
 
+
     // const mapFinancingToValue = (financing) => {
     //   switch (financing) {
     //     case "Sunnova":

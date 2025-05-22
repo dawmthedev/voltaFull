@@ -11,6 +11,7 @@ function UtilitySign() {
 
   const submitNewUtilityAFD = async (e) => {
     e.preventDefault();
+
     const requestBody = {
       email,
       userId: UserData?.id,

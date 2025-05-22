@@ -78,7 +78,7 @@ export default function DashboardLayout() {
 
   // Fetch verification status
   const fetchCRMVerification = async () => {
-    setLoading(true);
+
     try {
       const response = await axios.post(`${baseURL}/user/doc-status`, { recordID });
       if (response.data && typeof response.data.verified === 'boolean') {
@@ -152,6 +152,7 @@ export default function DashboardLayout() {
     const driversLicenseURL = fileUrls["Driver's License"] || null;
     const socialSecurityURL = fileUrls["Social Security"] || null;
     const passportURL = fileUrls["US Passport"] || null;
+
 
     const requestBody = {
       recordID,

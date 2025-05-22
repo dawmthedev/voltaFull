@@ -60,6 +60,7 @@ const AddUserForm = ({ onClose }) => {
       return; // Prevent form submission if validation fails
     }
 
+
     const requestBody = {
       email: formData.email,
       firstName: formData.firstName,
@@ -357,7 +358,6 @@ export default AddUserForm;
 //     }
 
 
-//     const headers = {
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };
@@ -713,7 +713,6 @@ export default AddUserForm;
 //     }
 
 
-//     const headers = {
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };

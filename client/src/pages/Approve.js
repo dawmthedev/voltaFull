@@ -28,7 +28,7 @@ const UpdateConfirmationPage = () => {
       value: fieldValue
     };
 
-    const response = await axios.post(`${baseURL}/approve`, recordData);
+
 
     console.log(response.data);
     handleClose(); // Close the dialog after updating
