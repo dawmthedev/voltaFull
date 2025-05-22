@@ -19,7 +19,6 @@ function UtilitySign() {
 
     try {
       const response = await axios.post(`${baseURL}/utility-affidavit`, requestBody);
-      console.log("Success!", response.data);
       setIsSubmitted(true); // Set the submission status to true upon success
     } catch (error) {
       console.error("Failed to send data:", error);

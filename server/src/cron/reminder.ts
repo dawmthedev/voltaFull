@@ -1,6 +1,7 @@
 import { model, Schema } from "mongoose";
 import { categoryModel, plannerModel } from "./model";
 import { NodemailerClient } from "../clients/nodemailer";
+import { $log } from "@tsed/logger";
 
 export const runJob = async () => {
   const planners = await plannerModel.find();
@@ -9,7 +10,6 @@ export const runJob = async () => {
 
 export const notifyLeads = async () => {
   const _planners = await plannerModel.find();
-  // console.log("_planners-------------**", _planners);
   // filter planners by timeOfExecution and startDate
   const filteredPlanners = _planners.filter((planner) => {
     const timeOfExecution = Number(planner.timeOfExecution);
@@ -20,7 +20,7 @@ export const notifyLeads = async () => {
     return timeOfExecution <= currentDate.getTime() && _startDate == _currentDate;
   });
 
-  console.log("filteredPlanners-------------**", filteredPlanners);
+  $log.info("filteredPlanners-------------**", filteredPlanners);
 
   const planners = await plannerModel.find({
     timeOfExecution: { $lte: new Date().getTime().toString(), 
@@ -28,15 +28,15 @@ export const notifyLeads = async () => {
     startDate: { $eq: new Date().toISOString().split("T")[0] }
     }
   });
-  console.log("planners-------------", planners);
+  $log.info("planners-------------", planners);
   const categories = await categoryModel.find({
     _id: { $in: planners.map((planner) => planner.categoryId) }
   });
-  console.log("categories-------------", categories);
+  $log.info("categories-------------", categories);
   filteredPlanners.forEach(async (planner) => {
     // const category = categories.find((category) => category._id === planner.categoryId);
     const category = await categoryModel.findById(planner.categoryId);
-    console.log("category-------------", category);
+    $log.info("category-------------", category);
     if (!category) return;
     let dynamicModel: any;
     try {
@@ -46,7 +46,7 @@ export const notifyLeads = async () => {
       dynamicModel = model(category.name, ProductSchema);
     }
     const leads = await dynamicModel.find();
-    console.log("leads-------------", leads);
+    $log.info("leads-------------", leads);
     leads.forEach(async (lead: any) => {
       try {
         await NodemailerClient.sendEmailToPlanner({
@@ -57,7 +57,7 @@ export const notifyLeads = async () => {
         });
         await dynamicModel.updateOne({ _id: lead._id }, { isNotify: false });
       } catch (error) {
-        console.log("error", error);
+        $log.info("error", error);
       }
     });
   });

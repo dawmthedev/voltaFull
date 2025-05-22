@@ -231,9 +231,7 @@ export default function PayrollData(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.data.payrollData);
 
-        console.log('responseData.data.payrollData:', responseData.data.payrollData);
 
         if (responseData.success && responseData.data.payrollData) {
           const payData = responseData.data.payrollData.map((payrollItem) => {

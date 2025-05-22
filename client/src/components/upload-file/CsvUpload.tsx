@@ -27,7 +27,6 @@ function CsvUpload({ handleCsvData }: CsvUploadProps) {
 
   const handleLeadSubmit = (e) => {
     e.preventDefault();
-    console.log('Lead Submitted!');
   };
 
   const handleFileUpload = (event) => {
@@ -39,7 +38,6 @@ function CsvUpload({ handleCsvData }: CsvUploadProps) {
       complete: (results) => {
         setData(results.data);
         setLoading(false);
-        //  console.log(results.data);
         handleCsvData(results.data);
       }
     });
@@ -51,7 +49,6 @@ function CsvUpload({ handleCsvData }: CsvUploadProps) {
     // Check Uploaded EALERTS
 
     data.forEach((lead) => {
-      console.log(lead);
     });
     alert('File uploaded!');
 

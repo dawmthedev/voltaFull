@@ -49,7 +49,6 @@ const LoginPage = () => {
           type: 'error'
         })
       );
-      console.log(error);
     }
   };
   return (

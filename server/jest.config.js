@@ -47,7 +47,8 @@ module.exports = {
   testMatch: [
     '**/src/**/__tests__/**/*.[jt]s?(x)',
     '**/src/**/?(*.)+(spec|test).[tj]s?(x)',
-    '**/tests/**/*.test.[tj]s?(x)'
+    '**/tests/**/?(*.)+(spec|test).[tj]s?(x)'
+
   ],
   // A map from regular expressions to paths to transformers
   transform: {

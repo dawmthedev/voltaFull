@@ -25,7 +25,6 @@ const EmailUserForm = () => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
       // Add any additional actions on success here
     } catch (error) {
       alert("Failed sending email");

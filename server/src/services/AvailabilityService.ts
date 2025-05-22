@@ -41,7 +41,6 @@ export class AvailabilityService {
       endDate: { $gte: currentDate },
       adminId: repId
     });
-    // console.log("availability-----------", availability);
     if (availability.length) return false;
     return true;
   }
