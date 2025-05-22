@@ -65,5 +65,5 @@ export const errorMap: { [key: string]: string } = {
   FIELD_ALREADY_EXISTS: "Field already exists",
   EMPTY_CATEGORY: "Category can not be null",
   EMPTY_LEAD: "Lead name can not be null",
-  INVALID_RESPONSE_QUICKBASE: "Invalid response from quickbase."
+  INVALID_RESPONSE_QUICKBASE: "Invalid response from external service."
 };
