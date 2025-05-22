@@ -1,33 +1,20 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
-import { useDispatch } from 'react-redux';
-import { useAppSelector } from '../../hooks/hooks';
-import { closeAlert, selectAlert, setAlert } from '../../redux/slice/alertSlice';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-export const Alerts = () => {
-  const dispatch = useDispatch();
-  const { open, type, message } = useAppSelector(selectAlert);
-  return (
-    <Snackbar
-      open={open}
-      onClose={() => {
-        dispatch(closeAlert());
-      }}
-      autoHideDuration={3000}
-      anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    >
-      <Alert
-        severity={type}
-        variant="filled"
-        sx={{
-          color: 'white',
-          fontWeight: 'bold'
-        }}
-        onClose={() => {
-          dispatch(closeAlert());
-      >
-        {message}
-      </Alert>
-    </Snackbar>
-  );
-};
+export interface AlertProps {
+  open: boolean;
+  message: string;
+  type?: 'error' | 'warning' | 'info' | 'success';
+  onClose?: () => void;
+}
+
+const AlertComponent: React.FC<AlertProps> = ({ open, message, type = 'info', onClose }) => (
+  <Snackbar open={open} autoHideDuration={3000} onClose={onClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+    <MuiAlert severity={type} variant="filled" onClose={onClose} sx={{ color: 'white', fontWeight: 'bold' }}>
+      {message}
+    </MuiAlert>
+  </Snackbar>
+);
+
+export default AlertComponent;

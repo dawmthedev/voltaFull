@@ -1,44 +1,47 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
-import CustomInput from '../input/CustomInput';
-import { RoleDataTypes } from '../../types';
 
-interface AddNewUserProps {
-  user: {
-    name: string;
-    role: string;
-    isSuperAdmin: boolean;
-  };
-  getUsersData: (value: string, name: string) => void;
+export interface RoleDataTypes {
+  id: string;
+  name: string;
+}
+export interface AddNewUserProps {
+  user: { name: string; role: string; isSuperAdmin: boolean };
+  getUsersData: (value: any, name: string) => void;
   roles: RoleDataTypes[];
 }
-const AddUserForm = ({ user, getUsersData, roles }: AddNewUserProps) => {
-  const [isChecked, setIsChecked] = useState(user.isSuperAdmin);
-  const handleOnChange = (e) => {
-    setIsChecked(!isChecked);
+
+const AddUserForm: React.FC<AddNewUserProps> = ({ user, getUsersData, roles }) => {
+  const [checked, setChecked] = useState(user.isSuperAdmin);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setChecked(e.target.checked);
     getUsersData(e.target.checked, 'isSuperAdmin');
+  };
+
   return (
     <div>
-      <CustomInput value={user.name} onChange={(e) => getUsersData(e.target.value, e.target.name)} name="name" label="Name" />
-      <FormControl fullWidth sx={{ mt: '.8rem' }}>
-        <InputLabel id="demo-simple-select-label">Select Role</InputLabel>
-        <Select
-          value={user.role}
-          label="Select Role"
-          name="role"
-          onChange={(e: SelectChangeEvent) => {
-            getUsersData(e.target.value, e.target.name);
-          }}
-        >
-          {roles?.map(({ id, name }: { name: string; id: string }) => (
-            <MenuItem key={id} value={name}>
-              {name}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControlLabel sx={{ mt: '.8rem' }} control={<Checkbox checked={isChecked} onChange={handleOnChange} />} label="Super Admin" />
+      <input
+        value={user.name}
+        name="name"
+        onChange={(e) => getUsersData(e.target.value, e.target.name)}
+        placeholder="Name"
+      />
+      <select
+        value={user.role}
+        name="role"
+        onChange={(e) => getUsersData(e.target.value, e.target.name)}
+      >
+        {roles.map((r) => (
+          <option key={r.id} value={r.name}>
+            {r.name}
+          </option>
+        ))}
+      </select>
+      <label>
+        <input type="checkbox" checked={checked} onChange={handleChange} /> Super Admin
+      </label>
     </div>
   );
 };
+
 export default AddUserForm;

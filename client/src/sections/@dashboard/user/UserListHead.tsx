@@ -1,63 +1,23 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
-import PropTypes from 'prop-types';
-// @mui
 import React from 'react';
 
-// ----------------------------------------------------------------------
-const visuallyHidden = {
-  border: 0,
-  margin: -1,
-  padding: 0,
-  width: '1px',
-  height: '1px',
-  overflow: 'hidden',
-  position: 'absolute',
-  whiteSpace: 'nowrap',
-  clip: 'rect(0 0 0 0)'
-};
-UserListHead.propTypes = {
-  order: PropTypes.oneOf(['asc', 'desc']),
-  orderBy: PropTypes.string,
-  rowCount: PropTypes.number,
-  headLabel: PropTypes.array,
-  numSelected: PropTypes.number,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func
-export default function UserListHead({ order, orderBy, rowCount, headLabel, numSelected, onRequestSort, onSelectAllClick }) {
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
+export interface HeadCell {
+  id: string;
+  name: string;
+  alignRight?: boolean;
+}
+
+export interface UserListHeadProps {
+  headLabel: HeadCell[];
+}
+
+export default function UserListHead({ headLabel }: UserListHeadProps) {
   return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-          />
-        </TableCell>
-        {headLabel.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.alignRight ? 'right' : 'left'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              hideSortIcon
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-              sx={{ textTransform: 'capitalize' }}
-            >
-              {headCell.name}
-              {orderBy === headCell.id ? (
-                <Box sx={{ ...visuallyHidden }}>{order === 'desc' ? 'sorted descending' : 'sorted ascending'}</Box>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
+    <thead>
+      <tr>
+        {headLabel.map((h) => (
+          <th key={h.id}>{h.name}</th>
         ))}
-      </TableRow>
-    </TableHead>
+      </tr>
+    </thead>
   );
 }

@@ -37,5 +37,5 @@ export const theme = extendTheme({
 });
 
 export default function ThemeProvider({ children }: { children: React.ReactNode }) {
-  return <ChakraProvider theme={theme}>{children}</ChakraProvider>;
+  return React.createElement(ChakraProvider, { theme }, children);
 }
