@@ -1,4 +1,6 @@
 import {Appender, BaseAppender, LogEvent} from "@tsed/logger";
+import { summaryConfig } from "../config/logger/summaryConfig";
+import { formatArg } from "./logger";
 
 const RED = "\x1b[31m";
 const RESET = "\x1b[0m";
@@ -11,8 +13,14 @@ const RESET = "\x1b[0m";
 @Appender({name: "emoji"})
 export class EmojiAppender extends BaseAppender {
   write(event: LogEvent): void {
-    const [first, ...rest] = event.data || [];
-    const message = first instanceof Error ? first.message : String(first);
+    let [first, ...rest] = event.data || [];
+    let category: string | undefined;
+    const last = rest[rest.length - 1];
+    if (typeof last === "string" && summaryConfig[last]) {
+      category = last;
+      rest = rest.slice(0, -1);
+    }
+    const message = first instanceof Error ? first.message : formatArg(first, category);
 
     switch (event.level.toString().toLowerCase()) {
       case "error":
@@ -21,13 +29,13 @@ export class EmojiAppender extends BaseAppender {
           const clone: any = {...first};
           delete clone.message;
           if (Object.keys(clone).length) {
-            process.stdout.write(JSON.stringify(clone, null, 2) + "\n");
+            process.stdout.write(formatArg(clone, category) + "\n");
           }
           if (first.stack) {
             process.stdout.write(first.stack + "\n");
           }
         } else if (rest.length) {
-          process.stdout.write(rest.map(r => typeof r === "string" ? r : JSON.stringify(r, null, 2)).join(" ") + "\n");
+          process.stdout.write(rest.map(r => formatArg(r, category)).join(" ") + "\n");
         }
         break;
       case "warn":
