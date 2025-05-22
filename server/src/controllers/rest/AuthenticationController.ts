@@ -151,12 +151,6 @@ export class AuthenticationController {
     const findAdmin = await this.adminService.findAdminByEmail(email);
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
     const verificationData = await this.verificationService.generateVerification({ email, type });
-    const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
-      repEmail: email
-    });
-    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
-    if (response.data.recordID == "00000") throw new Unauthorized("Email is not authorized in Quickbase");
-    if (!response.data.recordID) throw new NotFound("Invalid qbId received from the API.");
     await NodemailerClient.sendVerificationEmail({
       title: type || "Email",
       email,
@@ -185,19 +179,12 @@ export class AuthenticationController {
     if (!organization) {
       organization = await this.organizationService.createOrganization({ name: "Voltaic LLC", email });
     }
-    const response = await axios.post("https://voltaicqbapi.herokuapp.com/CRMAuth", {
-      repEmail: email
-    });
-    if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
-    if (response.data.recordID == "00000") throw new Unauthorized("Email is not authorized in Quickbase");
-    if (!response.data.recordID) throw new NotFound("Invalid qbId received from the API.");
     const admin = await this.adminService.findAdminByEmail(email);
     if (admin) throw new Error(ADMIN_ALREADY_EXISTS);
     await this.adminService.createAdmin({
-      email: response.data.email,
+      email: email,
       name: name || "",
-      role: response.data.role,
-      recordID: response.data.recordID,
+      role: body.role || "admin",
       password: password,
       organizationId: organization?._id || ""
     });
