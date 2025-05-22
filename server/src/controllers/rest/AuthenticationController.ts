@@ -31,7 +31,7 @@ import { OrganizationService } from "../../services/OrganizationService";
 import { createPasswordHash } from "../../util";
 import { VerificationEnum } from "../../../types";
 import axios from "axios";
-import { $log } from "@tsed/logger";
+import logger from "../../util/logger";
 
 type MulterFile = Express.Multer.File;
 // Then use MulterFile where you previously used Express.Multer.File
@@ -143,7 +143,7 @@ export class AuthenticationController {
   @Returns(200, SuccessResult).Of(SuccessMessageModel)
   public async startVerification(@BodyParams() body: StartVerificationParams) {
     const { email, type } = body;
-    $log.info("Starting verification", { email, type });
+    logger.request("Starting verification", { email, type });
     if (!email || !type) throw new BadRequest(MISSING_PARAMS);
     const findAdmin = await this.adminService.findAdminByEmail(email);
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
@@ -152,7 +152,7 @@ export class AuthenticationController {
     const maskedCode = verificationData.code
       ? `${verificationData.code.substring(0, 2)}***`
       : "";
-    $log.info("Generated verification code", { code: maskedCode });
+    logger.request("Generated verification code", { code: maskedCode });
     
   
     try {
@@ -161,9 +161,9 @@ export class AuthenticationController {
         email,
         code: verificationData.code
       });
-      $log.info("Verification email sent");
+      logger.request("Verification email sent");
     } catch (error) {
-      $log.error("Failed to send verification email", error);
+      logger.error("Failed to send verification email", error);
       throw error;
     }
     return new SuccessResult({ success: true, message: "Verification Code sent successfully!" }, SuccessMessageModel);
@@ -213,8 +213,8 @@ export class AuthenticationController {
   public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
     const { email, password } = body;
 
-    $log.info("Testing Login...");
-    $log.info("Received login request for email:", email); // Be careful with logging sensitive information
+    logger.request("Testing Login...");
+    logger.request("Received login request for email:", email); // Be careful with logging sensitive information
 
     if (!email || !password) throw new BadRequest(MISSING_PARAMS);
     const admin = await this.adminService.findAdminByEmail(email);
@@ -249,7 +249,7 @@ export class AuthenticationController {
   @Post("/crmNewSales")
   @Returns(200, SuccessResult).Of(NewSaleResultModel)
   public async crmNewSales(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    $log.info("crm payroll-----------------------------------------");
+    logger.request("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -264,11 +264,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM Payroll...");
-    $log.info(recordId);
+    logger.request("Getting CRM Payroll...");
+    logger.request(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-    $log.info("response--------", response);
+    logger.request("response--------", response);
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
@@ -317,7 +317,7 @@ export class AuthenticationController {
       batteryPlacement: record["batteryPlacement"] ? record["batteryPlacement"].replace(/"/g, "") : null
     }));
 
-    $log.info("Returning CRM payroll data...");
+    logger.request("Returning CRM payroll data...");
 
     return new SuccessResult({ newSaleData: NewSaleResults }, NewSaleResultCollection);
   }
@@ -364,7 +364,7 @@ export class AuthenticationController {
       max_tokens: 300
     };
 
-    $log.info("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
+    logger.request("Sending Request to OpenAI:", { apiUrl, payload }); // Log request details
 
     while (attempt < maxRetries) {
       try {
@@ -375,7 +375,7 @@ export class AuthenticationController {
           }
         });
 
-        $log.info("Received Response from OpenAI:", response.data); // Log response details
+        logger.request("Received Response from OpenAI:", response.data); // Log response details
 
         if (response.data.choices && response.data.choices.length > 0) {
           return response.data.choices[0].text.trim();
@@ -383,11 +383,11 @@ export class AuthenticationController {
           throw new Error("No valid response from OpenAI");
         }
       } catch (error) {
-        $log.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
+        logger.error("Error in OpenAI API call:", error.response ? error.response.data : error.message);
         if (error.response && error.response.status === 429) {
           // If rate-limited, wait and retry
           attempt++;
-          $log.info(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
+          logger.retry(`Rate limited. Retrying attempt ${attempt} in ${retryDelay}ms...`);
           await new Promise((resolve) => setTimeout(resolve, retryDelay));
         } else {
           // If a different error, throw it
@@ -441,7 +441,7 @@ export class AuthenticationController {
   //             throw new Error('No valid response from OpenAI');
   //         }
   //     } catch (error) {
-  //         $log.error('Error in OpenAI API call:', error);
+  //         logger.error('Error in OpenAI API call:', error);
   //         throw new Error(`Failed to process utility bill with OpenAI: ${error.message}`);
   //     }
   // }
@@ -449,7 +449,7 @@ export class AuthenticationController {
   @Post("/crmPayroll")
   @Returns(200, SuccessResult).Of(CrmPayrollResultModel)
   public async crmPayroll(@BodyParams() body: CrmPayBody, @Response() res: Response) {
-    $log.info("crm payroll-----------------------------------------");
+    logger.request("crm payroll-----------------------------------------");
     const { recordId } = body;
     CrmPayBody;
     if (!recordId) throw new BadRequest(MISSING_PARAMS);
@@ -464,11 +464,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM Payroll...");
-    $log.info(recordId);
+    logger.request("Getting CRM Payroll...");
+    logger.request(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
-    $log.info("response--------", response);
+    logger.request("response--------", response);
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
@@ -509,7 +509,7 @@ export class AuthenticationController {
       amount: record["amount"] ? record["amount"] : null
     }));
 
-    $log.info("Returning CRM payroll data...");
+    logger.request("Returning CRM payroll data...");
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
@@ -531,14 +531,14 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM Payroll...");
-    $log.info(recordId);
+    logger.request("Getting CRM Payroll...");
+    logger.request(recordId);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
     const data = response.data;
     const dataArray = Array.isArray(data) ? data : [data];
-    $log.info(typeof data);
+    logger.request(typeof data);
 
     // const payrollResults = dataArray.map((record) => ({
     //   lead: record["lead"] ? record["lead"].replace(/"/g, '') : null,
@@ -576,7 +576,7 @@ export class AuthenticationController {
       amount: record["amount"] ? record["amount"] : null
     }));
 
-    $log.info("Returning CRM payroll data...");
+    logger.request("Returning CRM payroll data...");
 
     return new SuccessResult({ payrollData: payrollResults }, CrmPayrollResultCollection);
   }
@@ -590,7 +590,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -599,7 +599,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -638,7 +638,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -647,7 +647,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -694,7 +694,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -703,7 +703,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -754,13 +754,13 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM deal...");
+    logger.request("Getting CRM deal...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
 
     const data = response.data;
-    $log.info(data);
+    logger.request(data);
 
     // Transform the structure as needed
     const result = {
@@ -834,9 +834,9 @@ export class AuthenticationController {
     };
 
     //prod
-    $log.info("Result : ");
+    logger.request("Result : ");
 
-    $log.info(result);
+    logger.request(result);
 
     const singleCrmDealResultModel = new SingleCrmDealResultModel(result); // Pass the result object as a single parameter
 
@@ -864,7 +864,7 @@ export class AuthenticationController {
       // Pass the instance and the class (constructor) for serialization
       return new SuccessResult(responseModel, AIResponseModel);
     } catch (error) {
-      $log.error(error);
+      logger.error(error);
       throw new BadRequest("Error processing your question");
     }
   }
@@ -878,7 +878,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -887,7 +887,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -922,7 +922,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -931,7 +931,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -978,9 +978,9 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users Anticipated Pa..");
+    logger.request("Getting CRM users Anticipated Pa..");
 
-    $log.info(API_URL);
+    logger.request(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -989,7 +989,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1022,9 +1022,9 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users Anticipated Pa...");
+    logger.request("Getting CRM users Anticipated Pa...");
 
-    $log.info(API_URL);
+    logger.request(API_URL);
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1033,7 +1033,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1071,7 +1071,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users!!!...");
+    logger.request("Getting CRM users!!!...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1080,7 +1080,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1152,7 +1152,7 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, {}, { headers });
     if (!response || !response.data) throw new BadRequest("Invalid response from Quickbase API");
@@ -1161,7 +1161,7 @@ export class AuthenticationController {
 
     const dataArray = Array.isArray(data) ? data : [data];
 
-    $log.info(dataArray);
+    logger.request(dataArray);
 
     // Map over dataArray and transform its structure
     const results = dataArray.map((project) => {
@@ -1193,18 +1193,18 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
 
-    $log.info(response);
+    logger.request(response);
     const data = response.data;
 
     const item = data; // Assuming data is the object you are working with
 
     // Check if data is not an array or empty
     // Log the original item for debugging
-    $log.info("Original Item:", item);
+    logger.request("Original Item:", item);
 
     // Check if item is not an object or is empty
     if (typeof item !== "object" || Object.keys(item).length === 0) {
@@ -1241,11 +1241,11 @@ export class AuthenticationController {
       "Content-Type": "application/json"
     };
 
-    $log.info("Getting CRM users...");
+    logger.request("Getting CRM users...");
 
     const response = await axios.post(API_URL, requestBody, { headers });
 
-    $log.info(response);
+    logger.request(response);
     const data = response.data;
 
     if (!Array.isArray(data)) {
