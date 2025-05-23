@@ -1,4 +1,3 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // @mui
 //
 import palette from './palette';

@@ -1,4 +1,4 @@
-import { GlobalStyles, alpha, useTheme } from '@mui/material';
+
 import { bgBlur } from '../../utils/cssStyles';
 
 export default function StyledChart() {
