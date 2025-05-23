@@ -1,20 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
-import { faker } from '@faker-js/faker';
 // @mui
-import { useAppDispatch, useAppSelector } from '../hooks/hooks';
-import { authSelector } from '../redux/slice/authSlice';
 
 // components
-import Iconify from '../components/iconify';
 // sections
 import {
-  AppTasks,
-  AppNewsUpdate,
-  AppOrderTimeline,
   AppCurrentVisits,
   AppWebsiteVisits,
-  AppTrafficBySite,
   AppWidgetSummary,
   AppCurrentSubject,
   AppConversionRates
@@ -23,13 +15,9 @@ import { baseURL } from '../libs/client/apiClient';
 // ----------------------------------------------------------------------
 export default function DashboardAppPage() {
   const theme = useTheme();
-  const data = useAppSelector(authSelector);
   const [AHJTimelineData, setData] = useState([]);
   const [DealsData, setDealsData] = useState([]);
   const [DealsAvgTimelineData, setDealsAvgData] = useState([]);
-  const [AhjKeys, setAhjKeys] = useState(null);
-  const [isLoading, setLoading] = useState(true);
-  const [payError, setPayError] = useState(null);
   const fetchAhjTimelineData = async () => {
     try {
       const response = await fetch(`${baseURL}/auth/crmAHJTimelines`, {
@@ -58,9 +46,9 @@ export default function DashboardAppPage() {
         }));
         setData(formattedArray);
       }
-      setLoading(false);
+      // Data successfully loaded
     } catch (error) {
-      setPayError(error);
+      console.error(error);
     }
   };
   const fetchDealsData = async () => {
@@ -103,7 +91,7 @@ export default function DashboardAppPage() {
         setDealsData(chartData);
       }
     } catch (error) {
-      setPayError(error);
+      console.error(error);
     }
   };
 
@@ -126,7 +114,7 @@ export default function DashboardAppPage() {
         setDealsAvgData(chartData);
       }
     } catch (error) {
-      setPayError(error);
+      console.error(error);
     }
   };
   useEffect(() => {
