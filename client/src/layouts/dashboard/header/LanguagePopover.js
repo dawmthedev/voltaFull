@@ -1,26 +1,31 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { useState } from 'react';
-// @mui
+import { IconButton, MenuItem, Popover, Stack, Box } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
 const LANGS = [
   {
     value: 'en',
     label: 'CRM',
     icon: '/assets/Statuses/crm.png',
   },
+  {
     value: 'de',
     label: 'Website',
     icon: '/assets/Statuses/website.png',
-  
+  },
 ];
+
 export default function LanguagePopover() {
   const [open, setOpen] = useState(null);
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
+
   const handleClose = () => {
     setOpen(null);
+  };
+
   return (
     <>
       <IconButton
@@ -29,13 +34,12 @@ export default function LanguagePopover() {
           padding: 0,
           width: 44,
           height: 44,
-          ...(open && {
-            bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity),
-          }),
+          ...(open && { bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity) }),
         }}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
       </IconButton>
+
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -54,6 +58,8 @@ export default function LanguagePopover() {
               borderRadius: 0.75,
             },
           },
+        }}
+      >
         <Stack spacing={0.75}>
           {LANGS.map((option) => (
             <MenuItem key={option.value} selected={option.value === LANGS[0].value} onClick={() => handleClose()}>
