@@ -1,65 +1,47 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { useState } from 'react';
-// @mui
-// mocks_
-import account from '../../../_mock/account';
-import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
-import { authSelector } from '../../../redux/slice/authSlice';
+import PropTypes from 'prop-types';
+import { Avatar, Box, Divider, IconButton, MenuItem, Popover, Stack, Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { logout } from '../../../redux/middleware/authentication';
-import { setAlert } from '../../../redux/slice/alertSlice';
+import account from '../../../_mock/account';
 
-// ----------------------------------------------------------------------
-const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-    actionLink: 'eva:home'
-  },
-    label: 'Profile',
-    icon: 'eva:person-fill',
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-    label: 'VC Assistant',
-    actionLink: 'https://vccrm.vercel.app/dashboard/assistant'
-  }
-];
-export default function AccountPopover() {
+function MenuOption({ label, onClick }) {
+  return (
+    <MenuItem onClick={onClick}>
+      {label}
+    </MenuItem>
+  );
+}
+
+MenuOption.propTypes = {
+  label: PropTypes.string,
+  onClick: PropTypes.func,
+};
+
+export default function AccountPopover({ onLogout }) {
   const navigate = useNavigate();
-  
-  // Function to handle navigation
-  const handleNavigation = (path) => {
-    handleClose(); // Close the popover
-    navigate(path); // Navigate to the specified path
-  };
-  const dispatch = useAppDispatch();
-  const { data } = useAppSelector(authSelector);
   const [open, setOpen] = useState(null);
+
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
+  };
+
   const handleClose = () => {
     setOpen(null);
+  };
+
+  const handleLogout = () => {
+    handleClose();
+    if (onLogout) onLogout();
+    navigate('/login', { replace: true });
+  };
+
   return (
     <>
-      <IconButton
-        onClick={handleOpen}
-        sx={{
-          p: 0,
-          ...(open && {
-            '&:before': {
-              zIndex: 1,
-              content: "''",
-              width: '100%',
-              height: '100%',
-              borderRadius: '50%',
-              position: 'absolute',
-              bgcolor: (theme) => alpha(theme.palette.grey[900], 0.8)
-            }
-          })
-        }}
-      >
-        <Avatar src={account.photoURL} alt="photoURL" />
+      <IconButton onClick={handleOpen} sx={{ p: 0 }}>
+        <Avatar src={account.photoURL} alt="account" />
       </IconButton>
+
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -74,43 +56,32 @@ export default function AccountPopover() {
             width: 180,
             '& .MuiMenuItem-root': {
               typography: 'body2',
-              borderRadius: 0.75
-          }
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography  variant="subtitle2" noWrap sx={{ textTransform: 'uppercase' }}>
-            {data?.name}
+          <Typography variant="subtitle2" noWrap>
+            {account.displayName}
           </Typography>
-          <Typography  variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {data?.email}
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {data?.role}
-            {data?.recordID}
+            {account.email}
+          </Typography>
         </Box>
         <Divider sx={{ borderStyle: 'dashed' }} />
         <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem  key={option.label} onClick={() => handleNavigation(option.actionLink)} >
-              {option.label}
-            </MenuItem>
-          ))}
+          <MenuOption label="Profile" onClick={() => navigate('/dashboard/app')} />
         </Stack>
-        {/* Logout Button */}
-        <MenuItem
-          sx={{ m: 1 }}
-          onClick={async () => {
-            const response = await dispatch(logout());
-            if (response.error) {
-              dispatch(setAlert({ message: response.error.message, type: 'error', open: true }));
-              return;
-            dispatch(setAlert({ message: 'Logout successful', type: 'success', open: true }));
-            handleClose();
-            localStorage.removeItem('persist:root')
-            navigate('/login', { replace: true });
-          }}
-        >
+        <Divider sx={{ borderStyle: 'dashed' }} />
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
     </>
   );
 }
+
+AccountPopover.propTypes = {
+  onLogout: PropTypes.func,
+};

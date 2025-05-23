@@ -1,28 +1,26 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
-// @mui
+import { useTheme, useMediaQuery } from '@mui/material';
 
-// ----------------------------------------------------------------------
 export default function useResponsive(query, start, end) {
   const theme = useTheme();
-  const mediaUp = useMediaQuery(theme.breakpoints.up(start));
-  const mediaDown = useMediaQuery(theme.breakpoints.down(start));
-  const mediaBetween = useMediaQuery(theme.breakpoints.between(start, end));
-  const mediaOnly = useMediaQuery(theme.breakpoints.only(start));
-  if (query === 'up') {
-    return mediaUp;
-  }
-  if (query === 'down') {
-    return mediaDown;
-  if (query === 'between') {
-    return mediaBetween;
-  return mediaOnly;
+
+  const up = useMediaQuery(theme.breakpoints.up(start));
+  const down = useMediaQuery(theme.breakpoints.down(start));
+  const between = useMediaQuery(theme.breakpoints.between(start, end));
+  const only = useMediaQuery(theme.breakpoints.only(start));
+
+  if (query === 'up') return up;
+  if (query === 'down') return down;
+  if (query === 'between') return between;
+  return only;
 }
+
 export function useWidth() {
+  const theme = useTheme();
   const keys = [...theme.breakpoints.keys].reverse();
   return (
     keys.reduce((output, key) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
       const matches = useMediaQuery(theme.breakpoints.up(key));
       return !output && matches ? key : output;
     }, null) || 'xs'
   );
+}

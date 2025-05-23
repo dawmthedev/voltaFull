@@ -1,17 +1,18 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
-// @mui
+import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-export function bgBlur(props) {
-  const color = props?.color || '#000000';
-  const blur = props?.blur || 6;
-  const opacity = props?.opacity || 0.8;
-  const imgUrl = props?.imgUrl;
+export function bgBlur({ color = '#000', blur = 6, opacity = 0.8, imgUrl } = {}) {
+  const backdrop = {
+    backdropFilter: `blur(${blur}px)`,
+    WebkitBackdropFilter: `blur(${blur}px)`,
+    backgroundColor: alpha(color, opacity),
+  };
+
   if (imgUrl) {
     return {
       position: 'relative',
       backgroundImage: `url(${imgUrl})`,
       '&:before': {
+        ...backdrop,
         position: 'absolute',
         top: 0,
         left: 0,
@@ -19,43 +20,49 @@ export function bgBlur(props) {
         content: '""',
         width: '100%',
         height: '100%',
-        backdropFilter: `blur(${blur}px)`,
-        WebkitBackdropFilter: `blur(${blur}px)`,
-        backgroundColor: alpha(color, opacity),
       },
     };
   }
+
+  return backdrop;
+}
+
+export function bgGradient({ direction = 'to bottom', startColor, endColor, color, imgUrl } = {}) {
+  const gradient = `linear-gradient(${direction}, ${startColor || color}, ${endColor || color})`;
   return {
-    backdropFilter: `blur(${blur}px)`,
-    WebkitBackdropFilter: `blur(${blur}px)`,
-    backgroundColor: alpha(color, opacity),
+    background: imgUrl ? `${gradient}, url(${imgUrl})` : gradient,
+    backgroundSize: 'cover',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center center',
   };
 }
-export function bgGradient(props) {
-  const direction = props?.direction || 'to bottom';
-  const startColor = props?.startColor;
-  const endColor = props?.endColor;
-  const color = props?.color;
-      background: `linear-gradient(${direction}, ${startColor || color}, ${endColor || color}), url(${imgUrl})`,
-      backgroundSize: 'cover',
-      backgroundRepeat: 'no-repeat',
-      backgroundPosition: 'center center',
-    background: `linear-gradient(${direction}, ${startColor}, ${endColor})`,
+
 export function textGradient(value) {
+  return {
     background: `-webkit-linear-gradient(${value})`,
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
+  };
+}
+
 export function filterStyles(value) {
+  return {
     filter: value,
     WebkitFilter: value,
     MozFilter: value,
+  };
+}
+
 export const hideScrollbarY = {
   msOverflowStyle: 'none',
   scrollbarWidth: 'none',
   overflowY: 'scroll',
-  '&::-webkit-scrollbar': {
-    display: 'none',
-  },
+  '&::-webkit-scrollbar': { display: 'none' },
 };
+
 export const hideScrollbarX = {
   overflowX: 'scroll',
+  msOverflowStyle: 'none',
+  scrollbarWidth: 'none',
+  '&::-webkit-scrollbar': { display: 'none' },
+};
