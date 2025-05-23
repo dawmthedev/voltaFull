@@ -1,9 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
-// @mui
 
-// ----------------------------------------------------------------------
 const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
   <Box
     component="span"
@@ -21,8 +19,10 @@ const SvgColor = forwardRef(({ src, sx, ...other }, ref) => (
     {...other}
   />
 ));
+
 SvgColor.propTypes = {
   src: PropTypes.string,
   sx: PropTypes.object,
 };
+
 export default SvgColor;

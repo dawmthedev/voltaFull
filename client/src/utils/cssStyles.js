@@ -1,13 +1,10 @@
+export function bgBlur({ color = '#000', blur = 6, opacity = 0.8, imgUrl } = {}) {
+  const backdrop = {
+    backdropFilter: `blur(${blur}px)`,
+    WebkitBackdropFilter: `blur(${blur}px)`,
+    backgroundColor: `rgba(0,0,0,${opacity})`,
+  };
 
-
-// @mui
-
-// ----------------------------------------------------------------------
-export function bgBlur(props) {
-  const color = props?.color || '#000000';
-  const blur = props?.blur || 6;
-  const opacity = props?.opacity || 0.8;
-  const imgUrl = props?.imgUrl;
   if (imgUrl) {
     return {
       position: 'relative',

@@ -1,16 +1,11 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
-// @mui
+import { Box, Stack, Typography } from '@mui/material';
+import { alpha } from '@mui/material/styles';
 
-// ----------------------------------------------------------------------
-ColorPreview.propTypes = {
-  sx: PropTypes.object,
-  limit: PropTypes.number,
-  colors: PropTypes.arrayOf(PropTypes.string),
-};
 export default function ColorPreview({ colors, limit = 3, sx }) {
   const showColor = colors.slice(0, limit);
   const moreColor = colors.length - limit;
+
   return (
     <Stack component="span" direction="row" alignItems="center" justifyContent="flex-end" sx={sx}>
       {showColor.map((color, index) => (
@@ -31,3 +26,9 @@ export default function ColorPreview({ colors, limit = 3, sx }) {
     </Stack>
   );
 }
+
+ColorPreview.propTypes = {
+  sx: PropTypes.object,
+  limit: PropTypes.number,
+  colors: PropTypes.arrayOf(PropTypes.string),
+};

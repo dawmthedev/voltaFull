@@ -1,4 +1,4 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Box, Button, Container, Grid, Paper, TextField, Typography, CircularProgress } from '@mui/material';
 import React, { useState } from 'react';
 import { baseURL } from '../libs/client/apiClient';
 
@@ -6,37 +6,34 @@ function Assistant() {
   const [messages, setMessages] = useState([{ id: 1, text: 'Hello, how can I help you?', isBot: true }]);
   const [userInput, setUserInput] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+
   const handleSendMessage = async () => {
     const userMessage = userInput.trim();
-    if (!userMessage) return; // Prevent sending empty messages
-    setUserInput(''); // Clear the input field
-    // Add user message to chat
-    setMessages((messages) => [...messages, { id: messages.length + 1, text: userMessage, isBot: false }]);
-    setIsProcessing(true); // Set processing to true
+    if (!userMessage) return;
+    setUserInput('');
+    setMessages((msgs) => [...msgs, { id: msgs.length + 1, text: userMessage, isBot: false }]);
+    setIsProcessing(true);
     try {
       const response = await fetch(`${baseURL}/auth/askOpenAI`, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: userMessage })
       });
-      if (!response.ok) {
-        throw new Error('Network response was not ok');
-      }
+      if (!response.ok) throw new Error('Network response was not ok');
       const responseData = await response.json();
-      // Add AI response to chat
       if (responseData.success && responseData.data) {
-        setMessages((messages) => [...messages, { id: messages.length + 2, text: responseData.data.response, isBot: true }]);
+        setMessages((msgs) => [...msgs, { id: msgs.length + 2, text: responseData.data.response, isBot: true }]);
       } else {
         throw new Error('Response data is not valid');
+      }
     } catch (error) {
       console.error('Error:', error);
-      setMessages((messages) => [...messages, { id: messages.length + 2, text: "Sorry, I couldn't process your request.", isBot: true }]);
+      setMessages((msgs) => [...msgs, { id: msgs.length + 2, text: "Sorry, I couldn't process your request.", isBot: true }]);
     } finally {
-      setIsProcessing(false); // Set processing to false
+      setIsProcessing(false);
     }
   };
+
   return (
     <>
       <Container maxWidth="sm">
@@ -53,22 +50,12 @@ function Assistant() {
               )}
               {messages.map((message, index) => (
                 <Grid item key={index} sx={{ width: '100%' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: message.isBot ? 'start' : 'end'
-                    }}
-                  >
-                    <Paper
-                      sx={{
-                        p: 1,
-                        bgcolor: message.isBot ? '#e0f7fa' : '#80deea',
-                        borderRadius: 2
-                      }}
-                    >
+                  <Box sx={{ display: 'flex', justifyContent: message.isBot ? 'start' : 'end' }}>
+                    <Paper sx={{ p: 1, bgcolor: message.isBot ? '#e0f7fa' : '#80deea', borderRadius: 2 }}>
                       <Typography variant="body1">{message.text}</Typography>
                     </Paper>
                   </Box>
+                </Grid>
               ))}
             </Grid>
           </Paper>
@@ -82,7 +69,7 @@ function Assistant() {
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
             />
             <Button variant="contained" color="primary" onClick={handleSendMessage} sx={{ ml: 1 }}>
-              <SendIcon />
+              <span>Send</span>
             </Button>
           </Box>
         </Box>

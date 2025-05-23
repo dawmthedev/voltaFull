@@ -1,5 +1,5 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react';
+import { Box, TextField, Typography } from '@mui/material';
 
 interface CustomInputProps {
   value: string;
@@ -10,6 +10,7 @@ interface CustomInputProps {
   size?: 'small' | 'medium';
   error?: string;
 }
+
 const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error, onChange }: CustomInputProps) => {
   return (
     <Box>
@@ -19,12 +20,13 @@ const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error
         onChange={(e: React.ChangeEvent<HTMLInputElement>) => onChange(e)}
         name={name}
         label={label}
-        fullWidth={true}
+        fullWidth
         sx={{ my: error ? 0 : 1 }}
         size={size}
       />
-      {error && <Typography color={'darkorange'}>{error}</Typography>}
+      {error && <Typography color="darkorange">{error}</Typography>}
     </Box>
   );
 };
+
 export default CustomInput;

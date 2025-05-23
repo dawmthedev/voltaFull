@@ -1,5 +1,5 @@
-
 import merge from 'lodash/merge';
+import { useTheme, alpha } from '@mui/material/styles';
 
 export default function useChart(options = {}) {
   const theme = useTheme();
@@ -8,13 +8,13 @@ export default function useChart(options = {}) {
     chart: {
       toolbar: { show: false },
       zoom: { enabled: false },
-      foreColor: theme.palette.text.disabled,
-      fontFamily: theme.typography.fontFamily,
+      foreColor: theme.palette?.text?.disabled,
+      fontFamily: theme.typography?.fontFamily,
     },
     stroke: { width: 3, curve: 'smooth', lineCap: 'round' },
     fill: { type: 'solid' },
     dataLabels: { enabled: false },
-    grid: { strokeDashArray: 3, borderColor: theme.palette.divider },
+    grid: { strokeDashArray: 3, borderColor: theme.palette?.divider },
     tooltip: { theme: 'light' },
     legend: { show: true, position: 'top', horizontalAlign: 'right' },
     plotOptions: {
@@ -22,16 +22,16 @@ export default function useChart(options = {}) {
       radialBar: {
         track: {
           strokeWidth: '100%',
-          background: alpha(theme.palette.grey[500], 0.16),
+          background: alpha(theme.palette?.grey?.[500] || '#000', 0.16),
         },
       },
     },
     colors: [
-      theme.palette.primary.main,
-      theme.palette.warning.main,
-      theme.palette.info.main,
-      theme.palette.error.main,
-      theme.palette.success.main,
+      theme.palette?.primary?.main,
+      theme.palette?.warning?.main,
+      theme.palette?.info?.main,
+      theme.palette?.error?.main,
+      theme.palette?.success?.main,
     ],
   };
 

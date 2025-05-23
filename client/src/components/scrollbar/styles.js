@@ -1,24 +1,23 @@
-import SimpleBar from 'simplebar-react';
-// @mui
+const { styled, alpha } = require('@mui/material/styles');
+const SimpleBar = require('simplebar-react');
 
-// ----------------------------------------------------------------------
-export const StyledRootScrollbar = styled('div')(() => ({
+const StyledRootScrollbar = styled('div')({
   flexGrow: 1,
   height: '100%',
   overflow: 'hidden',
-}));
-export const StyledScrollbar = styled(SimpleBar)(({ theme }) => ({
+});
+
+const StyledScrollbar = styled(SimpleBar)(({ theme }) => ({
   maxHeight: '100%',
-  '& .simplebar-scrollbar': {
-    '&:before': {
-      backgroundColor: alpha(theme.palette.grey[600], 0.48),
-    },
-    '&.simplebar-visible:before': {
-      opacity: 1,
+  '& .simplebar-scrollbar:before': {
+    backgroundColor: alpha(theme.palette?.grey?.[600] || '#000', 0.48),
   },
-  '& .simplebar-track.simplebar-vertical': {
-    width: 10,
-  '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': {
-    height: 6,
-  '& .simplebar-mask': {
-    zIndex: 'inherit',
+  '& .simplebar-scrollbar.simplebar-visible:before': {
+    opacity: 1,
+  },
+  '& .simplebar-track.simplebar-vertical': { width: 10 },
+  '& .simplebar-track.simplebar-horizontal .simplebar-scrollbar': { height: 6 },
+  '& .simplebar-mask': { zIndex: 'inherit' },
+}));
+
+module.exports = { StyledRootScrollbar, StyledScrollbar };
