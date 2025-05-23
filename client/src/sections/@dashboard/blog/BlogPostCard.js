@@ -20,6 +20,7 @@ const StyledTitle = styled(Link)({
   WebkitLineClamp: 2,
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
+});
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   zIndex: 9,
   width: 32,
@@ -34,11 +35,14 @@ const StyledInfo = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   marginTop: theme.spacing(3),
   color: theme.palette.text.disabled,
+});
 const StyledCover = styled('img')({
   top: 0,
   width: '100%',
   height: '100%',
   objectFit: 'cover',
+});
+
 BlogPostCard.propTypes = {
   post: PropTypes.object.isRequired,
   index: PropTypes.number,
