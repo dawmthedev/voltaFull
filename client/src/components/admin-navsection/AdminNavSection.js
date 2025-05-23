@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
 
+
 import { List, Typography, Box } from '@mui/material';
 
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
