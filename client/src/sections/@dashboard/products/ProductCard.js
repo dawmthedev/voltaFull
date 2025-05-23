@@ -61,6 +61,7 @@ export default function ShopProductCard({ product }) {
             </Typography>
             &nbsp;
             {fCurrency(price)}
+          </Typography>
         </Stack>
       </Stack>
     </Card>
