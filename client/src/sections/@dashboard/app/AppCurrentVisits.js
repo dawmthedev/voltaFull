@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { styled, Card, CardHeader } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 // utils
 import { fNumber } from '../../../utils/formatNumber';
 // components

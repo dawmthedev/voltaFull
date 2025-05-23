@@ -1,6 +1,6 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { Helmet } from 'react-helmet-async';
 // @mui
+import { Container, Stack, Typography, Grid } from '@mui/material';
 // components
 import Iconify from '../components/iconify';
 import { BlogPostCard, BlogPostsSort, BlogPostsSearch } from '../sections/@dashboard/blog';

@@ -1,6 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
+// @mui
+import { Container, Card, Box } from '@mui/material';
 import PayrollData from '../components/dataGrid/PayrollData';
 import LeadGenPay from '../components/dataGrid/LeadGenPay';
 import { useAppSelector } from '../hooks/hooks';
