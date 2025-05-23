@@ -37,7 +37,7 @@ const loadGoogleMapsAPI = (callback?: () => void) => {
   }
 };
 
-const RootComponent = () => {
+export const RootComponent = () => {
   useEffect(() => {
     loadGoogleMapsAPI(() => {
     });
@@ -56,9 +56,13 @@ const RootComponent = () => {
   );
 };
 
-// Render the root component
-const root = ReactDOM.createRoot(document.getElementById('root') as HTMLElement);
-root.render(<RootComponent />);
+// Render the root component when not running tests
+if (process.env.NODE_ENV !== 'test') {
+  const root = ReactDOM.createRoot(
+    document.getElementById('root') as HTMLElement
+  );
+  root.render(<RootComponent />);
+}
 
 
 
