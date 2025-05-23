@@ -50,8 +50,7 @@ export default function AppCurrentVisits({ title, subheader, chartColors, chartD
         },
       },
     },
-    plotOptions: {
-      pie: { donut: { labels: { show: false } } },
+    plotOptions: { pie: { donut: { labels: { show: false } } } },
   });
   return (
     <Card {...other}>
