@@ -8,7 +8,7 @@ import {
   MenuItem,
 } from '@mui/material';
 
-import { transparentize } from '@chakra-ui/theme-tools';
+import { alpha } from '@mui/material/styles';
 
 
 
@@ -48,7 +48,7 @@ export default function LanguagePopover() {
           p: 0,
           width: 44,
           height: 44,
-          bgcolor: anchorEl ? (theme) => transparentize(theme.palette.primary.main, 0.12) : undefined,
+          bgcolor: anchorEl ? (theme) => alpha(theme.palette.primary.main, 0.12) : undefined,
         }}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
