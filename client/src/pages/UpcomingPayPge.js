@@ -1,7 +1,8 @@
-import { Button } from "@chakra-ui/react";
 import React from 'react'; // Import React as a whole without destructuring
 import { Helmet } from 'react-helmet-async';
 import { useDropzone } from 'react-dropzone';
+import { Container, Card, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
+import { InsertDriveFile as InsertDriveFileIcon } from '@mui/icons-material';
 
 import DealsData from '../components/dataGrid/DealsData'; // Assuming this is your chart
 import UpcomingPayData from '../components/dataGrid/UpcomingPay';
