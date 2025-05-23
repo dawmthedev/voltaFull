@@ -9,6 +9,7 @@ export default function Backdrop(theme) {
         },
         invisible: {
           background: 'transparent',
+        },
       },
     },
   };
