@@ -10,12 +10,11 @@ import {
   Text,
   List,
   ListItem,
-  Divider,
   Tooltip,
   Badge,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Divider } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 const mockNotifications = [...Array(3)].map(() => ({

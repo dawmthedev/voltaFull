@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Card, CardHeader, CardBody, Stack, Text, Circle } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { CardBody, Text, Circle } from '@chakra-ui/react';
+import { Box, Card, CardHeader, Stack } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 
 AppOrderTimeline.propTypes = {

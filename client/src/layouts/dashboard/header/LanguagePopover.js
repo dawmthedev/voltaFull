@@ -4,10 +4,9 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
-  Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Stack } from '@mui/material';
 import { transparentize } from '@chakra-ui/theme-tools';
 
 const LANGS = [

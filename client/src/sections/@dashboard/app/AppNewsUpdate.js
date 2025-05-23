@@ -1,7 +1,14 @@
-import { Button, Stack } from '@chakra-ui/react';
-import { Box } from '@mui/material';
-// @mui
 import PropTypes from 'prop-types';
+import {
+  Box,
+  Button,
+  Card,
+  CardHeader,
+  Divider,
+  Link,
+  Stack,
+  Typography,
+} from '@mui/material';
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components

@@ -1,17 +1,15 @@
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Divider,
   IconButton,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Stack,
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Divider, Stack } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
