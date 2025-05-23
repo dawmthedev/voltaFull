@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { IconButton, Button, Flex, chakra } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { IconButton } from '@chakra-ui/react';
+import { Box, Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
@@ -13,29 +14,28 @@ const NAV_WIDTH = 280;
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
 
-const StyledRoot = chakra('header', {
-  baseStyle: {
-    position: 'sticky',
-    top: 0,
-    width: '100%',
-    boxShadow: 'none',
-    backdropFilter: 'blur(6px)',
-    bg: 'white',
-    zIndex: 'docked',
-  },
-});
+const StyledRoot = styled('header')(({ theme }) => ({
+  position: 'sticky',
+  top: 0,
+  width: '100%',
+  boxShadow: 'none',
+  backdropFilter: 'blur(6px)',
+  background: theme.palette.common.white,
+  zIndex: theme.zIndex.appBar,
+}));
 
-const StyledToolbar = chakra(Flex, {
-  baseStyle: {
-    minHeight: HEADER_MOBILE,
-    alignItems: 'center',
-    px: 4,
-    '@media (min-width: 62em)': {
-      minHeight: HEADER_DESKTOP,
-      px: 5,
-    },
+const StyledToolbar = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  minHeight: HEADER_MOBILE,
+  alignItems: 'center',
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+  [theme.breakpoints.up('lg')]: {
+    minHeight: HEADER_DESKTOP,
+    paddingLeft: theme.spacing(2.5),
+    paddingRight: theme.spacing(2.5),
   },
-});
+}));
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,

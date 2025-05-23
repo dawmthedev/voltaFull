@@ -1,6 +1,5 @@
 import PropTypes from 'prop-types';
 import {
-  Avatar,
   Divider,
   IconButton,
   Menu,
@@ -8,10 +7,9 @@ import {
   MenuItem,
   MenuList,
   Stack,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Avatar, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
@@ -44,20 +42,20 @@ export default function AccountPopover({ onLogout }) {
         <Avatar src={account.photoURL} alt="account" />
       </MenuButton>
       <MenuList p={0} mt={1.5} ml={0.75} w="180px">
-        <Box my={1.5} px={2.5}>
-          <Text fontWeight="semibold" noOfLines={1}>
+        <Box sx={{ my: 1.5, px: 2.5 }}>
+          <Typography fontWeight="fontWeightSemibold" noWrap>
             {account.displayName}
-          </Text>
-          <Text fontSize="sm" color="gray.500" noOfLines={1}>
+          </Typography>
+          <Typography variant="body2" color="grey.500" noWrap>
             {account.email}
-          </Text>
+          </Typography>
         </Box>
         <Divider borderStyle="dashed" />
         <Stack p={1}>
           <MenuOption label="Profile" onClick={() => navigate('/dashboard/app')} />
         </Stack>
         <Divider borderStyle="dashed" />
-        <MenuItem onClick={handleLogout} m={1}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </MenuList>

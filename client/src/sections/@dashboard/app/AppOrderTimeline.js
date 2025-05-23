@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import { Card, CardHeader, CardBody, Stack, Text, Circle } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Card, CardHeader, CardBody, Stack, Circle } from '@chakra-ui/react';
+import { Box, Typography } from '@mui/material';
 import { fDateTime } from '../../../utils/formatTime';
 
 AppOrderTimeline.propTypes = {
@@ -13,11 +13,11 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
   return (
     <Card {...other}>
       <CardHeader>
-        <Text fontWeight="bold">{title}</Text>
+        <Typography fontWeight="fontWeightBold">{title}</Typography>
         {subheader && (
-          <Text fontSize="sm" color="gray.500">
+          <Typography variant="body2" color="grey.500">
             {subheader}
-          </Text>
+          </Typography>
         )}
       </CardHeader>
       <CardBody>
@@ -41,16 +41,16 @@ function OrderItem({ item, isLast }) {
     'red.500';
 
   return (
-    <Box display="flex" alignItems="flex-start">
-      <Box mr={2} display="flex" flexDirection="column" alignItems="center">
+    <Box sx={{ display: 'flex', alignItems: 'flex-start' }}>
+      <Box sx={{ mr: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
         <Circle size="8px" bg={color} mt={2} />
-        {!isLast && <Box flex="1" w="1px" bg="gray.200" />}
+        {!isLast && <Box sx={{ flex: 1, width: '1px', bgcolor: 'gray.200' }} />}
       </Box>
       <Box>
-        <Text fontWeight="medium">{title}</Text>
-        <Text fontSize="sm" color="gray.500">
+        <Typography fontWeight="fontWeightMedium">{title}</Typography>
+        <Typography variant="body2" color="grey.500">
           {fDateTime(time)}
-        </Text>
+        </Typography>
       </Box>
     </Box>
   );

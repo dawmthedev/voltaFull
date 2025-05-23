@@ -8,7 +8,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { Box } from '@mui/material';
-import { transparentize } from '@chakra-ui/theme-tools';
+import { alpha } from '@mui/material/styles';
 
 const LANGS = [
   {
@@ -34,7 +34,7 @@ export default function LanguagePopover() {
         p={0}
         w="44px"
         h="44px"
-        bg={isOpen ? (theme) => transparentize(theme.colors.primary[500], 0.12) : undefined}
+        bg={isOpen ? (theme) => alpha(theme.palette.primary.main, 0.12) : undefined}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
       </MenuButton>

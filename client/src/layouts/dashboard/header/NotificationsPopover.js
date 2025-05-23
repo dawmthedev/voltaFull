@@ -7,7 +7,6 @@ import {
   PopoverContent,
   PopoverArrow,
   PopoverBody,
-  Text,
   List,
   ListItem,
   Divider,
@@ -15,7 +14,7 @@ import {
   Badge,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 const mockNotifications = [...Array(3)].map(() => ({
@@ -50,12 +49,12 @@ export default function NotificationsPopover() {
       <PopoverContent mt={1.5} ml={0.75} w="360px">
         <PopoverArrow />
         <PopoverBody p={0}>
-          <Box display="flex" alignItems="center" py={2} px={2.5}>
+          <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
             <Box sx={{ flexGrow: 1 }}>
-            <Text fontWeight="semibold">Notifications</Text>
-            <Text fontSize="sm" color="gray.500">
+            <Typography fontWeight="fontWeightSemibold">Notifications</Typography>
+            <Typography variant="body2" color="grey.500">
               You have {totalUnRead} unread messages
-            </Text>
+            </Typography>
           </Box>
           {totalUnRead > 0 && (
             <Tooltip label="Mark all as read">
@@ -70,10 +69,10 @@ export default function NotificationsPopover() {
           {notifications.map((notification) => (
             <ListItem key={notification.id} py={2} px={4} borderBottomWidth="1px">
               <Box>
-                <Text fontWeight="medium">{notification.title}</Text>
-                <Text fontSize="sm" color="gray.500">
+                <Typography fontWeight="fontWeightMedium">{notification.title}</Typography>
+                <Typography variant="body2" color="grey.500">
                   {notification.description}
-                </Text>
+                </Typography>
               </Box>
             </ListItem>
           ))}
