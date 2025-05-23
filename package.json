@@ -6,9 +6,9 @@
     "client"
   ],
   "scripts": {
-    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-    "start:server": "cross-env PORT=4000 npm --workspace server start",
-    "start:client": "cross-env PORT=3000 npm --workspace client start",
+    "dev": "concurrently \"cross-env NODE_ENV=development npm run server\" \"npm run client\"",
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
     "test": "npm test --workspaces"
   },
   "devDependencies": {
