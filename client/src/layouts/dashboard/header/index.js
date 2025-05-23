@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { Box, IconButton, Button, Flex, chakra } from '@chakra-ui/react';
+import { IconButton, Button, Flex, chakra } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';

@@ -1,7 +1,6 @@
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
   Divider,
   IconButton,
   Menu,
@@ -12,6 +11,7 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
