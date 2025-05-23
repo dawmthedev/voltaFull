@@ -36,7 +36,8 @@ const StyledInfo = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   marginTop: theme.spacing(3),
   color: theme.palette.text.disabled,
-}));
+
+});
 
 const StyledCover = styled('img')({
   top: 0,
