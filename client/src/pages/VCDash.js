@@ -221,6 +221,7 @@ export default function VCDashboardAppPage() {
         ],
         agreements: [
           // ... data sorted by agreements
+        ],
         revenue: [
           // ... data sorted by revenue
         ]
@@ -231,9 +232,11 @@ export default function VCDashboardAppPage() {
     },
     thisMonth: {
       // ... data for thisMonth
+    },
     thisYear: {
       // ... data for thisYear
     }
+  };
   // Mock data for leads, deals, and installs
   const mockData = {
     myDoors: [
@@ -245,39 +248,51 @@ export default function VCDashboardAppPage() {
       { id: 1, title: 'Sunshine Solar', subtitle: 'Completed: 15' },
       { id: 2, title: 'Enerflo Power', subtitle: 'Pending: 7' }
       // ... add more deals
+    ],
     myCloses: [
       { id: 1, title: 'Rooftop Install', subtitle: '2430 Chapman St' },
       { id: 2, title: 'Panel Upgrade', subtitle: '1985 Toucan Cir' }
       // ... add more installs
+    ],
     myInstalls: [
       { id: 1, title: 'Door: Sets', subtitle: '43/72', percentage: '50%' },
       { id: 2, title: 'Sets: Sits', subtitle: '43/72', percentage: '50%' },
       { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' },
       { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' }
     ]
+  };
+
   const tasks = {
     toDo: [
       { title: 'Follow up with lead', completed: false }
       // ... add more to-do tasks
+    ],
     recentlyCompleted: [
       { title: 'Send proposal to client', completed: true }
       // ... add more completed tasks
+    ]
+  };
+
   // Function to simulate filtered data based on selected filters
   const getFilteredLeaderboardData = () => {
     const timeData = leaderboardData[timeFilter] || {};
     const officeData = timeData[officeFilter] || {};
     const filteredData = officeData[dataFilter] || [];
     return filteredData;
+  };
+
   const getFilteredData = (dataKey) => {
     // Check if the dataKey exists in mockData
     const data = mockData[dataKey];
     if (!data) {
       return <Typography>No data available.</Typography>;
+    }
     return data.map((item) => (
       <ListItem key={item.id}>
         <ListItemText primary={item.title} secondary={item.subtitle} />
       </ListItem>
     ));
+  };
   return (
     <>
       <Helmet>
