@@ -1,7 +1,6 @@
 import React from 'react';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import { ChakraProvider } from '@chakra-ui/react';
 
 import palette from './theme/palette';
 import typography from './theme/typography';
@@ -28,9 +27,5 @@ export function ThemeProviderWrapper({ children }: { children: React.ReactNode }
 }
 
 export default function AppThemeProvider({ children }: { children: React.ReactNode }) {
-  return (
-    <ChakraProvider>
-      <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
-    </ChakraProvider>
-  );
+  return <ThemeProviderWrapper>{children}</ThemeProviderWrapper>;
 }

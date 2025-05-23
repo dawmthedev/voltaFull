@@ -1,13 +1,8 @@
 import React, { useState } from 'react';
-import {
-  Box,
-  IconButton,
-  Slide,
-  TextField,
-  InputAdornment,
-  ClickAwayListener,
-} from '@mui/material';
+
 import { styled, alpha } from '@mui/material/styles';
+import { Box } from '@mui/material';
+
 import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
@@ -21,14 +16,18 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
-  height: HEADER_MOBILE,
-  padding: theme.spacing(0, 3),
+
+  height: `${HEADER_MOBILE}px`,
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
   backgroundColor: alpha(theme.palette.common.white, 0.2),
   backdropFilter: 'blur(6px)',
-  boxShadow: theme.shadows[8],
-  [theme.breakpoints.up('md')]: {
-    height: HEADER_DESKTOP,
-    padding: theme.spacing(0, 5),
+  boxShadow: theme.shadows[3],
+  '@media (min-width: 48em)': {
+    height: `${HEADER_DESKTOP}px`,
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
+
   },
 }));
 
