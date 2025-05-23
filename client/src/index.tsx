@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Provider } from 'react-redux';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,39 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 import App from './App';
 import { store, persistor } from './redux/store';
 
-// Function to load the Google Maps API
-// Continues execution even if the script fails to load
-const loadGoogleMapsAPI = (callback?: () => void) => {
-  const existingScript = document.getElementById('googleMaps') as HTMLScriptElement | null;
-
-  const runCallback = () => {
-    if (callback) callback();
-  };
-
-  if (!existingScript) {
-    const script = document.createElement('script');
-    script.src =
-      'https://maps.googleapis.com/maps/api/js?key=AIzaSyDzUn0CKCVkUOaJtzzw16qT3QTSfPTtS6Q&libraries=places';
-    script.id = 'googleMaps';
-    script.async = true;
-
-    script.onload = runCallback;
-    script.onerror = (error) => {
-      console.error('Failed to load Google Maps API', error);
-      runCallback();
-    };
-
-    document.body.appendChild(script);
-  } else {
-    runCallback();
-  }
-};
-
 export const RootComponent = () => {
-  useEffect(() => {
-    loadGoogleMapsAPI(() => {
-    });
-  }, []);
 
   return (
     <Provider store={store}>
