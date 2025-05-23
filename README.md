@@ -8,7 +8,10 @@ This repository contains the React client and the Express/Node server for the Vo
 
 ## Setup
 
+
+
 Install all server and client dependencies and launch the dev environment:
+
 
 ```bash
 ./setup.sh

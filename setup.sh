@@ -23,11 +23,15 @@ fi
 echo "📦  Node: $(node -v)   npm: $(npm -v)"
 echo "🔍  (If your package.json 'engines' field still complains, you can loosen it to \"node\": \">=18 <=20\".)"
 
-# ─── 3) Server: install deps ───────────────────────────────────────────────────
+# ─── 3) Root: install dev deps 
+echo "🔧  Installing root dependencies..."
+npm install
+
+# ─── 4) Server: install deps ───────────────────────────────────────────────────
 echo "🔧  Installing server dependencies..."
 ( cd server && npm install )
 
-# ─── 4) Client: fix peer-deps & install ────────────────────────────────────────
+# ─── 5) Client: fix peer-deps & install ────────────────────────────────────────
 echo "🔧  Preparing client for install..."
 ( cd client && \
     # bump date-fns so @date-io/date-fns@3.0.0 is happy
