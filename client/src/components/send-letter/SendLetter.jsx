@@ -11,54 +11,58 @@ import {
 } from '@mui/material';
 import axios from 'axios';
 import { baseURL } from '../../libs/client/apiClient';
+import {
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Checkbox,
+  ListItemText,
+} from '@mui/material';
+
+const roles = ['All Users', 'Setter', 'Manager', 'Sales Rep', 'W2', '1099', 'Construction'];
 
 const MessageForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     topic: '',
     message: '',
     headline: '',
-    receiver: [],  // Holds selected roles
+    receiver: [],
   });
-  const [submissionStatus, setSubmissionStatus] = useState({
-    success: false,
+  const [status, setStatus] = useState({ success: false, message: '' });
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     if (name === 'receiver') {
-      // If "All Users" is selected, only allow that option and disable the others
-      if (value.includes('All Users')) {
-        setFormData({
-          ...formData,
-          receiver: ['All Users'],  // Deselect all other options when "All Users" is selected
-        });
-      } else {
-          [name]: value, // Update the receiver array normally if "All Users" is not selected
-      }
+      const val = typeof value === 'string' ? value.split(',') : value;
+      setFormData({ ...formData, receiver: val });
     } else {
-      setFormData({
-        ...formData,
-        [name]: value,
-      });
+      setFormData({ ...formData, [name]: value });
     }
   };
+
   const submitData = async (e) => {
     e.preventDefault();
     const requestBody = {
-      topic: 'Done',
+      topic: formData.topic,
       message: formData.message,
       headline: formData.headline,
-      receiver: formData.receiver
+      receiver: formData.receiver,
     };
     try {
-      const response = await axios.post(`${baseURL}/messages`, requestBody);
-      setSubmissionStatus({
-        success: true,
-        message: 'Message, Topic, and Receiver roles sent successfully!',
+      await axios.post(`${baseURL}/messages`, requestBody);
+      setStatus({ success: true, message: 'Message sent successfully!' });
       setTimeout(() => {
-        onClose(); // Close the modal after 2 seconds
+        if (onClose) onClose();
       }, 2000);
     } catch (error) {
-      alert("Failed sending data");
-      console.error("Failed to send data:", error);
+      console.error('Failed to send data:', error);
+      setStatus({ success: false, message: 'Failed to send data' });
+    }
+  };
+
   return (
     <form onSubmit={submitData}>
       <TextField
@@ -69,18 +73,24 @@ const MessageForm = ({ onClose }) => {
         fullWidth
         margin="normal"
       />
-{/*       
+      <TextField
         label="Topic"
         name="topic"
         value={formData.topic}
-      /> */}
-      
+        onChange={handleChange}
+        fullWidth
+        margin="normal"
+      />
+      <TextField
         label="Message"
         name="message"
         value={formData.message}
+        onChange={handleChange}
         multiline
         rows={4}
-      {/* Multi-select dropdown for receiver */}
+        fullWidth
+        margin="normal"
+      />
       <FormControl fullWidth margin="normal">
         <InputLabel id="receiver-label">Receiver</InputLabel>
         <Select
@@ -91,33 +101,21 @@ const MessageForm = ({ onClose }) => {
           onChange={handleChange}
           renderValue={(selected) => selected.join(', ')}
         >
-          <MenuItem value="All Users">
-            <Checkbox checked={formData.receiver.indexOf('All Users') > -1} />
-            <ListItemText primary="All Users" />
-          </MenuItem>
-          <MenuItem value="Setter" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('Setter') > -1} />
-            <ListItemText primary="Setter" />
-          <MenuItem value="Manager" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('Manager') > -1} />
-            <ListItemText primary="Manager" />
-          <MenuItem value="Sales Rep" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('Sales Rep') > -1} />
-            <ListItemText primary="Sales Rep" />
-          <MenuItem value="W2" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('W2') > -1} />
-            <ListItemText primary="W2" />
-          <MenuItem value="1099" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('1099') > -1} />
-            <ListItemText primary="1099" />
-          <MenuItem value="Construction" disabled={formData.receiver.includes('All Users')}>
-            <Checkbox checked={formData.receiver.indexOf('Construction') > -1} />
-            <ListItemText primary="Construction" />
+          {roles.map((option) => (
+            <MenuItem
+              key={option}
+              value={option}
+              disabled={option !== 'All Users' && formData.receiver.includes('All Users')}
+            >
+              <Checkbox checked={formData.receiver.indexOf(option) > -1} />
+              <ListItemText primary={option} />
+            </MenuItem>
+          ))}
         </Select>
       </FormControl>
-      {submissionStatus.success && (
-        <div style={{ margin: '16px 0', color: 'green' }}>
-          {submissionStatus.message}
+      {status.message && (
+        <div style={{ margin: '16px 0', color: status.success ? 'green' : 'red' }}>
+          {status.message}
         </div>
       )}
       <Button type="submit" variant="contained" color="primary" fullWidth>
@@ -126,70 +124,5 @@ const MessageForm = ({ onClose }) => {
     </form>
   );
 };
+
 export default MessageForm;
-// import React, { useState } from 'react';
-// import axios from 'axios';
-// const MessageForm = ({ onClose }) => {
-//   const [formData, setFormData] = useState({
-//     topic: '',
-//     message: '',
-//     headline: '',
-//     receiver: '',  // New state for the dropdown
-//   });
-//   const [submissionStatus, setSubmissionStatus] = useState({
-//     success: false,
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({
-//       ...formData,
-//       [name]: value,
-//     });
-//   };
-//   return (
-//     <form onSubmit={submitData}>
-//       <TextField
-//         label="Headline"
-//         name="headline"
-//         value={formData.headline}
-//         onChange={handleChange}
-//         fullWidth
-//         margin="normal"
-//       />
-//         label="Topic"
-//         name="topic"
-//         value={formData.topic}
-//         label="Message"
-//         name="message"
-//         value={formData.message}
-//         multiline
-//         rows={4}
-//       {/* Dropdown for receiver */}
-//       <FormControl fullWidth margin="normal">
-//         <InputLabel id="receiver-label">Receiver</InputLabel>
-//         <Select
-//           labelId="receiver-label"
-//           name="receiver"
-//           value={formData.receiver}
-//           onChange={handleChange}
-//           fullWidth
-//         >
-//           <MenuItem value="Setter">Setter</MenuItem>
-//           <MenuItem value="Manager">Manager</MenuItem>
-//           <MenuItem value="Sales Rep">Sales Rep</MenuItem>
-//           <MenuItem value="W2">W2</MenuItem>
-//           <MenuItem value="W9">W9</MenuItem>
-//           <MenuItem value="1099">1099</MenuItem>
-//         </Select>
-//       </FormControl>
-//       {submissionStatus.success && (
-//         <div style={{ margin: '16px 0', color: 'green' }}>
-//           {submissionStatus.message}
-//         </div>
-//       )}
-//       <Button type="submit" variant="contained" color="primary" fullWidth>
-//         Submit
-//       </Button>
-//     </form>
-//   );
-// };
-// export default MessageForm;
