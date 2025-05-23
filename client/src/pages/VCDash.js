@@ -348,7 +348,9 @@ export default function VCDashboardAppPage() {
                   Map goes here
                 </Typography>
                 {/* Insert map component or iframe here */}
-          {/* Right Sidebar - Appointments & Tasks */}
+              </Paper>
+            </Grid>
+            {/* Right Sidebar - Appointments & Tasks */}
             <Paper sx={{ height: '40%' }}>
               <Typography variant="h5" px={2} pt={2} gutterBottom>
                 Appointments
@@ -361,6 +363,7 @@ export default function VCDashboardAppPage() {
                 )}
                 {/* {!claimData.length && <Typography sx={{ p: 2 }}>No lead is available for claim </Typography>} */}
                 {claimData.map((item, index) => (
+                  <Box key={index} display="flex" alignItems="center" justifyContent="space-between">
                     <ListItemText sx={{ textTransform: 'capitalize' }} primary={item.source || ''} secondary={item.name || ''} />
                     <Button
                       variant="outlined"
@@ -371,10 +374,14 @@ export default function VCDashboardAppPage() {
                     >
                       Claim
                     </Button>
+                  </Box>
                 )) || 'No lead is available for claim'}
+              </List>
+            </Paper>
             <Paper sx={{ p: 2, mt: 3, height: '60%' }}>
               <Typography variant="h5" gutterBottom>
                 Tasks
+              </Typography>
               <Tabs value={taskTab} onChange={(event, newValue) => setTaskTab(newValue)} variant="fullWidth">
                 <Tab label="To Do" value="toDo" />
                 <Tab label="Recently Completed" value="recentlyCompleted" />
@@ -388,6 +395,10 @@ export default function VCDashboardAppPage() {
                   ))
                 ) : (
                   <Typography>No tasks available.</Typography>
+                )}
+              </List>
+            </Paper>
+          </Grid>
         </Grid>
       </Container>
     </>
