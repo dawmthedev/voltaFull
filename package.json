@@ -1,14 +1,16 @@
 {
   "name": "Volta-Fullstack",
   "private": true,
-  "workspaces": ["server", "client"],
-"scripts": {
-  "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
-  "start:server": "cross-env PORT=4000 npm --workspace server start",
-  "start:client": "cross-env PORT=3000 npm --workspace client start",
-  "test": "npm test --workspaces"
-},
-
+  "workspaces": [
+    "server",
+    "client"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm run start:server\" \"npm run start:client\"",
+    "start:server": "cross-env PORT=4000 npm --workspace server start",
+    "start:client": "cross-env PORT=3000 npm --workspace client start",
+    "test": "npm test --workspaces"
+  },
   "devDependencies": {
     "concurrently": "^7.6.0",
     "cross-env": "^7.0.3"
