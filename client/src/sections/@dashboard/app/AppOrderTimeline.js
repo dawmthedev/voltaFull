@@ -2,7 +2,15 @@ import PropTypes from 'prop-types';
 
 
 
-import { Box, Typography } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Stack,
+  Box,
+  Typography,
+} from '@mui/material';
+import { blue, green, teal, orange, red, grey } from '@mui/material/colors';
 
 
 
@@ -29,7 +37,7 @@ export default function AppOrderTimeline({ title, subheader, list, ...other }) {
           </Typography>
         )}
       </CardHeader>
-      <CardBody>
+      <CardContent>
 
         <Stack>
           {list.map((item, index) => (
