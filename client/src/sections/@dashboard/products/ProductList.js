@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 // @mui
+import { Grid } from '@mui/material';
 import ShopProductCard from './ProductCard';
-
-// ----------------------------------------------------------------------
 ProductList.propTypes = {
   products: PropTypes.array.isRequired,
 };
