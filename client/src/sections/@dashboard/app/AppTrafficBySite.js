@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Box, Card, CardHeader, CardContent, Paper, Typography } from '@mui/material';
 // @mui
 import PropTypes from 'prop-types';
 // utils
