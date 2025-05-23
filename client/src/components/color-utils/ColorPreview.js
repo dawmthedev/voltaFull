@@ -3,6 +3,9 @@ import PropTypes from 'prop-types';
 // @mui
 import { alpha } from '@mui/material/styles';
 
+import PropTypes from 'prop-types';
+
+
 // ----------------------------------------------------------------------
 ColorPreview.propTypes = {
   sx: PropTypes.object,

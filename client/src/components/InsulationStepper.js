@@ -1,5 +1,5 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
+import { Box, Typography, Stepper, Step, StepLabel, Modal } from '@mui/material';
 
 const stepLabels = [
     { label: 'Insulation', key: 'InsulationDate' },
