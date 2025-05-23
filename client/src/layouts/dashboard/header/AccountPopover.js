@@ -8,10 +8,9 @@ import {
   MenuItem,
   MenuList,
   Stack,
-  Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
@@ -45,12 +44,12 @@ export default function AccountPopover({ onLogout }) {
       </MenuButton>
       <MenuList p={0} mt={1.5} ml={0.75} w="180px">
         <Box my={1.5} px={2.5}>
-          <Text fontWeight="semibold" noOfLines={1}>
+          <Typography sx={{ fontWeight: 600 }} noWrap>
             {account.displayName}
-          </Text>
-          <Text fontSize="sm" color="gray.500" noOfLines={1}>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap>
             {account.email}
-          </Text>
+          </Typography>
         </Box>
         <Divider borderStyle="dashed" />
         <Stack p={1}>

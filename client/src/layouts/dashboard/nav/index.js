@@ -6,12 +6,11 @@ import {
   DrawerContent,
   DrawerBody,
   Avatar,
-  Text,
   Link,
   Button,
   chakra,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { transparentize } from '@chakra-ui/theme-tools';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
@@ -72,12 +71,12 @@ export default function Nav({ openNav, onCloseNav }) {
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box ml={2}>
-              <Text fontWeight="semibold" color="gray.800">
+              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {account.displayName}
-              </Text>
-              <Text fontSize="sm" color="gray.500">
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
                 {account.role}
-              </Text>
+              </Typography>
             </Box>
           </StyledAccount>
         </Link>
