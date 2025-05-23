@@ -1,4 +1,3 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // import React, { useState, useMemo } from 'react';
 // import {
 //   Box,
@@ -172,6 +171,21 @@ import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  ButtonGroup,
+  Button,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Box,
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 // ... (rest of your imports)
@@ -203,7 +217,7 @@ export default function VCDashboardAppPage() {
     return () => {
       abort();
     };
-  }, []);
+  }, [abort, getClaimableLeads]);
   const getClaimableLeads = async () => {
     await dispatch(
       getLeadsForClaim({
