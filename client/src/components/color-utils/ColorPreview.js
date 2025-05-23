@@ -1,6 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Box, Stack, Typography } from '@mui/material';
 import PropTypes from 'prop-types';
 // @mui
+import { alpha } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 ColorPreview.propTypes = {
