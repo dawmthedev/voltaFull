@@ -3,10 +3,13 @@ import React, { useState } from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
 
+
+
 import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
+
 
 const StyledSearchbar = styled('div')(({ theme }) => ({
   top: 0,
@@ -27,6 +30,7 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
     height: `${HEADER_DESKTOP}px`,
     paddingLeft: theme.spacing(5),
     paddingRight: theme.spacing(5),
+
 
   },
 }));

@@ -12,6 +12,8 @@ import {
 
 import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
+
+
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -25,6 +27,7 @@ import account from '../../../_mock/account';
 
 const NAV_WIDTH = 280;
 
+
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -32,6 +35,7 @@ const StyledAccount = styled('div')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
+
 
 Nav.propTypes = {
   openNav: PropTypes.bool,

@@ -4,9 +4,7 @@ import {
   Avatar,
   Divider,
   IconButton,
-
   Stack,
-
   useDisclosure,
 } from '@chakra-ui/react';
 import { Box, Typography } from '@mui/material';
@@ -51,6 +49,7 @@ export default function AccountPopover({ onLogout }) {
   return (
     <>
 
+
       <IconButton onClick={handleOpen} p={0}>
 
         <Avatar src={account.photoURL} alt="account" />
@@ -58,7 +57,9 @@ export default function AccountPopover({ onLogout }) {
       <Menu
         anchorEl={anchorEl}
 
+
         open={Boolean(anchorEl)}
+
 
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
@@ -66,15 +67,17 @@ export default function AccountPopover({ onLogout }) {
         PaperProps={{ sx: { p: 0, mt: 1.5, ml: 0.75, width: 180 } }}
       >
 
+
         <Box my={1.5} px={2.5}>
           <Typography sx={{ fontWeight: 600 }} noWrap>
+
             {account.displayName}
           </Typography>
           <Typography variant="body2" color="text.secondary" noWrap>
             {account.email}
           </Typography>
         </Box>
-        <Divider borderStyle="dashed" />
+        <Divider sx={{ borderStyle: 'dashed' }} />
         <Stack p={1}>
           <MenuOption label="Profile" onClick={() => {
             handleClose();
