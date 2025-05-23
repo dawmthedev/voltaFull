@@ -308,27 +308,61 @@ export default function VCDashboardAppPage() {
             <Paper sx={{ p: 2, height: '100%' }}>
               {/* Time Filters */}
               <ButtonGroup variant="contained" fullWidth>
-                <Button onClick={() => setTimeFilter('thisWeek')} variant={timeFilter === 'thisWeek' ? 'contained' : 'outlined'}>
+                <Button
+                  onClick={() => setTimeFilter('thisWeek')}
+                  variant={timeFilter === 'thisWeek' ? 'contained' : 'outlined'}
+                >
                   This Week
                 </Button>
-                <Button onClick={() => setTimeFilter('thisMonth')} variant={timeFilter === 'thisMonth' ? 'contained' : 'outlined'}>
+                <Button
+                  onClick={() => setTimeFilter('thisMonth')}
+                  variant={timeFilter === 'thisMonth' ? 'contained' : 'outlined'}
+                >
                   This Month
-                <Button onClick={() => setTimeFilter('thisYear')} variant={timeFilter === 'thisYear' ? 'contained' : 'outlined'}>
+                </Button>
+                <Button
+                  onClick={() => setTimeFilter('thisYear')}
+                  variant={timeFilter === 'thisYear' ? 'contained' : 'outlined'}
+                >
                   This Year
+                </Button>
               </ButtonGroup>
               {/* Office Filter */}
               <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
-                <Button onClick={() => setOfficeFilter('company')} variant={officeFilter === 'company' ? 'contained' : 'outlined'}>
+                <Button
+                  onClick={() => setOfficeFilter('company')}
+                  variant={officeFilter === 'company' ? 'contained' : 'outlined'}
+                >
                   Company
-                <Button onClick={() => setOfficeFilter('office')} variant={officeFilter === 'office' ? 'contained' : 'outlined'}>
+                </Button>
+                <Button
+                  onClick={() => setOfficeFilter('office')}
+                  variant={officeFilter === 'office' ? 'contained' : 'outlined'}
+                >
                   Office
+                </Button>
+              </ButtonGroup>
               {/* Data Filters */}
-                <Button onClick={() => setDataFilter('closingRate')} variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}>
+              <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
+                <Button
+                  onClick={() => setDataFilter('closingRate')}
+                  variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}
+                >
                   Closing Rate
-                <Button onClick={() => setDataFilter('agreements')} variant={dataFilter === 'agreements' ? 'contained' : 'outlined'}>
+                </Button>
+                <Button
+                  onClick={() => setDataFilter('agreements')}
+                  variant={dataFilter === 'agreements' ? 'contained' : 'outlined'}
+                >
                   Agreements
-                <Button onClick={() => setDataFilter('revenue')} variant={dataFilter === 'revenue' ? 'contained' : 'outlined'}>
+                </Button>
+                <Button
+                  onClick={() => setDataFilter('revenue')}
+                  variant={dataFilter === 'revenue' ? 'contained' : 'outlined'}
+                >
                   Revenue
+                </Button>
+              </ButtonGroup>
               <List sx={{ mt: 2 }}>
                 {getFilteredLeaderboardData().map((data, index) => (
                   <ListItem key={index} divider>
