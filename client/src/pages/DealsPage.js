@@ -19,13 +19,19 @@ export default function DealsPage() {
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
     setFileUrls([]); // Reset file URLs when closing the modal
+  };
+
   const onDrop = (acceptedFiles) => {
     const urls = acceptedFiles.map((file) => URL.createObjectURL(file));
     setFileUrls(urls); // Store the local URLs of uploaded files
+  };
+
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
+
   const handleSendMessage = () => {
     // Handle message submission logic here
     handleCloseMessageModal();
+  };
   return (
     <React.Fragment>
       <Helmet>
@@ -99,6 +105,7 @@ export default function DealsPage() {
       </Button>
       <Button onClick={handleSendMessage} sx={{ backgroundColor: '#1976d2', color: '#fff', '&:hover': { backgroundColor: '#1565c0' } }}>
         Submit
+      </Button>
     </DialogActions>
   </Dialog>
 </>
