@@ -1,11 +1,10 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
-// @mui
 import {
-  Radio,
+  Box,
   Stack,
   Button,
   Drawer,
+  Radio,
   Rating,
   Divider,
   Checkbox,
@@ -14,6 +13,7 @@ import {
   Typography,
   RadioGroup,
   FormControlLabel,
+} from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
@@ -33,6 +33,8 @@ export const FILTER_PRICE_OPTIONS = [
   { value: 'below', label: 'Below $25' },
   { value: 'between', label: 'Between $25 - $75' },
   { value: 'above', label: 'Above $75' },
+];
+
 export const FILTER_COLOR_OPTIONS = [
   '#00AB55',
   '#000000',
@@ -42,6 +44,8 @@ export const FILTER_COLOR_OPTIONS = [
   '#1890FF',
   '#94D82D',
   '#FFC107',
+];
+
 ShopFilterSidebar.propTypes = {
   openFilter: PropTypes.bool,
   onOpenFilter: PropTypes.func,
