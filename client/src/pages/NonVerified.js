@@ -26,6 +26,7 @@ export default function NonVerifiedPage() {
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
             We appreciate your cooperation in verifying your email address. Please click the button below to verify your email address.
+          </Typography>
           <Box
             component="img"
             src="/assets/Images/iconImages/emailVerify.png"
