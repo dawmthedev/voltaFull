@@ -33,8 +33,11 @@ import UtilitySign from './pages/UtilitySign';
 import Exam from './pages/Exam';
 
 export default function Router() {
-  let session = document.cookie.split(';').find((item) => item.includes('session'));
-  session = session ? session.split('=')[1] : null;
+  const sessionCookie = document.cookie
+    .split(';')
+    .map((c) => c.trim())
+    .find((c) => c.startsWith('session='));
+  const session = sessionCookie ? sessionCookie.split('=')[1] : null;
   const { data } = useAppSelector(authSelector);
 
   const routes = useRoutes([
