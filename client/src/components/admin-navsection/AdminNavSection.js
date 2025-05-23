@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { List, Text } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { Text } from '@chakra-ui/react';
+import { Box, List } from '@mui/material';
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
@@ -14,7 +14,7 @@ export function AdminNavSection({ data = [], ...other }) {
 
   return (
     <Box {...other}>
-      <List p={1}>
+      <List sx={{ p: 1 }}>
         {data.map((item) => {
           return <NavItem key={item.title} item={item} />;
         })}
