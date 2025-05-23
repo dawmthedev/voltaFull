@@ -1,4 +1,4 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Button } from "@chakra-ui/react";
 import React from 'react'; // Import React as a whole without destructuring
 import { Helmet } from 'react-helmet-async';
 import { useDropzone } from 'react-dropzone';
@@ -8,11 +8,10 @@ import PreviousgPayData from '../components/dataGrid/PreviousPayData';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 export default function PreviousPayPage() {
-  const { data, unlocked } = useAppSelector(authSelector); // Assuming `unlocked` controls the modal vs chart view
+  const { data } = useAppSelector(authSelector); // Assuming `unlocked` controls the modal vs chart view
   const recordId = data?.recordID;
   // Modal state management
   const [isMessageModalOpen, setMessageModalOpen] = React.useState(false);
-  const [messageText, setMessageText] = React.useState('');
   const [fileUrls, setFileUrls] = React.useState([]);
   const handleOpenMessageModal = () => {
     setMessageModalOpen(true);
