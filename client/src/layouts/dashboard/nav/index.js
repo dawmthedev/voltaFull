@@ -1,18 +1,15 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
 
+import { styled, alpha } from '@mui/material/styles';
 import {
+  Box,
   Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  DrawerBody,
-  Avatar,
   Link,
   Button,
-} from '@chakra-ui/react';
-
-import { styled, alpha } from '@mui/material/styles';
-import { Box } from '@mui/material';
+  Avatar,
+  Typography,
+} from '@mui/material';
 
 
 
