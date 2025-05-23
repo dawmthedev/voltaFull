@@ -10,7 +10,6 @@ AdminNavSection.propTypes = {
 };
 
 export function AdminNavSection({ data = [], ...other }) {
-  const { data: loginData } = useAppSelector(authSelector);
 
   return (
     <Box {...other}>
