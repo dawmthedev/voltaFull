@@ -1,5 +1,15 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
+import {
+  Container,
+  Typography,
+  Paper,
+  Grid,
+  TextField,
+  CircularProgress,
+  Box,
+  Button
+} from '@mui/material';
+import SendIcon from '@mui/icons-material/Send';
 import { baseURL } from '../libs/client/apiClient';
 
 function Assistant() {
@@ -55,25 +65,26 @@ function Assistant() {
                   <CircularProgress size={24} />
                 </Grid>
               )}
-              {messages.map((message, index) => (
-                <Grid item key={index} sx={{ width: '100%' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: message.isBot ? 'start' : 'end'
-                    }}
-                  >
-                    <Paper
+                {messages.map((message, index) => (
+                  <Grid item key={index} sx={{ width: '100%' }}>
+                    <Box
                       sx={{
-                        p: 1,
-                        bgcolor: message.isBot ? '#e0f7fa' : '#80deea',
-                        borderRadius: 2
+                        display: 'flex',
+                        justifyContent: message.isBot ? 'start' : 'end'
                       }}
                     >
-                      <Typography variant="body1">{message.text}</Typography>
-                    </Paper>
-                  </Box>
-              ))}
+                      <Paper
+                        sx={{
+                          p: 1,
+                          bgcolor: message.isBot ? '#e0f7fa' : '#80deea',
+                          borderRadius: 2
+                        }}
+                      >
+                        <Typography variant="body1">{message.text}</Typography>
+                      </Paper>
+                    </Box>
+                  </Grid>
+                ))}
             </Grid>
           </Paper>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>

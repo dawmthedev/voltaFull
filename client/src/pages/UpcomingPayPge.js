@@ -106,6 +106,7 @@ export default function UpcomingPayPage() {
       </Button>
       <Button onClick={handleSendMessage} sx={{ backgroundColor: '#1976d2', color: '#fff', '&:hover': { backgroundColor: '#1565c0' } }}>
         Submit
+      </Button>
     </DialogActions>
   </Dialog>
 </>
