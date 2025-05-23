@@ -27,9 +27,13 @@ function Assistant() {
       const responseData = await response.json();
       // Add AI response to chat
       if (responseData.success && responseData.data) {
-        setMessages((messages) => [...messages, { id: messages.length + 2, text: responseData.data.response, isBot: true }]);
+        setMessages((messages) => [
+          ...messages,
+          { id: messages.length + 2, text: responseData.data.response, isBot: true }
+        ]);
       } else {
         throw new Error('Response data is not valid');
+      }
     } catch (error) {
       console.error('Error:', error);
       setMessages((messages) => [...messages, { id: messages.length + 2, text: "Sorry, I couldn't process your request.", isBot: true }]);
