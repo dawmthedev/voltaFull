@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
+import { styled, Card, CardHeader } from '@mui/material';
 // utils
 import { fNumber } from '../../../utils/formatNumber';
 // components
@@ -22,6 +23,7 @@ const StyledChartWrapper = styled('div')(({ theme }) => ({
     position: 'relative !important',
     borderTop: `solid 1px ${theme.palette.divider}`,
     top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
+  },
 }));
 AppCurrentVisits.propTypes = {
   title: PropTypes.string,
