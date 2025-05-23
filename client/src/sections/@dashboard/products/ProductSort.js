@@ -18,6 +18,7 @@ export default function ShopProductSort() {
   };
   const handleClose = () => {
     setOpen(null);
+  };
   return (
     <>
       <Button
@@ -38,16 +39,19 @@ export default function ShopProductSort() {
         onClose={handleClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
         transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        {SORT_BY_OPTIONS.map((option) => (
-          <MenuItem
-            key={option.value}
-            selected={option.value === 'newest'}
-            onClick={handleClose}
-            sx={{ typography: 'body2' }}
-          >
-            {option.label}
-          </MenuItem>
-        ))}
+      >
+        {SORT_BY_OPTIONS.map((option) => {
+          return (
+            <MenuItem
+              key={option.value}
+              selected={option.value === 'newest'}
+              onClick={handleClose}
+              sx={{ typography: 'body2' }}
+            >
+              {option.label}
+            </MenuItem>
+          );
+        })}
       </Menu>
     </>
   );
