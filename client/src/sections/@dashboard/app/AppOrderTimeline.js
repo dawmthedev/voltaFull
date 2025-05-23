@@ -1,13 +1,7 @@
 import PropTypes from 'prop-types';
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Stack,
-  Typography,
-  Box,
-} from '@mui/material';
-import { blue, green, teal, orange, red, grey } from '@mui/material/colors';
+
+import { Box, Typography } from '@mui/material';
+
 import { fDateTime } from '../../../utils/formatTime';
 
 AppOrderTimeline.propTypes = {
@@ -19,13 +13,18 @@ AppOrderTimeline.propTypes = {
 export default function AppOrderTimeline({ title, subheader, list, ...other }) {
   return (
     <Card {...other}>
-      <CardHeader
-        title={title}
-        subheader={subheader}
-        titleTypographyProps={{ fontWeight: 'bold' }}
-        subheaderTypographyProps={{ color: 'text.secondary', variant: 'body2' }}
-      />
-      <CardContent>
+
+      <CardHeader>
+
+        <Typography fontWeight="bold">{title}</Typography>
+        {subheader && (
+          <Typography fontSize="sm" color="gray.500">
+            {subheader}
+          </Typography>
+        )}
+      </CardHeader>
+      <CardBody>
+
         <Stack>
           {list.map((item, index) => (
             <OrderItem key={item.id} item={item} isLast={index === list.length - 1} />
@@ -54,8 +53,11 @@ function OrderItem({ item, isLast }) {
         {!isLast && <Box sx={{ flex: 1, width: 1, bgcolor: grey[200] }} />}
       </Box>
       <Box>
+
+
         <Typography fontWeight="medium">{title}</Typography>
-        <Typography variant="body2" color="text.secondary">
+        <Typography fontSize="sm" color="gray.500">
+
           {fDateTime(time)}
         </Typography>
       </Box>
