@@ -39,7 +39,9 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
           </linearGradient>
           <linearGradient id="BG2" x1="50%" x2="50%" y1="0%" y2="100%">
             <stop offset="0%" stopColor={PRIMARY_LIGHT} />
+          </linearGradient>
           <linearGradient id="BG3" x1="50%" x2="50%" y1="0%" y2="100%">
+          </linearGradient>
         </defs>
         <g fill={PRIMARY_MAIN} fillRule="evenodd" stroke="none" strokeWidth="1">
           <path
@@ -61,6 +63,7 @@ const Logo = forwardRef(({ disabledLink = false, sx, ...other }, ref) => {
     <Link to="/" component={RouterLink} sx={{ display: 'contents' }}>
       {logo}
     </Link>
+  );
 });
 Logo.propTypes = {
   sx: PropTypes.object,
