@@ -21,6 +21,7 @@ const StyledTitle = styled(Link)({
   display: '-webkit-box',
   WebkitBoxOrient: 'vertical',
 });
+
 const StyledAvatar = styled(Avatar)(({ theme }) => ({
   zIndex: 9,
   width: 32,
@@ -35,7 +36,9 @@ const StyledInfo = styled('div')(({ theme }) => ({
   justifyContent: 'flex-end',
   marginTop: theme.spacing(3),
   color: theme.palette.text.disabled,
+
 });
+
 const StyledCover = styled('img')({
   top: 0,
   width: '100%',
