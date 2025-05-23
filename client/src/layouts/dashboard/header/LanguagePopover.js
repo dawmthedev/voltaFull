@@ -2,13 +2,11 @@ import { useState } from 'react';
 
 import {
   IconButton,
-
-
   Stack,
-} from '@chakra-ui/react';
-
-import { Box, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
+  Box,
+  Menu,
+  MenuItem,
+} from '@mui/material';
 
 import { transparentize } from '@chakra-ui/theme-tools';
 
@@ -46,14 +44,12 @@ export default function LanguagePopover() {
     <>
       <IconButton
         onClick={handleOpen}
-
-
-        p={0}
-        w="44px"
-        h="44px"
-
-        bg={anchorEl ? (theme) => transparentize(theme.colors.primary[500], 0.12) : undefined}
-
+        sx={{
+          p: 0,
+          width: 44,
+          height: 44,
+          bgcolor: anchorEl ? (theme) => transparentize(theme.palette.primary.main, 0.12) : undefined,
+        }}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
       </IconButton>
@@ -73,7 +69,7 @@ export default function LanguagePopover() {
 
 
             <MenuItem key={option.value} onClick={handleClose} disabled={option.value === LANGS[0].value}>
-              <Box as="img" alt={option.label} src={option.icon} w={28} mr={2} />
+              <Box component="img" alt={option.label} src={option.icon} sx={{ width: 28, mr: 2 }} />
 
 
               {option.label}
