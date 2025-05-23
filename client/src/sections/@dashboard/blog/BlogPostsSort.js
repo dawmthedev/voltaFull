@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 // @mui
+import { TextField, MenuItem } from '@mui/material';
 
 // ----------------------------------------------------------------------
 BlogPostsSort.propTypes = {

@@ -19,11 +19,18 @@ export default function useResponsive(query, start, end) {
 
 export function useWidth() {
   const theme = useTheme();
-  const keys = [...theme.breakpoints.keys].reverse();
-  return (
-    keys.reduce((output, key) => {
-      const matches = useMediaQuery(theme.breakpoints.up(key));
-      return !output && matches ? key : output;
-    }, null) || 'xs'
-  );
+
+  // Call useMediaQuery for each breakpoint key.
+  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
+  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
+  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
+  const isXsUp = useMediaQuery(theme.breakpoints.up('xs'));
+
+  if (isXlUp) return 'xl';
+  if (isLgUp) return 'lg';
+  if (isMdUp) return 'md';
+  if (isSmUp) return 'sm';
+  if (isXsUp) return 'xs';
+  return 'xs';
 }

@@ -6,7 +6,6 @@ import RookieData from '../components/dataGrid/RookiesData';
 import RookieDataLead from '../components/dataGrid/RookieLeadgens';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
-import DealsDataLeadgen from '../components/dataGrid/DealsDataLeadgen';
 export default function Rookies() {
  
   const { data } = useAppSelector(authSelector);
