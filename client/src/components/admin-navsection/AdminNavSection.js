@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { List, Text } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+import { List } from '@chakra-ui/react';
+import { Box, Typography } from '@mui/material';
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
@@ -37,7 +37,7 @@ function NavItem({ item }) {
       _active={{ color: 'gray.800', bg: 'gray.100', fontWeight: 'bold' }}
     >
       <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon>
-      <Text>{title}</Text>
+      <Typography>{title}</Typography>
       {info && info}
     </StyledNavItem>
   );
