@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 
+
 import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
+
 
 
 
@@ -9,6 +11,8 @@ import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
+
+
 
 
 const StyledSearchbar = styled('div')(({ theme }) => ({
@@ -19,6 +23,7 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
+
 
   height: `${HEADER_MOBILE}px`,
   paddingLeft: theme.spacing(3),

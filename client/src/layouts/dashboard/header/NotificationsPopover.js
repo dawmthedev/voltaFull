@@ -5,15 +5,11 @@ import {
   Box,
   Divider,
   IconButton,
-
   Popover,
-
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
   PopoverBody,
-
-
   ListItem,
   Popover,
   Tooltip,
@@ -22,7 +18,9 @@ import {
 
   useDisclosure,
 } from '@chakra-ui/react';
+
 import { Box, List, Typography } from '@mui/material';
+
 
 import Iconify from '../../../components/iconify';
 
@@ -73,12 +71,14 @@ export default function NotificationsPopover() {
       <PopoverContent mt={1.5} ml={0.75} w="360px">
         <PopoverArrow />
         <PopoverBody p={0}>
-          <Box display="flex" alignItems="center" py={2} px={2.5}>
+          <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
             <Box sx={{ flexGrow: 1 }}>
+
             <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
 
 
             <Typography variant="body2" color="text.secondary">
+
               You have {totalUnRead} unread messages
             </Typography>
           </Box>
@@ -99,10 +99,12 @@ export default function NotificationsPopover() {
             <ListItem key={notification.id} sx={{ py: 2, px: 2, borderBottomWidth: 1, borderColor: 'divider' }}>
               <Box>
 
+
                 <Typography sx={{ fontWeight: 500 }}>{notification.title}</Typography>
 
 
                 <Typography variant="body2" color="text.secondary">
+
                   {notification.description}
                 </Typography>
               </Box>

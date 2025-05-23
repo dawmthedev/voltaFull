@@ -1,6 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
+
 import { Box, IconButton, Button, Toolbar } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
@@ -19,11 +21,13 @@ const StyledRoot = styled('header')(({ theme }) => ({
   width: '100%',
   boxShadow: 'none',
   backdropFilter: 'blur(6px)',
+
   backgroundColor: 'white',
   zIndex: theme.zIndex.appBar,
 }));
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+
   minHeight: HEADER_MOBILE,
   alignItems: 'center',
   paddingLeft: theme.spacing(2),

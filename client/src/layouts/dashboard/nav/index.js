@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
+
 import {
   Drawer,
   DrawerOverlay,
@@ -12,6 +13,7 @@ import {
 
 import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
+
 
 
 import { useLocation } from 'react-router-dom';
@@ -28,13 +30,17 @@ import account from '../../../_mock/account';
 const NAV_WIDTH = 280;
 
 
+
+
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
+
   backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
+
 
 
 Nav.propTypes = {
@@ -61,22 +67,24 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box px={2.5} py={3} display="flex" justifyContent="flex-start" alignItems="center">
+      <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`}
           alt="Voltaic CRM Logo"
           style={{ maxWidth: '150px', maxHeight: '150px', width: 'auto', height: 'auto', objectFit: 'contain' }}
         />
       </Box>
-      <Box mb={5} mx={2.5}>
-        <Link textDecoration="none">
+      <Box sx={{ mb: 5, mx: 2.5 }}>
+        <Link underline="none">
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
+
             <Box ml={2}>
               <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {account.displayName}
               </Typography>
               <Typography variant="body2" color="text.secondary">
+
                 {account.role}
               </Typography>
             </Box>
@@ -84,9 +92,9 @@ export default function Nav({ openNav, onCloseNav }) {
         </Link>
       </Box>
       {data.role === 'Mentor' ? <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />}
-      <Box flexGrow={1} />
-      <Box px={2.5} pb={3} mt={10}>
-        <Button href="/login" colorScheme="blue">
+      <Box sx={{ flexGrow: 1 }} />
+      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+        <Button href="/login" variant="contained" color="primary">
           Log out
         </Button>
       </Box>
@@ -94,17 +102,14 @@ export default function Nav({ openNav, onCloseNav }) {
   );
 
   return (
-    <Box as="nav" flexShrink={{ lg: 0 }} w={{ lg: NAV_WIDTH }}>
+    <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV_WIDTH } }}>
       {isDesktop ? (
-        <Box w={NAV_WIDTH} bg="gray.50" borderRight="1px dashed" borderColor="gray.200">
+        <Box sx={{ width: NAV_WIDTH, bgcolor: 'grey.50', borderRight: '1px dashed', borderColor: 'grey.200' }}>
           {renderContent}
         </Box>
       ) : (
-        <Drawer isOpen={openNav} onClose={onCloseNav} placement="left">
-          <DrawerOverlay />
-          <DrawerContent w={NAV_WIDTH}>
-            <DrawerBody p={0}>{renderContent}</DrawerBody>
-          </DrawerContent>
+        <Drawer anchor="left" open={openNav} onClose={onCloseNav} PaperProps={{ sx: { width: NAV_WIDTH } }}>
+          {renderContent}
         </Drawer>
       )}
     </Box>

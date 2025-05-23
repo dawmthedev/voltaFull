@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 
+
 import { Box } from '@mui/material';
 
 export const StyledNavItem = styled(Box)(({ theme }) => ({
@@ -17,6 +18,7 @@ export const StyledNavItem = styled(Box)(({ theme }) => ({
 }));
 
 export const StyledNavItemIcon = styled('div')(({ theme }) => ({
+
   width: '22px',
   height: '22px',
 
@@ -26,6 +28,7 @@ export const StyledNavItemIcon = styled('div')(({ theme }) => ({
 }));
 
 export const StyledNavItemIcon = styled('div')(({ theme }) => ({
+
   width: 22,
   height: 22,
   color: 'inherit',
@@ -34,5 +37,7 @@ export const StyledNavItemIcon = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   marginRight: theme.spacing(2),
 
+
   marginRight: theme.spacing(1),
+
 }));
