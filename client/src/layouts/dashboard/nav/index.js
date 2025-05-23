@@ -18,7 +18,7 @@ import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-import AdminNavSection from '../../../components/admin-navsection/AdminNavSection';
+import AdminNavSection from '../../../components/admin-navsection';
 import navConfig from './config';
 import AdminConfig from './AdminConfig';
 import { useAppSelector } from '../../../hooks/hooks';

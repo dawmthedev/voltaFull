@@ -1,1 +1,1 @@
-export { default} from './AdminNavSection';
+export { AdminNavSection as default } from './AdminNavSection';
