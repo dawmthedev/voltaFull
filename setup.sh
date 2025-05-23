@@ -35,4 +35,6 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
-echo "✅  Setup complete!"
+echo "🚀  Starting full-stack dev environment..."
+npm run dev
+
