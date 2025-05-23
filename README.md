@@ -1,37 +1,18 @@
-# VoltaFull
+# ⚡️ VoltaFull Monorepo
 
-This repository contains the client and server applications.
+This repository houses both the **client** and **server** applications using a Node.js monorepo layout with npm workspaces.
 
-## Running the Client
+---
 
-```
-cd client
-npm install
-npm start
-```
+## 🏗 Project Structure
 
-## Running the Server
+- `client/` – React front-end
+- `server/` – Express/Node backend
+- `tests/` – Shared or global tests (if applicable)
 
-```
-cd server
-npm install
-npm start
-```
+---
 
-## Running Tests
+## 🚀 Getting Started
 
-Execute tests from either the `client` or `server` directory.
-
-Run once:
-
-```
-npm test
-```
-
-Watch mode:
-
-```
-npm run test:watch
-```
-
-After the tests complete a coverage report is written to the `coverage` directory.
+```bash
+./setup.sh
