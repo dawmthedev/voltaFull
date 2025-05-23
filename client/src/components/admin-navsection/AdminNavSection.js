@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { Box, List, ListItemText } from '@mui/material';
+import { Box, List, Text, Link } from '@chakra-ui/react';
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
@@ -14,7 +14,7 @@ export function AdminNavSection({ data = [], ...other }) {
 
   return (
     <Box {...other}>
-      <List disablePadding sx={{ p: 1 }}>
+      <List p={1}>
         {data.map((item) => {
           return <NavItem key={item.title} item={item} />;
         })}
@@ -32,18 +32,12 @@ function NavItem({ item }) {
 
   return (
     <StyledNavItem
-      component={RouterLink}
+      as={RouterLink}
       to={path}
-      sx={{
-        '&.active': {
-          color: 'text.primary',
-          bgcolor: 'action.selected',
-          fontWeight: 'fontWeightBold',
-        },
-      }}
+      _active={{ color: 'gray.800', bg: 'gray.100', fontWeight: 'bold' }}
     >
       <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon>
-      <ListItemText disableTypography primary={title} />
+      <Text>{title}</Text>
       {info && info}
     </StyledNavItem>
   );

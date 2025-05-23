@@ -1,9 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { AppBar, Toolbar, IconButton, Button, Box } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { Box, IconButton, Button, Flex, chakra } from '@chakra-ui/react';
 import Iconify from '../../../components/iconify';
-import { bgBlur } from '../../../utils/cssStyles';
 import Searchbar from './Searchbar';
 import AccountPopover from './AccountPopover';
 import LanguagePopover from './LanguagePopover';
@@ -14,21 +12,29 @@ const NAV_WIDTH = 280;
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
 
-const StyledRoot = styled(AppBar)(({ theme }) => ({
-  ...bgBlur({ color: theme.palette.background.default }),
-  boxShadow: 'none',
-  [theme.breakpoints.up('lg')]: {
-    width: `calc(100% - ${NAV_WIDTH + 1}px)`,
+const StyledRoot = chakra('header', {
+  baseStyle: {
+    position: 'sticky',
+    top: 0,
+    width: '100%',
+    boxShadow: 'none',
+    backdropFilter: 'blur(6px)',
+    bg: 'white',
+    zIndex: 'docked',
   },
-}));
+});
 
-const StyledToolbar = styled(Toolbar)(({ theme }) => ({
-  minHeight: HEADER_MOBILE,
-  [theme.breakpoints.up('lg')]: {
-    minHeight: HEADER_DESKTOP,
-    padding: theme.spacing(0, 5),
+const StyledToolbar = chakra(Flex, {
+  baseStyle: {
+    minHeight: HEADER_MOBILE,
+    alignItems: 'center',
+    px: 4,
+    '@media (min-width: 62em)': {
+      minHeight: HEADER_DESKTOP,
+      px: 5,
+    },
   },
-}));
+});
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
@@ -42,23 +48,25 @@ export default function Header({ onOpenNav }) {
       <StyledToolbar>
         <IconButton
           onClick={onOpenNav}
-          sx={{ mr: 1, color: 'text.primary', display: { lg: 'none' } }}
+          mr={1}
+          color="gray.800"
+          display={{ lg: 'none' }}
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
         <Searchbar />
 
-        <Box sx={{ flexGrow: 1 }} />
+        <Box flex="1" />
 
-        <Button onClick={() => setUtilityBillModalOpen(true)} sx={{ mr: 2 }}>
+        <Button onClick={() => setUtilityBillModalOpen(true)} mr={2}>
           Upload Bill
         </Button>
 
-        <IconButton sx={{ mr: 1 }}>
+        <IconButton mr={1}>
           <NotificationsPopover />
         </IconButton>
-        <IconButton sx={{ mr: 1 }}>
+        <IconButton mr={1}>
           <LanguagePopover />
         </IconButton>
         <AccountPopover />

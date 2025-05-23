@@ -1,6 +1,14 @@
-import { useState } from 'react';
-import { IconButton, MenuItem, Popover, Stack, Box } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+import {
+  IconButton,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  Box,
+  Stack,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { transparentize } from '@chakra-ui/theme-tools';
 
 const LANGS = [
   {
@@ -16,59 +24,30 @@ const LANGS = [
 ];
 
 export default function LanguagePopover() {
-  const [open, setOpen] = useState(null);
-
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setOpen(null);
-  };
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
-      <IconButton
-        onClick={handleOpen}
-        sx={{
-          padding: 0,
-          width: 44,
-          height: 44,
-          ...(open && { bgcolor: (theme) => alpha(theme.palette.primary.main, theme.palette.action.focusOpacity) }),
-        }}
+    <Menu isOpen={isOpen} onClose={onClose} placement="bottom-end">
+      <MenuButton
+        as={IconButton}
+        onClick={onOpen}
+        p={0}
+        w="44px"
+        h="44px"
+        bg={isOpen ? (theme) => transparentize(theme.colors.primary[500], 0.12) : undefined}
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
-      </IconButton>
-
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{
-          sx: {
-            p: 1,
-            mt: 1.5,
-            ml: 0.75,
-            width: 180,
-            '& .MuiMenuItem-root': {
-              px: 1,
-              typography: 'body2',
-              borderRadius: 0.75,
-            },
-          },
-        }}
-      >
+      </MenuButton>
+      <MenuList p={1} mt={1.5} ml={0.75} w="180px">
         <Stack spacing={0.75}>
           {LANGS.map((option) => (
-            <MenuItem key={option.value} selected={option.value === LANGS[0].value} onClick={() => handleClose()}>
-              <Box component="img" alt={option.label} src={option.icon} sx={{ width: 28, mr: 2 }} />
+            <MenuItem key={option.value} onClick={onClose} isDisabled={option.value === LANGS[0].value}>
+              <Box as="img" alt={option.label} src={option.icon} w={28} mr={2} />
               {option.label}
             </MenuItem>
           ))}
         </Stack>
-      </Popover>
-    </>
+      </MenuList>
+    </Menu>
   );
 }
