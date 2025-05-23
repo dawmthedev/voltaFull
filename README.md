@@ -20,7 +20,7 @@ This repository houses both the **client** and **server** applications using a N
 ./setup.sh
 
 
-Full folder strucutre:
+Full folder strucutre so you can map out and delte the unecessary files:
 
 ├── .DS_Store
 ├── .nvmrc
