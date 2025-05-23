@@ -1,4 +1,4 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Card, CardHeader, Box } from '@mui/material';
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
@@ -28,8 +28,8 @@ export default function AppConversionRates({ title, subheader, chartData, ...oth
     },
     plotOptions: {
       bar: { horizontal: true, barHeight: '28%', borderRadius: 2 },
-    xaxis: {
-      categories: chartLabels,
+    },
+    xaxis: { categories: chartLabels },
   });
   return (
     <Card {...other}>
