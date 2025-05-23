@@ -15,6 +15,7 @@ export default function ProductsPage() {
   };
   const handleCloseFilter = () => {
     setOpenFilter(false);
+  };
   return (
     <>
       <Helmet>
