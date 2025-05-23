@@ -1,19 +1,15 @@
-
-
 import { Box, Stack, Typography } from '@mui/material';
 
-import PropTypes from 'prop-types';
 // @mui
 import { alpha } from '@mui/material/styles';
 
 import PropTypes from 'prop-types';
 
-
 // ----------------------------------------------------------------------
 ColorPreview.propTypes = {
   sx: PropTypes.object,
   limit: PropTypes.number,
-  colors: PropTypes.arrayOf(PropTypes.string),
+  colors: PropTypes.arrayOf(PropTypes.string)
 };
 export default function ColorPreview({ colors, limit = 3, sx }) {
   const showColor = colors.slice(0, limit);
@@ -30,7 +26,7 @@ export default function ColorPreview({ colors, limit = 3, sx }) {
             borderRadius: '50%',
             border: (theme) => `solid 2px ${theme.palette.background.paper}`,
             boxShadow: (theme) => `inset -1px 1px 2px ${alpha(theme.palette.common.black, 0.24)}`,
-            bgcolor: color,
+            bgcolor: color
           }}
         />
       ))}
