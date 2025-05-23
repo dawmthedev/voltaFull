@@ -5,14 +5,13 @@ import {
   DrawerOverlay,
   DrawerContent,
   DrawerBody,
-  Box,
   Avatar,
   Text,
   Link,
-  Stack,
   Button,
   chakra,
 } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import { transparentize } from '@chakra-ui/theme-tools';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';

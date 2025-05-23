@@ -1,4 +1,5 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Button, Stack } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 // @mui
 import PropTypes from 'prop-types';
 // utils

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { chakra, Input, IconButton, Slide, Box, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
+import { chakra, Input, IconButton, Slide, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import { transparentize } from '@chakra-ui/theme-tools';
 import Iconify from '../../../components/iconify';
 

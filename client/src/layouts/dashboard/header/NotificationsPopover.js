@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
 import {
-  Box,
   IconButton,
   Popover,
   PopoverTrigger,
@@ -16,6 +15,7 @@ import {
   Badge,
   useDisclosure,
 } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import Iconify from '../../../components/iconify';
 
 const mockNotifications = [...Array(3)].map(() => ({

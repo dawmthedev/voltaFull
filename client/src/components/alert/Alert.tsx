@@ -1,5 +1,5 @@
 import React from 'react';
-import { Alert, AlertIcon, Collapse, CloseButton, Box } from '@chakra-ui/react';
+import { Alert, AlertIcon, Collapse, CloseButton } from '@chakra-ui/react';
 
 export interface AlertProps {
   open: boolean;
