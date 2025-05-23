@@ -25,9 +25,6 @@ export const StyledNavItemIcon = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginRight: theme.spacing(2),
-
-
   marginRight: theme.spacing(1),
 
 }));
