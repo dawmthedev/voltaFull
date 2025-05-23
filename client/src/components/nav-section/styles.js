@@ -19,16 +19,6 @@ export const StyledNavItem = styled(Box)(({ theme }) => ({
 
 export const StyledNavItemIcon = styled('div')(({ theme }) => ({
 
-  width: '22px',
-  height: '22px',
-
-  paddingLeft: theme.spacing(1),
-  paddingRight: theme.spacing(1),
-  textDecoration: 'none',
-}));
-
-export const StyledNavItemIcon = styled('div')(({ theme }) => ({
-
   width: 22,
   height: 22,
   color: 'inherit',
