@@ -1,15 +1,16 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import {
   Divider,
   IconButton,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Stack,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Box, Avatar, Typography } from '@mui/material';
+
+import { Box, Typography } from '@mui/material';
+
+
+
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
@@ -28,38 +29,73 @@ MenuOption.propTypes = {
 
 export default function AccountPopover({ onLogout }) {
   const navigate = useNavigate();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleLogout = () => {
-    onClose();
+    handleClose();
     if (onLogout) onLogout();
     navigate('/login', { replace: true });
   };
 
+  const open = Boolean(anchorEl);
+
   return (
-    <Menu isOpen={isOpen} onClose={onClose} placement="bottom-end">
-      <MenuButton as={IconButton} onClick={onOpen} p={0}>
+    <>
+
+
+      <IconButton onClick={handleOpen} p={0}>
+
         <Avatar src={account.photoURL} alt="account" />
-      </MenuButton>
-      <MenuList p={0} mt={1.5} ml={0.75} w="180px">
-        <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography fontWeight="fontWeightSemibold" noWrap>
+
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+
+
+        open={Boolean(anchorEl)}
+
+
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{ sx: { p: 0, mt: 1.5, ml: 0.75, width: 180 } }}
+      >
+
+
+        <Box my={1.5} px={2.5}>
+          <Typography sx={{ fontWeight: 600 }} noWrap>
+
             {account.displayName}
           </Typography>
-          <Typography variant="body2" color="grey.500" noWrap>
+          <Typography variant="body2" color="text.secondary" noWrap>
+
             {account.email}
           </Typography>
         </Box>
-        <Divider borderStyle="dashed" />
+        <Divider sx={{ borderStyle: 'dashed' }} />
         <Stack p={1}>
-          <MenuOption label="Profile" onClick={() => navigate('/dashboard/app')} />
+          <MenuOption label="Profile" onClick={() => {
+            handleClose();
+            navigate('/dashboard/app');
+          }} />
+
         </Stack>
-        <Divider borderStyle="dashed" />
+
+        <Divider sx={{ borderStyle: 'dashed' }} />
+
         <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
-      </MenuList>
-    </Menu>
+      </Menu>
+    </>
   );
 }
 

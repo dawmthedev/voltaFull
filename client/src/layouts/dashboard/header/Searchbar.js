@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
-import { Input, IconButton, Slide, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
-import { Box } from '@mui/material';
+
+
 import { styled, alpha } from '@mui/material/styles';
+import { Box } from '@mui/material';
+
+
+
+
 import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
+
+
+
 
 const StyledSearchbar = styled('div')(({ theme }) => ({
   top: 0,
@@ -15,47 +23,57 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
+
+
   height: `${HEADER_MOBILE}px`,
-  paddingLeft: theme.spacing(1.5),
-  paddingRight: theme.spacing(1.5),
-  background: alpha(theme.palette.common.white, 0.2),
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  backgroundColor: alpha(theme.palette.common.white, 0.2),
   backdropFilter: 'blur(6px)',
-  boxShadow: theme.shadows[4],
-  [theme.breakpoints.up('md')]: {
+  boxShadow: theme.shadows[3],
+  '@media (min-width: 48em)': {
     height: `${HEADER_DESKTOP}px`,
-    paddingLeft: theme.spacing(2.5),
-    paddingRight: theme.spacing(2.5),
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
+
+
   },
 }));
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
-  const ref = React.useRef(null);
-  useOutsideClick({ ref, handler: () => setOpen(false) });
 
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   return (
-    <Box ref={ref} position="relative">
-      {!open && (
-        <IconButton onClick={handleOpen} color="gray.800">
-          <Iconify icon="eva:search-fill" />
-        </IconButton>
-      )}
-      <Slide direction="down" in={open} style={{ zIndex: 99 }}>
-        <StyledSearchbar>
-          <InputGroup mr={1} flex="1">
-            <InputLeftElement pointerEvents="none">
-              <Iconify icon="eva:search-fill" />
-            </InputLeftElement>
-            <Input autoFocus placeholder="Search…" />
-          </InputGroup>
-          <IconButton onClick={handleClose} ml={1}>
-            <Iconify icon="eva:close-fill" />
+    <ClickAwayListener onClickAway={handleClose}>
+      <Box position="relative">
+        {!open && (
+          <IconButton onClick={handleOpen} color="inherit">
+            <Iconify icon="eva:search-fill" />
           </IconButton>
-        </StyledSearchbar>
-      </Slide>
-    </Box>
+        )}
+        <Slide direction="down" in={open} style={{ zIndex: 99 }}>
+          <StyledSearchbar>
+            <TextField
+              autoFocus
+              placeholder="Search…"
+              sx={{ flex: 1, mr: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="eva:search-fill" />
+                  </InputAdornment>
+                ),
+              }}
+            />
+            <IconButton onClick={handleClose} sx={{ ml: 1 }}>
+              <Iconify icon="eva:close-fill" />
+            </IconButton>
+          </StyledSearchbar>
+        </Slide>
+      </Box>
+    </ClickAwayListener>
   );
 }

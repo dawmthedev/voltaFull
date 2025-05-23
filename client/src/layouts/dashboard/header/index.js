@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import React, { useState } from 'react';
-import { IconButton } from '@chakra-ui/react';
-import { Box, Button } from '@mui/material';
+
+import { Box, IconButton, Button, Toolbar } from '@mui/material';
+
 import { styled } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 import Searchbar from './Searchbar';
@@ -20,12 +21,13 @@ const StyledRoot = styled('header')(({ theme }) => ({
   width: '100%',
   boxShadow: 'none',
   backdropFilter: 'blur(6px)',
-  background: theme.palette.common.white,
+
+  backgroundColor: 'white',
   zIndex: theme.zIndex.appBar,
 }));
 
-const StyledToolbar = styled(Box)(({ theme }) => ({
-  display: 'flex',
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+
   minHeight: HEADER_MOBILE,
   alignItems: 'center',
   paddingLeft: theme.spacing(2),
@@ -49,27 +51,27 @@ export default function Header({ onOpenNav }) {
       <StyledToolbar>
         <IconButton
           onClick={onOpenNav}
-          mr={1}
-          color="gray.800"
-          display={{ lg: 'none' }}
+          sx={{ mr: 0.5, color: 'grey.800', display: { lg: 'none' } }}
         >
           <Iconify icon="eva:menu-2-fill" />
         </IconButton>
 
         <Searchbar />
 
-        <Box flex="1" />
+        <Box sx={{ flexGrow: 1 }} />
 
-        <Button onClick={() => setUtilityBillModalOpen(true)} mr={2}>
+        <Button onClick={() => setUtilityBillModalOpen(true)} sx={{ mr: 1 }}>
           Upload Bill
         </Button>
 
-        <IconButton mr={1}>
+
+        <IconButton sx={{ mr: 0.5 }}>
           <NotificationsPopover />
         </IconButton>
-        <IconButton mr={1}>
+        <IconButton sx={{ mr: 0.5 }}>
           <LanguagePopover />
         </IconButton>
+
         <AccountPopover />
       </StyledToolbar>
 

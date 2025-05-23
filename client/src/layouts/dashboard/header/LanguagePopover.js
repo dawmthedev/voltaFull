@@ -1,14 +1,17 @@
+import { useState } from 'react';
+
 import {
   IconButton,
-  Menu,
-  MenuButton,
-  MenuList,
-  MenuItem,
+
   Stack,
-  useDisclosure,
 } from '@chakra-ui/react';
-import { Box } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+
+import { Box, Menu, MenuItem } from '@mui/material';
+import { useState } from 'react';
+import { transparentize } from '@chakra-ui/theme-tools';
+
+
+
 
 const LANGS = [
   {
@@ -24,30 +27,58 @@ const LANGS = [
 ];
 
 export default function LanguagePopover() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+
+
 
   return (
-    <Menu isOpen={isOpen} onClose={onClose} placement="bottom-end">
-      <MenuButton
-        as={IconButton}
-        onClick={onOpen}
+    <>
+      <IconButton
+        onClick={handleOpen}
+
+
         p={0}
         w="44px"
         h="44px"
-        bg={isOpen ? (theme) => alpha(theme.palette.primary.main, 0.12) : undefined}
+
+        bg={anchorEl ? (theme) => transparentize(theme.colors.primary[500], 0.12) : undefined}
+
       >
         <img src={LANGS[0].icon} alt={LANGS[0].label} />
-      </MenuButton>
-      <MenuList p={1} mt={1.5} ml={0.75} w="180px">
+      </IconButton>
+      <Menu
+        anchorEl={anchorEl}
+
+        open={Boolean(anchorEl)}
+
+
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{ sx: { p: 1, mt: 1.5, ml: 0.75, width: 180 } }}
+      >
         <Stack spacing={0.75}>
           {LANGS.map((option) => (
-            <MenuItem key={option.value} onClick={onClose} isDisabled={option.value === LANGS[0].value}>
+
+
+            <MenuItem key={option.value} onClick={handleClose} disabled={option.value === LANGS[0].value}>
               <Box as="img" alt={option.label} src={option.icon} w={28} mr={2} />
+
+
               {option.label}
             </MenuItem>
           ))}
         </Stack>
-      </MenuList>
-    </Menu>
+      </Menu>
+    </>
   );
 }

@@ -1,7 +1,21 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { Box, Drawer, Avatar, Typography, Link, Button } from '@mui/material';
+
+import {
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  Avatar,
+  Link,
+  Button,
+} from '@chakra-ui/react';
+
 import { styled, alpha } from '@mui/material/styles';
+import { Box } from '@mui/material';
+
+
+
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -15,13 +29,19 @@ import account from '../../../_mock/account';
 
 const NAV_WIDTH = 280;
 
+
+
+
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   padding: theme.spacing(2),
   borderRadius: theme.shape.borderRadius,
-  background: alpha(theme.palette.grey[500], 0.12),
+
+  backgroundColor: alpha(theme.palette.grey[500], 0.12),
 }));
+
+
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
@@ -58,11 +78,13 @@ export default function Nav({ openNav, onCloseNav }) {
         <Link underline="none">
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
-            <Box sx={{ ml: 2 }}>
-              <Typography fontWeight="fontWeightSemibold" color="grey.800">
+
+            <Box ml={2}>
+              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {account.displayName}
               </Typography>
-              <Typography variant="body2" color="grey.500">
+              <Typography variant="body2" color="text.secondary">
+
                 {account.role}
               </Typography>
             </Box>
