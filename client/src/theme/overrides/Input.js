@@ -1,4 +1,5 @@
 // ----------------------------------------------------------------------
+import { alpha } from '@mui/material/styles';
 export default function Input(theme) {
   return {
     MuiInputBase: {
