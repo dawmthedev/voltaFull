@@ -1,7 +1,19 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-import { Drawer, Box, Avatar, Typography, Link, Stack, Button } from '@mui/material';
-import { styled, alpha } from '@mui/material/styles';
+import {
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerBody,
+  Box,
+  Avatar,
+  Text,
+  Link,
+  Stack,
+  Button,
+  chakra,
+} from '@chakra-ui/react';
+import { transparentize } from '@chakra-ui/theme-tools';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -15,13 +27,15 @@ import account from '../../../_mock/account';
 
 const NAV_WIDTH = 280;
 
-const StyledAccount = styled('div')(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(2, 2.5),
-  borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: alpha(theme.palette.grey[500], 0.12),
-}));
+const StyledAccount = chakra('div', {
+  baseStyle: {
+    display: 'flex',
+    alignItems: 'center',
+    p: 2,
+    borderRadius: 'md',
+    bg: (theme) => transparentize(theme.colors.gray[500], 0.12),
+  },
+});
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
@@ -47,32 +61,32 @@ export default function Nav({ openNav, onCloseNav }) {
         '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+      <Box px={2.5} py={3} display="flex" justifyContent="flex-start" alignItems="center">
         <img
           src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`}
           alt="Voltaic CRM Logo"
           style={{ maxWidth: '150px', maxHeight: '150px', width: 'auto', height: 'auto', objectFit: 'contain' }}
         />
       </Box>
-      <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none">
+      <Box mb={5} mx={2.5}>
+        <Link textDecoration="none">
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
-            <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+            <Box ml={2}>
+              <Text fontWeight="semibold" color="gray.800">
                 {account.displayName}
-              </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              </Text>
+              <Text fontSize="sm" color="gray.500">
                 {account.role}
-              </Typography>
+              </Text>
             </Box>
           </StyledAccount>
         </Link>
       </Box>
       {data.role === 'Mentor' ? <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />}
-      <Box sx={{ flexGrow: 1 }} />
-      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Button href="/login" variant="contained">
+      <Box flexGrow={1} />
+      <Box px={2.5} pb={3} mt={10}>
+        <Button href="/login" colorScheme="blue">
           Log out
         </Button>
       </Box>
@@ -80,29 +94,17 @@ export default function Nav({ openNav, onCloseNav }) {
   );
 
   return (
-    <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV_WIDTH } }}>
+    <Box as="nav" flexShrink={{ lg: 0 }} w={{ lg: NAV_WIDTH }}>
       {isDesktop ? (
-        <Drawer
-          open
-          variant="permanent"
-          PaperProps={{
-            sx: {
-              width: NAV_WIDTH,
-              bgcolor: 'background.default',
-              borderRightStyle: 'dashed',
-            },
-          }}
-        >
+        <Box w={NAV_WIDTH} bg="gray.50" borderRight="1px dashed" borderColor="gray.200">
           {renderContent}
-        </Drawer>
+        </Box>
       ) : (
-        <Drawer
-          open={openNav}
-          onClose={onCloseNav}
-          ModalProps={{ keepMounted: true }}
-          PaperProps={{ sx: { width: NAV_WIDTH } }}
-        >
-          {renderContent}
+        <Drawer isOpen={openNav} onClose={onCloseNav} placement="left">
+          <DrawerOverlay />
+          <DrawerContent w={NAV_WIDTH}>
+            <DrawerBody p={0}>{renderContent}</DrawerBody>
+          </DrawerContent>
         </Drawer>
       )}
     </Box>

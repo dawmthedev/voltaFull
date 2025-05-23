@@ -1,6 +1,21 @@
 import { useState } from 'react';
 import { faker } from '@faker-js/faker';
-import { Box, Badge, IconButton, Popover, Typography, List, ListItem, ListItemText, Divider, Tooltip } from '@mui/material';
+import {
+  Box,
+  IconButton,
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+  Text,
+  List,
+  ListItem,
+  Divider,
+  Tooltip,
+  Badge,
+  useDisclosure,
+} from '@chakra-ui/react';
 import Iconify from '../../../components/iconify';
 
 const mockNotifications = [...Array(3)].map(() => ({
@@ -11,66 +26,60 @@ const mockNotifications = [...Array(3)].map(() => ({
 }));
 
 export default function NotificationsPopover() {
-  const [open, setOpen] = useState(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const [notifications, setNotifications] = useState(mockNotifications);
 
   const totalUnRead = notifications.length;
-
-  const handleOpen = (event) => {
-    setOpen(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setOpen(null);
-  };
 
   const handleMarkAllAsRead = () => {
     setNotifications([]);
   };
 
   return (
-    <>
-      <IconButton color={open ? 'primary' : 'default'} onClick={handleOpen} sx={{ width: 40, height: 40 }}>
-        <Badge badgeContent={totalUnRead} color="error">
+    <Popover isOpen={isOpen} onClose={onClose} placement="bottom-end">
+      <PopoverTrigger>
+        <IconButton onClick={onOpen} w={40} h={40} colorScheme={isOpen ? 'blue' : 'gray'}>
+          {totalUnRead > 0 && (
+            <Badge position="absolute" top="0" right="0" colorScheme="red">
+              {totalUnRead}
+            </Badge>
+          )}
           <Iconify icon="eva:bell-fill" />
-        </Badge>
-      </IconButton>
-
-      <Popover
-        open={Boolean(open)}
-        anchorEl={open}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{ sx: { mt: 1.5, ml: 0.75, width: 360 } }}
-      >
-        <Box sx={{ display: 'flex', alignItems: 'center', py: 2, px: 2.5 }}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography variant="subtitle1">Notifications</Typography>
-            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+        </IconButton>
+      </PopoverTrigger>
+      <PopoverContent mt={1.5} ml={0.75} w="360px">
+        <PopoverArrow />
+        <PopoverBody p={0}>
+          <Box display="flex" alignItems="center" py={2} px={2.5}>
+            <Box sx={{ flexGrow: 1 }}>
+            <Text fontWeight="semibold">Notifications</Text>
+            <Text fontSize="sm" color="gray.500">
               You have {totalUnRead} unread messages
-            </Typography>
+            </Text>
           </Box>
           {totalUnRead > 0 && (
-            <Tooltip title="Mark all as read">
-              <IconButton color="primary" onClick={handleMarkAllAsRead}>
+            <Tooltip label="Mark all as read">
+              <IconButton colorScheme="blue" onClick={handleMarkAllAsRead}>
                 <Iconify icon="eva:done-all-fill" />
               </IconButton>
             </Tooltip>
           )}
         </Box>
-        <Divider sx={{ borderStyle: 'dashed' }} />
-        <List disablePadding>
+        <Divider borderStyle="dashed" />
+        <List spacing={0} p={0} m={0}>
           {notifications.map((notification) => (
-            <ListItem key={notification.id} button>
-              <ListItemText
-                primary={notification.title}
-                secondary={notification.description}
-              />
+            <ListItem key={notification.id} py={2} px={4} borderBottomWidth="1px">
+              <Box>
+                <Text fontWeight="medium">{notification.title}</Text>
+                <Text fontSize="sm" color="gray.500">
+                  {notification.description}
+                </Text>
+              </Box>
             </ListItem>
           ))}
         </List>
-      </Popover>
-    </>
+        </PopoverBody>
+      </PopoverContent>
+    </Popover>
   );
 }

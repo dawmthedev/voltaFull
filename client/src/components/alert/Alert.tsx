@@ -1,6 +1,5 @@
 import React from 'react';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+import { Alert, AlertIcon, Collapse, CloseButton, Box } from '@chakra-ui/react';
 
 export interface AlertProps {
   open: boolean;
@@ -10,11 +9,13 @@ export interface AlertProps {
 }
 
 const AlertComponent: React.FC<AlertProps> = ({ open, message, type = 'info', onClose }) => (
-  <Snackbar open={open} autoHideDuration={3000} onClose={onClose} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
-    <MuiAlert severity={type} variant="filled" onClose={onClose} sx={{ color: 'white', fontWeight: 'bold' }}>
+  <Collapse in={open} style={{ position: 'fixed', top: '1rem', right: '1rem', zIndex: 1400 }}>
+    <Alert status={type} variant="solid" borderRadius="md" color="white">
+      <AlertIcon />
       {message}
-    </MuiAlert>
-  </Snackbar>
+      {onClose && <CloseButton position="absolute" right="8px" top="8px" onClick={onClose} />}
+    </Alert>
+  </Collapse>
 );
 
 export default AlertComponent;
