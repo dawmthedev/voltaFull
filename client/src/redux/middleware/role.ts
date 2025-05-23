@@ -1,6 +1,5 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { get, post, put, destroy } from '../../libs/client/apiClient';
-import { RoleDataTypes } from '../../types';
+import { get, post } from '../../libs/client/apiClient';
 import { setAlert } from '../slice/alertSlice';
 
 const getRoles = createAsyncThunk('role/get', async ({ signal }: { signal: AbortSignal }, {dispatch}) => {
