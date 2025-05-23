@@ -60,12 +60,14 @@ export default function Header({ onOpenNav }) {
           Upload Bill
         </Button>
 
+
         <IconButton sx={{ mr: 0.5 }}>
           <NotificationsPopover />
         </IconButton>
         <IconButton sx={{ mr: 0.5 }}>
           <LanguagePopover />
         </IconButton>
+
         <AccountPopover />
       </StyledToolbar>
 

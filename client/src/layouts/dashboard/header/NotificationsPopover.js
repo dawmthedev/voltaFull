@@ -7,16 +7,19 @@ import {
   IconButton,
 
   Popover,
+
   PopoverTrigger,
   PopoverContent,
   PopoverArrow,
   PopoverBody,
+
 
   ListItem,
   Popover,
   Tooltip,
 
   Badge,
+
   useDisclosure,
 } from '@chakra-ui/react';
 import { Box, List, Typography } from '@mui/material';
@@ -34,6 +37,7 @@ export default function NotificationsPopover() {
   const [anchorEl, setAnchorEl] = useState(null);
   const [notifications, setNotifications] = useState(mockNotifications);
 
+
   const handleOpen = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -42,7 +46,16 @@ export default function NotificationsPopover() {
     setAnchorEl(null);
   };
 
+
   const totalUnRead = notifications.length;
+
+  const handleOpen = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
   const handleMarkAllAsRead = () => {
     setNotifications([]);
@@ -50,6 +63,7 @@ export default function NotificationsPopover() {
 
   return (
     <>
+
       <IconButton onClick={handleOpen} sx={{ width: 40, height: 40, color: anchorEl ? 'primary.main' : 'inherit' }}>
         <Badge badgeContent={totalUnRead} color="error" invisible={totalUnRead === 0}>
           <Iconify icon="eva:bell-fill" />
@@ -62,6 +76,7 @@ export default function NotificationsPopover() {
           <Box display="flex" alignItems="center" py={2} px={2.5}>
             <Box sx={{ flexGrow: 1 }}>
             <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
+
 
             <Typography variant="body2" color="text.secondary">
               You have {totalUnRead} unread messages
@@ -76,6 +91,7 @@ export default function NotificationsPopover() {
           )}
         </Box>
 
+
         <Divider borderStyle="dashed" />
         <List sx={{ p: 0, m: 0 }}>
 
@@ -84,6 +100,7 @@ export default function NotificationsPopover() {
               <Box>
 
                 <Typography sx={{ fontWeight: 500 }}>{notification.title}</Typography>
+
 
                 <Typography variant="body2" color="text.secondary">
                   {notification.description}
