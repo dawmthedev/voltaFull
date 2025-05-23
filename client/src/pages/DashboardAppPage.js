@@ -147,9 +147,16 @@ export default function DashboardAppPage() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Weekly Sales" total={2} icon={'ant-design:home-filled'} />
           </Grid>
+          <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="New Leads" total={14} color="info" icon={'ant-design:profile-filled'} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Tasks" total={4} color="warning" icon={'ant-design:profile-filled'} />
+          </Grid>
+          <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary title="Messages" total={234} color="error" icon={'ant-design:profile-filled'} />
+          </Grid>
+
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Installs Month to Month"
@@ -169,36 +176,25 @@ export default function DashboardAppPage() {
                 '12/01/2023'
               ]}
               chartData={DealsData}
-              // chartData={
-              //   [
-              //   {
-              //     name: 'Sunnova',
-              //     type: 'column',
-              //     fill: 'solid',
-              //     data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
-              //   },
-              //     name: 'Enium',
-              //     type: 'area',
-              //     fill: 'gradient',
-              //     data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
-              //     name: 'Cash',
-              //     type: 'line',
-              //     data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
-              // ]}
             />
+          </Grid>
+
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
               title="Avg Stage Duration"
               chartData={DealsAvgTimelineData}
-              // chartData={[
-              //   { label: 'America', value: 4344 },
-              //   { label: 'Asia', value: 5435 },
-              //   { label: 'Europe', value: 1443 },
-              //   { label: 'Africa', value: 4443 },
-              chartColors={[theme.palette.primary.main, theme.palette.info.main, theme.palette.warning.main, theme.palette.error.main]}
+              chartColors={[
+                theme.palette.primary.main,
+                theme.palette.info.main,
+                theme.palette.warning.main,
+                theme.palette.error.main
+              ]}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
             <AppConversionRates
               title="Projects by county"
-              // chartData={AHJTimelineData}
               chartData={[
                 { label: 'San Diego County', value: 400 },
                 { label: 'Orange County', value: 430 },
@@ -210,61 +206,29 @@ export default function DashboardAppPage() {
                 { label: 'Santa Barbara County', value: 1100 },
                 { label: 'Kern County', value: 1200 },
                 { label: 'San Luis Obispo County', value: 1380 }
+              ]}
+            />
+          </Grid>
+
+          <Grid item xs={12} md={6} lg={8}>
             <AppCurrentSubject
               title="Stage duration by AHJ "
-              chartLabels={['Sale Date', 'Welcome', 'Site Survey', 'NTP', 'QC Check', 'FLA', 'Plans', 'Install', 'Inspection', 'PTO']}
+              chartLabels={[
+                'Sale Date',
+                'Welcome',
+                'Site Survey',
+                'NTP',
+                'QC Check',
+                'FLA',
+                'Plans',
+                'Install',
+                'Inspection',
+                'PTO'
+              ]}
               chartData={AHJTimelineData}
-              //   { name: 'Los Angeles', data: [1, 5, 3, 4, 10, 20] },
-              //   { name: 'Listing and marketing', data: [2, 3, 4, 8, 28, 20] },
-              //   { name: 'Closing and follow-up', data: [1, 5, 7, 3, 45, 17] },
               chartColors={[...Array(6)].map(() => theme.palette.text.secondary)}
-          {/* <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
-              title="Messages"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: faker.name.findName(),
-                description: faker.phone.phoneNumberFormat(),
-                image: `/assets/images/covers/cover_${index + 1}.jpg`,
-                postedAt: faker.date.recent(),
-              }))}
-          </Grid> */}
-          {/* <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline
-              title="Hot Lead of the day"
-                title: [
-                  'Potential Lead',
-                  'Qualified Lead',
-                  'Scored Lead',
-                  'Categorized Lead',
-                  'Active Lead',
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
-            <AppTrafficBySite
-              title="Traffic by Site"
-              list={[
-                {
-                  name: 'FaceBook',
-                  value: 323234,
-                  icon: <Iconify icon={'eva:facebook-fill'} color="#1877F2" width={32} />,
-                },
-                  name: 'Google',
-                  value: 341212,
-                  icon: <Iconify icon={'eva:google-fill'} color="#DF3E30" width={32} />,
-                  name: 'Linkedin',
-                  value: 411213,
-                  icon: <Iconify icon={'eva:linkedin-fill'} color="#006097" width={32} />,
-                  name: 'Twitter',
-                  value: 443232,
-                  icon: <Iconify icon={'eva:twitter-fill'} color="#1C9CEA" width={32} />,
-            <AppTasks
-              title="Tasks"
-                { id: '1', label: 'Follow up with Lead #1233' },
-                { id: '2', label: 'Call Lead #1233' },
-                { id: '3', label: 'Show Lead #1233 Property #346' },
-                { id: '4', label: 'Backlog Lead #4' },
-                { id: '5', label: 'Set Up Meeting' },
+            />
+          </Grid>
         </Grid>
       </Container>
     </>

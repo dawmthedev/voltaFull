@@ -1,4 +1,3 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React, { useState } from 'react';
 import {
   Grid,
@@ -8,7 +7,8 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
-  DialogTitle,
+  DialogTitle
+} from '@mui/material';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { baseURL } from '../libs/client/apiClient';
@@ -54,6 +54,7 @@ const UpdateConfirmationPage = () => {
           </Button>
           <Button onClick={handleUpdate} color="primary" autoFocus>
             Confirm
+          </Button>
         </DialogActions>
       </Dialog>
     </Grid>
