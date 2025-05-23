@@ -8,10 +8,10 @@ import {
   Avatar,
   Link,
   Button,
-  chakra,
 } from '@chakra-ui/react';
-import { Box, Typography } from '@mui/material';
-import { transparentize } from '@chakra-ui/theme-tools';
+
+import { styled, alpha } from '@mui/material/styles';
+import { Box } from '@mui/material';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -25,15 +25,13 @@ import account from '../../../_mock/account';
 
 const NAV_WIDTH = 280;
 
-const StyledAccount = chakra('div', {
-  baseStyle: {
-    display: 'flex',
-    alignItems: 'center',
-    p: 2,
-    borderRadius: 'md',
-    bg: (theme) => transparentize(theme.colors.gray[500], 0.12),
-  },
-});
+const StyledAccount = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.grey[500], 0.12),
+}));
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
