@@ -1,4 +1,4 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
+import { Button, Input, Box, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // form
@@ -14,6 +14,7 @@ import {
   IconButton,
   CardHeader,
   FormControlLabel,
+} from '@mui/material';
 // components
 import Iconify from '../../../components/iconify';
 
@@ -55,6 +56,7 @@ export default function AppTasks({ title, subheader, list, ...other }) {
     </Card>
   );
 }
+
 TaskItem.propTypes = {
   checked: PropTypes.bool,
   onChange: PropTypes.func,
@@ -62,18 +64,36 @@ TaskItem.propTypes = {
     id: PropTypes.string,
     label: PropTypes.string,
   }),
+};
+
 function TaskItem({ task, checked, onChange }) {
   const [open, setOpen] = useState(null);
+
   const handleOpenMenu = (event) => {
     setOpen(event.currentTarget);
   };
+
   const handleCloseMenu = () => {
     setOpen(null);
+  };
+
   const handleMarkComplete = () => {
     handleCloseMenu();
+  };
+
   const handleShare = () => {
+    handleCloseMenu();
+  };
+
   const handleEdit = () => {
+    handleCloseMenu();
+  };
+
   const handleDelete = () => {
+    handleCloseMenu();
+  };
+
+  return (
     <Stack
       direction="row"
       sx={{
@@ -89,9 +109,11 @@ function TaskItem({ task, checked, onChange }) {
         control={<Checkbox checked={checked} onChange={onChange} />}
         label={task.label}
         sx={{ flexGrow: 1, m: 0 }}
+      />
       <IconButton size="large" color="inherit" sx={{ opacity: 0.48 }} onClick={handleOpenMenu}>
         <Iconify icon={'eva:more-vertical-fill'} />
       </IconButton>
+
       <Popover
         open={Boolean(open)}
         anchorEl={open}
@@ -107,20 +129,31 @@ function TaskItem({ task, checked, onChange }) {
               borderRadius: 0.75,
             },
           },
+        }}
       >
         <MenuItem onClick={handleMarkComplete}>
           <Iconify icon={'eva:checkmark-circle-2-fill'} sx={{ mr: 2 }} />
           Mark Complete
         </MenuItem>
+
         <MenuItem onClick={handleEdit}>
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
+        </MenuItem>
+
         <MenuItem onClick={handleShare}>
           <Iconify icon={'eva:share-fill'} sx={{ mr: 2 }} />
           Share
+        </MenuItem>
+
         <Divider sx={{ borderStyle: 'dashed' }} />
+
         <MenuItem onClick={handleDelete} sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
+        </MenuItem>
       </Popover>
     </Stack>
+  );
+}
+
