@@ -12,7 +12,7 @@ import {
   chakra,
 } from '@chakra-ui/react';
 import { Box } from '@mui/material';
-import { transparentize } from '@chakra-ui/theme-tools';
+import { alpha } from '@mui/material/styles';
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -32,7 +32,7 @@ const StyledAccount = chakra('div', {
     alignItems: 'center',
     p: 2,
     borderRadius: 'md',
-    bg: (theme) => transparentize(theme.colors.gray[500], 0.12),
+    bg: (theme) => alpha(theme.palette.grey[500], 0.12),
   },
 });
 

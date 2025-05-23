@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { chakra, Input, IconButton, Slide, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
 import { Box } from '@mui/material';
-import { transparentize } from '@chakra-ui/theme-tools';
+import { alpha } from '@mui/material/styles';
 import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
@@ -18,7 +18,7 @@ const StyledSearchbar = chakra('div', {
     alignItems: 'center',
     height: `${HEADER_MOBILE}px`,
     px: 3,
-    bg: (theme) => transparentize(theme.colors.white, 0.2),
+    bg: (theme) => alpha(theme.palette.common.white, 0.2),
     backdropFilter: 'blur(6px)',
     boxShadow: 'md',
     '@media (min-width: 48em)': {
