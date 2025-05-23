@@ -1,4 +1,3 @@
-import { Button, Input, Box, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 import { useState } from 'react';
 // form

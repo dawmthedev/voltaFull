@@ -47,6 +47,10 @@
     "@faker-js/faker": "^7.6.0",
     "@iconify/icons-eva": "^1.2.6",
     "@iconify/react": "^4.0.0",
+    "@mui/icons-material": "^5.15.0",
+    "@mui/lab": "^5.0.0-alpha.129",
+    "@mui/material": "^5.15.0",
+    "@mui/x-license-pro": "^6.0.0",
     "@react-google-maps/api": "^2.19.3",
     "@reduxjs/toolkit": "^1.9.7",
     "@types/axios": "^0.14.0",
@@ -90,11 +94,7 @@
     "simplebar-react": "^2.4.3",
     "typescript": "^4.0.0",
     "web-vitals": "^3.0.3",
-    "yarn": "^1.22.19",
-    "@mui/material": "^5.15.0",
-    "@mui/lab": "^5.0.0-alpha.129",
-    "@mui/icons-material": "^5.15.0",
-    "@mui/x-license-pro": "^6.0.0"
+    "yarn": "^1.22.19"
   },
   "devDependencies": {
     "@babel/core": "^7.19.3",

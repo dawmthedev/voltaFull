@@ -1,4 +1,5 @@
 import { Box, Checkbox } from '@mui/material';
+
 import PropTypes from 'prop-types';
 // @mui
 //
@@ -9,7 +10,7 @@ ColorMultiPicker.propTypes = {
   sx: PropTypes.object,
   colors: PropTypes.array,
   onChangeColor: PropTypes.func,
-  selected: PropTypes.arrayOf(PropTypes.string),
+  selected: PropTypes.arrayOf(PropTypes.string)
 };
 export default function ColorMultiPicker({ colors, selected, onChangeColor, sx, ...other }) {
   return (
@@ -29,7 +30,7 @@ export default function ColorMultiPicker({ colors, selected, onChangeColor, sx, 
             sx={{
               color,
               '&:hover': { opacity: 0.72 },
-              '& svg': { width: 12, height: 12 },
+              '& svg': { width: 12, height: 12 }
             }}
             {...other}
           />

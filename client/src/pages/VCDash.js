@@ -1,4 +1,3 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 // import React, { useState, useMemo } from 'react';
 // import {
 //   Box,
@@ -172,6 +171,21 @@ import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
+import {
+  Container,
+  Typography,
+  Grid,
+  Paper,
+  ButtonGroup,
+  Button,
+  Tabs,
+  Tab,
+  List,
+  ListItem,
+  ListItemText,
+  CircularProgress,
+  Box
+} from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 // ... (rest of your imports)
@@ -203,7 +217,7 @@ export default function VCDashboardAppPage() {
     return () => {
       abort();
     };
-  }, []);
+  }, [abort, getClaimableLeads]);
   const getClaimableLeads = async () => {
     await dispatch(
       getLeadsForClaim({
@@ -308,58 +322,34 @@ export default function VCDashboardAppPage() {
             <Paper sx={{ p: 2, height: '100%' }}>
               {/* Time Filters */}
               <ButtonGroup variant="contained" fullWidth>
-                <Button
-                  onClick={() => setTimeFilter('thisWeek')}
-                  variant={timeFilter === 'thisWeek' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setTimeFilter('thisWeek')} variant={timeFilter === 'thisWeek' ? 'contained' : 'outlined'}>
                   This Week
                 </Button>
-                <Button
-                  onClick={() => setTimeFilter('thisMonth')}
-                  variant={timeFilter === 'thisMonth' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setTimeFilter('thisMonth')} variant={timeFilter === 'thisMonth' ? 'contained' : 'outlined'}>
                   This Month
                 </Button>
-                <Button
-                  onClick={() => setTimeFilter('thisYear')}
-                  variant={timeFilter === 'thisYear' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setTimeFilter('thisYear')} variant={timeFilter === 'thisYear' ? 'contained' : 'outlined'}>
                   This Year
                 </Button>
               </ButtonGroup>
               {/* Office Filter */}
               <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
-                <Button
-                  onClick={() => setOfficeFilter('company')}
-                  variant={officeFilter === 'company' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setOfficeFilter('company')} variant={officeFilter === 'company' ? 'contained' : 'outlined'}>
                   Company
                 </Button>
-                <Button
-                  onClick={() => setOfficeFilter('office')}
-                  variant={officeFilter === 'office' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setOfficeFilter('office')} variant={officeFilter === 'office' ? 'contained' : 'outlined'}>
                   Office
                 </Button>
               </ButtonGroup>
               {/* Data Filters */}
               <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
-                <Button
-                  onClick={() => setDataFilter('closingRate')}
-                  variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setDataFilter('closingRate')} variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}>
                   Closing Rate
                 </Button>
-                <Button
-                  onClick={() => setDataFilter('agreements')}
-                  variant={dataFilter === 'agreements' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setDataFilter('agreements')} variant={dataFilter === 'agreements' ? 'contained' : 'outlined'}>
                   Agreements
                 </Button>
-                <Button
-                  onClick={() => setDataFilter('revenue')}
-                  variant={dataFilter === 'revenue' ? 'contained' : 'outlined'}
-                >
+                <Button onClick={() => setDataFilter('revenue')} variant={dataFilter === 'revenue' ? 'contained' : 'outlined'}>
                   Revenue
                 </Button>
               </ButtonGroup>

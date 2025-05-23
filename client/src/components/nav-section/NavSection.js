@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-import { Box, List, Text, Link } from '@chakra-ui/react';
+import { List, Text } from '@chakra-ui/react';
+import { Box } from '@mui/material';
 import { StyledNavItem, StyledNavItemIcon } from './styles';
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';

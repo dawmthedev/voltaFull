@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import PayrollData from '../components/dataGrid/PayrollData';
-import NewSalelData from '../components/dataGrid/NewSaleData'
-import LeadGenPay from '../components/dataGrid/LeadGenPay';
+import NewSalelData from '../components/dataGrid/NewSaleData';
+import { Container, Card } from '@mui/material';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 import { Fragment } from 'react';
