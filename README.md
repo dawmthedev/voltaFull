@@ -35,6 +35,8 @@ To run both together:
 
 ```bash
 npm run dev
+# or simply
+npm start
 ```
 
 ## Tests
