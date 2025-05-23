@@ -64,8 +64,15 @@ export default function DashboardAppPage() {
     }
   };
   const fetchDealsData = async () => {
+    try {
       const response = await fetch(`${baseURL}/auth/crmDealsGlobal`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ recordId: '7777' })
+      });
+      const responseData = await response.json();
       if (responseData && responseData.data && responseData.data.deals) {
         const financingTypes = ['Sunnova', 'Enium', 'Cash'];
         // Initialize data structure
@@ -74,31 +81,54 @@ export default function DashboardAppPage() {
           type: 'column', // Change the type as needed
           fill: 'solid', // Change the fill as needed
           data: Array(12).fill(0) // Initialize an array for each month
+        }));
+
         responseData.data.deals.forEach((item) => {
           const saleDate = new Date(item.saleDate);
           const month = saleDate.getMonth();
-          const year = saleDate.getFullYear();
-          /// alert("year")
           const financingType = item.financing.replace(/"/g, ''); // Remove double quotes
           const index = financingTypes.indexOf(financingType);
           if (index !== -1) {
             monthlyData[index].data[month] += 1;
           }
         });
+
         const chartData = monthlyData.map((item) => ({
           name: item.name,
           type: item.type,
           fill: item.fill,
           data: item.data
+        }));
+
         setDealsData(chartData);
+      }
+    } catch (error) {
+      setPayError(error);
+    }
+  };
+
   const fetchDealsAvgData = async () => {
+    try {
       const response = await fetch(`${baseURL}/auth/crmAvgTimelines`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({ repId: '7777' })
+      });
+      const responseData = await response.json();
+      if (responseData && responseData.data && responseData.data.timeline) {
         const timeline = responseData.data.timeline;
         const chartData = Object.entries(timeline).map(([label, value]) => ({
           label,
           value: parseFloat(value) || 0
+        }));
         setDealsAvgData(chartData);
+      }
+    } catch (error) {
+      setPayError(error);
+    }
+  };
   useEffect(() => {
     fetchAhjTimelineData();
     fetchDealsData();
