@@ -1,26 +1,23 @@
-import { chakra } from '@chakra-ui/react';
+import { styled } from '@mui/material/styles';
 
-export const StyledNavItem = chakra('a', {
-  baseStyle: {
-    display: 'flex',
-    alignItems: 'center',
-    height: '48px',
-    position: 'relative',
-    textTransform: 'capitalize',
-    color: 'gray.600',
-    borderRadius: 'md',
-    px: 2,
-  },
-});
+export const StyledNavItem = styled('a')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  height: '48px',
+  position: 'relative',
+  textTransform: 'capitalize',
+  color: theme.palette.grey[600],
+  borderRadius: theme.shape.borderRadius,
+  paddingLeft: theme.spacing(2),
+  paddingRight: theme.spacing(2),
+}));
 
-export const StyledNavItemIcon = chakra('div', {
-  baseStyle: {
-    width: '22px',
-    height: '22px',
-    color: 'inherit',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    mr: 2,
-  },
-});
+export const StyledNavItemIcon = styled('div')(({ theme }) => ({
+  width: '22px',
+  height: '22px',
+  color: 'inherit',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginRight: theme.spacing(2),
+}));

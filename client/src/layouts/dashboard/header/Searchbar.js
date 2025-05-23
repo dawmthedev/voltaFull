@@ -1,32 +1,32 @@
 import React, { useState } from 'react';
-import { chakra, Input, IconButton, Slide, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
+import { Input, IconButton, Slide, InputGroup, InputLeftElement, useOutsideClick } from '@chakra-ui/react';
+import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
-import { transparentize } from '@chakra-ui/theme-tools';
 import Iconify from '../../../components/iconify';
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
 
-const StyledSearchbar = chakra('div', {
-  baseStyle: {
-    top: 0,
-    left: 0,
-    zIndex: 99,
-    width: '100%',
-    display: 'flex',
-    position: 'absolute',
-    alignItems: 'center',
-    height: `${HEADER_MOBILE}px`,
-    px: 3,
-    bg: (theme) => transparentize(theme.colors.white, 0.2),
-    backdropFilter: 'blur(6px)',
-    boxShadow: 'md',
-    '@media (min-width: 48em)': {
-      height: `${HEADER_DESKTOP}px`,
-      px: 5,
-    },
+const StyledSearchbar = styled('div')(({ theme }) => ({
+  top: 0,
+  left: 0,
+  zIndex: 99,
+  width: '100%',
+  display: 'flex',
+  position: 'absolute',
+  alignItems: 'center',
+  height: `${HEADER_MOBILE}px`,
+  paddingLeft: theme.spacing(3),
+  paddingRight: theme.spacing(3),
+  backgroundColor: alpha(theme.palette.common.white, 0.2),
+  backdropFilter: 'blur(6px)',
+  boxShadow: theme.shadows[3],
+  '@media (min-width: 48em)': {
+    height: `${HEADER_DESKTOP}px`,
+    paddingLeft: theme.spacing(5),
+    paddingRight: theme.spacing(5),
   },
-});
+}));
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
