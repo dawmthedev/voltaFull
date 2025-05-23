@@ -5,6 +5,7 @@ export interface PlannerFormProps {
   categories?: any[];
   getFormData?: ({ name, value }: { name: string; value: any }) => void;
   error?: Record<string, string>;
+  children?: React.ReactNode;
 }
 
 const PlannerForm: React.FC<PlannerFormProps> = ({ children }) => {
