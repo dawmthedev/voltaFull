@@ -10,19 +10,31 @@ import App from './App';
 import { store, persistor } from './redux/store';
 
 // Function to load the Google Maps API
-const loadGoogleMapsAPI = (callback: () => void) => {
-  const existingScript = document.getElementById('googleMaps');
+// Continues execution even if the script fails to load
+const loadGoogleMapsAPI = (callback?: () => void) => {
+  const existingScript = document.getElementById('googleMaps') as HTMLScriptElement | null;
+
+  const runCallback = () => {
+    if (callback) callback();
+  };
+
   if (!existingScript) {
     const script = document.createElement('script');
-    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDzUn0CKCVkUOaJtzzw16qT3QTSfPTtS6Q&libraries=places`;
+    script.src =
+      'https://maps.googleapis.com/maps/api/js?key=AIzaSyDzUn0CKCVkUOaJtzzw16qT3QTSfPTtS6Q&libraries=places';
     script.id = 'googleMaps';
-    document.body.appendChild(script);
+    script.async = true;
 
-    script.onload = () => {
-      if (callback) callback();
+    script.onload = runCallback;
+    script.onerror = (error) => {
+      console.error('Failed to load Google Maps API', error);
+      runCallback();
     };
+
+    document.body.appendChild(script);
+  } else {
+    runCallback();
   }
-  if (existingScript && callback) callback();
 };
 
 const RootComponent = () => {
