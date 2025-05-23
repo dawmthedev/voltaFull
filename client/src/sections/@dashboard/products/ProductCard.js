@@ -1,6 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import PropTypes from 'prop-types';
 // @mui
+import { styled } from '@mui/material/styles';
+import { Card, Box, Stack, Link, Typography } from '@mui/material';
 // utils
 import { fCurrency } from '../../../utils/formatNumber';
 // components

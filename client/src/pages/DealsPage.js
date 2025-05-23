@@ -1,6 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import React from 'react'; // Import React as a whole without destructuring
 import { Helmet } from 'react-helmet-async';
+// @mui
+import { Container, Card, Box, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 
 import DealsData from '../components/dataGrid/DealsData'; // Assuming this is your chart

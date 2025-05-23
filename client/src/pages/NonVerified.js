@@ -1,7 +1,7 @@
-import { Button, Input, Box, Stack, Heading } from "@chakra-ui/react";
 import { Helmet } from 'react-helmet-async';
 // @mui
-
+import { styled } from '@mui/material/styles';
+import { Container, Typography, Box } from '@mui/material';
 // ----------------------------------------------------------------------
 const StyledContent = styled('div')(({ theme }) => ({
   maxWidth: 480,

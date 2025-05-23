@@ -1,5 +1,7 @@
 
 import { bgBlur } from '../../utils/cssStyles';
+import { useTheme, alpha } from '@mui/material/styles';
+import { GlobalStyles } from '@mui/material';
 
 export default function StyledChart() {
   const theme = useTheme();
