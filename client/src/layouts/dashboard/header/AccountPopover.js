@@ -12,7 +12,6 @@ import {
   Text,
   useDisclosure,
 } from '@chakra-ui/react';
-import { transparentize } from '@chakra-ui/theme-tools';
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
