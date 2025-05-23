@@ -6,13 +6,14 @@ import {
   DrawerContent,
   DrawerBody,
   Avatar,
-  Text,
   Link,
   Button,
-  chakra,
 } from '@chakra-ui/react';
+
+import { styled, alpha } from '@mui/material/styles';
 import { Box } from '@mui/material';
-import { alpha } from '@mui/material/styles';
+
+
 import { useLocation } from 'react-router-dom';
 import useResponsive from '../../../hooks/useResponsive';
 import Scrollbar from '../../../components/scrollbar';
@@ -26,15 +27,15 @@ import account from '../../../_mock/account';
 
 const NAV_WIDTH = 280;
 
-const StyledAccount = chakra('div', {
-  baseStyle: {
-    display: 'flex',
-    alignItems: 'center',
-    p: 2,
-    borderRadius: 'md',
-    bg: (theme) => alpha(theme.palette.grey[500], 0.12),
-  },
-});
+
+const StyledAccount = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(2),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: alpha(theme.palette.grey[500], 0.12),
+}));
+
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
@@ -72,12 +73,12 @@ export default function Nav({ openNav, onCloseNav }) {
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
             <Box ml={2}>
-              <Text fontWeight="semibold" color="gray.800">
+              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
                 {account.displayName}
-              </Text>
-              <Text fontSize="sm" color="gray.500">
+              </Typography>
+              <Typography variant="body2" color="text.secondary">
                 {account.role}
-              </Text>
+              </Typography>
             </Box>
           </StyledAccount>
         </Link>
