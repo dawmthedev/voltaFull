@@ -1,6 +1,7 @@
 import PropTypes from 'prop-types';
 import ReactApexChart from 'react-apexcharts';
 // @mui
+import { styled, Card, CardHeader } from '@mui/material';
 // components
 import { useChart } from '../../../components/chart';
 
@@ -15,12 +16,14 @@ const StyledChartWrapper = styled('div')(({ theme }) => ({
   },
   '& .apexcharts-canvas svg,.apexcharts-canvas foreignObject': {
     overflow: 'visible',
+  },
   '& .apexcharts-legend': {
     height: LEGEND_HEIGHT,
     alignContent: 'center',
     position: 'relative !important',
     borderTop: `solid 1px ${theme.palette.divider}`,
     top: `calc(${CHART_HEIGHT - LEGEND_HEIGHT}px) !important`,
+  },
 }));
 AppCurrentSubject.propTypes = {
   title: PropTypes.string,
