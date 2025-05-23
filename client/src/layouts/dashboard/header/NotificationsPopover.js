@@ -5,12 +5,22 @@ import {
   Box,
   Divider,
   IconButton,
-  List,
+
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverArrow,
+  PopoverBody,
+
   ListItem,
   Popover,
   Tooltip,
-  Typography,
-} from '@mui/material';
+
+  Badge,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { Box, List, Typography } from '@mui/material';
+
 import Iconify from '../../../components/iconify';
 
 const mockNotifications = [...Array(3)].map(() => ({
@@ -43,19 +53,16 @@ export default function NotificationsPopover() {
       <IconButton onClick={handleOpen} sx={{ width: 40, height: 40, color: anchorEl ? 'primary.main' : 'inherit' }}>
         <Badge badgeContent={totalUnRead} color="error" invisible={totalUnRead === 0}>
           <Iconify icon="eva:bell-fill" />
-        </Badge>
-      </IconButton>
-      <Popover
-        open={Boolean(anchorEl)}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-        PaperProps={{ sx: { mt: 1.5, ml: 0.75, width: 360, p: 0 } }}
-      >
-        <Box display="flex" alignItems="center" py={2} px={2.5}>
-          <Box sx={{ flexGrow: 1 }}>
-            <Typography fontWeight="semibold">Notifications</Typography>
+
+        </IconButton>
+      </PopoverTrigger>
+      <PopoverContent mt={1.5} ml={0.75} w="360px">
+        <PopoverArrow />
+        <PopoverBody p={0}>
+          <Box display="flex" alignItems="center" py={2} px={2.5}>
+            <Box sx={{ flexGrow: 1 }}>
+            <Typography sx={{ fontWeight: 600 }}>Notifications</Typography>
+
             <Typography variant="body2" color="text.secondary">
               You have {totalUnRead} unread messages
             </Typography>
@@ -68,12 +75,16 @@ export default function NotificationsPopover() {
             </Tooltip>
           )}
         </Box>
-        <Divider sx={{ borderStyle: 'dashed' }} />
-        <List disablePadding>
+
+        <Divider borderStyle="dashed" />
+        <List sx={{ p: 0, m: 0 }}>
+
           {notifications.map((notification) => (
             <ListItem key={notification.id} sx={{ py: 2, px: 2, borderBottomWidth: 1, borderColor: 'divider' }}>
               <Box>
-                <Typography fontWeight="medium">{notification.title}</Typography>
+
+                <Typography sx={{ fontWeight: 500 }}>{notification.title}</Typography>
+
                 <Typography variant="body2" color="text.secondary">
                   {notification.description}
                 </Typography>

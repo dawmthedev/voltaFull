@@ -4,10 +4,11 @@ import {
   Divider,
   IconButton,
   Stack,
-  Text,
+
+  useDisclosure,
 } from '@chakra-ui/react';
-import { Box, Menu, MenuItem } from '@mui/material';
-import { useState } from 'react';
+import { Box, Typography } from '@mui/material';
+
 import { useNavigate } from 'react-router-dom';
 import account from '../../../_mock/account';
 
@@ -56,12 +57,12 @@ export default function AccountPopover({ onLogout }) {
         PaperProps={{ sx: { p: 0, mt: 1.5, ml: 0.75, width: 180 } }}
       >
         <Box my={1.5} px={2.5}>
-          <Text fontWeight="semibold" noOfLines={1}>
+          <Typography sx={{ fontWeight: 600 }} noWrap>
             {account.displayName}
-          </Text>
-          <Text fontSize="sm" color="gray.500" noOfLines={1}>
+          </Typography>
+          <Typography variant="body2" color="text.secondary" noWrap>
             {account.email}
-          </Text>
+          </Typography>
         </Box>
         <Divider borderStyle="dashed" />
         <Stack p={1}>
