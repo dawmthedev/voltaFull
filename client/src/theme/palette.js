@@ -70,6 +70,7 @@ const ERROR = {
   contrastText: '#fff',
 };
 
+// Base color tokens used across both light and dark modes
 const palette = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
@@ -79,6 +80,11 @@ const palette = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
+};
+
+export const lightPalette = {
+  mode: 'light',
+  ...palette,
   divider: alpha(GREY[500], 0.24),
   text: {
     primary: GREY[800],
@@ -101,5 +107,33 @@ const palette = {
     disabledOpacity: 0.48,
   },
 };
+
+export const darkPalette = {
+  mode: 'dark',
+  ...palette,
+  divider: alpha(GREY[500], 0.24),
+  text: {
+    primary: '#fff',
+    secondary: GREY[500],
+    disabled: GREY[600],
+  },
+  background: {
+    paper: GREY[800],
+    default: GREY[900],
+    neutral: GREY[800],
+  },
+  action: {
+    active: GREY[500],
+    hover: alpha(GREY[500], 0.08),
+    selected: alpha(GREY[500], 0.16),
+    disabled: alpha(GREY[500], 0.8),
+    disabledBackground: alpha(GREY[500], 0.24),
+    focus: alpha(GREY[500], 0.24),
+    hoverOpacity: 0.08,
+    disabledOpacity: 0.48,
+  },
+};
+
+export const getPalette = (mode) => (mode === 'dark' ? darkPalette : lightPalette);
 
 export default palette;
