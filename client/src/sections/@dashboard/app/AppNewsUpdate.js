@@ -71,8 +71,8 @@ function NewsItem({ news }) {
         </Typography>
       </Box>
       <Button href=""  className={styles.callButton}>
-      <Iconify icon="eva:phone-fill" color="#18712" width={22} height={22}  />
-              </Button>
+        <Iconify icon="eva:phone-fill" color="#1877F2" width={22} height={22} />
+      </Button>
 
 
 
