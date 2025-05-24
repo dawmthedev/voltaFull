@@ -28,6 +28,11 @@ export default function Router() {
         { index: true, element: <Navigate to="/dashboard/deals" /> },
         { path: 'deals', element: <DealsPage /> },
 
+        { path: 'projects', element: <ProjectsPage /> },
+        { path: 'technician-allocation', element: <TechnicianAllocation /> },
+        { path: 'messaging-notifications', element: <MessagingNotifications /> },
+        { path: 'analytics-dashboard', element: <AnalyticsDashboard /> },
+
         { path: 'deals/:id', element: <LeadDetailPage /> },
         { path: 'calendar', element: <CalendarPage /> },
         { path: 'user', element: <UserPage /> }
