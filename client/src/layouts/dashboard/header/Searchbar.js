@@ -1,28 +1,19 @@
-import React, { useState } from 'react';
-
-
-import { styled, alpha } from '@mui/material/styles';
-import {
-  Box,
-  ClickAwayListener,
-  IconButton,
-  Slide,
-  TextField,
-  InputAdornment,
-} from '@mui/material';
-
-
-
-
+import { useState } from 'react';
+// @mui
+import { styled } from '@mui/material/styles';
+import { Input, Slide, Button, IconButton, InputAdornment, ClickAwayListener } from '@mui/material';
+// utils
+import { bgBlur } from '../../../utils/cssStyles';
+// component
 import Iconify from '../../../components/iconify';
+
+// ----------------------------------------------------------------------
 
 const HEADER_MOBILE = 64;
 const HEADER_DESKTOP = 92;
 
-
-
-
 const StyledSearchbar = styled('div')(({ theme }) => ({
+  ...bgBlur({ color: theme.palette.background.default }),
   top: 0,
   left: 0,
   zIndex: 99,
@@ -30,57 +21,57 @@ const StyledSearchbar = styled('div')(({ theme }) => ({
   display: 'flex',
   position: 'absolute',
   alignItems: 'center',
-
-
-  height: `${HEADER_MOBILE}px`,
-  paddingLeft: theme.spacing(3),
-  paddingRight: theme.spacing(3),
-  backgroundColor: alpha(theme.palette.common.white, 0.2),
-  backdropFilter: 'blur(6px)',
-  boxShadow: theme.shadows[3],
-  '@media (min-width: 48em)': {
-    height: `${HEADER_DESKTOP}px`,
-    paddingLeft: theme.spacing(5),
-    paddingRight: theme.spacing(5),
-
-
+  height: HEADER_MOBILE,
+  padding: theme.spacing(0, 3),
+  boxShadow: theme.customShadows.z8,
+  [theme.breakpoints.up('md')]: {
+    height: HEADER_DESKTOP,
+    padding: theme.spacing(0, 5),
   },
 }));
+
+// ----------------------------------------------------------------------
 
 export default function Searchbar() {
   const [open, setOpen] = useState(false);
 
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <ClickAwayListener onClickAway={handleClose}>
-      <Box position="relative">
+      <div>
         {!open && (
-          <IconButton onClick={handleOpen} color="inherit">
+          <IconButton onClick={handleOpen}>
             <Iconify icon="eva:search-fill" />
           </IconButton>
         )}
-        <Slide direction="down" in={open} style={{ zIndex: 99 }}>
+
+        <Slide direction="down" in={open} mountOnEnter unmountOnExit>
           <StyledSearchbar>
-            <TextField
+            <Input
               autoFocus
+              fullWidth
+              disableUnderline
               placeholder="Search…"
-              sx={{ flex: 1, mr: 1 }}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Iconify icon="eva:search-fill" />
-                  </InputAdornment>
-                ),
-              }}
+              startAdornment={
+                <InputAdornment position="start">
+                  <Iconify icon="eva:search-fill" sx={{ color: 'text.disabled', width: 20, height: 20 }} />
+                </InputAdornment>
+              }
+              sx={{ mr: 1, fontWeight: 'fontWeightBold' }}
             />
-            <IconButton onClick={handleClose} sx={{ ml: 1 }}>
-              <Iconify icon="eva:close-fill" />
-            </IconButton>
+            <Button variant="contained" onClick={handleClose}>
+              Search
+            </Button>
           </StyledSearchbar>
         </Slide>
-      </Box>
+      </div>
     </ClickAwayListener>
   );
 }

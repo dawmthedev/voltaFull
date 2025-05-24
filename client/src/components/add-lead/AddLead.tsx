@@ -1,32 +1,33 @@
 import React from 'react';
+import { Box, Grid } from '@mui/material';
 
-export interface LeadField {
-  name: string;
-  type: string;
-  value: string;
-}
+import CustomInput from '../input/CustomInput';
 
-export interface AddLeadProps {
-  leadValue: LeadField[];
+interface AddLeadProps {
+  leadValue: {
+    name: string;
+    type: string;
+    value: string;
+  }[];
   getAddLeadData: (value: string, name: string, index: number) => void;
 }
 
-const AddLead: React.FC<AddLeadProps> = ({ leadValue, getAddLeadData }) => {
+const AddLead = ({ leadValue, getAddLeadData }: AddLeadProps) => {
   return (
-    <div>
-      {leadValue.map((lead, index) => (
-        <div key={index}>
-          <label>
-            {lead.name}
-            <input
-              value={lead.value}
-              name={lead.name}
-              onChange={(e) => getAddLeadData(e.target.value, e.target.name, index)}
-            />
-          </label>
-        </div>
+    <Grid>
+      {leadValue?.map((lead, index) => (
+        <Box key={index}>
+          <CustomInput
+            label={lead.name}
+            name={lead.name}
+            value={lead.value}
+            onChange={(e) => {
+              getAddLeadData(e.target.value, e.target.name, index);
+            }}
+          />
+        </Box>
       ))}
-    </div>
+    </Grid>
   );
 };
 

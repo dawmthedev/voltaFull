@@ -1,22 +1,56 @@
-import React from 'react';
+import * as React from 'react';
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import CircularProgress from '@mui/material/CircularProgress';
 
-export interface CustomModalProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
+interface CustomModalProps {
   title?: string;
-  children?: React.ReactNode;
-  size?: string;
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   handleSubmit?: () => void;
+  children?: React.ReactNode;
+  size?: 'xs' | 'sm' | 'md' | 'lg';
+  loading?: boolean;
+  setIsEdit?: React.Dispatch<React.SetStateAction<boolean>>;
 }
+const CustomModal = ({ title, open, setOpen, handleSubmit, setIsEdit, size = 'sm', children, loading }: CustomModalProps) => {
+  const handleClose = () => {
+    setOpen(false);
+    setIsEdit && setIsEdit(false);
+  };
 
-const CustomModal: React.FC<CustomModalProps> = ({ open, setOpen, title, children, handleSubmit }) => {
-  if (!open) return null;
   return (
     <div>
-      <h3>{title}</h3>
-      <div>{children}</div>
-      <button onClick={() => setOpen(false)}>Close</button>
-      {handleSubmit && <button onClick={handleSubmit}>Submit</button>}
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+        fullWidth={true}
+        maxWidth={size}
+      >
+        <DialogTitle id="alert-dialog-title">{title}</DialogTitle>
+        <DialogContent>{children}</DialogContent>
+        {title && (
+          <DialogActions>
+            <Button onClick={handleClose} autoFocus>
+              Cancel
+            </Button>
+            {loading ? (
+              <Button autoFocus>
+                <CircularProgress size="14px" sx={{ color: '#0F52BA' }} />
+              </Button>
+            ) : (
+              <Button onClick={handleSubmit} autoFocus>
+                Submit
+              </Button>
+            )}
+          </DialogActions>
+        )}
+      </Dialog>
     </div>
   );
 };

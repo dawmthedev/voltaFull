@@ -1,20 +1,11 @@
+// @mui
 import PropTypes from 'prop-types';
-
-
-
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Stack,
-  Box,
-  Typography,
-} from '@mui/material';
-import { blue, green, teal, orange, red, grey } from '@mui/material/colors';
-
-
-
+import { Card, Typography, CardHeader, CardContent } from '@mui/material';
+import { Timeline, TimelineDot, TimelineItem, TimelineContent, TimelineSeparator, TimelineConnector } from '@mui/lab';
+// utils
 import { fDateTime } from '../../../utils/formatTime';
+
+// ----------------------------------------------------------------------
 
 AppOrderTimeline.propTypes = {
   title: PropTypes.string,
@@ -25,61 +16,26 @@ AppOrderTimeline.propTypes = {
 export default function AppOrderTimeline({ title, subheader, list, ...other }) {
   return (
     <Card {...other}>
+      <CardHeader title={title} subheader={subheader} />
 
-      <CardHeader>
-
-
-        <Typography fontWeight="bold">{title}</Typography>
-        {subheader && (
-          <Typography fontSize="sm" color="gray.500">
-
-            {subheader}
-          </Typography>
-        )}
-      </CardHeader>
-      <CardContent>
-
-        <Stack>
+      <CardContent
+        sx={{
+          '& .MuiTimelineItem-missingOppositeContent:before': {
+            display: 'none',
+          },
+        }}
+      >
+        <Timeline>
           {list.map((item, index) => (
             <OrderItem key={item.id} item={item} isLast={index === list.length - 1} />
           ))}
-        </Stack>
+        </Timeline>
       </CardContent>
     </Card>
   );
 }
 
-function OrderItem({ item, isLast }) {
-  const { type, title, time } = item;
-  const color =
-    (type === 'order1' && blue[500]) ||
-    (type === 'order2' && green[500]) ||
-    (type === 'order3' && teal[500]) ||
-    (type === 'order4' && orange[500]) ||
-    red[500];
-
-  return (
-
-    <Box display="flex" alignItems="flex-start">
-      <Box mr={2} display="flex" flexDirection="column" alignItems="center">
-        <Box
-          sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: color, mt: 1 }}
-        />
-        {!isLast && <Box sx={{ flex: 1, width: 1, bgcolor: grey[200] }} />}
-      </Box>
-      <Box>
-
-
-        <Typography fontWeight="medium">{title}</Typography>
-        <Typography fontSize="sm" color="gray.500">
-
-
-          {fDateTime(time)}
-        </Typography>
-      </Box>
-    </Box>
-  );
-}
+// ----------------------------------------------------------------------
 
 OrderItem.propTypes = {
   isLast: PropTypes.bool,
@@ -89,3 +45,31 @@ OrderItem.propTypes = {
     type: PropTypes.string,
   }),
 };
+
+function OrderItem({ item, isLast }) {
+  const { type, title, time } = item;
+  return (
+    <TimelineItem>
+      <TimelineSeparator>
+        <TimelineDot
+          color={
+            (type === 'order1' && 'primary') ||
+            (type === 'order2' && 'success') ||
+            (type === 'order3' && 'info') ||
+            (type === 'order4' && 'warning') ||
+            'error'
+          }
+        />
+        {isLast ? null : <TimelineConnector />}
+      </TimelineSeparator>
+
+      <TimelineContent>
+        <Typography variant="subtitle2">{title}</Typography>
+
+        <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+          {fDateTime(time)}
+        </Typography>
+      </TimelineContent>
+    </TimelineItem>
+  );
+}

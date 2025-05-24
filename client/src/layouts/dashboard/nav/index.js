@@ -1,53 +1,53 @@
 import PropTypes from 'prop-types';
 import { useEffect } from 'react';
-
-import { styled, alpha } from '@mui/material/styles';
-import {
-  Box,
-  Drawer,
-  Link,
-  Button,
-  Avatar,
-  Typography,
-} from '@mui/material';
-
-
-
 import { useLocation } from 'react-router-dom';
+// @mui
+import { styled, alpha } from '@mui/material/styles';
+import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+
+import { useAppDispatch, useAppSelector } from '../../../hooks/hooks';
+import { authSelector } from '../../../redux/slice/authSlice';
+
+// mock
+import account from '../../../_mock/account';
+// hooks
 import useResponsive from '../../../hooks/useResponsive';
+
+// components
+import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-import AdminNavSection from '../../../components/admin-navsection';
+//import AdminNavSection from'../../../components/admin-navsection';
+//import AdminConfig from './AdminConfig';
 import navConfig from './config';
+import { AdminNavSection } from '../../../components/admin-navsection/AdminNavSection';
 import AdminConfig from './AdminConfig';
-import { useAppSelector } from '../../../hooks/hooks';
-import { authSelector } from '../../../redux/slice/authSlice';
-import account from '../../../_mock/account';
+
+
+
+// ----------------------------------------------------------------------
 
 const NAV_WIDTH = 280;
-
-
-
 
 const StyledAccount = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
-  padding: theme.spacing(2),
-  borderRadius: theme.shape.borderRadius,
-
-  backgroundColor: alpha(theme.palette.grey[500], 0.12),
+  padding: theme.spacing(2, 2.5),
+  borderRadius: Number(theme.shape.borderRadius) * 1.5,
+  backgroundColor: alpha(theme.palette.grey[500], 0.12)
 }));
 
-
+// ----------------------------------------------------------------------
 
 Nav.propTypes = {
   openNav: PropTypes.bool,
-  onCloseNav: PropTypes.func,
+  onCloseNav: PropTypes.func
 };
 
 export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
   const { data } = useAppSelector(authSelector);
+
   const isDesktop = useResponsive('up', 'lg');
 
   useEffect(() => {
@@ -61,51 +61,112 @@ export default function Nav({ openNav, onCloseNav }) {
     <Scrollbar
       sx={{
         height: 1,
-        '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' },
+        '& .simplebar-content': { height: 1, display: 'flex', flexDirection: 'column' }
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
+      <Box sx={{ marginLeft: '40px', px: 2.5, py: 3, display: 'flex', justifyContent: 'flex-start', alignItems: 'center' }}>
         <img
           src={`${process.env.PUBLIC_URL}/assets/images/iconImages/logo.png`}
           alt="Voltaic CRM Logo"
-          style={{ maxWidth: '150px', maxHeight: '150px', width: 'auto', height: 'auto', objectFit: 'contain' }}
+          style={{
+            maxWidth: '150px',
+            maxHeight: '150px',
+            width: 'auto',
+            height: 'auto',
+            objectFit: 'contain'
+          }}
         />
       </Box>
+
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none">
           <StyledAccount>
             <Avatar src={account.photoURL} alt="photoURL" />
 
-            <Box ml={2}>
-              <Typography sx={{ fontWeight: 600, color: 'text.primary' }}>
+            <Box sx={{ ml: 2 }}>
+              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
                 {account.displayName}
               </Typography>
-              <Typography variant="body2" color="text.secondary">
 
+              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {account.role}
               </Typography>
             </Box>
           </StyledAccount>
         </Link>
       </Box>
-      {data.role === 'Mentor' ? <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />}
+
+
+{/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
+{data.role == "Mentor" ? <AdminNavSection data={AdminConfig}  /> : <NavSection data={navConfig} />}
+
+
+
       <Box sx={{ flexGrow: 1 }} />
+
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
-        <Button href="/login" variant="contained" color="primary">
-          Log out
-        </Button>
+        <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
+          {/* <Box component="img" src="/assets/illustrations/illustration_avatar.png" sx={{ width: 100, position: 'absolute', top: -50 }} /> */}
+
+          {/* <Box sx={{ textAlign: 'center' }}>
+            <Typography gutterBottom variant="h6">
+              Get more?
+            </Typography>
+
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              How' are you?
+            </Typography>
+          </Box> */}
+<Button
+  href="https://voltaicapp.vercel.app/InstallMap"
+  variant="contained"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  Install Map
+</Button>
+
+          <Button href="/login" variant="contained">
+            Log out
+          </Button>
+        </Stack>
       </Box>
     </Scrollbar>
   );
 
   return (
-    <Box component="nav" sx={{ flexShrink: { lg: 0 }, width: { lg: NAV_WIDTH } }}>
+    <Box
+      component="nav"
+      sx={{
+        flexShrink: { lg: 0 },
+        width: { lg: NAV_WIDTH }
+      }}
+    >
       {isDesktop ? (
-        <Box sx={{ width: NAV_WIDTH, bgcolor: 'grey.50', borderRight: '1px dashed', borderColor: 'grey.200' }}>
+        <Drawer
+          open
+          variant="permanent"
+          PaperProps={{
+            sx: {
+              width: NAV_WIDTH,
+              bgcolor: 'background.default',
+              borderRightStyle: 'dashed'
+            }
+          }}
+        >
           {renderContent}
-        </Box>
+        </Drawer>
       ) : (
-        <Drawer anchor="left" open={openNav} onClose={onCloseNav} PaperProps={{ sx: { width: NAV_WIDTH } }}>
+        <Drawer
+          open={openNav}
+          onClose={onCloseNav}
+          ModalProps={{
+            keepMounted: true
+          }}
+          PaperProps={{
+            sx: { width: NAV_WIDTH }
+          }}
+        >
           {renderContent}
         </Drawer>
       )}

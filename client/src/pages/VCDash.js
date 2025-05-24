@@ -19,6 +19,8 @@
 //   TableHead,
 //   Paper,
 //   TableContainer
+// } from '@mui/material';
+// import { ThemeProvider, createTheme } from '@mui/material/styles';
 
 // // Define a theme for the dashboard
 // const theme = createTheme({
@@ -28,8 +30,10 @@
 //     },
 //     secondary: {
 //       main: '#ec407a',
+//     },
 //   },
 // });
+
 // function KpiCard({ title, value }) {
 //   return (
 //     <Card variant="outlined" sx={{ minWidth: 200, m: 1 }}>
@@ -39,12 +43,15 @@
 //         </Typography>
 //         <Typography variant="body2">
 //           {value}
+//         </Typography>
 //       </CardContent>
 //     </Card>
 //   );
 // }
+
 // // Example of a list component for graveyard leads
 // function GraveyardLeads({ leads }) {
+//   return (
 //     <List dense>
 //       {leads.map((lead, index) => (
 //         <ListItem key={index}>
@@ -55,6 +62,8 @@
 //         </ListItem>
 //       ))}
 //     </List>
+//   );
+// }
 // function RepCardRankings({ repCardUsers, sortConfig, handleSort }) {
 //   // Memoize the sorted data to avoid unnecessary sorting on each render
 //   const sortedUsers = useMemo(() => {
@@ -62,6 +71,8 @@
 //     // Placeholder for sorting function, which you will replace with actual logic
 //     return repCardUsers;
 //   }, [repCardUsers, sortConfig]);
+
+//   return (
 //     <TableContainer component={Paper}>
 //       <Table aria-label="simple table">
 //         <TableHead>
@@ -84,6 +95,9 @@
 //         </TableBody>
 //       </Table>
 //     </TableContainer>
+//   );
+// }
+
 // export default function Dashboard() {
 //   const [timeFilter, setTimeFilter] = useState('week');
 //  // RepCard users' data example
@@ -96,6 +110,7 @@
 // ]);
 // // Sorting configuration state
 // const [sortConfig, setSortConfig] = useState({ key: null, direction: 'asc' });
+
 //  // Sort handler
 //  const handleSort = (key) => {
 //   const direction = sortConfig.key === key && sortConfig.direction === 'asc' ? 'desc' : 'asc';
@@ -116,19 +131,27 @@
 //         // More leads...
 //       ],
 //       // Add more KPI data for 'week'
+//     },
 //     // Add data for 'month' and 'year'
 //   };
+
 //   // Placeholder for the leads carousel component
 //   function LeadsCarousel() {
 //     return <Typography>Carousel Placeholder</Typography>;
 //   }
+
 //   const handleTimeFilterChange = (event, newValue) => {
 //     setTimeFilter(newValue);
+//   };
+
+//   return (
 //     <ThemeProvider theme={theme}>
 //       <Container maxWidth="xl" sx={{ mt: 4 }}>
 //         <Typography variant="h4" component="div" gutterBottom>
 //           Door Knocking Dashboard
+//         </Typography>
 //         <Divider sx={{ mb: 4 }} />
+
 //         {/* Time filter buttons */}
 //         <Box sx={{ mb: 3 }}>
 //           <ButtonGroup variant="text" color="primary">
@@ -137,10 +160,13 @@
 //             </Button>
 //             <Button onClick={() => setTimeFilter('month')} variant={timeFilter === 'month' ? 'contained' : 'text'}>
 //               This Month
+//             </Button>
 //             <Button onClick={() => setTimeFilter('year')} variant={timeFilter === 'year' ? 'contained' : 'text'}>
 //               This Year
+//             </Button>
 //           </ButtonGroup>
 //         </Box>
+
 //         {/* KPI cards */}
 //         <Grid container spacing={2}>
 //           {Object.entries(kpiData[timeFilter] || {}).map(([key, value], index) => (
@@ -149,75 +175,87 @@
 //                 <KpiCard title={key.split(/(?=[A-Z])/).join(" ")} value={value} />
 //               </Grid>
 //             )
+//           ))}
 //         </Grid>
+
 //         {/* Graveyard Leads */}
 //         <Box sx={{ mt: 4 }}>
 //           <Typography variant="h6" gutterBottom>
 //             Graveyard Leads
 //           </Typography>
 //           <GraveyardLeads leads={kpiData[timeFilter].graveyardLeads} />
+//         </Box>
+
 //          {/* RepCard User Rankings */}
 //          <Box sx={{ mt: 4 }}>
+//           <Typography variant="h6" gutterBottom>
 //             RepCard User Rankings
+//           </Typography>
 //           <RepCardRankings repCardUsers={repCardUsers} sortConfig={sortConfig} handleSort={handleSort} />
+//         </Box>
 //         {/* Leads Carousel */}
+//         <Box sx={{ mt: 4 }}>
+//           <Typography variant="h6" gutterBottom>
 //             Leads Carousel
+//           </Typography>
 //           <LeadsCarousel />
 //           {/* Implement the carousel with a third-party library */}
+//         </Box>
 //       </Container>
 //     </ThemeProvider>
+//   );
+// }
+
 // ============================================
+
 import { Helmet } from 'react-helmet-async';
 import { useEffect, useState } from 'react';
 import { faker } from '@faker-js/faker';
 // @mui
-import {
-  Container,
-  Typography,
-  Grid,
-  Paper,
-  ButtonGroup,
-  Button,
-  Tabs,
-  Tab,
-  List,
-  ListItem,
-  ListItemText,
-  CircularProgress,
-  Box
-} from '@mui/material';
+import { useTheme, ThemeProvider } from '@mui/material/styles';
+import { Grid, Container, Typography, Paper, ListItem, List, ListItemText, CircularProgress } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 // ... (rest of your imports)
 // Import additional components
+import { Tab, Tabs, Box, Button, ButtonGroup } from '@mui/material';
 import { leadState } from '../redux/slice/leadSlice';
 import { claimLead, getLeadsForClaim } from '../redux/middleware/lead';
 import createAbortController from '../utils/createAbortController';
+
 // ... (rest of your code)
+
 export default function VCDashboardAppPage() {
   const { claimData, loading: claimLeadLoading } = useAppSelector(leadState);
   const dispatch = useAppDispatch();
   const { signal, abort } = createAbortController();
+
   // ... (existing states and functions)
+
   // Add the leaderboard filters and options back into the UI
   const timeFilters = ['This Week', 'This Month', 'This Year'];
   const typeFilters = ['Company', 'Office'];
   const dataTypes = ['Closing Rate', 'Agreements', 'Revenue'];
+
   const [leaderboardType, setLeaderboardType] = useState('revenue');
   // Leaderboard filter states
   const [timeFilter, setTimeFilter] = useState('thisWeek');
   const [officeFilter, setOfficeFilter] = useState('company');
   const [dataFilter, setDataFilter] = useState('closingRate');
+
   const [activeTab, setActiveTab] = useState('myLeads');
   const [taskTab, setTaskTab] = useState('toDo');
+
   useEffect(() => {
     (async () => {
       await getClaimableLeads();
     })();
+
     return () => {
       abort();
     };
-  }, [abort, getClaimableLeads]);
+  }, []);
+
   const getClaimableLeads = async () => {
     await dispatch(
       getLeadsForClaim({
@@ -225,6 +263,7 @@ export default function VCDashboardAppPage() {
       })
     );
   };
+
   // Mock data for leaderboard
   const leaderboardData = {
     thisWeek: {
@@ -251,6 +290,7 @@ export default function VCDashboardAppPage() {
       // ... data for thisYear
     }
   };
+
   // Mock data for leads, deals, and installs
   const mockData = {
     myDoors: [
@@ -273,6 +313,7 @@ export default function VCDashboardAppPage() {
       { id: 2, title: 'Sets: Sits', subtitle: '43/72', percentage: '50%' },
       { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' },
       { id: 2, title: 'Sits: Close', subtitle: '43/72', percentage: '50%' }
+      // ... add more installs
     ]
   };
 
@@ -292,6 +333,7 @@ export default function VCDashboardAppPage() {
     const timeData = leaderboardData[timeFilter] || {};
     const officeData = timeData[officeFilter] || {};
     const filteredData = officeData[dataFilter] || [];
+
     return filteredData;
   };
 
@@ -301,21 +343,25 @@ export default function VCDashboardAppPage() {
     if (!data) {
       return <Typography>No data available.</Typography>;
     }
+
     return data.map((item) => (
       <ListItem key={item.id}>
         <ListItemText primary={item.title} secondary={item.subtitle} />
       </ListItem>
     ));
   };
+
   return (
     <>
       <Helmet>
         <title>Dashboard | Voltaic</title>
       </Helmet>
+
       <Container maxWidth="xl">
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back
         </Typography>
+
         <Grid container spacing={3}>
           {/* Sidebar - Leaderboards */}
           <Grid item xs={12} md={3}>
@@ -342,7 +388,7 @@ export default function VCDashboardAppPage() {
                 </Button>
               </ButtonGroup>
               {/* Data Filters */}
-              <ButtonGroup variant="contained" fullWidth sx={{ my: 1 }}>
+              <ButtonGroup variant="contained" fullWidth>
                 <Button onClick={() => setDataFilter('closingRate')} variant={dataFilter === 'closingRate' ? 'contained' : 'outlined'}>
                   Closing Rate
                 </Button>
@@ -353,6 +399,7 @@ export default function VCDashboardAppPage() {
                   Revenue
                 </Button>
               </ButtonGroup>
+
               <List sx={{ mt: 2 }}>
                 {getFilteredLeaderboardData().map((data, index) => (
                   <ListItem key={index} divider>
@@ -365,6 +412,7 @@ export default function VCDashboardAppPage() {
               </List>
             </Paper>
           </Grid>
+
           {/* Main Content - Leads, Deals, Installs, and Map */}
           <Grid item xs={12} md={6} container spacing={3} direction="column" sx={{ height: 'calc(100vh - 64px)' }}>
             {/* Tabs for Leads, Deals, Installs */}
@@ -378,6 +426,7 @@ export default function VCDashboardAppPage() {
                 <List>{getFilteredData(activeTab)}</List>
               </Paper>
             </Grid>
+
             {/* Map */}
             <Grid item xs>
               <Paper
@@ -389,7 +438,10 @@ export default function VCDashboardAppPage() {
                 {/* Insert map component or iframe here */}
               </Paper>
             </Grid>
-            {/* Right Sidebar - Appointments & Tasks */}
+          </Grid>
+
+          {/* Right Sidebar - Appointments & Tasks */}
+          <Grid item xs={12} md={3}>
             <Paper sx={{ height: '40%' }}>
               <Typography variant="h5" px={2} pt={2} gutterBottom>
                 Appointments
@@ -402,7 +454,7 @@ export default function VCDashboardAppPage() {
                 )}
                 {/* {!claimData.length && <Typography sx={{ p: 2 }}>No lead is available for claim </Typography>} */}
                 {claimData.map((item, index) => (
-                  <Box key={index} display="flex" alignItems="center" justifyContent="space-between">
+                  <ListItem key={index} divider>
                     <ListItemText sx={{ textTransform: 'capitalize' }} primary={item.source || ''} secondary={item.name || ''} />
                     <Button
                       variant="outlined"
@@ -413,7 +465,7 @@ export default function VCDashboardAppPage() {
                     >
                       Claim
                     </Button>
-                  </Box>
+                  </ListItem>
                 )) || 'No lead is available for claim'}
               </List>
             </Paper>

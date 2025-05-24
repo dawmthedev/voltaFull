@@ -1,6 +1,6 @@
 // @mui
 import PropTypes from 'prop-types';
-import { styled, alpha } from '@mui/material/styles';
+import { alpha, styled } from '@mui/material/styles';
 import { Card, Typography } from '@mui/material';
 // utils
 import { fShortenNumber } from '../../../utils/formatNumber';
@@ -8,6 +8,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
+
 const StyledIcon = styled('div')(({ theme }) => ({
   margin: 'auto',
   display: 'flex',
@@ -18,6 +19,9 @@ const StyledIcon = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   marginBottom: theme.spacing(3),
 }));
+
+// ----------------------------------------------------------------------
+
 AppWidgetSummary.propTypes = {
   color: PropTypes.string,
   icon: PropTypes.string,
@@ -25,6 +29,7 @@ AppWidgetSummary.propTypes = {
   total: PropTypes.number.isRequired,
   sx: PropTypes.object,
 };
+
 export default function AppWidgetSummary({ title, total, icon, color = 'primary', sx, ...other }) {
   return (
     <Card
@@ -50,7 +55,9 @@ export default function AppWidgetSummary({ title, total, icon, color = 'primary'
       >
         <Iconify icon={icon} width={24} height={24} />
       </StyledIcon>
+
       <Typography variant="h3">{fShortenNumber(total)}</Typography>
+
       <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
         {title}
       </Typography>

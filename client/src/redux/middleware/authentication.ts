@@ -20,6 +20,8 @@ const startVerification = createAsyncThunk(
       const { data } = await post('/auth/start-verification', { email, type });
       return data.data;
     } catch (error) {
+      const a = (error as AxiosError<any>).response?.data.message;
+      console.log(a);
       throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
     }
   }

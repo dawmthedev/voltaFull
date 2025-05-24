@@ -1,5 +1,7 @@
-// ----------------------------------------------------------------------
 import { alpha } from '@mui/material/styles';
+
+// ----------------------------------------------------------------------
+
 export default function Input(theme) {
   return {
     MuiInputBase: {
@@ -40,6 +42,11 @@ export default function Input(theme) {
             backgroundColor: theme.palette.action.disabledBackground,
           },
         },
+        underline: {
+          '&:before': {
+            borderBottomColor: alpha(theme.palette.grey[500], 0.56),
+          },
+        },
       },
     },
     MuiOutlinedInput: {
@@ -48,8 +55,10 @@ export default function Input(theme) {
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: alpha(theme.palette.grey[500], 0.32),
           },
-          '&.Mui-disabled .MuiOutlinedInput-notchedOutline': {
-            borderColor: theme.palette.action.disabledBackground,
+          '&.Mui-disabled': {
+            '& .MuiOutlinedInput-notchedOutline': {
+              borderColor: theme.palette.action.disabledBackground,
+            },
           },
         },
       },

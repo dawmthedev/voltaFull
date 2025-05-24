@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createReducer, createSlice } from '@reduxjs/toolkit';
 import { createRole, getRoles  } from '../middleware/role';
 import { RoleDataTypes } from '../../types';
 

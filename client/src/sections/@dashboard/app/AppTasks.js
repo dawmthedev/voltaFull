@@ -18,17 +18,20 @@ import {
 import Iconify from '../../../components/iconify';
 
 // ----------------------------------------------------------------------
+
 AppTasks.propTypes = {
   title: PropTypes.string,
   subheader: PropTypes.string,
   list: PropTypes.array.isRequired,
 };
+
 export default function AppTasks({ title, subheader, list, ...other }) {
   const { control } = useForm({
     defaultValues: {
       taskCompleted: ['2'],
     },
   });
+
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
@@ -38,6 +41,7 @@ export default function AppTasks({ title, subheader, list, ...other }) {
         render={({ field }) => {
           const onSelected = (task) =>
             field.value.includes(task) ? field.value.filter((value) => value !== task) : [...field.value, task];
+
           return (
             <>
               {list.map((task) => (
@@ -55,6 +59,8 @@ export default function AppTasks({ title, subheader, list, ...other }) {
     </Card>
   );
 }
+
+// ----------------------------------------------------------------------
 
 TaskItem.propTypes = {
   checked: PropTypes.bool,
@@ -78,18 +84,22 @@ function TaskItem({ task, checked, onChange }) {
 
   const handleMarkComplete = () => {
     handleCloseMenu();
+    console.log('MARK COMPLETE', task.id);
   };
 
   const handleShare = () => {
     handleCloseMenu();
+    console.log('SHARE', task.id);
   };
 
   const handleEdit = () => {
     handleCloseMenu();
+    console.log('EDIT', task.id);
   };
 
   const handleDelete = () => {
     handleCloseMenu();
+    console.log('DELETE', task.id);
   };
 
   return (
@@ -109,6 +119,7 @@ function TaskItem({ task, checked, onChange }) {
         label={task.label}
         sx={{ flexGrow: 1, m: 0 }}
       />
+
       <IconButton size="large" color="inherit" sx={{ opacity: 0.48 }} onClick={handleOpenMenu}>
         <Iconify icon={'eva:more-vertical-fill'} />
       </IconButton>
@@ -155,4 +166,3 @@ function TaskItem({ task, checked, onChange }) {
     </Stack>
   );
 }
-

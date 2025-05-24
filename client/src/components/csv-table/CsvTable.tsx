@@ -1,22 +1,34 @@
 import React from 'react';
 
-export interface CsvTableProps {
-  rows: Array<Record<string, string>>;
+import { DataGridPro } from '@mui/x-data-grid-pro';
+import { Box } from '@mui/material';
+
+interface CsvTableProps {
+  data: any;
+  headLabel: {
+    name: string;
+    type?: string;
+    alignRight?: boolean;
+  }[];
 }
 
-const CsvTable: React.FC<CsvTableProps> = ({ rows }) => {
+const CsvTable = ({ data, headLabel }: CsvTableProps) => {
+  const columns = headLabel.map((headCell) => ({
+    field: headCell.name,
+    headerName: headCell.name.charAt(0).toUpperCase() + headCell.name.slice(1),
+    width: 200,
+    textAlign: 'center'
+  }));
+
+  const rows = data.map((row) => ({
+    id: Object.values(row)[0] || Math.random() * 1000,
+    ...row
+  }));
+
   return (
-    <table>
-      <tbody>
-        {rows.map((row, idx) => (
-          <tr key={idx}>
-            {Object.values(row).map((value, i) => (
-              <td key={i}>{value}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <Box sx={{ height: '60vh', width: '100%' }}>
+      <DataGridPro rows={rows} columns={columns} />
+    </Box>
   );
 };
 

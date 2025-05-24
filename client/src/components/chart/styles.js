@@ -1,7 +1,10 @@
-
-import { bgBlur } from '../../utils/cssStyles';
-import { useTheme, alpha } from '@mui/material/styles';
+// @mui
+import { alpha, useTheme } from '@mui/material/styles';
 import { GlobalStyles } from '@mui/material';
+// utils
+import { bgBlur } from '../../utils/cssStyles';
+
+// ----------------------------------------------------------------------
 
 export default function StyledChart() {
   const theme = useTheme();
@@ -10,6 +13,7 @@ export default function StyledChart() {
     <GlobalStyles
       styles={{
         '.apexcharts-canvas': {
+          // Tooltip
           '.apexcharts-xaxistooltip': {
             ...bgBlur({ color: theme.palette.background.default }),
             border: 0,
@@ -20,6 +24,10 @@ export default function StyledChart() {
             '&:after': { borderBottomColor: alpha(theme.palette.background.default, 0.8) },
           },
           '.apexcharts-tooltip.apexcharts-theme-light': {
+            ...bgBlur({ color: theme.palette.background.default }),
+            border: 0,
+            boxShadow: theme.customShadows.dropdown,
+            borderRadius: Number(theme.shape.borderRadius) * 1.5,
             '.apexcharts-tooltip-title': {
               border: 0,
               textAlign: 'center',
@@ -28,6 +36,8 @@ export default function StyledChart() {
               color: theme.palette.text[theme.palette.mode === 'light' ? 'secondary' : 'primary'],
             },
           },
+
+          // Legend
           '.apexcharts-legend': {
             padding: 0,
           },

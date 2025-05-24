@@ -1,26 +1,53 @@
-import React from 'react';
+import * as React from 'react';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-export interface Option {
+interface CustomSelectFieldProps {
+  value: string;
+  onChange: (e: React.ChangeEvent<{ name?: string | undefined; value: unknown }>) => void;
+  items: string[];
   label: string;
-  value: string;
+  open: boolean;
+  setOpen: (open: boolean) => void;
 }
 
-export interface CustomSelectFieldProps {
-  options: Option[];
-  value: string;
-  onChange?: (value: string) => void;
-}
+export default function CustomSelectField({ label, value, onChange, items, open, setOpen }: CustomSelectFieldProps) {
+  const handleChange = (event) => {
+    onChange(event);
+  };
 
-const CustomSelectField: React.FC<CustomSelectFieldProps> = ({ options, value, onChange }) => {
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleOpen = () => {
+    setOpen(true);
+  };
+
   return (
-    <select value={value} onChange={(e) => onChange && onChange(e.target.value)}>
-      {options.map((o) => (
-        <option key={o.value} value={o.value}>
-          {o.label}
-        </option>
-      ))}
-    </select>
+    <FormControl sx={{ my: 1, minWidth: 120, width: '100%' }}>
+      <InputLabel id="demo-controlled-open-select-label">{label || 'Select'}</InputLabel>
+      <Select
+        labelId="demo-controlled-open-select-label"
+        id="demo-controlled-open-select"
+        open={open}
+        onClose={handleClose}
+        onOpen={handleOpen}
+        value={value}
+        label={label || 'Select'}
+        onChange={handleChange}
+      >
+        <MenuItem value="">
+          <em>Select</em>
+        </MenuItem>
+        {items.map((item) => (
+          <MenuItem key={item} value={item}>
+            {item}
+          </MenuItem>
+        ))}
+      </Select>
+    </FormControl>
   );
-};
-
-export default CustomSelectField;
+}

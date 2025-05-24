@@ -1,25 +1,23 @@
 import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-
-
-
-
-import { List, Typography, Box } from '@mui/material';
-
-
+// @mui
+import { Box, List, ListItemText } from '@mui/material';
+//
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
-import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
+import { useAppSelector } from '../../hooks/hooks';
+
+// ----------------------------------------------------------------------
 
 AdminNavSection.propTypes = {
-  data: PropTypes.array,
+  data: PropTypes.array
 };
 
 export function AdminNavSection({ data = [], ...other }) {
-
+  const { data: loginData } = useAppSelector(authSelector);
   return (
     <Box {...other}>
-      <List sx={{ p: 1 }}>
+      <List disablePadding sx={{ p: 1 }}>
         {data.map((item) => {
           return <NavItem key={item.title} item={item} />;
         })}
@@ -28,8 +26,10 @@ export function AdminNavSection({ data = [], ...other }) {
   );
 }
 
-AdminNavSection.propTypes = {
-  data: PropTypes.array,
+// ----------------------------------------------------------------------
+
+NavItem.propTypes = {
+  item: PropTypes.object
 };
 
 function NavItem({ item }) {
@@ -41,19 +41,17 @@ function NavItem({ item }) {
       to={path}
       sx={{
         '&.active': {
-          color: 'grey.800',
-          bgcolor: 'grey.100',
-          fontWeight: 'bold',
-        },
+          color: 'text.primary',
+          bgcolor: 'action.selected',
+          fontWeight: 'fontWeightBold'
+        }
       }}
     >
       <StyledNavItemIcon>{icon && icon}</StyledNavItemIcon>
-      <Typography>{title}</Typography>
+
+      <ListItemText disableTypography primary={title} />
+
       {info && info}
     </StyledNavItem>
   );
 }
-
-NavItem.propTypes = {
-  item: PropTypes.object,
-};

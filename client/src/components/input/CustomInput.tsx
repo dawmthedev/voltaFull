@@ -1,5 +1,5 @@
-import React from 'react';
 import { Box, TextField, Typography } from '@mui/material';
+import React from 'react';
 
 interface CustomInputProps {
   value: string;
@@ -10,6 +10,7 @@ interface CustomInputProps {
   size?: 'small' | 'medium';
   error?: string;
 }
+
 const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error, onChange }: CustomInputProps) => {
   return (
     <Box>
@@ -27,4 +28,5 @@ const CustomInput = ({ type = 'text', value, name, label, size = 'medium', error
     </Box>
   );
 };
+
 export default CustomInput;

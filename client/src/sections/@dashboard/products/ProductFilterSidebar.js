@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
+// @mui
 import {
   Box,
+  Radio,
   Stack,
   Button,
   Drawer,
-  Radio,
   Rating,
   Divider,
   Checkbox,
@@ -14,13 +15,13 @@ import {
   RadioGroup,
   FormControlLabel,
 } from '@mui/material';
-
 // components
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 import { ColorMultiPicker } from '../../../components/color-utils';
 
 // ----------------------------------------------------------------------
+
 export const SORT_BY_OPTIONS = [
   { value: 'featured', label: 'Featured' },
   { value: 'newest', label: 'Newest' },
@@ -47,6 +48,7 @@ export const FILTER_COLOR_OPTIONS = [
 ];
 
 // ----------------------------------------------------------------------
+
 ShopFilterSidebar.propTypes = {
   openFilter: PropTypes.bool,
   onOpenFilter: PropTypes.func,
@@ -142,7 +144,9 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
                         color="default"
                         icon={<Rating readOnly value={4 - index} />}
                         checkedIcon={<Rating readOnly value={4 - index} />}
-                        sx={{ '&:hover': { bgcolor: 'transparent' } }}
+                        sx={{
+                          '&:hover': { bgcolor: 'transparent' },
+                        }}
                       />
                     }
                     label="& Up"
@@ -174,4 +178,3 @@ export default function ShopFilterSidebar({ openFilter, onOpenFilter, onCloseFil
     </>
   );
 }
-

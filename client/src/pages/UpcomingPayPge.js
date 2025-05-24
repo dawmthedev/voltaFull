@@ -1,22 +1,27 @@
 import React from 'react'; // Import React as a whole without destructuring
 import { Helmet } from 'react-helmet-async';
+import { Container, Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Card } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
-import { Container, Card, Button, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
-import { InsertDriveFile as InsertDriveFileIcon } from '@mui/icons-material';
+import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 
 import DealsData from '../components/dataGrid/DealsData'; // Assuming this is your chart
 import UpcomingPayData from '../components/dataGrid/UpcomingPay';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
+
 export default function UpcomingPayPage() {
-  const { data } = useAppSelector(authSelector); // Assuming `unlocked` controls the modal vs chart view
+  const { data, unlocked } = useAppSelector(authSelector); // Assuming `unlocked` controls the modal vs chart view
   const recordId = data?.recordID;
+
   // Modal state management
   const [isMessageModalOpen, setMessageModalOpen] = React.useState(false);
+  const [messageText, setMessageText] = React.useState('');
   const [fileUrls, setFileUrls] = React.useState([]);
+
   const handleOpenMessageModal = () => {
     setMessageModalOpen(true);
   };
+
   const handleCloseMessageModal = () => {
     setMessageModalOpen(false);
     setFileUrls([]); // Reset file URLs when closing the modal
@@ -30,9 +35,12 @@ export default function UpcomingPayPage() {
   const { getRootProps, getInputProps } = useDropzone({ onDrop });
 
   const handleSendMessage = () => {
+    console.log('Message to send:', messageText);
+    console.log('File URLs:', fileUrls);
     // Handle message submission logic here
     handleCloseMessageModal();
   };
+
   return (
     <React.Fragment>
       <Helmet>
@@ -40,6 +48,7 @@ export default function UpcomingPayPage() {
       </Helmet>
       <Container>
         <h2>Anticipated Pay this Friday</h2>
+
         {/* Conditional rendering based on 'unlocked' flag */}
         {false ? (
           // Render the modal when 'unlocked' is true
@@ -110,6 +119,7 @@ export default function UpcomingPayPage() {
     </DialogActions>
   </Dialog>
 </>
+
         ) : (
           // Render the DealsData (chart) when 'unlocked' is false
           <Card sx={{ p: '1rem' }}>

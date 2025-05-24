@@ -1,8 +1,5 @@
-
-import { Box } from '@mui/material';
-
 import React, { useState } from 'react';
-import { Box, Typography, Stepper, Step, StepLabel, Modal } from '@mui/material';
+import { Stepper, Step, StepLabel, Typography, Modal, Box } from '@mui/material';
 
 const stepLabels = [
     { label: 'Service Inspection', key: 'ServiceInspectionDate' },
@@ -17,24 +14,33 @@ const stepLabels = [
     { label: 'FDA & CP (Serivce)', key: 'FDACPServiceDate' },
     { label: 'Service Package Submitted', key: 'ServicePackageSubmittedDate' }
     
+
    
 ];
+
 const StatusStepLabels = [
     { label: 'In Queue', key: '01-01-2024' },
     { label: 'Scheduled', key: '01-02-2024' },
     { label: 'Complete', key: '01-03-2024' }
+];
+
 const ServiceStepper = ({ activeStep, taskDates, financing }) => {
     const [open, setOpen] = useState(false);
     const [selectedStep, setSelectedStep] = useState(null);
+
     const handleOpen = (step) => {
         setSelectedStep(step);
         setOpen(true);
     };
+
     const handleClose = () => {
         setOpen(false);
         setSelectedStep(null);
+    };
+
     return (
         <div>
+
             <Typography> Service Milestones</Typography>
             <Stepper sx={{ paddingLeft: '50px', backgroundColor: 'whitesmoke', borderRadius: 2 }} activeStep={activeStep} orientation="vertical">
                 {stepLabels.map((step, index) => {
@@ -49,9 +55,12 @@ const ServiceStepper = ({ activeStep, taskDates, financing }) => {
                         const stepDate = taskDates[step.key];
                         const isCompleted = Boolean(stepDate);
                         stepContent = isCompleted ? (
+                            <Typography variant="caption" style={{ marginLeft: '10px', color: 'green' }}>
                                 {stepDate}
+                            </Typography>
                         ) : null;
                     }
+
                     return (
                         <Step key={step.label} completed={Boolean(taskDates[step.key]) || (step.key === 'NTPDate' && financing === "Sunnova")}>
                             <StepLabel onClick={() => handleOpen(step)}>
@@ -62,6 +71,7 @@ const ServiceStepper = ({ activeStep, taskDates, financing }) => {
                     );
                 })}
             </Stepper>
+
             <Modal
                 open={open}
                 onClose={handleClose}
@@ -84,6 +94,7 @@ const ServiceStepper = ({ activeStep, taskDates, financing }) => {
         </div>
     );
 };
+
 const style = {
     position: 'absolute',
     top: '50%',
@@ -94,4 +105,6 @@ const style = {
     border: '2px solid #000',
     boxShadow: 24,
     p: 4,
+};
+
 export default ServiceStepper;

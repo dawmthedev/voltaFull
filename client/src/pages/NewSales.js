@@ -1,7 +1,9 @@
 import * as React from 'react';
 import { Helmet } from 'react-helmet-async';
-import NewSalelData from '../components/dataGrid/NewSaleData';
-import { Container, Card } from '@mui/material';
+import { Box, Card, Container } from '@mui/material';
+import PayrollData from '../components/dataGrid/PayrollData';
+import NewSalelData from '../components/dataGrid/NewSaleData'
+import LeadGenPay from '../components/dataGrid/LeadGenPay';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 import { Fragment } from 'react';
@@ -20,6 +22,7 @@ export default function NewSalePage() {
           <NewSalelData recordUserId={recordId} />
         </Card>
     
+
         {/* <h1>Lead generation Commissions</h1>
           <LeadGenPay recordUserId={recordId} /> */}
       </Container>

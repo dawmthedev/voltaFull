@@ -1,21 +1,19 @@
-
-
 // @mui
 import { alpha } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
-export function bgBlur({ color = '#000000', blur = 6, opacity = 0.8, imgUrl } = {}) {
-  const backdrop = {
-    backgroundColor: alpha(color, opacity),
-    backdropFilter: `blur(${blur}px)`,
-    WebkitBackdropFilter: `blur(${blur}px)`,
-  };
+
+export function bgBlur(props) {
+  const color = props?.color || '#000000';
+  const blur = props?.blur || 6;
+  const opacity = props?.opacity || 0.8;
+  const imgUrl = props?.imgUrl;
+
   if (imgUrl) {
     return {
       position: 'relative',
       backgroundImage: `url(${imgUrl})`,
       '&:before': {
-        ...backdrop,
         position: 'absolute',
         top: 0,
         left: 0,
@@ -23,22 +21,44 @@ export function bgBlur({ color = '#000000', blur = 6, opacity = 0.8, imgUrl } = 
         content: '""',
         width: '100%',
         height: '100%',
+        backdropFilter: `blur(${blur}px)`,
+        WebkitBackdropFilter: `blur(${blur}px)`,
+        backgroundColor: alpha(color, opacity),
       },
     };
   }
 
-  return backdrop;
-}
-
-export function bgGradient({ direction = 'to bottom', startColor, endColor, color, imgUrl } = {}) {
-  const gradient = `linear-gradient(${direction}, ${startColor || color}, ${endColor || color})`;
   return {
-    background: imgUrl ? `${gradient}, url(${imgUrl})` : gradient,
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center center',
+    backdropFilter: `blur(${blur}px)`,
+    WebkitBackdropFilter: `blur(${blur}px)`,
+    backgroundColor: alpha(color, opacity),
   };
 }
+
+// ----------------------------------------------------------------------
+
+export function bgGradient(props) {
+  const direction = props?.direction || 'to bottom';
+  const startColor = props?.startColor;
+  const endColor = props?.endColor;
+  const imgUrl = props?.imgUrl;
+  const color = props?.color;
+
+  if (imgUrl) {
+    return {
+      background: `linear-gradient(${direction}, ${startColor || color}, ${endColor || color}), url(${imgUrl})`,
+      backgroundSize: 'cover',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: 'center center',
+    };
+  }
+
+  return {
+    background: `linear-gradient(${direction}, ${startColor}, ${endColor})`,
+  };
+}
+
+// ----------------------------------------------------------------------
 
 export function textGradient(value) {
   return {
@@ -48,6 +68,8 @@ export function textGradient(value) {
   };
 }
 
+// ----------------------------------------------------------------------
+
 export function filterStyles(value) {
   return {
     filter: value,
@@ -56,16 +78,24 @@ export function filterStyles(value) {
   };
 }
 
+// ----------------------------------------------------------------------
+
 export const hideScrollbarY = {
   msOverflowStyle: 'none',
   scrollbarWidth: 'none',
   overflowY: 'scroll',
-  '&::-webkit-scrollbar': { display: 'none' },
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
 };
 
+// ----------------------------------------------------------------------
+
 export const hideScrollbarX = {
-  overflowX: 'scroll',
   msOverflowStyle: 'none',
   scrollbarWidth: 'none',
-  '&::-webkit-scrollbar': { display: 'none' },
+  overflowX: 'scroll',
+  '&::-webkit-scrollbar': {
+    display: 'none',
+  },
 };

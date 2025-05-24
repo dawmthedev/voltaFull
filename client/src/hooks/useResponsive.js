@@ -1,36 +1,48 @@
-
-
+// @mui
 import { useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
+
+// ----------------------------------------------------------------------
 
 export default function useResponsive(query, start, end) {
   const theme = useTheme();
 
-  const up = useMediaQuery(theme.breakpoints.up(start));
-  const down = useMediaQuery(theme.breakpoints.down(start));
-  const between = useMediaQuery(theme.breakpoints.between(start, end));
-  const only = useMediaQuery(theme.breakpoints.only(start));
+  const mediaUp = useMediaQuery(theme.breakpoints.up(start));
 
-  if (query === 'up') return up;
-  if (query === 'down') return down;
-  if (query === 'between') return between;
-  return only;
+  const mediaDown = useMediaQuery(theme.breakpoints.down(start));
+
+  const mediaBetween = useMediaQuery(theme.breakpoints.between(start, end));
+
+  const mediaOnly = useMediaQuery(theme.breakpoints.only(start));
+
+  if (query === 'up') {
+    return mediaUp;
+  }
+
+  if (query === 'down') {
+    return mediaDown;
+  }
+
+  if (query === 'between') {
+    return mediaBetween;
+  }
+
+  return mediaOnly;
 }
+
+// ----------------------------------------------------------------------
 
 export function useWidth() {
   const theme = useTheme();
 
-  // Call useMediaQuery for each breakpoint key.
-  const isXlUp = useMediaQuery(theme.breakpoints.up('xl'));
-  const isLgUp = useMediaQuery(theme.breakpoints.up('lg'));
-  const isMdUp = useMediaQuery(theme.breakpoints.up('md'));
-  const isSmUp = useMediaQuery(theme.breakpoints.up('sm'));
-  const isXsUp = useMediaQuery(theme.breakpoints.up('xs'));
+  const keys = [...theme.breakpoints.keys].reverse();
 
-  if (isXlUp) return 'xl';
-  if (isLgUp) return 'lg';
-  if (isMdUp) return 'md';
-  if (isSmUp) return 'sm';
-  if (isXsUp) return 'xs';
-  return 'xs';
+  return (
+    keys.reduce((output, key) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const matches = useMediaQuery(theme.breakpoints.up(key));
+
+      return !output && matches ? key : output;
+    }, null) || 'xs'
+  );
 }

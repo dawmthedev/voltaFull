@@ -1,12 +1,42 @@
-import React from 'react';
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import { ClickAwayListener } from '@mui/base/ClickAwayListener';
+import { SxProps } from '@mui/system';
 
-export interface ClickAwayProps {
+interface ClickAwayProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   children: React.ReactNode;
-  onClickAway?: () => void;
 }
 
-const ClickAway: React.FC<ClickAwayProps> = ({ children }) => {
-  return <div>{children}</div>;
-};
+export default function ClickAway({ open, setOpen, children }: ClickAwayProps) {
+  const handleClick = () => {
+    setOpen((prev) => !prev);
+  };
 
-export default ClickAway;
+  const handleClickAway = () => {
+    setOpen(false);
+  };
+
+  const styles: SxProps = {
+    position: 'absolute',
+    top: 28,
+    right: 0,
+    left: 0,
+    zIndex: 1,
+    border: '1px solid',
+    p: 1,
+    bgcolor: 'background.paper'
+  };
+
+  return (
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <Box sx={{ position: 'relative' }}>
+        <button type="button" onClick={handleClick}>
+          Open menu dropdown
+        </button>
+        {open ? <Box sx={styles}>{children}</Box> : null}
+      </Box>
+    </ClickAwayListener>
+  );
+}
