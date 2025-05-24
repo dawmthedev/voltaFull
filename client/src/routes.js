@@ -31,6 +31,7 @@ import UpcomingPayPage from './pages/UpcomingPayPge';
 import PreviousPayPage from './pages/PreviousPay';
 import UtilitySign from './pages/UtilitySign';
 import Exam from './pages/Exam';
+import AccountsPayable from './pages/AccountsPayable';
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -74,6 +75,7 @@ export default function Router() {
         { path: 'planner', element: <Planner /> },
         { path: 'availability-planner', element: <AvailabilityPlanner /> },
         { path: 'deals', element: <DealsPage /> },
+        { path: 'accounts-payable', element: <AccountsPayable /> },
         { path: 'upcomingPay', element: <UpcomingPayPage /> },
         { path: 'lastweekPay', element: <PreviousPayPage /> }
       ]
