@@ -4,12 +4,11 @@ import * as React from 'react';
 import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
 
 import { useMemo, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
+import DEALS from '../../_mock/deals';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { styled, darken, lighten } from '@mui/material/styles';
-import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
 
 export default function DealsData(props) {
@@ -42,7 +41,7 @@ export default function DealsData(props) {
   const [skip, setSkip] = React.useState(0);
   // const [isLoading, setIsLoading] = useState(true);
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
 
@@ -195,121 +194,9 @@ export default function DealsData(props) {
   });
 
   useEffect(() => {
-    fetch(`${baseURL}/auth/crmDealsLeadgen`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ recordId: recordUserId })
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        if (responseData.success && responseData.data.deals) {
-          const dealsData = responseData.data.deals.map((deal) => {
-            return {
-              stage: deal.stage.replace(/^"|"$/g, ''),
-              status: deal.status.replace(/^"|"$/g, ''),
-              milestone: deal.milestone.replace(/^"|"$/g, ''),
-              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
-              email: deal.email.replace(/^"|"$/g, ''),
-              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
-              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
-              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
-              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
-              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
-              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
-              profile: 'hello',
-              id: deal.projectID
-            };
-          });
-          setData(dealsData);
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        setDealsError(error);
-        setLoading(false);
-      });
-  }, [recordUserId]);
-
-
-  useEffect(() => {
-    fetch(`${baseURL}/auth/crmDeals`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ recordId: recordUserId })
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        if (responseData.success && responseData.data.deals) {
-          const dealsData = responseData.data.deals.map((deal) => {
-            return {
-              stage: deal.stage.replace(/^"|"$/g, ''),
-              status: deal.status.replace(/^"|"$/g, ''),
-              milestone: deal.milestone.replace(/^"|"$/g, ''),
-              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
-              email: deal.email.replace(/^"|"$/g, ''),
-              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
-              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
-              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
-              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
-              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
-              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
-              profile: 'hello',
-              id: deal.projectID
-            };
-          });
-          setData(dealsData);
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        setDealsError(error);
-        setLoading(false);
-      });
-  }, [recordUserId]);
-
-  
-
-  useEffect(() => {
-    fetch(`${baseURL}/auth/crmDealsLeadgen`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ recordId: recordUserId })
-    })
-      .then((response) => response.json())
-      .then((responseData) => {
-        if (responseData.success && responseData.data.deals) {
-          const dealsData = responseData.data.deals.map((deal) => {
-            return {
-              stage: deal.stage.replace(/^"|"$/g, ''),
-              status: deal.status.replace(/^"|"$/g, ''),
-              milestone: deal.milestone.replace(/^"|"$/g, ''),
-              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
-              email: deal.email.replace(/^"|"$/g, ''),
-              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
-              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
-              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
-              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
-              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
-              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
-              profile: 'hello',
-              id: deal.projectID
-            };
-          });
-          setData(dealsData);
-        }
-        setLoading(false);
-      })
-      .catch((error) => {
-        setDealsError(error);
-        setLoading(false);
-      });
-  }, [recordUserId]);
+    setData(DEALS);
+    setLoading(false);
+  }, []);
 
 
 

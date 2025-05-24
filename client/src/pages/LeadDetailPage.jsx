@@ -13,7 +13,7 @@ import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
-import { baseURL } from '../libs/client/apiClient';
+import { PROJECTS } from '../_mock/projects';
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import axios from 'axios';
 
@@ -277,43 +277,28 @@ const LeadDetailPage = () => {
 
 
   useEffect(() => {
-    if (UserData) {
-      fetch(`${baseURL}/auth/crmDeal`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recordId: id || '3613' })
-      })
-        .then((response) => response.json())
-        .then((responseData) => {
-          if (responseData.success && responseData.data) {
-            const parsedData = responseData.data;
-            setHomeownerData(parsedData.homeownerName.replace(/^"|"$/g, '') || 'Loading...');
-            setPhoneData(parsedData.saleDate || 'Loading...');
-            setFinancing(parsedData.financing || 'Loading...');
-            setProducts(parsedData.products.replace(/^"|"$/g, '') || 'Loading...');
-            setProgress(parsedData.progress ? parseFloat(parsedData.progress.replace('%', '')) : 0);
-            setEmailData(parsedData.email.replace(/^"|"$/g, '') || 'Loading...');
-            setAddressData(parsedData.address.replace(/^"|"$/g, '') || 'Loading...');
-            setContractAmount(parsedData.contractAmount || 'Loading...');
-            setAddersTotal(parsedData.addersTotal || 'Loading...');
-            setDealerFee(parsedData.dealerFee || 'Loading...');
-            setPPWFinal(parsedData.ppwFinal || 'Loading...');
-            setInstaller(parsedData.installer);
-            setStatus(parsedData.status || 'Loading...');
-            setAddersData(parsedData.vcadders || []);
-            setMessageData(parsedData.vcmessages || []);
-            setPayroll(parsedData.vccommissions || []);
-            setLoading(false);
-            updateStages(parsedData);
-          }
-        })
-        .catch(error => {
-          console.error('API Error:', error);
-          setDealsError(error);
-          setLoading(false);
-        });
+    const proj = PROJECTS.find((p) => p.id === Number(id));
+    if (proj) {
+      setHomeownerData(proj.name);
+      setPhoneData(proj.saleDate);
+      setFinancing(proj.financing);
+      setProducts(proj.products);
+      setProgress(proj.progress ? parseFloat(proj.progress.replace('%', '')) : 0);
+      setEmailData(proj.email);
+      setAddressData(proj.address);
+      setContractAmount(proj.contractAmount);
+      setAddersTotal(proj.addersTotal);
+      setDealerFee(proj.dealerFee);
+      setPPWFinal(proj.ppwFinal);
+      setInstaller(proj.installer);
+      setStatus(proj.status);
+      setAddersData(proj.vcadders || []);
+      setMessageData(proj.vcmessages || []);
+      setPayroll(proj.vccommissions || []);
+      updateStages(proj);
     }
-  }, [id, UserData]);
+    setLoading(false);
+  }, [id]);
 
   if (isLoading) {
     return (
