@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
 import axios from 'axios';
+import logger from '../../utils/logger';
 
 const MessageForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -46,7 +47,7 @@ const MessageForm = ({ onClose }) => {
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
@@ -70,7 +71,7 @@ const MessageForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       setSubmissionStatus({
         success: true,
         message: 'Message, Topic, and Receiver roles sent successfully!',
@@ -223,7 +224,7 @@ export default MessageForm;
 //     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
 //     const headers = {
-//       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+//       Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };

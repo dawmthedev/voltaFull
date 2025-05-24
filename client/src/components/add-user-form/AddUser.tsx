@@ -7,6 +7,7 @@ import { MultiSelect } from 'react-multi-select-component';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
+import logger from '../../utils/logger';
 
 const AddUserForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -63,7 +64,7 @@ const AddUserForm = ({ onClose }) => {
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
@@ -88,7 +89,7 @@ const AddUserForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
       }, 2000);
@@ -372,7 +373,7 @@ export default AddUserForm;
 //     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
 //     const headers = {
-//       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+//       Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };
@@ -731,7 +732,7 @@ export default AddUserForm;
 //     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
 //     const headers = {
-//       Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+//       Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
 //       "QB-Realm-Hostname": QB_DOMAIN,
 //       "Content-Type": "application/json",
 //     };

@@ -20,6 +20,7 @@ import AuthenticationLayout from '../layouts/AuthenticationLayout';
 import Iconify from '../components/iconify';
 import { RegisterOrgTypes } from '../types';
 import { baseURL } from '../libs/client/apiClient';
+import logger from '../utils/logger';
 
 const initialState = {
   email: '',
@@ -56,7 +57,7 @@ const RegisterPage = () => {
         setIsCodeSent(true);
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
   const handleRegister = async (data: RegisterOrgTypes) => {
@@ -68,13 +69,13 @@ const RegisterPage = () => {
         password: data.password,
         verificationToken: data.verifyCode
       });
-      console.log(response);
+      logger.success(response);
 
       if (response.status === 200) {
         navigate('/login');
       }
     } catch (error) {
-      console.log(error);
+      logger.error(error);
     }
   };
   return (
