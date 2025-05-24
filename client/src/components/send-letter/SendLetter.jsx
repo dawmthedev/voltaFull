@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
 import axios from 'axios';
+import logger from '../../utils/logger';
 
 const MessageForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -70,7 +71,7 @@ const MessageForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       setSubmissionStatus({
         success: true,
         message: 'Message, Topic, and Receiver roles sent successfully!',

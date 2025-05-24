@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 
 import { DataGridPro, GridToolbar, GroupingPanel } from '@mui/x-data-grid-pro';
+import logger from '../../utils/logger';
 
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
@@ -135,9 +136,9 @@ export default function InActiveRates(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.data.rates);
+        logger.request(responseData.data.rates);
 
-        console.log('responseData.data.payrollData:', responseData.data.rates);
+        logger.request('responseData.data.payrollData:', responseData.data.rates);
 
         if (responseData.success && responseData.data.rates) {
           const RateData = responseData.data.rates.map((feeRateItem, index) => {
