@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Button, TextField, Typography, Modal, Box, CircularProgress, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Modal, Box, Skeleton, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { baseURL } from '../../libs/client/apiClient';
 import axios from 'axios';
@@ -485,10 +485,8 @@ export default function NewSaleData(props) {
       </Box>
       <div style={{ height: 400, width: '100%' }}>
         {isLoading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-            <CircularProgress />
-          </Box>
-        ) : error ? (
+          <Skeleton variant="rectangular" width="100%" height="100%" />
+          ) : error ? (
           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
             <Typography color="error">{error}</Typography>
           </Box>

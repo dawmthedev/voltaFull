@@ -1,7 +1,7 @@
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
 
-import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Skeleton, Select, MenuItem } from '@mui/material';
 
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { styled, darken, lighten } from '@mui/material/styles';
 import { baseURL } from '../../libs/client/apiClient';
-// import { gridStyles } from '../../constants/styles';
+import { gridStyles } from '../../constants/styles';
 
 export default function UpcomingPayData(props) {
 
@@ -52,20 +52,13 @@ export default function UpcomingPayData(props) {
 
   //STYLES:
 
-  const gridStyles = {
-    height: '75vh',
-    maxWidth: '100%', // ensure the grid does not exceed the width of its container
-    overflow: 'auto', // allow scrolling within the grid if content exceeds its bounds
-    backgroundColor: 'none'
-  };
-
   const apiRef = React.useRef(null);
 
   //CHANGE THE COLUMNS AND THOSE FIELDS THAT ARE ADDED TO IT.
   const columns = useMemo(
     () => [
       {
-        field: 'Profile',
+        field: 'profile',
         headerName: 'Profile',
         width: 150,
         editable: true,
@@ -92,7 +85,7 @@ export default function UpcomingPayData(props) {
       },
       {
         field: 'milestone',
-        headerName: 'MileStone',
+        headerName: 'Milestone',
         width: 180,
         editable: false,
         type: 'text'
@@ -101,7 +94,7 @@ export default function UpcomingPayData(props) {
     
       {
         field: 'plansReqDate',
-        headerName: 'Plans Requeated Date',
+        headerName: 'Plans Requested Date',
         width: 180,
         editable: false,
         type: 'text'
@@ -130,14 +123,14 @@ export default function UpcomingPayData(props) {
       },
       {
         field: 'contractAmount',
-        headerName: 'ContractAmount',
+        headerName: 'Contract Amount',
         width: 180,
         editable: false,
         type: 'text'
       },
       {
         field: 'salesRep',
-        headerName: 'salesRep',
+        headerName: 'Sales Rep',
         width: 180,
         editable: false,
         type: 'text'
@@ -322,12 +315,10 @@ export default function UpcomingPayData(props) {
           </Box>
 
           {isLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <CircularProgress />
-            </Box>
+            <Skeleton variant="rectangular" width="100%" height="100%" />
           ) : (
             <StyledDataGrid
-              sx={gridStyles}
+              sx={{ ...gridStyles, height: '75vh', backgroundColor: 'none' }}
               //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
               //    rows={leadsRows}
               rows={filteredRows}

@@ -1,6 +1,6 @@
 // TODO: add subscription to update the table when a new lead is added, NEW_LEAD_SUBSCRIPTION
 import * as React from 'react';
-import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
+import { Button, TextField, Typography, Skeleton, Select, MenuItem } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 import { useMemo, useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -22,12 +22,6 @@ export default function LeadGenPay(props) {
   const { recordUserId } = props;
 
   // Grid style
-  const gridStyles = {
-    height: 350,
-    maxWidth: '100%', // ensure the grid does not exceed the width of its container
-    overflow: 'auto' // allow scrolling within the grid if content exceeds its bounds
-  };
-
   const [gridRef] = useState({});
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -80,7 +74,7 @@ export default function LeadGenPay(props) {
 
       {
         field: 'saleDate',
-        headerName: 'SaleDate',
+        headerName: 'Sale Date',
         width: 180,
         editable: false,
         hide: false,
@@ -335,9 +329,7 @@ export default function LeadGenPay(props) {
           </Box>
 
           {isLoading ? (
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%' }}>
-              <CircularProgress />
-            </Box>
+            <Skeleton variant="rectangular" width="100%" height="100%" />
           ) : (
             <StyledDataGrid
               pageSize={pageSize}
@@ -346,7 +338,7 @@ export default function LeadGenPay(props) {
               paginationMode="server"
               onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
               onPageChange={(newPage) => setPage(newPage)}
-              sx={gridStyles}
+              sx={{ ...gridStyles, height: 350 }}
               //  rows={categories.length || searchQuery ? data?.leads?.rows : leadsRows}  columns={columnsToShow}
               rows={leadsRows}
               editable
