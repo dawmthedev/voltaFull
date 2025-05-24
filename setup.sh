@@ -29,7 +29,7 @@ npm install
 
 # ─── 4) Server: install deps ───────────────────────────────────────────────────
 echo "🔧  Installing server dependencies..."
-( cd server && yarn install )
+( cd server && npm install )
 
 # ─── 5) Client: fix peer-deps & install ────────────────────────────────────────
 echo "🔧  Preparing client for install..."
