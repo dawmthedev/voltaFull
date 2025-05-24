@@ -6,7 +6,9 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DealsPage from './pages/DealsPage';
 import LeadDetailPage from './pages/LeadDetailPage';
+import CalendarPage from './pages/CalendarPage';
 import LandingPage from './pages/LandingPage';
+
 
 import RegisterPage from './pages/RegisterPage';
 
@@ -27,6 +29,7 @@ export default function Router() {
         { path: 'deals', element: <DealsPage /> },
 
         { path: 'deals/:id', element: <LeadDetailPage /> },
+        { path: 'calendar', element: <CalendarPage /> },
         { path: 'user', element: <UserPage /> }
 
       ]
