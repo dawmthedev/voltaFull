@@ -65,3 +65,23 @@ Edit `.barreslby.json` to customize it:
   "delete": true
 }
 ```
+
+## Tests
+
+Run the server unit tests:
+
+```bash
+yarn test
+```
+
+Watch files and re-run tests on change:
+
+```bash
+yarn test:watch
+```
+
+Generate a coverage report:
+
+```bash
+yarn test:coverage
+```
