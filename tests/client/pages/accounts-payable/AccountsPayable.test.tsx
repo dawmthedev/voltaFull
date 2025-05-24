@@ -1,4 +1,5 @@
 import { render, screen } from "@testing-library/react";
+import "@testing-library/jest-dom";
 import AccountsPayable from "../../../../client/src/pages/AccountsPayable";
 
 describe("AccountsPayable page", () => {

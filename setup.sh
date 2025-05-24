@@ -40,7 +40,7 @@ echo "🔧  Preparing client for install..."
 )
 
 echo "🧪  Running test suite..."
-npm test
+npx jest
 
 echo "🚀  Starting full-stack dev environment..."
 npm run dev
