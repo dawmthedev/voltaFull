@@ -2,32 +2,29 @@ import React from "react";
 import { useMemo } from "react";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider as MUIThemeProvider, createTheme, StyledEngineProvider } from "@mui/material/styles";
-import palette from "./palette";
+import { getPalette } from "./palette";
 import shadows from "./shadows";
 import typography from "./typography";
 import GlobalStyles from "./globalStyles";
 import customShadows from "./customShadows";
 import componentsOverride from "./overrides";
 
-export default function ThemeProvider({ children }: { children: React.ReactNode }) {
+export default function ThemeProvider({
+  children,
+  mode = 'light',
+}: {
+  children: React.ReactNode;
+  mode?: 'light' | 'dark';
+}) {
   const themeOptions = useMemo(
     () => ({
-      palette: {
-        primary: {
-          main: '#556cd6',
-          contrastText: '#ffffff',
-        },
-        secondary: {
-          main: '#19857b',
-          contrastText: '#000000',
-        },
-      },
+      palette: getPalette(mode),
       shape: { borderRadius: 6 },
       typography,
       shadows: shadows(),
-      customShadows: customShadows()
+      customShadows: customShadows(),
     }),
-    []
+    [mode]
   );
 
   const theme = createTheme(themeOptions as any );
