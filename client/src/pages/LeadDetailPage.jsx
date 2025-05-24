@@ -1,21 +1,14 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
-  Grid, Dialog, Button, TextField, Autocomplete, Box, DialogTitle, DialogContent,
-  DialogContentText, DialogActions, Typography, Paper, List, ListItem, ListItemText,
+  Grid, Box, Typography, Paper, List, ListItem, ListItemText,
   ListItemIcon, LinearProgress, CircularProgress
 } from '@mui/material';
-import InsertDriveFileIcon from '@mui/icons-material/InsertDriveFile';
 import EmailIcon from '@mui/icons-material/Email';
 import PersonIcon from '@mui/icons-material/Person';
-import { v4 as uuidv4 } from "uuid";
-import { useDropzone } from 'react-dropzone';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
-import { baseURL } from '../libs/client/apiClient';
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import axios from 'axios';
 
 import MainStepper from '../components/MainStepper';
 import BatteryStepper from '../components/BatteryStepper';
@@ -54,13 +47,6 @@ const LeadDetailPage = () => {
   const [payrollData, setPayroll] = useState([]);
   const [addersData, setAddersData] = useState([]);
   const [messageData, setMessageData] = useState([]);
-  const [selectedUser, setSelectedUser] = useState([]);
-  const [isMessageModalOpen, setMessageModalOpen] = useState(false);
-  const [messageText, setMessageText] = useState('');
-  const [files, setFiles] = useState([]);
-  const [fileUrls, setFileUrls] = useState([]);
-  const [uploadProgress, setUploadProgress] = useState({});
-  const [users, setUsers] = useState([]);
   const [taskDates, setTaskDates] = useState({});
   const [BatteryTaskDates, setBatteryTaskDates] = useState({});
   const [HVACTaskDates, setHVACTaskDates] = useState({});
@@ -150,170 +136,16 @@ const LeadDetailPage = () => {
 
 
 
-  const handleOpenMessageModal = () => setMessageModalOpen(true);
-  const handleCloseMessageModal = () => {
-    setMessageModalOpen(false);
-    setSelectedUser([]);
-    setFiles([]);
-    setFileUrls([]);
-    setUploadProgress({});
-  };
-
-  const submitNewMessage = async ({ Message, relatedProject, TaggedUsers, from }) => {
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-    const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
-      "QB-Realm-Hostname": "voltaic.quickbase.com",
-      "Content-Type": "application/json",
-    };
-
-    const requestBody = {
-      to: "br5cqr42m",
-      data: [{
-        6: { value: Message },
-        26: { value: relatedProject },
-        61: { value: 'Project Manager' },
-        62: { value: TaggedUsers },
-        82: { value: from },
-        83: { value: fileUrls[0] || null },
-        84: { value: fileUrls[1] || null },
-        85: { value: fileUrls[2] || null },
-        86: { value: fileUrls[3] || null }
-      }]
-    };
-
-    try {
-      await axios.post(API_ENDPOINT, requestBody, { headers });
-      setMessageText('');
-      setMessageModalOpen(false);
-      setSelectedUser([]);
-      setFiles([]);
-      setFileUrls([]);
-    } catch (error) {
-      console.error("Failed to send message:", error);
-    }
-  };
-
-  const onDrop = useCallback((acceptedFiles) => {
-    const file = acceptedFiles[0];
-    if (file) {
-      const preUri = `images/utility${uuidv4()}.jpg`;
-      const pathReference = ref(getStorage(), preUri);
-
-      uploadBytes(pathReference, file).then(() => {
-        getDownloadURL(ref(getStorage(), preUri)).then((url) => setFileUrls((prev) => [...prev, url]));
-      }).catch(error => console.error("Upload error:", error));
-    }
-  }, []);
-
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
-
-  const handleSendMessage = async () => {
-    const taggedUserEmails = selectedUser.map(user => user.email).join('; ');
-    try {
-      await submitNewMessage({ Message: messageText, relatedProject: id, TaggedUsers: taggedUserEmails, from: UserData?.name });
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
-  };
 
 
-
-
-
-  
-  useEffect(() => {
-    const fetchCRMUsers = async () => {
-      const API_URL = "https://api.quickbase.com/v1/records/query";
-      const USER_TOKEN = "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3";
-      const QB_DOMAIN = "voltaic.quickbase.com";
-
-      const requestBody = {
-        from: "br5cqr4wu",
-        where: "({53.EX.'Active'})",
-        
-        sortBy: [
-          { fieldId: 12, order: "ASC" },
-          { fieldId: 1049, order: "ASC" },
-          { fieldId: 52, order: "ASC" },
-          { fieldId: 10, order: "ASC" },
-          { fieldId: 602, order: "ASC" },
-        ],
-        groupBy: [
-          { fieldId: 12, grouping: "equal-values" },
-          { fieldId: 53, grouping: "equal-values" },
-          { fieldId: 1049, grouping: "equal-values" },
-          { fieldId: 10, grouping: "equal-values" },
-          { fieldId: 602, grouping: "equal-values" },
-        ],
-        options: { skip: 0, top: 0, compareWithAppLocalTime: false },
-      };
-
-      const headers = {
-        Authorization: USER_TOKEN,
-        "QB-Realm-Hostname": QB_DOMAIN,
-        "Content-Type": "application/json",
-      };
-
-      try {
-        const response = await axios.post(API_URL, requestBody, { headers });
-        if (response.data && response.data.data) {
-          const activeUsers = response.data.data
-            .filter((user) => user['53'] && user['53'].value === 'Active') // Filter for 'isLeft' users
-            .map((user) => ({
-              id: user['6'] && user['6'].value, // If '6' is the ID field, it should be a string in quotes
-              name: user['12'] ? user['12'].value.trim() : 'No Name', // .trim() is used to remove whitespace
-              email: user['10'] ? user['10'].value : 'No Email',
-            }));
-          setUsers(activeUsers);
-        }
-      } catch (error) {
-        console.error('Failed to fetch users:', error);
-      }
-    };
-
-    fetchCRMUsers();
-  }, []);
-
-
-  useEffect(() => {
-    if (UserData) {
-      fetch(`${baseURL}/auth/crmDeal`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ recordId: id || '3613' })
-      })
-        .then((response) => response.json())
-        .then((responseData) => {
-          if (responseData.success && responseData.data) {
-            const parsedData = responseData.data;
-            setHomeownerData(parsedData.homeownerName.replace(/^"|"$/g, '') || 'Loading...');
-            setPhoneData(parsedData.saleDate || 'Loading...');
-            setFinancing(parsedData.financing || 'Loading...');
-            setProducts(parsedData.products.replace(/^"|"$/g, '') || 'Loading...');
-            setProgress(parsedData.progress ? parseFloat(parsedData.progress.replace('%', '')) : 0);
-            setEmailData(parsedData.email.replace(/^"|"$/g, '') || 'Loading...');
-            setAddressData(parsedData.address.replace(/^"|"$/g, '') || 'Loading...');
-            setContractAmount(parsedData.contractAmount || 'Loading...');
-            setAddersTotal(parsedData.addersTotal || 'Loading...');
-            setDealerFee(parsedData.dealerFee || 'Loading...');
-            setPPWFinal(parsedData.ppwFinal || 'Loading...');
-            setInstaller(parsedData.installer);
-            setStatus(parsedData.status || 'Loading...');
-            setAddersData(parsedData.vcadders || []);
-            setMessageData(parsedData.vcmessages || []);
-            setPayroll(parsedData.vccommissions || []);
-            setLoading(false);
-            updateStages(parsedData);
-          }
-        })
-        .catch(error => {
-          console.error('API Error:', error);
-          setDealsError(error);
-          setLoading(false);
-        });
-    }
-  }, [id, UserData]);
+useEffect(() => {
+  setHomeownerData('John Doe');
+  setAddressData('123 Main St');
+  setEmailData('john@example.com');
+  setProducts('Solar');
+  setMessageData([{ id: 1, from: 'Admin', Message: 'Welcome!' }]);
+  setLoading(false);
+}, []);
 
   if (isLoading) {
     return (
@@ -460,45 +292,11 @@ const LeadDetailPage = () => {
         <Grid item sx={{ p: 2, backgroundColor: 'whitesmoke', borderRadius: 2, mt: 2 }}>
           <Box display="flex" justifyContent="space-between">
             <Typography variant="h6" sx={{ color: 'brown', fontWeight: 'bold' }}>Messages</Typography>
-            <Button onClick={handleOpenMessageModal} sx={{
-  backgroundColor: 'primary.main',
-  color: 'white',
-  '&:hover': { backgroundColor: 'primary.dark' }
-}}>Add Message</Button>
           </Box>
           {messageData.map((msg) => (
             <Card key={msg.id} data={msg} from={msg.from} />
           ))}
         </Grid>
-
-        {/* Message Modal */}
-        <Dialog open={isMessageModalOpen} onClose={handleCloseMessageModal}>
-          <DialogTitle>New Message</DialogTitle>
-          <DialogContent>
-            <DialogContentText>To send a message, please enter your message here.</DialogContentText>
-            <TextField fullWidth margin="dense" label="Message" value={messageText} onChange={(e) => setMessageText(e.target.value)} />
-            <Autocomplete
-  multiple
-  id="tags-outlined"
-  options={Array.from(new Set(users.map(user => JSON.stringify(user)))).map(user => JSON.parse(user))} // Remove duplicates
-  getOptionLabel={(option) => option.name}
-  filterSelectedOptions
-  value={selectedUser}
-  onChange={(event, newValue) => setSelectedUser(newValue)}
-  renderInput={(params) => <TextField {...params} label="Tag Users" />}
-/>   <section {...getRootProps({ className: 'dropzone' })} style={{ border: '2px dashed #ccc', padding: '20px', textAlign: 'center', marginTop: '20px' }}>
-              <input {...getInputProps()} />
-              <p>Drag 'n' drop some files here, or click to select files</p>
-            </section>
-            <aside>
-              <ul>{fileUrls.map((url, index) => <li key={index}><InsertDriveFileIcon /><a href={url} target="_blank" rel="noopener noreferrer">{url.slice(0, 20) + '...'}</a></li>)}</ul>
-            </aside>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleCloseMessageModal}>Cancel</Button>
-            <Button onClick={handleSendMessage}>Send</Button>
-          </DialogActions>
-        </Dialog>
       </Grid>
     </Grid>
   );
@@ -545,14 +343,12 @@ const formatDate = (timestamp) => {
 
 
 const Card = ({ data, from }) => (
-
-  
-  <Box sx={{ 
-    boxShadow: '0px 0px 10px #e3e3e3', 
-    marginTop: '16px', 
-    padding: '16px', 
-    borderRadius: '8px', 
-    backgroundColor: '#fff', 
+  <Box sx={{
+    boxShadow: '0px 0px 10px #e3e3e3',
+    marginTop: '16px',
+    padding: '16px',
+    borderRadius: '8px',
+    backgroundColor: '#fff',
     cursor: 'pointer'
   }}>
     <Typography variant="subtitle2" sx={{ color: 'black', fontWeight: 'bold', marginBottom: '8px' }}>
@@ -560,12 +356,13 @@ const Card = ({ data, from }) => (
     </Typography>
     <Box sx={{ marginLeft: '16px' }}>
       <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', marginBottom: '8px' }}>
-        {data.text.replace(/["]/g, '').replace(/\r?\n|\r/g, ' ')} {/* Removes quotes and newlines */}
+        {(data.text || data.Message || '').replace(/["]/g, '').replace(/\r?\n|\r/g, ' ')}
       </Typography>
-      <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
-      <strong>Created At:</strong> {formatDate(data.createdAt.replace(/^"|"$/g, ''))}
-    
-      </Typography>
+      {data.createdAt && (
+        <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block' }}>
+          <strong>Created At:</strong> {formatDate(data.createdAt.replace(/^"|"$/g, ''))}
+        </Typography>
+      )}
     </Box>
   </Box>
 );
