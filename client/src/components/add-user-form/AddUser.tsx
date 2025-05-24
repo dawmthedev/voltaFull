@@ -7,6 +7,7 @@ import { MultiSelect } from 'react-multi-select-component';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { format } from 'date-fns';
+import logger from '../../utils/logger';
 
 const AddUserForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
@@ -88,7 +89,7 @@ const AddUserForm = ({ onClose }) => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       setTimeout(() => {
         onClose(); // Close the modal after 2 seconds
       }, 2000);

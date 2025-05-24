@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar, GroupingPanel } from '@mui/x-data-grid-pro';
+import logger from '../../utils/logger';
 
 import { useAppSelector } from '../../hooks/hooks';
 import { authSelector } from '../../redux/slice/authSlice';
@@ -225,9 +226,9 @@ export default function PayrollData(props) {
     })
       .then((response) => response.json())
       .then((responseData) => {
-        console.log(responseData.data.payrollData);
+        logger.request(responseData.data.payrollData);
 
-        console.log('responseData.data.payrollData:', responseData.data.payrollData);
+        logger.request('responseData.data.payrollData:', responseData.data.payrollData);
 
         if (responseData.success && responseData.data.payrollData) {
           const payData = responseData.data.payrollData.map((payrollItem) => {

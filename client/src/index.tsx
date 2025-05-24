@@ -8,6 +8,7 @@ import { PersistGate } from 'redux-persist/integration/react';
 // import reportWebVitals from "./reportWebVitals";
 import App from './App';
 import { store, persistor } from './redux/store';
+import logger from './utils/logger';
 
 // Function to load the Google Maps API
 const loadGoogleMapsAPI = (callback: () => void) => {
@@ -28,7 +29,7 @@ const loadGoogleMapsAPI = (callback: () => void) => {
 const RootComponent = () => {
   useEffect(() => {
     loadGoogleMapsAPI(() => {
-      console.log('Google Maps API has been loaded');
+      logger.success('Google Maps API has been loaded');
     });
   }, []);
 
