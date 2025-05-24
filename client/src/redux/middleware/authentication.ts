@@ -36,6 +36,44 @@ const register = createAsyncThunk('auth/register', async ({ name, email, passwor
   }
 });
 
+const startVerification = createAsyncThunk(
+  'auth/startVerification',
+  async ({ email, type }: { email: string; type: string }) => {
+    try {
+      const { data } = await post('/auth/start-verification', { email, type });
+      return data.data;
+    } catch (error) {
+      throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
+    }
+  }
+);
+
+const verifyCode = createAsyncThunk(
+  'auth/verifyCode',
+  async ({ email, code }: { email: string; code: string }) => {
+    try {
+      const { data } = await post('/auth/verify', { email, code });
+      return data.data;
+    } catch (error) {
+      throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
+    }
+  }
+);
+
+const completeVerification = createAsyncThunk(
+  'auth/completeVerification',
+  async (
+    params: { email: string; code: string } | { name: string; email: string; password: string }
+  ) => {
+    try {
+      const { data } = await post('/auth/complete-registration', params);
+      return data.data;
+    } catch (error) {
+      throw new Error((error as AxiosError<any>).response?.data.message || SOMETHING_WENT_WRONG);
+    }
+  }
+);
+
 // const completeRegistration = createAsyncThunk(
 //   'auth/completeRegistration',
 //   async ({ name, email, password }: { name: string; email: string; password: string }) => {
@@ -58,4 +96,12 @@ const logout = createAsyncThunk('auth/logout', async () => {
 });
 
 
-export { getOrganization, login, register, logout };
+export {
+  getOrganization,
+  login,
+  register,
+  startVerification,
+  verifyCode,
+  completeVerification,
+  logout
+};
