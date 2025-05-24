@@ -14,7 +14,7 @@ const getOrganization = createAsyncThunk('organization/get', async ({ id }: { id
 });
 
 
-const login = createAsyncThunk('aut/login', async ({ email, password }: { email: string; password: string }) => {
+const login = createAsyncThunk('auth/login', async ({ email, password }: { email: string; password: string }) => {
   try {
     const { data } = await post('/auth/login', { email, password });
     return data.data;
