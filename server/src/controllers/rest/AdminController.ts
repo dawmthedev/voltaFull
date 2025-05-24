@@ -75,4 +75,27 @@ export class AdminController {
       SuccessMessageModel
     );
   }
+
+  @Get("/me")
+  @Returns(200, SuccessResult).Of(AdminResultModel)
+  public async getMe(@Context() context: Context) {
+    const admin = context.get("user");
+    if (!admin) throw new Unauthorized(ADMIN_NOT_FOUND);
+    return new SuccessResult(
+      {
+        id: admin.id,
+        name: admin.name,
+        email: admin.email,
+        role: admin.role || "",
+        docs: admin.docs || "",
+        recordID: admin.recordID || "",
+        unlocked: admin.unlocked || "",
+        twoFactorEnabled: admin.twoFactorEnabled,
+        orgId: admin.orgId || "",
+        company: admin.company,
+        isSuperAdmin: admin.isSuperAdmin
+      },
+      AdminResultModel
+    );
+  }
 }
