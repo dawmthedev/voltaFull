@@ -107,7 +107,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     console.log(formData);
     e.preventDefault();
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": "voltaic.quickbase.com",
       "Content-Type": "application/json",
     };
@@ -151,7 +151,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
