@@ -5,7 +5,7 @@ import { Box, List, ListItemText } from '@mui/material';
 import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
 import { authSelector } from '../../redux/slice/authSlice';
 import { useAppSelector } from '../../hooks/hooks';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -22,7 +22,7 @@ interface AdminNavSectionProps {
   [key: string]: any;
 }
 
-export function AdminNavSection({ data = [], ...other }: AdminNavSectionProps) {
+export default function AdminNavSection({ data = [], ...other }: AdminNavSectionProps) {
   const { data: loginData } = useAppSelector(authSelector);
   return (
     <Box {...other}>

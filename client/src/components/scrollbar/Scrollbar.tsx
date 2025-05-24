@@ -1,4 +1,4 @@
-import { memo, ReactNode } from 'react';
+import React, { memo, ReactNode } from 'react';
 import { SxProps } from '@mui/system';
 // @mui
 import { Box } from '@mui/material';
