@@ -6,7 +6,9 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DealsPage from './pages/DealsPage';
 import LeadDetailPage from './pages/LeadDetailPage';
+
 import RegisterPage from './pages/RegisterPage';
+
 
 export default function Router() {
   let session = document.cookie.split(';').find((item) => item.includes('session'));
@@ -18,8 +20,10 @@ export default function Router() {
       children: [
         { index: true, element: <Navigate to="/dashboard/deals" /> },
         { path: 'deals', element: <DealsPage /> },
+
         { path: 'deals/:id', element: <LeadDetailPage /> },
         { path: 'user', element: <UserPage /> }
+
       ]
     },
     {
