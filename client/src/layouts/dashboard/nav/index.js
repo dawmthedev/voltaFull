@@ -117,15 +117,6 @@ export default function Nav({ openNav, onCloseNav }) {
               How' are you?
             </Typography>
           </Box> */}
-<Button
-  href="https://voltaicapp.vercel.app/InstallMap"
-  variant="contained"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  Install Map
-</Button>
-
           <Button href="/login" variant="contained">
             Log out
           </Button>
