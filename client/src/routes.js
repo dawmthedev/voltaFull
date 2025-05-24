@@ -8,6 +8,10 @@ import DealsPage from './pages/DealsPage';
 import LeadDetailPage from './pages/LeadDetailPage';
 import CalendarPage from './pages/CalendarPage';
 import LandingPage from './pages/LandingPage';
+import ProjectsPage from './pages/ProjectsPage';
+import TechnicianAllocation from './pages/TechnicianAllocation';
+import MessagingNotifications from './pages/MessagingNotifications';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 
 
 import RegisterPage from './pages/RegisterPage';
