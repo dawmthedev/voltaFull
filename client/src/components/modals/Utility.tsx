@@ -1,10 +1,14 @@
 import React, { useState, useCallback } from 'react';
-import PropTypes from 'prop-types';
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, CircularProgress } from '@mui/material';
 import { useDropzone } from 'react-dropzone';
 import { baseURL } from '../../libs/client/apiClient';
 
-const UtilityBillUploadModal = ({ open, setOpen }) => {
+interface UtilityBillUploadModalProps {
+  open: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const UtilityBillUploadModal = ({ open, setOpen }: UtilityBillUploadModalProps) => {
     const [file, setFile] = useState(null);
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState('');
@@ -75,12 +79,6 @@ const UtilityBillUploadModal = ({ open, setOpen }) => {
             </DialogActions>
         </Dialog>
     );
-};
-
-UtilityBillUploadModal.propTypes = {
-    open: PropTypes.bool.isRequired,
-    setOpen: PropTypes.func.isRequired,
-    baseURL: PropTypes.string.isRequired,
 };
 
 export default UtilityBillUploadModal;
