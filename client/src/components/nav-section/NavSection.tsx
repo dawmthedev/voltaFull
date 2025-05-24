@@ -3,7 +3,7 @@ import { Box, List, ListItemText } from '@mui/material';
 import { StyledNavItem, StyledNavItemIcon } from './styles';
 import { authSelector } from '../../redux/slice/authSlice';
 import { useAppSelector } from '../../hooks/hooks';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 
 interface NavItemData {
   title: string;

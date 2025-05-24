@@ -7,7 +7,7 @@ import { login, register, startVerification, verifyCode, completeVerification, l
 
 type AuthState = {
   loading: boolean;
-  data: AdminResponseTypes[];
+  data: AdminResponseTypes | null;
   error: string | null;
   verificationData: any;
   verificationLoading: boolean;
@@ -19,7 +19,7 @@ type AuthState = {
 
 const initialState: AuthState = {
   loading: false,
-  data: [],
+  data: null,
   error: null,
   verificationData: null,
   verificationLoading: false,
