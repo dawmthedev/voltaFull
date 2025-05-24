@@ -4,7 +4,6 @@ import { Box, Stack, Link, Card, Button, Divider, Typography, CardHeader } from 
 // utils
 import { fToNow } from '../../../utils/formatTime';
 // components
-import styles from '../../../Styles/Messages.module.css';
 import Iconify from '../../../components/iconify';
 import Scrollbar from '../../../components/scrollbar';
 
@@ -70,9 +69,23 @@ function NewsItem({ news }) {
           {description}
         </Typography>
       </Box>
-      <Button href=""  className={styles.callButton}>
-      <Iconify icon="eva:phone-fill" color="#18712" width={22} height={22}  />
-              </Button>
+      <Button
+        href=""
+        sx={{
+          backgroundColor: '#00bfa5',
+          color: 'white',
+          border: 'none',
+          borderRadius: '5px',
+          p: '10px',
+          fontSize: '1.2rem',
+          m: '10px',
+          width: '100%',
+          height: '100%',
+          '&:hover': { backgroundColor: '#00bfa5' },
+        }}
+      >
+        <Iconify icon="eva:phone-fill" color="#18712" width={22} height={22} />
+      </Button>
 
 
 
