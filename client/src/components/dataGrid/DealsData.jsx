@@ -194,9 +194,103 @@ export default function DealsData(props) {
   });
 
   useEffect(() => {
-    setData(DEALS);
+
+    setData([
+      {
+        id: 1,
+        homeownerName: 'Test Homeowner',
+        saleDate: '2024-01-01',
+        status: 'Active',
+        stage: 'Proposal',
+        email: 'test@example.com',
+        plansReceived: '',
+        installComplete: '',
+        ptoApproved: '',
+        ppwFinal: 0
+      }
+    ]);
     setLoading(false);
   }, []);
+
+
+  useEffect(() => {
+    fetch(`${baseURL}/auth/crmDeals`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ recordId: recordUserId })
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        if (responseData.success && responseData.data.deals) {
+          const dealsData = responseData.data.deals.map((deal) => {
+            return {
+              stage: deal.stage.replace(/^"|"$/g, ''),
+              status: deal.status.replace(/^"|"$/g, ''),
+              milestone: deal.milestone.replace(/^"|"$/g, ''),
+              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
+              email: deal.email.replace(/^"|"$/g, ''),
+              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
+              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
+              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
+              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
+              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
+              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
+              profile: 'hello',
+              id: deal.projectID
+            };
+          });
+          setData(dealsData);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setDealsError(error);
+        setLoading(false);
+      });
+  }, [recordUserId]);
+
+  
+
+  useEffect(() => {
+    fetch(`${baseURL}/auth/crmDealsLeadgen`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ recordId: recordUserId })
+    })
+      .then((response) => response.json())
+      .then((responseData) => {
+        if (responseData.success && responseData.data.deals) {
+          const dealsData = responseData.data.deals.map((deal) => {
+            return {
+              stage: deal.stage.replace(/^"|"$/g, ''),
+              status: deal.status.replace(/^"|"$/g, ''),
+              milestone: deal.milestone.replace(/^"|"$/g, ''),
+              datePaid: deal.datePaid.replace(/^"|"$/g, ''),
+              email: deal.email.replace(/^"|"$/g, ''),
+              saleDate: deal.saleDate.replace(/^"|"$/g, ''),
+              plansReceived: deal.plansReceived.replace(/^"|"$/g, ''),
+              installComplete: deal.installComplete.replace(/^"|"$/g, ''),
+              ptoApproved: deal.ptoApproved.replace(/^"|"$/g, ''),
+              ppwFinal: truncateDecimals(deal.ppwFinal, 1),
+              homeownerName: deal.homeownerName.replace(/^"|"$/g, ''),
+              profile: 'hello',
+              id: deal.projectID
+            };
+          });
+          setData(dealsData);
+        }
+        setLoading(false);
+      })
+      .catch((error) => {
+        setDealsError(error);
+        setLoading(false);
+      });
+  }, [recordUserId]);
+
 
 
 
