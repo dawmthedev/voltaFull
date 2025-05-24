@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { LoadingButton } from '@mui/lab';
-import { Button, Checkbox, IconButton, InputAdornment, Stack, TextField } from '@mui/material';
+import {
+  Button,
+  Checkbox,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  Grid,
+  Card,
+  Typography,
+  FormControlLabel,
+  FormHelperText
+} from '@mui/material';
+import { useForm, Controller } from 'react-hook-form';
 import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthenticationLayout from '../layouts/AuthenticationLayout';
@@ -20,14 +33,22 @@ const initialState = {
 
 const RegisterPage = () => {
   const navigate = useNavigate();
-  const [register, setRegister] = useState<RegisterOrgTypes>(initialState);
   const [isCodeSent, setIsCodeSent] = useState<boolean>(false);
   const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  const {
+    control,
+    handleSubmit,
+    getValues,
+    formState: { errors }
+  } = useForm<RegisterOrgTypes>({
+    defaultValues: initialState
+  });
 
   const handleClick = async () => {
     try {
       const response = await axios.post(`${baseURL}/auth/start-verification`, {
-        email: register.email,
+        email: getValues('email'),
         type: 'email'
       });
 
@@ -38,14 +59,14 @@ const RegisterPage = () => {
       console.log(error);
     }
   };
-  const handleRegister = async () => {
+  const handleRegister = async (data: RegisterOrgTypes) => {
     try {
       const response = await axios.post(`${baseURL}/auth/register`, {
-        email: register.email,
-        name: register.name,
-        company: register.company,
-        password: register.password,
-        verificationToken: register.verifyCode
+        email: data.email,
+        name: data.name,
+        company: data.company,
+        password: data.password,
+        verificationToken: data.verifyCode
       });
       console.log(response);
 
@@ -58,88 +79,143 @@ const RegisterPage = () => {
   };
   return (
     <AuthenticationLayout title="Register" link={{ text: 'Login', to: '/login' }}>
-      <Stack spacing={3}>
-        <TextField
-          disabled={isCodeSent}
-          value={register.email}
-          onChange={(e) => setRegister({ ...register, email: e.target.value })}
+      <Grid container spacing={2}>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ p: 3 }}>
+            <form onSubmit={isCodeSent ? handleSubmit(handleRegister) : handleSubmit(handleClick)}>
+              <Stack spacing={3}>
+        <Controller
           name="email"
-          label="Email address"
+          control={control}
+          rules={{ required: 'Email is required' }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              disabled={isCodeSent}
+              label="Email address"
+              error={Boolean(errors.email)}
+              helperText={errors.email?.message}
+            />
+          )}
         />
-        <TextField
-          disabled={isCodeSent}
-          value={register.name}
-          onChange={(e) => setRegister({ ...register, name: e.target.value })}
+        <Controller
           name="name"
-          label="Name"
+          control={control}
+          rules={{ required: 'Name is required' }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              disabled={isCodeSent}
+              label="Name"
+              error={Boolean(errors.name)}
+              helperText={errors.name?.message}
+            />
+          )}
         />
-        <TextField
-          disabled={isCodeSent}
-          value={register.company}
-          onChange={(e) => setRegister({ ...register, company: e.target.value })}
+        <Controller
           name="company"
-          label="Company"
+          control={control}
+          rules={{ required: 'Company is required' }}
+          render={({ field }) => (
+            <TextField
+              {...field}
+              disabled={isCodeSent}
+              label="Company"
+              error={Boolean(errors.company)}
+              helperText={errors.company?.message}
+            />
+          )}
         />
         <Stack direction="row" alignItems="center" justifyContent="space-between" gap={2} sx={{ my: 2 }}>
-          <TextField
-            value={register.password}
-            onChange={(e) => setRegister({ ...register, password: e.target.value })}
+          <Controller
             name="password"
-            label="Password"
-            type={showPassword ? 'text' : 'password'}
-            disabled={isCodeSent}
+            control={control}
+            rules={{ required: 'Password is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Password"
+                type={showPassword ? 'text' : 'password'}
+                disabled={isCodeSent}
+                error={Boolean(errors.password)}
+                helperText={errors.password?.message}
+              />
+            )}
           />
-          <TextField
-            value={register.confirmPassword}
-            onChange={(e) => setRegister({ ...register, confirmPassword: e.target.value })}
+          <Controller
             name="confirmPassword"
-            label="Confirm Password"
-            type={showPassword ? 'text' : 'password'}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
-            disabled={isCodeSent}
+            control={control}
+            rules={{ required: 'Confirm password is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Confirm Password"
+                type={showPassword ? 'text' : 'password'}
+                disabled={isCodeSent}
+                error={Boolean(errors.confirmPassword)}
+                helperText={errors.confirmPassword?.message}
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                        <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
+            )}
           />
-        </Stack>
-      </Stack>
-      {isCodeSent && (
+              </Stack>
+              {isCodeSent && (
         <Stack spacing={3} sx={{ position: 'relative', mt: 2 }}>
-          <TextField
-            name="code"
-            label="Code"
-            value={register.verifyCode}
-            onChange={(e) => setRegister({ ...register, verifyCode: e.target.value })}
+          <Controller
+            name="verifyCode"
+            control={control}
+            rules={{ required: 'Verification code is required' }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Code"
+                error={Boolean(errors.verifyCode)}
+                helperText={errors.verifyCode?.message}
+              />
+            )}
           />
           <Button variant="text" sx={{ position: 'absolute', bottom: '10px', right: '10px' }}>
             Resend
           </Button>
         </Stack>
-      )}
+              )}
 
-      <Stack direction="row" alignItems="center" justifyItems="start" sx={{ my: 2 }}>
-        <Checkbox
-          name="remember"
-          checked={register.agree}
-          onChange={(e) => setRegister({ ...register, agree: Boolean(e.target.value) })}
-          disabled={isCodeSent}
+              <Stack direction="row" alignItems="center" justifyItems="start" sx={{ my: 2 }}>
+        <Controller
+          name="agree"
+          control={control}
+          rules={{ required: 'You must agree' }}
+          render={({ field }) => (
+            <FormControlLabel
+              control={<Checkbox {...field} checked={field.value} disabled={isCodeSent} />}
+              label={<Link to="#">I agree to the terms and conditions</Link>}
+            />
+          )}
         />
-        <Link to="#">I agree to the terms and conditions</Link>
-      </Stack>
-      {!isCodeSent ? (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleClick}>
-          Register
-        </LoadingButton>
-      ) : (
-        <LoadingButton fullWidth size="large" type="submit" variant="contained" onClick={handleRegister}>
-          Complete Registration
-        </LoadingButton>
-      )}
+        {errors.agree && <FormHelperText error>{errors.agree.message}</FormHelperText>}
+              </Stack>
+
+              <LoadingButton fullWidth size="large" type="submit" variant="contained">
+                {isCodeSent ? 'Complete Registration' : 'Register'}
+              </LoadingButton>
+            </Stack>
+            </form>
+          </Card>
+        </Grid>
+        <Grid item xs={12} md={6}>
+          <Card sx={{ p: 3, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <Typography variant="h6">Join Us!</Typography>
+          </Card>
+        </Grid>
+      </Grid>
     </AuthenticationLayout>
   );
 };
