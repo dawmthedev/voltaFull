@@ -17,11 +17,9 @@ import useResponsive from '../../../hooks/useResponsive';
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
-import { AdminNavSection } from '../../../components/admin-navsection/AdminNavSection';
+import AdminNavSection from '../../../components/admin-navsection/AdminNavSection';
 import navConfig from './config';
 import AdminConfig from './AdminConfig';
-
-
 
 // ----------------------------------------------------------------------
 
@@ -94,15 +92,8 @@ export default function Nav({ openNav, onCloseNav }) {
         </Link>
       </Box>
 
-
-{/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
-{data.role === 'Mentor' ? (
-  <AdminNavSection data={AdminConfig} />
-) : (
-  <NavSection data={navConfig} />
-)}
-
-
+      {/* {data.recordID == "1890" ?  <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />} */}
+      {data.role === 'Mentor' ? <AdminNavSection data={AdminConfig} /> : <NavSection data={navConfig} />}
 
       <Box sx={{ flexGrow: 1 }} />
 
