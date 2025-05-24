@@ -10,6 +10,8 @@ import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
 
+
+
 import MainStepper from '../components/MainStepper';
 import BatteryStepper from '../components/BatteryStepper';
 import HvacStepper from '../components/HVACStepper';
@@ -138,6 +140,7 @@ const LeadDetailPage = () => {
 
 
 
+
 useEffect(() => {
   setHomeownerData('John Doe');
   setAddressData('123 Main St');
@@ -146,6 +149,7 @@ useEffect(() => {
   setMessageData([{ id: 1, from: 'Admin', Message: 'Welcome!' }]);
   setLoading(false);
 }, []);
+
 
   if (isLoading) {
     return (

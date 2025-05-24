@@ -4,12 +4,11 @@ import * as React from 'react';
 import { Button, TextField, Typography, CircularProgress, Select, MenuItem } from '@mui/material';
 
 import { useMemo, useState, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
+import DEALS from '../../_mock/deals';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { styled, darken, lighten } from '@mui/material/styles';
-import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
 
 export default function DealsData(props) {
@@ -42,7 +41,7 @@ export default function DealsData(props) {
   const [skip, setSkip] = React.useState(0);
   // const [isLoading, setIsLoading] = useState(true);
 
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [isLoading, setLoading] = useState(true);
   const [dealsError, setDealsError] = useState(null);
 
@@ -195,6 +194,7 @@ export default function DealsData(props) {
   });
 
   useEffect(() => {
+
     setData([
       {
         id: 1,
@@ -290,6 +290,7 @@ export default function DealsData(props) {
         setLoading(false);
       });
   }, [recordUserId]);
+
 
 
 

@@ -4,5 +4,6 @@ export const PROJECTS = [
     name: 'Demo Project',
     status: 'Active',
     messages: [{ id: 1, from: 'Admin', text: 'Welcome!' }]
+
   }
 ];
