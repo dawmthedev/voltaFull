@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { AdminResponseTypes } from '../../types';
 
-import { login, startVerification, register, verifyCode, completeVerification, logout } from '../middleware/authentication';
+
+import { login, register, startVerification, verifyCode, completeVerification, logout } from '../middleware/authentication';
+
 
 type AuthState = {
   loading: boolean;
@@ -115,6 +117,9 @@ const authSlice = createSlice({
       state.loading = false;
       state.error = action.error.message;
     });
+
+
+
     // logout
     builder.addCase(logout.pending, (state) => {
       state.loading = true;
