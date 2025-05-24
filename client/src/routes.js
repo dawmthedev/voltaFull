@@ -6,6 +6,10 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import DealsPage from './pages/DealsPage';
 import LeadDetailPage from './pages/LeadDetailPage';
+import ProjectsPage from './pages/ProjectsPage';
+import TechnicianAllocation from './pages/TechnicianAllocation';
+import MessagingNotifications from './pages/MessagingNotifications';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
 
 import RegisterPage from './pages/RegisterPage';
 
@@ -20,6 +24,11 @@ export default function Router() {
       children: [
         { index: true, element: <Navigate to="/dashboard/deals" /> },
         { path: 'deals', element: <DealsPage /> },
+
+        { path: 'projects', element: <ProjectsPage /> },
+        { path: 'technician-allocation', element: <TechnicianAllocation /> },
+        { path: 'messaging-notifications', element: <MessagingNotifications /> },
+        { path: 'analytics-dashboard', element: <AnalyticsDashboard /> },
 
         { path: 'deals/:id', element: <LeadDetailPage /> },
         { path: 'user', element: <UserPage /> }
