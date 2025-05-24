@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem } from '@mui/material';
 import axios from 'axios';
+import logger from '../utils/logger';
 
 const EmailUserForm = () => {
   const [formData, setFormData] = useState({
@@ -25,7 +26,7 @@ const EmailUserForm = () => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       // Add any additional actions on success here
     } catch (error) {
       alert("Failed sending email");

@@ -18,6 +18,7 @@ import Iconify from '../components/iconify';
 import { useAppDispatch, useAppSelector } from '../hooks/hooks';
 import { login } from '../redux/middleware/authentication';
 import { setAlert } from '../redux/slice/alertSlice';
+import logger from '../utils/logger';
 import { authSelector } from '../redux/slice/authSlice';
 
 const LoginPage = () => {
@@ -66,7 +67,7 @@ const LoginPage = () => {
           type: 'error'
         })
       );
-      console.log(error);
+      logger.error(error);
     }
   };
   return (

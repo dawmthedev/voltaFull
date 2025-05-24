@@ -9,6 +9,7 @@ import PersonIcon from '@mui/icons-material/Person';
 import { useParams } from 'react-router-dom';
 import { useAppSelector } from '../hooks/hooks';
 import { authSelector } from '../redux/slice/authSlice';
+import logger from '../utils/logger';
 
 
 
@@ -67,7 +68,7 @@ const LeadDetailPage = () => {
 
     // Function to update stages
     const updateStages = (data) => {
-      console.log("Updating stages with data:", data);
+      logger.request('Updating stages with data:', data);
       setTaskDates({
         saleDate: data.saleDate ? data.saleDate.replace(/^"|"$/g, '') : null,
         welcomeDate: data.welcomeDate ? data.welcomeDate.replace(/^"|"$/g, '') : null,

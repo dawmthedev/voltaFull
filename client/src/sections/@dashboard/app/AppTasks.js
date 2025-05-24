@@ -14,6 +14,7 @@ import {
   CardHeader,
   FormControlLabel,
 } from '@mui/material';
+import logger from '../../../utils/logger';
 // components
 import Iconify from '../../../components/iconify';
 
@@ -84,22 +85,22 @@ function TaskItem({ task, checked, onChange }) {
 
   const handleMarkComplete = () => {
     handleCloseMenu();
-    console.log('MARK COMPLETE', task.id);
+    logger.success('MARK COMPLETE', task.id);
   };
 
   const handleShare = () => {
     handleCloseMenu();
-    console.log('SHARE', task.id);
+    logger.success('SHARE', task.id);
   };
 
   const handleEdit = () => {
     handleCloseMenu();
-    console.log('EDIT', task.id);
+    logger.success('EDIT', task.id);
   };
 
   const handleDelete = () => {
     handleCloseMenu();
-    console.log('DELETE', task.id);
+    logger.success('DELETE', task.id);
   };
 
   return (

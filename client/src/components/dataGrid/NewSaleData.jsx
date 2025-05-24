@@ -7,6 +7,7 @@ import { startOfDay, startOfWeek, startOfMonth, startOfYear, isWithinInterval } 
 import Autocomplete from 'react-google-autocomplete';
 import { useCallback } from 'react';
 import PlacesAutocomplete from 'react-places-autocomplete';
+import logger from '../../utils/logger';
 
 
 
@@ -103,11 +104,9 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
   const submitMissingData = async (e) => {
 
-    console.log("formData")
-    console.log(formData);
     e.preventDefault();
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": "voltaic.quickbase.com",
       "Content-Type": "application/json",
     };
@@ -127,7 +126,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
   
     try {
       const response = await axios.post("https://api.quickbase.com/v1/records", requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       pushNewProject(e)
       setIsSubmitted(true);
       onClose(); // Close the modal here
@@ -151,7 +150,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     const API_ENDPOINT = "https://api.quickbase.com/v1/records";
 
     const headers = {
-      Authorization: "QB-USER-TOKEN b7738j_qjt3_0_dkaew43bvzcxutbu9q4e6crw3ei3",
+      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
       "QB-Realm-Hostname": QB_DOMAIN,
       "Content-Type": "application/json",
     };
@@ -172,10 +171,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
     
 
 
-    console.log("pushing new project" , formData)
 
-
-    console.log("pushing new project" , formData)
   
     const requestBody = {
       to: "br5cqr4r3",
@@ -197,7 +193,7 @@ const EditModal = ({ open, onClose, data, onSave }) => {
 
     try {
       const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      console.log("Success!", response.data);
+      logger.success("Success!", response.data);
       setIsSubmitted(true);
 
       onClose(); // Close the modal here
@@ -385,7 +381,6 @@ export default function NewSaleData(props) {
 
   const handleOpenModal = (row) => {
 
-    console.log("Selected Row:", row);  // This logs correctly, including recordID
   
 
   
@@ -404,13 +399,11 @@ export default function NewSaleData(props) {
     setSelectedRow(row);
 
 
-    console.log(selectedRow)
     setOpenModal(true);
   };
 
   const handleCloseModal = () => {
 
-    console.log( selectedRow)
     setOpenModal(false);
     setSelectedRow(null);
     setFormData({});

@@ -17,6 +17,16 @@ Install all server and client dependencies and launch the dev environment:
 ./setup.sh
 ```
 
+### Client environment variables
+
+Create a `.env` file inside the `client` folder with your QuickBase token:
+
+```env
+REACT_APP_QB_TOKEN=<your-token>
+```
+
+This token will be loaded by the React app when interacting with QuickBase.
+
 ## Running the applications
 
 ### Start the server only

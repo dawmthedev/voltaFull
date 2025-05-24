@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 
 import Papa from 'papaparse';
+import logger from '../../utils/logger';
 
 // const CsvUpload = (props) => {
 interface CsvUploadProps {
@@ -27,7 +28,7 @@ function CsvUpload({ handleCsvData }: CsvUploadProps) {
 
   const handleLeadSubmit = (e) => {
     e.preventDefault();
-    console.log('Lead Submitted!');
+    logger.success('Lead Submitted!');
   };
 
   const handleFileUpload = (event) => {
@@ -51,7 +52,7 @@ function CsvUpload({ handleCsvData }: CsvUploadProps) {
     // Check Uploaded EALERTS
 
     data.forEach((lead) => {
-      console.log(lead);
+      logger.request(lead);
     });
     alert('File uploaded!');
 
