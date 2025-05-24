@@ -10,12 +10,15 @@ This repository contains the React client and the Express/Node server for the Vo
 
 
 
-Install all server and client dependencies and launch the dev environment:
+Install all server and client dependencies, run the test suite, and launch the dev environment:
 
 
 ```bash
 ./setup.sh
 ```
+
+The script installs dependencies, runs `npm test` to verify everything is working,
+and finally launches the development environment.
 
 ### Client environment variables
 

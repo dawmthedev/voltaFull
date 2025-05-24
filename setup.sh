@@ -39,6 +39,9 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
+echo "🧪  Running test suite..."
+npm test
+
 echo "🚀  Starting full-stack dev environment..."
 npm run dev
 
