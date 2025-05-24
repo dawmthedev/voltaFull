@@ -1,24 +1,30 @@
-import PropTypes from 'prop-types';
 import { NavLink as RouterLink } from 'react-router-dom';
-// @mui
 import { Box, List, ListItemText } from '@mui/material';
-//
-import { StyledNavItem, StyledNavItemIcon } from '../nav-section/styles';
+import { StyledNavItem, StyledNavItemIcon } from './styles';
 import { authSelector } from '../../redux/slice/authSlice';
 import { useAppSelector } from '../../hooks/hooks';
+import { ReactNode } from 'react';
 
-// ----------------------------------------------------------------------
+interface NavItemData {
+  title: string;
+  path: string;
+  icon?: ReactNode;
+  info?: ReactNode;
+  isSuperAdmin?: boolean;
+}
 
-AdminNavSection.propTypes = {
-  data: PropTypes.array
-};
+interface NavSectionProps {
+  data?: NavItemData[];
+  [key: string]: any;
+}
 
-export function AdminNavSection({ data = [], ...other }) {
+export default function NavSection({ data = [], ...other }: NavSectionProps) {
   const { data: loginData } = useAppSelector(authSelector);
   return (
     <Box {...other}>
       <List disablePadding sx={{ p: 1 }}>
         {data.map((item) => {
+          if (item.isSuperAdmin && !loginData?.isSuperAdmin) return null;
           return <NavItem key={item.title} item={item} />;
         })}
       </List>
@@ -26,13 +32,7 @@ export function AdminNavSection({ data = [], ...other }) {
   );
 }
 
-// ----------------------------------------------------------------------
-
-NavItem.propTypes = {
-  item: PropTypes.object
-};
-
-function NavItem({ item }) {
+function NavItem({ item }: { item: NavItemData }) {
   const { title, path, icon, info } = item;
 
   return (
