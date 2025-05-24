@@ -9,6 +9,7 @@ import DEALS from '../../_mock/deals';
 import { useNavigate } from 'react-router-dom';
 import { DataGridPro, GridToolbar } from '@mui/x-data-grid-pro';
 import { styled, darken, lighten } from '@mui/material/styles';
+import { baseURL } from '../../libs/client/apiClient';
 // import { gridStyles } from '../../constants/styles';
 
 export default function DealsData(props) {
