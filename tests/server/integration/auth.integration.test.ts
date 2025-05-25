@@ -3,12 +3,14 @@ import SuperTest from "supertest";
 import { Server } from "../../server/src/Server";
 import { AdminService } from "../../server/src/services/AdminService";
 import { VerificationService } from "../../server/src/services/VerificationService";
+import { OrganizationService } from "../../server/src/services/OrganizationService";
 import { createPasswordHash } from "../../server/src/util";
 
 describe("Authentication integration", () => {
   let request: SuperTest.SuperTest<SuperTest.Test>;
   let adminService: AdminService;
   let verificationService: VerificationService;
+  let organizationService: OrganizationService;
 
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = "test-key";
@@ -19,6 +21,7 @@ describe("Authentication integration", () => {
     request = SuperTest(PlatformTest.callback());
     adminService = PlatformTest.injector.get(AdminService)!;
     verificationService = PlatformTest.injector.get(VerificationService)!;
+    organizationService = PlatformTest.injector.get(OrganizationService)!;
   });
 
   afterEach(PlatformTest.reset);
@@ -99,6 +102,57 @@ describe("Authentication integration", () => {
         success: true,
         data: { success: true, message: "Verification Code verified successfully" }
       });
+    });
+  });
+
+  describe("POST /auth/register", () => {
+    it("registers admin when data is valid", async () => {
+      jest
+        .spyOn(organizationService, "findOrganization")
+        .mockResolvedValue(null as any);
+      jest
+        .spyOn(organizationService, "createOrganization")
+        .mockResolvedValue({ _id: "org1" } as any);
+      jest.spyOn(adminService, "findAdminByEmail").mockResolvedValue(null as any);
+      jest
+        .spyOn(adminService, "createAdmin")
+        .mockResolvedValue({} as any);
+
+      const res = await request
+        .post("/rest/auth/register")
+        .send({ name: "John", email: "john@example.com", password: "secret" })
+        .expect(200);
+
+      expect(organizationService.createOrganization).toHaveBeenCalled();
+      expect(adminService.createAdmin).toHaveBeenCalledWith(
+        expect.objectContaining({
+          email: "john@example.com",
+          name: "John",
+          password: "secret",
+          role: "admin",
+          organizationId: "org1"
+        })
+      );
+      expect(res.body).toEqual({
+        success: true,
+        data: { success: true, message: "Admin registered successfully" }
+      });
+    });
+
+    it("returns error when admin exists", async () => {
+      jest
+        .spyOn(organizationService, "findOrganization")
+        .mockResolvedValue({ _id: "org1" } as any);
+      jest
+        .spyOn(adminService, "findAdminByEmail")
+        .mockResolvedValue({} as any);
+
+      const res = await request
+        .post("/rest/auth/register")
+        .send({ name: "John", email: "john@example.com", password: "secret" })
+        .expect(500);
+
+      expect(res.body.message).toBe("ADMIN_ALREADY_EXISTS");
     });
   });
 });
