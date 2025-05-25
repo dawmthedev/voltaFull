@@ -10,10 +10,14 @@ const AuthContext = createContext<AuthContextProps | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<any>(null);
 
+  const baseOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' }
+  };
+
   const signIn = async (email: string, password: string) => {
     const res = await fetch('/rest/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      ...baseOptions,
       body: JSON.stringify({ email, password })
     });
 
