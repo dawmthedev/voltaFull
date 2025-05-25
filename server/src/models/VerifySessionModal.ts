@@ -28,11 +28,11 @@ export class VerifySessionModal {
   expiry: Date;
 
   @Property()
-  @Default(new Date())
+  @Default(() => new Date())
   createdAt: Date;
 
   @Property()
-  @Default(new Date())
+  @Default(() => new Date())
   updatedAt: Date;
 
   @Property()
