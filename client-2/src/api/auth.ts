@@ -1,3 +1,4 @@
+
 export interface Credentials {
   email: string;
   password: string;
@@ -18,4 +19,5 @@ export async function login(credentials: Credentials) {
 
   return response.json();
 }
+
 

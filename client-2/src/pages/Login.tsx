@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
+
 import { useAuth } from '../hooks/useAuth'
+
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate()
@@ -15,7 +17,9 @@ const LoginPage: React.FC = () => {
     setError('')
     try {
       await signIn(email, password)
+
       navigate('/dashboard/deals', { replace: true })
+
     } catch (err) {
       setError((err as Error).message)
     }
@@ -25,6 +29,7 @@ const LoginPage: React.FC = () => {
     <Box className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-white px-4">
       <Box bg="white" p={8} rounded="xl" shadow="xl" className="w-full max-w-md transition-transform hover:scale-[1.01]">
         <Heading mb={6} size="lg" textAlign="center">Login to Volta</Heading>
+
         <form onSubmit={handleSubmit}>
           <Stack spacing={4}>
             <FormControl>
@@ -35,6 +40,7 @@ const LoginPage: React.FC = () => {
               <FormLabel>Password</FormLabel>
               <Input type="password" value={password} onChange={e => setPassword(e.target.value)} />
             </FormControl>
+
             {error && (
               <Text color="red.500" fontSize="sm">
                 {error}
