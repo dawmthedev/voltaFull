@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
+import { baseURL } from '../apiConfig';
 
 interface AuthContextProps {
   user: any;
@@ -16,7 +17,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   const signIn = async (email: string, password: string) => {
-    const res = await fetch('/rest/auth/login', {
+    const res = await fetch(`${baseURL}/auth/login`, {
       ...baseOptions,
       body: JSON.stringify({ email, password })
     });

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { baseURL } from '../apiConfig';
 
 const Register: React.FC = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const Register: React.FC = () => {
     e.preventDefault();
     setError('');
     try {
-      const res = await fetch('/rest/auth/register', {
+      const res = await fetch(`${baseURL}/auth/register`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, name, password })
