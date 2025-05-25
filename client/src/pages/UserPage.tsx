@@ -33,7 +33,7 @@ import { adminSelector, loadingAdmin } from '../redux/slice/adminSlice';
 import { loadingRole, roleList } from '../redux/slice/roleSlice';
 import CustomModal from '../components/modals/CustomModal';
 import AddUserForm from '../components/add-user-form/AddUser';
-import MessageForm from '../components/send-letter/SendLetter'
+import MessageForm from '../components/send-letter/SendLetter';
 
 import EmailUserForm from '../components/email-user/EmailUser';
 import { setAlert } from '../redux/slice/alertSlice';
@@ -109,7 +109,6 @@ export default function UserPage() {
   const [isRoleModalOpen, setIsRoleModalOpen] = useState<boolean>(false);
   const [isMessageModalOpen, setIsMessageModalOpen] = useState<boolean>(false);
 
-
   const [user, setUser] = useState(initialState);
   const [newRole, setNewRole] = useState<string>('');
 
@@ -129,7 +128,14 @@ export default function UserPage() {
   };
 
   const getSelectedUser = (userData) => {
-    setUser({ ...user, id: userData.id, name: userData.name, role: userData.role, isSuperAdmin: userData.isSuperAdmin , docs: userData.docs});
+    setUser({
+      ...user,
+      id: userData.id,
+      name: userData.name,
+      role: userData.role,
+      isSuperAdmin: userData.isSuperAdmin,
+      docs: userData.docs
+    });
   };
 
   const handleCloseMenu = () => {
@@ -140,7 +146,9 @@ export default function UserPage() {
     if (!user.name) {
       return dispatch(setAlert({ message: 'Name can not be empty.', type: 'error' }));
     }
-    const response = await dispatch(updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin, docs: user.docs }));
+    const response = await dispatch(
+      updateAdmin({ id: user.id, name: user.name, role: user.role, isSuperAdmin: user.isSuperAdmin, docs: user.docs })
+    );
     if (response && response.payload) {
       await dispatch(getUsers({ signal }));
     }
@@ -166,7 +174,6 @@ export default function UserPage() {
     handleCloseMenu();
     setNewRole('');
   };
-
 
   const submitNewUser = async () => {
     if (!newRole) {
@@ -231,12 +238,10 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-
-    // Function to handle closing the modal
-    const handleCloseModal = () => {
-      setIsModalOpen(false);
-    };
-  
+  // Function to handle closing the modal
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - users.length) : 0;
 
@@ -255,9 +260,6 @@ export default function UserPage() {
             User
           </Typography>
 
-
-
-
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsRoleModalOpen(true)}>
             Add Role
           </Button>
@@ -265,19 +267,14 @@ export default function UserPage() {
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsModalOpen(true)}>
             Add User
           </Button>
-          
 
           {/* <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsEmailModalOpen(true)}>
             Send Email
           </Button> */}
 
-
-
           <Button variant="contained" startIcon={<Iconify icon="eva:plus-fill" />} onClick={() => setIsMessageModalOpen(true)}>
-        Send Message
-      </Button>
-
-
+            Send Message
+          </Button>
         </Stack>
 
         <CustomModal
@@ -287,47 +284,24 @@ export default function UserPage() {
           handleSubmit={submitRole}
           loading={roleLoading}
         >
-
-
-
-
           <CustomInput value={newRole} onChange={(e) => setNewRole(e.target.value)} name="name" label="Role" />
         </CustomModal>
-   
 
-
-
-
-        <CustomModal
-        title="Send Message"
-        open={isMessageModalOpen}
-        setOpen={setIsMessageModalOpen}
-      >
-        <MessageForm onClose={() => setIsMessageModalOpen(false)} />
-      </CustomModal>
-
-        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
-        <AddUserForm onClose={handleCloseModal} />
-
-
-
-
-
+        <CustomModal title="Send Message" open={isMessageModalOpen} setOpen={setIsMessageModalOpen}>
+          <MessageForm onClose={() => setIsMessageModalOpen(false)} />
         </CustomModal>
 
+        <CustomModal title="Update User" open={isModalOpen} setOpen={setIsModalOpen} handleSubmit={updateUser} loading={adminLoading}>
+          <AddUserForm onClose={handleCloseModal} />
+        </CustomModal>
 
-
-
-{/* 
+        {/* 
         <CustomModal title="Update User" open={isModalOpen} setOpen={setIsEmailModalOpen} handleSubmit={updateUser} loading={adminLoading}>
           <EmailUserForm
          
         
           />
         </CustomModal> */}
-
-
-
 
         <Card>
           <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
@@ -373,15 +347,14 @@ export default function UserPage() {
                         </TableCell>
 
                         <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
-  {docs !== "Null" ? (
-    <a href={docs} target="_blank" rel="noopener noreferrer">
-      {docs}
-    </a>
-  ) : (
-    docs
-  )}
-</TableCell>
-
+                          {docs !== 'Null' ? (
+                            <a href={docs} target="_blank" rel="noopener noreferrer">
+                              {docs}
+                            </a>
+                          ) : (
+                            docs
+                          )}
+                        </TableCell>
 
                         {isSuperAdmin ? (
                           <TableCell align="left" sx={{ textTransform: 'capitalize' }}>
@@ -392,8 +365,6 @@ export default function UserPage() {
                             False
                           </TableCell>
                         )}
-
-
 
                         {/* <TableCell align="left">{isVerified ? 'Yes' : 'No'}</TableCell> */}
                         {/* 

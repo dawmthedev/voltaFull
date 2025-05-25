@@ -1,5 +1,20 @@
 import React, { useState } from 'react';
-import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
+import {
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Switch,
+  FormControlLabel,
+  FormGroup,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography
+} from '@mui/material';
 import apiClient from '../../libs/client/apiClient';
 import { DatePicker } from '@mui/x-date-pickers';
 import PlacesAutocomplete from 'react-places-autocomplete';
@@ -24,7 +39,7 @@ const AddUserForm = ({ onClose }) => {
   });
 
   const [errors, setErrors] = useState({
-    hisLicense: '',
+    hisLicense: ''
   });
 
   const [missingFields, setMissingFields] = useState([]); // Store missing fields
@@ -86,7 +101,7 @@ const AddUserForm = ({ onClose }) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value
     });
   };
 
@@ -99,7 +114,7 @@ const AddUserForm = ({ onClose }) => {
     setFormData({
       ...formData,
       role: value,
-      payrollType: newPayrollType,
+      payrollType: newPayrollType
     });
   };
 
@@ -118,7 +133,7 @@ const AddUserForm = ({ onClose }) => {
     setFormData({
       ...formData,
       payrollType: newPayrollType,
-      role: newRole,
+      role: newRole
     });
   };
 
@@ -129,47 +144,14 @@ const AddUserForm = ({ onClose }) => {
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <form onSubmit={submitNewUserData}>
-        <TextField
-          label="First Name"
-          name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Last Name"
-          name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
-        <TextField
-          label="Phone"
-          name="phone"
-          value={formData.phone}
-          onChange={handleChange}
-          fullWidth
-          margin="normal"
-        />
+        <TextField label="First Name" name="firstName" value={formData.firstName} onChange={handleChange} fullWidth margin="normal" />
+        <TextField label="Last Name" name="lastName" value={formData.lastName} onChange={handleChange} fullWidth margin="normal" />
+        <TextField label="Email" name="email" value={formData.email} onChange={handleChange} fullWidth margin="normal" />
+        <TextField label="Phone" name="phone" value={formData.phone} onChange={handleChange} fullWidth margin="normal" />
 
         <FormControl fullWidth margin="normal">
           <InputLabel id="role-select-label">Role</InputLabel>
-          <Select
-            labelId="role-select-label"
-            name="role"
-            value={formData.role}
-            onChange={handleRoleChange}
-          >
+          <Select labelId="role-select-label" name="role" value={formData.role} onChange={handleRoleChange}>
             <MenuItem value="Manager">Manager</MenuItem>
             <MenuItem value="Dealer">Dealer</MenuItem>
             <MenuItem value="Sales Rep">Sales Rep</MenuItem>
@@ -208,14 +190,14 @@ const AddUserForm = ({ onClose }) => {
                 {...getInputProps({
                   placeholder: 'Enter Location',
                   label: 'Location',
-                  variant: 'outlined',
+                  variant: 'outlined'
                 })}
                 fullWidth
                 margin="normal"
               />
               <div style={{ zIndex: 3000, backgroundColor: 'white', position: 'absolute', width: '100%' }}>
                 {loading && <div>Loading...</div>}
-                {suggestions.map(suggestion => {
+                {suggestions.map((suggestion) => {
                   const className = suggestion.active ? 'suggestion-item--active' : 'suggestion-item';
                   const style = suggestion.active
                     ? { backgroundColor: '#fafafa', cursor: 'pointer' }
@@ -224,7 +206,7 @@ const AddUserForm = ({ onClose }) => {
                     <div
                       {...getSuggestionItemProps(suggestion, {
                         className,
-                        style,
+                        style
                       })}
                     >
                       <span>{suggestion.description}</span>
@@ -243,11 +225,11 @@ const AddUserForm = ({ onClose }) => {
             { label: 'Bryce Felkner', value: 'Bryce Felkner' },
             { label: 'Remy Levine', value: 'Remy Levine' }
           ]}
-          value={formData.selectedTeamMembers.map(member => ({ label: member, value: member }))}
+          value={formData.selectedTeamMembers.map((member) => ({ label: member, value: member }))}
           onChange={(selected) =>
             setFormData({
               ...formData,
-              selectedTeamMembers: selected.map(option => option.value),
+              selectedTeamMembers: selected.map((option) => option.value)
             })
           }
           labelledBy="Select Team Members"
@@ -288,4 +270,3 @@ const AddUserForm = ({ onClose }) => {
 };
 
 export default AddUserForm;
-
