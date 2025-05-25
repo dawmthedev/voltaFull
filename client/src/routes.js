@@ -18,16 +18,15 @@ import RegisterPage from './pages/RegisterPage';
 
 
 export default function Router() {
-  let session = document.cookie.split(';').find((item) => item.includes('session'));
-  session = session ? session.split('=')[1] : null;
+  const token = localStorage.getItem('token');
   const routes = useRoutes([
     {
       path: '/',
-      element: session ? <Navigate to="/dashboard/deals" replace /> : <LandingPage />,
+      element: token ? <Navigate to="/dashboard/deals" replace /> : <LandingPage />,
     },
     {
       path: '/dashboard',
-      element: session ? <DashboardLayout /> : <Navigate to="/login" replace />,
+      element: token ? <DashboardLayout /> : <Navigate to="/login" replace />,
       children: [
         { index: true, element: <Navigate to="/dashboard/deals" /> },
         { path: 'deals', element: <DealsPage /> },
