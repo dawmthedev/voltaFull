@@ -38,7 +38,7 @@ function summarizeSuites(suites) {
 function main() {
   if (!fs.existsSync(resultsPath)) {
     console.error(`Results file not found at ${resultsPath}`);
-    return;
+    return { testResults: [] };
   }
   const data = JSON.parse(fs.readFileSync(resultsPath, 'utf8'));
   const suites = data.testResults || [];
