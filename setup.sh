@@ -39,10 +39,15 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
-echo "🧪  Running test suite..."
-npm test || true
+# ─── 6) Run integrated test suites with Jest ───────────────────────────────────
+echo "🧪  Running server test suite..."
+( cd server && npm test -- --json --outputFile=jest-server-results.json ) || { echo "❌  Server tests failed. Results saved to jest-server-results.json"; }
 
-echo "✅  Test run complete. Codex can now analyze jest-results.json"
+echo "🧪  Running client test suite..."
+( cd client && npm test -- --config='{"collectCoverage": false, "setupFilesAfterEnv": []}' --json --outputFile=jest-client-results.json ) || { echo "❌  Client tests failed. Results saved to jest-client-results.json"; }
+
+echo "✅  Test run complete. Codex can now analyze the results files"
+
 echo "🚀  Starting full-stack dev environment..."
 npm run dev
 
