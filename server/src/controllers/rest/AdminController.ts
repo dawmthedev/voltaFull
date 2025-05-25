@@ -23,7 +23,7 @@ export class AdminController {
   @Inject() private saleRepService: SaleRepService;
 
   @Get()
-  @Returns(200, SuccessArrayResult).Of(AdminResultModel)
+  @(Returns(200, SuccessArrayResult).Of(AdminResultModel))
   public async getAllUsers(@BodyParams() body: { orgId: string }, @Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const admins = await this.adminService.findAdmins();
@@ -47,7 +47,7 @@ export class AdminController {
   }
 
   @Put()
-  @Returns(200, SuccessResult).Of(AdminResultModel)
+  @(Returns(200, SuccessResult).Of(AdminResultModel))
   public async updateAdmin(@BodyParams() body: UpdateAdminParams, @Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const admin = await this.adminService.updateAdmin({ ...body });
@@ -62,7 +62,7 @@ export class AdminController {
   }
 
   @Post("/create/sale-rep")
-  @Returns(200, SuccessResult).Of(SaleRefResultModel)
+  @(Returns(200, SuccessResult).Of(SaleRefResultModel))
   public async createSaleRep(@BodyParams() { _adminId }: { _adminId: string }, @Context() context: Context) {
     const { adminId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     if (!adminId) throw new Unauthorized(ADMIN_NOT_FOUND);
@@ -77,7 +77,7 @@ export class AdminController {
   }
 
   @Get("/me")
-  @Returns(200, SuccessResult).Of(AdminResultModel)
+  @(Returns(200, SuccessResult).Of(AdminResultModel))
   public async getMe(@Context() context: Context) {
     const admin = context.get("user");
     if (!admin) throw new Unauthorized(ADMIN_NOT_FOUND);
