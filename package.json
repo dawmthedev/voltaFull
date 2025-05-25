@@ -3,13 +3,15 @@
   "private": true,
   "workspaces": [
     "server",
-    "client"
+    "client",
+    "client-2"
   ],
   "scripts": {
-    "dev": "concurrently \"cross-env NODE_ENV=development npm run server\" \"npm run client\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development npm run server\" \"npm run client-2\"",
     "start": "npm run dev",
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
+    "client-2": "cd client-2 && npm run dev",
     "test": "jest --config=jest.config.js --silent --json --outputFile=jest-results.json"
   },
   "devDependencies": {
