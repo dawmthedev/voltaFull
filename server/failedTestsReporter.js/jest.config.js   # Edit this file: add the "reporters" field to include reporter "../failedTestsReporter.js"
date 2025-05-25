@@ -1,0 +1,27 @@
+const fs = require('fs');
+
+class FailedTestsReporter {
+    onRunComplete(contexts, results) {
+        const failedTests = results.testResults.filter(test => test.status === 'failed');
+        const totalFailed = failedTests.length;
+
+        console.log(`Total Failed Tests: ${totalFailed}`);
+        failedTests.forEach(test => {
+            console.log(`Test: ${test.fullName}`);
+            console.log(`Output: ${test.failureMessages.join('\n')}`);
+            console.log(`File: ${test.location.file}`);
+            console.log(`Line: ${test.location.line}`);
+            console.log('-----------------------------------');
+        });
+    }
+}
+
+module.exports = FailedTestsReporter;
+
+const reporters = [
+    '../failedTestsReporter.js'
+];
+
+module.exports = {
+    reporters
+};

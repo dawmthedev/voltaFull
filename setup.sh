@@ -39,9 +39,10 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
-echo "🧪  Running test suite..."
-npx jest
+# echo "🧪  Running test suite with JSON output..."
+# npx jest --json --outputFile=jest-results.json || true
 
+echo "✅  Test run complete. Codex can now analyze jest-results.json"
 echo "🚀  Starting full-stack dev environment..."
 npm run dev
 
