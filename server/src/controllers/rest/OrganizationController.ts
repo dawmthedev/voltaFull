@@ -16,7 +16,7 @@ export class OrganizationController {
   private adminService: AdminService;
 
   @Get("/")
-  @Returns(200, SuccessArrayResult).Of(OrganizationResultModel)
+  @(Returns(200, SuccessArrayResult).Of(OrganizationResultModel))
   public async getOrgs(@QueryParams() query: { id?: string }, @Context() context: Context) {
     const user = context.get("user");
     const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
@@ -36,7 +36,7 @@ export class OrganizationController {
   }
 
   @Get("/id")
-  @Returns(200, SuccessResult).Of(OrganizationResultModel)
+  @(Returns(200, SuccessResult).Of(OrganizationResultModel))
   public async getOrg(@Required() query: { id: string }, @Context() context: Context) {
     const { orgId } = await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const org = await this.organizationService.findOrganizationById(orgId);
