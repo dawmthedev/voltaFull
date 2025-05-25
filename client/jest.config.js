@@ -1,11 +1,13 @@
 module.exports = {
+  displayName: 'client',
   preset: 'ts-jest',
   testEnvironment: 'jsdom',
-  verbose: true, // added to output detailed test results
-  moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
-  transform: {
-    '^.+\\.tsx?$': 'ts-jest'
-  },
-  testPathIgnorePatterns: ['/node_modules/', '/dist/'],
+  rootDir: './',
+  testMatch: [
+    '<rootDir>/src/**/?(*.)+(spec|test).[jt]s?(x)',
+    '<rootDir>/../tests/client/**/?(*.)+(spec|test).[jt]s?(x)'
+  ],
+  transform: { '^.+\\.(ts|tsx)$': 'ts-jest' },
+  moduleNameMapper: { '\\.(css|scss)$': 'identity-obj-proxy' },
   setupFilesAfterEnv: ['<rootDir>/setupTests.ts']
 };
