@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, FormControl, InputLabel, Select, MenuItem, Switch, FormControlLabel, FormGroup, Dialog, DialogTitle, DialogContent, DialogActions, Typography } from '@mui/material';
-import axios from 'axios';
+import apiClient from '../../libs/client/apiClient';
 import { DatePicker } from '@mui/x-date-pickers';
 import PlacesAutocomplete from 'react-places-autocomplete';
 import { MultiSelect } from 'react-multi-select-component';
@@ -60,42 +60,25 @@ const AddUserForm = ({ onClose }) => {
       return; // Prevent form submission if validation fails
     }
 
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
+    const token = process.env.REACT_APP_QB_TOKEN;
 
-    const headers = {
-      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
-    };
+    const userPayload = { ...formData };
 
-    const requestBody = {
-      to: "br5cqr4wu", // Table identifier in Quickbase
-      data: [{
-        10: { value: formData.email },
-        6: { value: formData.firstName },
-        7: { value: formData.lastName },
-        14: { value: formData.phone },
-        796: { value: formData.hisLicense }, // Assuming field ID for HIS License
-        931: { value: formData.role }, // Assuming field ID for Role
-        1071: { value: formData.payrollType }, // Field ID for Payroll Type
-        1072: { value: formData.hireDate }, // New date field for Hire Date
-        1073: { value: formData.selectedTeamMembers.join(', ') }, // New multi-select field
-        1074: { value: formData.location }, // New location field
-        1075: { value: "true" } // New location field
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
-    };
+    if (!token) {
+      logger.success('Token missing, logging data instead', userPayload);
+      onClose();
+      return;
+    }
 
     try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      logger.success("Success!", response.data);
+      const { data } = await apiClient.post('/user', userPayload);
+      logger.success('Success!', data);
       setTimeout(() => {
-        onClose(); // Close the modal after 2 seconds
+        onClose();
       }, 2000);
     } catch (error) {
-      alert("Failed sending data");
-      console.error("Failed to send data:", error);
+      alert('Failed sending data');
+      console.error('Failed to send data:', error);
     }
   };
 
