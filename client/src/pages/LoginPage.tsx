@@ -1,15 +1,5 @@
 import React, { useState } from 'react';
-import {
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  Stack,
-  TextField,
-  Grid,
-  Card,
-  Typography
-} from '@mui/material';
+import { Checkbox, FormControlLabel, IconButton, InputAdornment, Stack, TextField, Grid, Card, Typography } from '@mui/material';
 import { useForm, Controller } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
@@ -82,12 +72,7 @@ const LoginPage = () => {
                   control={control}
                   rules={{ required: 'Email is required' }}
                   render={({ field }) => (
-                    <TextField
-                      {...field}
-                      label="Email address"
-                      error={Boolean(errors.email)}
-                      helperText={errors.email?.message}
-                    />
+                    <TextField {...field} label="Email address" error={Boolean(errors.email)} helperText={errors.email?.message} />
                   )}
                 />
                 <Controller
