@@ -128,7 +128,6 @@ export class NewSaleResultCollection {
 }
 
 const isSecure = process.env.NODE_ENV === "production";
-const QUICKBASE_API_BASE_URL = process.env.QUICKBASE_API_BASE_URL || "";
 const OPENAI_COMPLETION_URL = process.env.OPENAI_COMPLETION_URL || "";
 @Controller("/auth")
 export class AuthenticationController {
