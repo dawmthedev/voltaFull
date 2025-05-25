@@ -39,14 +39,8 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
-# ─── 6) Run integrated test suites with Jest ───────────────────────────────────
-echo "🧪  Running all test suites..."
-npm test || { echo "❌  Tests failed"; }
-
-# Split the combined results into per-project files
-node scripts/split-jest-results.js || true
-
-echo "✅  Test run complete. Codex can now analyze the results files"
+# ─── 6) (Tests are executed manually after setup) ─────────────────────────────
+echo INFO: Dependencies installed. Run npm test after making changes.
 
 echo "🚀  Starting full-stack dev environment..."
 npm run dev

@@ -10,12 +10,17 @@ This repository contains the React client and the Express/Node server for the Vo
 
 
 
-Install all dependencies, run the test suite, and launch the dev environment:
+Install all dependencies and launch the dev environment:
 
 ```bash
 npm install
-npm test
 npm run dev
+```
+
+After making changes you can run the full test suite with:
+
+```bash
+npm test
 ```
 
 ### Client environment variables

@@ -27,11 +27,15 @@ This **AGENTS.md** file provides guidance on how agents should interact with and
 
 ## 4. Testing Instructions
 
-- **Run tests**: Use `pnpm test` from the project root to execute all tests.
-- **Run specific tests**: Use `pnpm vitest run -t "<test name>"` to focus on specific tests.
+- **Run tests**: Use `npm test` from the project root to execute all tests.
+- **Run specific tests**: Use `npx jest --selectProjects=<project>` or add a path/pattern to focus on specific suites.
 - **Iterative testing**: Write and run tests iteratively until all tests pass.
-- **Validate changes**: Before merging, ensure all tests pass by running `pnpm turbo run test --filter <project_name>`.
-- **Linting**: After moving or modifying files, run `pnpm lint --filter <project_name>` to ensure ESLint and TypeScript rules are still passing.
+- **Validate changes**: Ensure the entire test suite passes before merging changes.
+- **Linting**: After moving or modifying files, run the package's lint script (`npm run lint` within `client` or `npm run test:lint` within `server`) to verify ESLint rules.
+
+### Setup notes
+
+- The `setup.sh` script installs dependencies only. Tests should be run manually after making changes rather than during setup.
 
 ## 5. Migrating Parts of the Codebase
 
