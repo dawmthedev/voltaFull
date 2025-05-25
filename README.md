@@ -22,13 +22,7 @@ and finally launches the development environment.
 
 ### Client environment variables
 
-Create a `.env` file inside the `client` folder with your QuickBase token:
-
-```env
-REACT_APP_QB_TOKEN=<your-token>
-```
-
-This token will be loaded by the React app when interacting with QuickBase.
+The client now relies on MongoDB only and no QuickBase token is needed.
 
 ## Running the applications
 
