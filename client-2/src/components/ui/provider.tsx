@@ -1,6 +1,6 @@
 import { ChakraProvider, extendTheme } from '@chakra-ui/react'
 import React from 'react'
-import { AuthProvider } from '../hooks/useAuth'
+import { AuthProvider } from '../../hooks/useAuth'
 
 const theme = extendTheme({
   fonts: { heading: 'Inter, sans-serif', body: 'Inter, sans-serif' },
