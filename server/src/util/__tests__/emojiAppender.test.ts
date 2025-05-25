@@ -2,6 +2,13 @@ import "../../config/logger";
 import { $log } from "@tsed/common";
 
 describe("EmojiAppender", () => {
+  const originalLevel = $log.level;
+  beforeEach(() => {
+    $log.level = "info";
+  });
+  afterEach(() => {
+    $log.level = originalLevel;
+  });
   it("summarizes object info logs", () => {
     const spy = jest.spyOn(process.stdout, "write").mockImplementation(() => true as any);
     $log.info({ b: 1, a: 2, d: 3, c: 4 });
