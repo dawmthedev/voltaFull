@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField, Button, MenuItem, Select, InputLabel, FormControl, Checkbox, ListItemText } from '@mui/material';
-import axios from 'axios';
+import { post } from '../../libs/client/apiClient';
 import logger from '../../utils/logger';
 
 const MessageForm = ({ onClose }) => {
@@ -43,45 +43,39 @@ const MessageForm = ({ onClose }) => {
   const submitData = async (e) => {
     e.preventDefault();
 
-    const QB_DOMAIN = "voltaic.quickbase.com";
-    const API_ENDPOINT = "https://api.quickbase.com/v1/records";
-
-    const headers = {
-      Authorization: `QB-USER-TOKEN ${process.env.REACT_APP_QB_TOKEN}`,
-      "QB-Realm-Hostname": QB_DOMAIN,
-      "Content-Type": "application/json",
+    const payload = {
+      headline: formData.headline,
+      message: formData.message,
+      receiver: formData.receiver
     };
 
-    const requestBody = {
-      to: "bufmzyuhi", // Table identifier in Quickbase
-      data: [{
-        7: { value: "Done" },    // FID 7 for Topic
-        6: { value: formData.message },  // FID 6 for Message
-        8: { value: formData.headline }, // FID 8 for Headline
-        10: { value: formData.receiver.includes('Setter') ? 'true' : 'false' }, // FID 10 for Setter
-        11: { value: formData.receiver.includes('Sales Rep') ? 'true' : 'false' }, // FID 11 for Sales Rep
-        12: { value: formData.receiver.includes('Manager') ? 'true' : 'false' }, // FID 12 for Manager
-        13: { value: formData.receiver.includes('1099') ? 'true' : 'false' }, // FID 13 for 1099
-        14: { value: formData.receiver.includes('W2') ? 'true' : 'false' }, // FID 14 for W2
-        15: { value: formData.receiver.includes('Construction') ? 'true' : 'false' }, // FID 15 for Construction
-        16: { value: formData.receiver.includes('All Users') ? 'true' : 'false' }, // FID 16 for All Users
-      }],
-      fieldsToReturn: [] // Specify fields to return, if any
-    };
+    const qbToken = process.env.REACT_APP_QB_TOKEN;
 
-    try {
-      const response = await axios.post(API_ENDPOINT, requestBody, { headers });
-      logger.success("Success!", response.data);
+    if (!qbToken) {
+      logger.warn('QB token missing. Payload:', payload);
       setSubmissionStatus({
         success: true,
-        message: 'Message, Topic, and Receiver roles sent successfully!',
+        message: 'Message, Topic, and Receiver roles sent successfully!'
       });
       setTimeout(() => {
-        onClose(); // Close the modal after 2 seconds
+        onClose();
+      }, 2000);
+      return;
+    }
+
+    try {
+      const { data } = await post('/messages', payload);
+      logger.success('Success!', data);
+      setSubmissionStatus({
+        success: true,
+        message: 'Message, Topic, and Receiver roles sent successfully!'
+      });
+      setTimeout(() => {
+        onClose();
       }, 2000);
     } catch (error) {
-      alert("Failed sending data");
-      console.error("Failed to send data:", error);
+      alert('Failed sending data');
+      console.error('Failed to send data:', error);
     }
   };
 
