@@ -10,7 +10,7 @@
     "start": "npm run dev",
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
-    "test": "npm test --workspaces"
+    "test": "jest --config=jest.config.js --json --outputFile=jest-results.json"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
