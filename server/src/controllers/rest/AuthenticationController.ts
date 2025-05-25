@@ -140,7 +140,7 @@ export class AuthenticationController {
   private organizationService: OrganizationService;
 
   @Post("/start-verification")
-  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async startVerification(@BodyParams() body: StartVerificationParams) {
     const { email, type } = body;
     logger.request("Starting verification", { email, type });
@@ -149,12 +149,9 @@ export class AuthenticationController {
     if (type === VerificationEnum.PASSWORD && !findAdmin) throw new BadRequest(EMAIL_NOT_EXISTS);
     const verificationData = await this.verificationService.generateVerification({ email, type });
 
-    const maskedCode = verificationData.code
-      ? `${verificationData.code.substring(0, 2)}***`
-      : "";
+    const maskedCode = verificationData.code ? `${verificationData.code.substring(0, 2)}***` : "";
     logger.request("Generated verification code", { code: maskedCode });
-    
-  
+
     try {
       await NodemailerClient.sendVerificationEmail({
         title: type || "Email",
@@ -170,7 +167,7 @@ export class AuthenticationController {
   }
 
   @Post("/verify")
-  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async verifyCode(@BodyParams() body: { code: string; email: string }) {
     const { code, email } = body;
     if (!code || !email) throw new BadRequest(MISSING_PARAMS);
@@ -179,7 +176,7 @@ export class AuthenticationController {
   }
 
   @Post("/register")
-  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async newOrg(@BodyParams() body: RegisterOrgParams) {
     let { email, name, password } = body;
     let organization = await this.organizationService.findOrganization();
@@ -199,7 +196,7 @@ export class AuthenticationController {
   }
 
   @Post("/complete-registration")
-  @Returns(200, SuccessResult).Of(SuccessMessageModel)
+  @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async completeRegistration(@BodyParams() body: CompleteRegistration) {
     const { name, email, password } = body;
     if (!email || !password) throw new BadRequest(MISSING_PARAMS);
@@ -209,12 +206,12 @@ export class AuthenticationController {
     return new SuccessResult({ success: true, message: "Admin registration successfully completed" }, SuccessMessageModel);
   }
   @Post("/login")
-  @Returns(200, SuccessResult).Of(AdminResultModel)
+  @(Returns(200, SuccessResult).Of(AdminResultModel))
   public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
     const { email, password } = body;
 
     logger.request("Testing Login...");
-    logger.request("Received login request for email:", email); // Be careful with logging sensitive information
+    logger.request("Received login request for email:", email); // Be careful with logging sensitive information -> Check if admin email is here
 
     if (!email || !password) throw new BadRequest(MISSING_PARAMS);
     const admin = await this.adminService.findAdminByEmail(email);
