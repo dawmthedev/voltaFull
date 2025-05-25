@@ -1,20 +1,23 @@
-export async function login(email: string, password: string) {
-  const res = await fetch('/rest/auth/login', {
+
+export interface Credentials {
+  email: string;
+  password: string;
+}
+
+export async function login(credentials: Credentials) {
+  const response = await fetch('/rest/auth/login', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email, password })
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(credentials)
   });
 
-  let data: any = null;
-  try {
-    data = await res.json();
-  } catch (err) {
-    // ignore json parse errors
+  if (!response.ok) {
+    throw new Error('Failed to login');
   }
 
-  if (!res.ok) {
-    throw new Error(data?.message || 'Login failed');
-  }
-
-  return data;
+  return response.json();
 }
+
+
