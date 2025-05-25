@@ -54,8 +54,16 @@ npm start
 
 ## Tests
 
-Execute all unit tests for the client and server:
+Run all unit tests for both projects with:
 
 ```bash
 npm test
+```
+
+This command runs Jest across the `client` and `server` workspaces. To test a
+single project only, use the `--selectProjects` option:
+
+```bash
+npx jest --selectProjects=client
+npx jest --selectProjects=server
 ```
