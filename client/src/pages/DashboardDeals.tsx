@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import {
   Box,
   Button,
+  Flex,
   Heading,
   Table,
   Thead,
@@ -12,6 +13,7 @@ import {
   Input,
   HStack
 } from '@chakra-ui/react'
+import { AddIcon } from '@chakra-ui/icons'
 import { fetchProjects, createProject } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
@@ -37,39 +39,58 @@ const DashboardDeals: React.FC = () => {
   }
 
   return (
-    <Box p={4}>
-      <Button onClick={handleLogout} mb={4} colorScheme="red">
-        Logout
-      </Button>
-      <Heading size="md" mb={2}>Projects</Heading>
-      <HStack mb={4}>
-        <Input
-          placeholder="Homeowner"
-          value={homeowner}
-          onChange={e => setHomeowner(e.target.value)}
-        />
-        <Button onClick={handleCreate} colorScheme="teal">
-          Add
-        </Button>
-      </HStack>
-      <Table variant="simple">
-        <Thead>
-          <Tr>
-            <Th>Homeowner</Th>
-            <Th>Sale Date</Th>
-            <Th>Status</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {projects.map(p => (
-            <Tr key={p._id}>
-              <Td>{p.homeowner}</Td>
-              <Td>{p.saleDate}</Td>
-              <Td>{p.status}</Td>
+    <Box px={{ base: 4, md: 8 }} py={6}>
+      <Flex justify="space-between" align="center" mb={6}>
+        <Heading fontSize={{ base: '2xl', md: '3xl' }}>Deals Dashboard</Heading>
+        <HStack>
+          <Button onClick={handleLogout} colorScheme="red" variant="outline">
+            Logout
+          </Button>
+          <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={handleCreate}>
+            Add Project
+          </Button>
+        </HStack>
+      </Flex>
+
+      <Box
+        position="sticky"
+        top="0"
+        bg="white"
+        zIndex="1"
+        py={2}
+        mb={4}
+        boxShadow="sm"
+      >
+        <HStack spacing={4} flexWrap="wrap">
+          <Input
+            placeholder="Homeowner"
+            value={homeowner}
+            onChange={e => setHomeowner(e.target.value)}
+            maxW="sm"
+          />
+        </HStack>
+      </Box>
+
+      <Box bg="white" borderRadius="lg" boxShadow="md" overflowX="auto">
+        <Table size="md" variant="simple">
+          <Thead bg="gray.50">
+            <Tr>
+              <Th>Homeowner</Th>
+              <Th>Sale Date</Th>
+              <Th>Status</Th>
             </Tr>
-          ))}
-        </Tbody>
-      </Table>
+          </Thead>
+          <Tbody>
+            {projects.map(p => (
+              <Tr key={p._id}>
+                <Td>{p.homeowner}</Td>
+                <Td>{p.saleDate}</Td>
+                <Td>{p.status}</Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
     </Box>
   )
 }
