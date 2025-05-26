@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Box,
   Flex,
@@ -18,7 +18,9 @@ import { fetchProjects, createProject } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
-import CSVPreviewModal, { CSVRow } from '../components/CSVPreviewModal'
+import CSVPreviewModal from '../components/CSVPreviewModal'
+import CSVUploadDropzone from '../components/CSVUploadDropzone'
+import { CSVRow, parseCSV } from '../utils/csv'
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
 import DealCard from '../components/DealCard'
@@ -32,8 +34,7 @@ const DashboardDeals: React.FC = () => {
     onOpen: openPreview,
     onClose: closePreview
   } = useDisclosure()
-  const [csvRows, setCsvRows] = useState<CSVRow[]>([])
-  const inputRef = useRef<HTMLInputElement | null>(null)
+  const [csvQueue, setCsvQueue] = useState<CSVRow[]>([])
   const toast = useToast()
 
   useEffect(() => {
@@ -46,18 +47,6 @@ const DashboardDeals: React.FC = () => {
 
   const handleCreate = onOpen
 
-  const parseCSV = (content: string): CSVRow[] => {
-    const [headerLine, ...lines] = content.split(/\r?\n/).filter(Boolean)
-    const headers = headerLine.split(',')
-    return lines.map(line => {
-      const values = line.split(',')
-      const obj: CSVRow = {}
-      headers.forEach((h, i) => {
-        obj[h.trim()] = values[i]?.trim() || ''
-      })
-      return obj
-    })
-  }
 
   const transformCSVToProject = (row: CSVRow) => ({
     homeowner: row['Homeowner'],
@@ -86,21 +75,13 @@ const DashboardDeals: React.FC = () => {
     duration: row['Project Duration']
   })
 
-  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0]
-    if (!file) return
-    const text = await file.text()
-    const rows = parseCSV(text)
-    setCsvRows(rows)
-    openPreview()
-    if (inputRef.current) inputRef.current.value = ''
-  }
 
   const handleConfirm = async (rows: CSVRow[]) => {
     for (const r of rows) {
       await dispatch(createProject(transformCSVToProject(r)))
     }
     closePreview()
+    setCsvQueue([])
     dispatch(fetchProjects())
     toast({
       title: `${rows.length} Projects Uploaded`,
@@ -129,6 +110,31 @@ const DashboardDeals: React.FC = () => {
         <Heading fontSize={{ base: 'sm', md: 'lg' }} className="text-balance" mb={6}>
           Deals Dashboard
         </Heading>
+
+        <Flex flexWrap="wrap" gap="2">
+          <Button
+            onClick={handleLogout}
+            colorScheme="red"
+            variant="outline"
+            className="whitespace-nowrap"
+          >
+            Logout
+          </Button>
+          <CSVUploadDropzone onParsed={rows => {
+            setCsvQueue(rows)
+            openPreview()
+          }} />
+          <Button
+            leftIcon={<AddIcon />}
+            colorScheme="teal"
+            onClick={handleCreate}
+            className="whitespace-nowrap"
+          >
+            Add Project
+          </Button>
+        </Flex>
+      </Flex>
+
 
       <Box height={4} />
 
@@ -212,7 +218,7 @@ const DashboardDeals: React.FC = () => {
         <CSVPreviewModal
           isOpen={previewOpen}
           onClose={closePreview}
-          rows={csvRows}
+          rows={csvQueue}
           onConfirm={handleConfirm}
         />
       </Box>

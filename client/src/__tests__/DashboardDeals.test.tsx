@@ -41,4 +41,22 @@ describe('DashboardDeals', () => {
 
     expect(screen.getByRole('button', { name: /Upload CSV/i })).toBeInTheDocument();
   });
+
+  test('opens preview modal after csv upload', async () => {
+    render(
+      <Provider>
+        <DashboardDeals />
+      </Provider>
+    )
+
+    const input = screen.getByTestId('csv-input') as HTMLInputElement
+    const file = new File(
+      ['Homeowner,Sale Date\nJohn,2024-01-01'],
+      'test.csv',
+      { type: 'text/csv' }
+    )
+    fireEvent.change(input, { target: { files: [file] } })
+
+    expect(await screen.findByText(/Preview CSV/i)).toBeInTheDocument()
+  })
 });
