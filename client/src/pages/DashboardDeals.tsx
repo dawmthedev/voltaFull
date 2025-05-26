@@ -12,7 +12,8 @@ import {
   Td,
   HStack,
   useDisclosure,
-  useToast
+  useToast,
+  Stack
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { fetchProjects } from '../store/projectsSlice'
@@ -21,6 +22,7 @@ import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
 import Sidebar from '../components/Sidebar'
 import { baseURL } from '../apiConfig'
+import DealCard from '../components/DealCard'
 
 const DashboardDeals: React.FC = () => {
   const dispatch = useAppDispatch()
@@ -89,7 +91,20 @@ const DashboardDeals: React.FC = () => {
 
       <Box height={4} />
 
-      <Box bg="white" borderRadius="lg" boxShadow="md" overflowX="auto">
+      <Stack spacing={4} display={{ base: 'block', md: 'none' }}>
+        {projects.map(p => (
+          <DealCard key={p._id} project={p} />
+        ))}
+      </Stack>
+
+      <Box
+        bg="white"
+        borderRadius="lg"
+        boxShadow="md"
+        overflowX="auto"
+        className="overflow-x-auto"
+        display={{ base: 'none', md: 'block' }}
+      >
         <Table size="md" variant="simple">
           <Thead bg="gray.50">
             <Tr>
@@ -102,21 +117,21 @@ const DashboardDeals: React.FC = () => {
               <Th>System Size</Th>
               <Th>Installer</Th>
               <Th>Phone</Th>
-              <Th>Sales Rep</Th>
-              <Th>Address</Th>
-              <Th>Utility Company</Th>
-              <Th>PTO Status</Th>
-              <Th>Project Manager</Th>
-              <Th>Financing</Th>
-              <Th>Source</Th>
-              <Th>AHJ</Th>
-              <Th>QC Status</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Sales Rep</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Address</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Utility Company</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>PTO Status</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Project Manager</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Financing</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>Source</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>AHJ</Th>
+              <Th display={{ base: 'none', lg: 'table-cell' }}>QC Status</Th>
             </Tr>
           </Thead>
           <Tbody>
             {projects.map(p => (
-              <Tr key={p._id}>
-                <Td>{p.homeowner}</Td>
+              <Tr key={p._id} _hover={{ bg: 'gray.50' }}>
+                <Td fontWeight="semibold">{p.homeowner}</Td>
                 <Td>{p.saleDate}</Td>
                 <Td>{p.products?.join(', ')}</Td>
                 <Td>{p.status}</Td>
@@ -125,15 +140,15 @@ const DashboardDeals: React.FC = () => {
                 <Td>{p.systemSize}</Td>
                 <Td>{p.installer}</Td>
                 <Td>{p.phone}</Td>
-                <Td>{p.salesRep}</Td>
-                <Td>{p.address}</Td>
-                <Td>{p.utilityCompany}</Td>
-                <Td>{p.ptoStatus}</Td>
-                <Td>{p.projectManager}</Td>
-                <Td>{p.financing}</Td>
-                <Td>{p.source}</Td>
-                <Td>{p.ahj}</Td>
-                <Td>{p.qcStatus}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.salesRep}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.address}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.utilityCompany}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.ptoStatus}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.projectManager}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.financing}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.source}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.ahj}</Td>
+                <Td display={{ base: 'none', lg: 'table-cell' }}>{p.qcStatus}</Td>
               </Tr>
             ))}
           </Tbody>
