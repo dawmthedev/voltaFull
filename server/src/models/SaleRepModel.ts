@@ -28,11 +28,11 @@ export class SaleRepModel {
   leads: string[];
 
   @Property()
-  @Default(new Date())
+  @Default(() => new Date())
   createdAt: Date;
 
   @Property()
-  @Default(new Date())
+  @Default(() => new Date())
   updatedAt: Date;
 
   @Ref(() => AdminModel)
