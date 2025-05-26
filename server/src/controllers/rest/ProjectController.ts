@@ -1,8 +1,12 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams } from "@tsed/platform-params";
+import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ProjectModel } from "../../models/ProjectModel";
-import { ProjectService } from "../../services/ProjectService";
+import {
+  ProjectService,
+  parseCSV,
+  transformCSVToProject
+} from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
 @Controller("/projects")
@@ -22,5 +26,14 @@ export class ProjectController {
   public async createProject(@BodyParams() body: Partial<ProjectModel>) {
     const project = await this.projectService.createProject(body);
     return new SuccessResult(project, ProjectModel);
+  }
+
+  @Post("/upload")
+  @(Returns(200, SuccessArrayResult).Of(ProjectModel))
+  public async uploadCSV(@MultipartFile("file") file: PlatformMulterFile) {
+    const records = parseCSV(file.buffer.toString());
+    const mapped = records.map(transformCSVToProject);
+    const inserted = await this.projectService.insertMany(mapped);
+    return new SuccessArrayResult(inserted, ProjectModel);
   }
 }
