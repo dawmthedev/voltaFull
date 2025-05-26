@@ -1,51 +1,42 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-# ─── 1) Detect Node manager or fall back ────────────────────────────────────────
-if command -v volta >/dev/null 2>&1; then
-  echo "🔧  Detected Volta — using the pin in package.json (volta key)"
-elif [ -s "$HOME/.nvm/nvm.sh" ]; then
-  echo "🔧  Loading nvm..."
-  # shellcheck source=/dev/null
-  source "$HOME/.nvm/nvm.sh"
-  echo "🔧  Installing & using Node $(cat .nvmrc)..."
-  nvm install
-  nvm use
-elif command -v nvm >/dev/null 2>&1; then
-  echo "🔧  nvm in PATH — installing & using Node $(cat .nvmrc)..."
-  nvm install
-  nvm use
-else
-  echo "⚠️  No Volta or nvm found — falling back to system Node"
+# ─── Fast-path for Codex: skip all installs if SKIP_SETUP=1 ─────────────────
+if [ "${SKIP_SETUP:-0}" = "1" ]; then
+  echo "🏃  Skipping setup (SKIP_SETUP=1)"
+  exit 0
 fi
 
-# ─── 2) Report versions ─────────────────────────────────────────────────────────
-echo "📦  Node: $(node -v)   npm: $(npm -v)"
-echo "🔍  (If your package.json 'engines' field still complains, you can loosen it to \"node\": \">=18 <=20\".)"
+# ─── 1) Load Volta or NVM (fallback to system Node) ─────────────────────────
+if command -v volta >/dev/null 2>&1; then
+  echo "🔧 Using Volta-pinned Node"
+elif [ -s "$HOME/.nvm/nvm.sh" ]; then
+  echo "🔧 Sourcing NVM and using .nvmrc"
+  # shellcheck source=/dev/null
+  source "$HOME/.nvm/nvm.sh"
+  nvm install && nvm use
+elif command -v nvm >/dev/null 2>&1; then
+  echo "🔧 nvm in PATH – installing from .nvmrc"
+  nvm install && nvm use
+else
+  echo "⚠️  No Volta or NVM — using system Node"
+fi
 
-# ─── 3) Root: install dev deps 
-echo "🔧  Installing root dependencies..."
-npm install
+# ─── 2) Version report ───────────────────────────────────────────────────────
+echo "📦 Node: $(node -v)   npm: $(npm -v)"
 
-# ─── 4) Server: install deps ───────────────────────────────────────────────────
-echo "🔧  Installing server dependencies..."
-( cd server && npm install )
+# ─── 3) One-and-done install marker ─────────────────────────────────────────
+MARKER=".setup-done"
+if [ ! -f "$MARKER" ]; then
+  echo "🔧 Installing all dependencies…"
+  npm install
 
-# ─── 5) Client: fix peer-deps & install ────────────────────────────────────────
-echo "🔧  Preparing client for install..."
-( cd client && \
-    # bump date-fns so @date-io/date-fns@3.0.0 is happy
-    npm install date-fns@^3.6.0 && \
-    npm install
-)
+  # write the marker so we don’t re-install next time
+  date > "$MARKER"
+else
+  echo "✅ Dependencies already installed — skipping"
+fi
 
-# ─── 6) Client-2: install deps ────────────────────────────────────────────────
-echo "🔧  Installing client-2 dependencies..."
-( cd client-2 && npm install )
-
-# ─── 7) (Tests are executed manually after setup) ─────────────────────────────
-# echo INFO: Dependencies installed. Run npm test after making changes.
-# npm test
-
-echo "🚀  Starting full-stack dev environment..."
+# ─── 4) Fire up server + client-new ─────────────────────────────────────────
+echo "🚀 Starting server & client-new…"
 npm run dev
