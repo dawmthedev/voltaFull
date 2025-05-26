@@ -45,7 +45,7 @@ const Sidebar: React.FC = () => {
       />
       <Box
         as="nav"
-        bg="gray.100"
+        bg="gray.50"
         p={4}
         w={collapsed ? '60px' : '200px'}
         display={{ base: 'none', md: 'block' }}
