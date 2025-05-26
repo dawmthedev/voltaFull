@@ -20,7 +20,7 @@ const Sidebar: React.FC = () => {
   const user = useAppSelector(state => state.auth.user)
   const links = (
     <VStack align="start" spacing={3}>
-      <NavLink to="/deals">Deals</NavLink>
+      <NavLink to="/dashboard/deals">Deals</NavLink>
       <NavLink to="/projects">Projects</NavLink>
       {user?.role === 'Technician' && (
         <NavLink to="/technician">Technician Allocation</NavLink>
