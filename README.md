@@ -27,6 +27,17 @@ npm test
 
 The client now relies on MongoDB only and no QuickBase token is needed.
 
+### Server environment variables
+
+Set `DATABASE_URL` with your MongoDB connection string before starting the
+server. Example:
+
+```dotenv
+DATABASE_URL=mongodb://<user>:<pass>@host:port/dbname
+```
+
+See `server/.env.example` for more variables.
+
 ## Running the applications
 
 ### Start the server only

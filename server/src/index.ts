@@ -32,7 +32,13 @@ export class Application {
   public async initializeServer() {
     await Secrets.initialize();
     // establish database connection with mongoose.connect()
-    this.databaseConnection = await mongoose.connect(process.env.DATABASE_URL || "");
+    const dbUrl = process.env.DATABASE_URL;
+    if (!dbUrl) {
+      throw new Error(
+        "DATABASE_URL is not set. Please configure it to connect to MongoDB."
+      );
+    }
+    this.databaseConnection = await mongoose.connect(dbUrl);
 
     try {
       this.app = express();
