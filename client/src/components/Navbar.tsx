@@ -38,6 +38,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onCSVChange, onAddProject }) 
             onChange={onCSVChange}
             hidden
             ref={inputRef}
+            data-testid="csv-input"
           />
           <Button onClick={() => inputRef.current?.click()} className="whitespace-nowrap">
             Upload CSV
