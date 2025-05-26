@@ -39,7 +39,11 @@ echo "🔧  Preparing client for install..."
     npm install
 )
 
-# ─── 6) (Tests are executed manually after setup) ─────────────────────────────
+# ─── 6) Client-2: install deps ────────────────────────────────────────────────
+echo "🔧  Installing client-2 dependencies..."
+( cd client-2 && npm install )
+
+# ─── 7) (Tests are executed manually after setup) ─────────────────────────────
 echo INFO: Dependencies installed. Run npm test after making changes.
 
 echo "🚀  Starting full-stack dev environment..."
