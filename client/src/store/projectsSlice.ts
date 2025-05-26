@@ -5,7 +5,13 @@ export interface Project {
   _id?: string
   homeowner?: string
   saleDate?: string
+  products?: string[]
+  contractAmount?: number
   status?: string
+  stage?: string
+  duration?: string
+  systemSize?: string
+  assignedTo?: string
 }
 
 interface ProjectsState {
