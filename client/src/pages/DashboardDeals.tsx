@@ -19,7 +19,6 @@ import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
 import CSVPreviewModal from '../components/CSVPreviewModal'
-import CSVUploadDropzone from '../components/CSVUploadDropzone'
 import { CSVRow, parseCSV } from '../utils/csv'
 import Sidebar from '../components/Sidebar'
 import Navbar from '../components/Navbar'
@@ -108,7 +107,8 @@ const DashboardDeals: React.FC = () => {
         onCSVChange={handleUpload}
         onAddProject={handleCreate}
       />
-      <Flex className="overflow-x-hidden" pt={16}>
+      <Box pt={{ base: '4.5rem', md: '4rem' }}>
+        <Flex className="overflow-x-hidden">
         <Sidebar />
         <Box
           px={{ base: 4, md: 8 }}
@@ -121,32 +121,7 @@ const DashboardDeals: React.FC = () => {
           Deals Dashboard
         </Heading>
 
-        <Flex flexWrap="wrap" gap="2">
-          <Button
-            onClick={handleLogout}
-            colorScheme="red"
-            variant="outline"
-            className="whitespace-nowrap"
-          >
-            Logout
-          </Button>
-          <CSVUploadDropzone onParsed={rows => {
-            setCsvQueue(rows)
-            openPreview()
-          }} />
-          <Button
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            onClick={handleCreate}
-            className="whitespace-nowrap"
-          >
-            Add Project
-          </Button>
-        </Flex>
-      </Flex>
-
-
-      <Box height={4} />
+        <Box height={4} />
 
       <Stack spacing={4} display={{ base: 'block', md: 'none' }}>
         {projects.map(p => (
@@ -232,7 +207,8 @@ const DashboardDeals: React.FC = () => {
           onConfirm={handleConfirm}
         />
       </Box>
-    </Flex>
+      </Flex>
+      </Box>
     </Box>
   )
 }
