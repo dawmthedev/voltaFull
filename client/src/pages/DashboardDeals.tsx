@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Table,
@@ -15,7 +14,6 @@ import {
   useToast,
   Stack
 } from '@chakra-ui/react'
-import { AddIcon } from '@chakra-ui/icons'
 import { fetchProjects, createProject } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
@@ -24,6 +22,7 @@ import CSVPreviewModal from '../components/CSVPreviewModal'
 import CSVUploadDropzone from '../components/CSVUploadDropzone'
 import { CSVRow, parseCSV } from '../utils/csv'
 import Sidebar from '../components/Sidebar'
+import Navbar from '../components/Navbar'
 import DealCard from '../components/DealCard'
 
 const DashboardDeals: React.FC = () => {
@@ -93,31 +92,25 @@ const DashboardDeals: React.FC = () => {
   }
 
   return (
-    <Flex className="h-screen overflow-x-hidden">
-      <Sidebar />
-      <Box
-        px={{ base: 4, md: 8 }}
-        py={6}
-        flex="1"
-        overflowY="auto"
-        className="min-w-0 overflow-x-hidden"
-      >
-      <Flex
-        justify="space-between"
-        align="center"
-        mb={6}
-        position="sticky"
-        top="0"
-        zIndex="50"
-        bg="white"
-        className="shadow-sm border-b py-3"
-      >
-        <Heading
-          fontSize={{ base: 'sm', md: 'lg' }}
-          className="text-balance"
+    <Box overflowX="hidden" minH="100vh">
+      <Navbar
+        onLogout={handleLogout}
+        onCSVChange={handleUpload}
+        onAddProject={handleCreate}
+      />
+      <Flex className="overflow-x-hidden" pt={16}>
+        <Sidebar />
+        <Box
+          px={{ base: 4, md: 8 }}
+          py={6}
+          flex="1"
+          overflowY="auto"
+          className="min-w-0 overflow-x-hidden"
         >
+        <Heading fontSize={{ base: 'sm', md: 'lg' }} className="text-balance" mb={6}>
           Deals Dashboard
         </Heading>
+
         <Flex flexWrap="wrap" gap="2">
           <Button
             onClick={handleLogout}
@@ -141,6 +134,7 @@ const DashboardDeals: React.FC = () => {
           </Button>
         </Flex>
       </Flex>
+
 
       <Box height={4} />
 
@@ -229,6 +223,7 @@ const DashboardDeals: React.FC = () => {
         />
       </Box>
     </Flex>
+    </Box>
   )
 }
 
