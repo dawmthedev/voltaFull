@@ -20,12 +20,25 @@ export function transformCSVToProject(row: Record<string, string>): Partial<Proj
     homeowner: row['Homeowner'],
     saleDate: row['Sale Date'],
     products: row['Products'] ? row['Products'].split(';') : [],
-    contractAmount: parseFloat(row['Contract Amount']?.replace(/[^0-9.]/g, '') || '0'),
-    status: row['Solar Install - Status'],
+    status: row['Solar Install - Status'] || row['Status'],
     stage: row['Stage'],
-    duration: row['Project Duration'],
-    systemSize: row['Final System Size (Watts)'],
-    assignedTo: row['email1']?.toLowerCase() || null
+    contractAmount: parseFloat((row['Contract Amount Final'] || '').replace(/[^0-9.]/g, '')) || 0,
+    systemSize: row['Final System Size (Watts)'] || row['Sold System Size (Watts)'],
+
+    phone: row['Phone'],
+    address: row['Address'],
+    installer: row['Installer'],
+    utilityCompany: row['Utility Company Text'],
+    salesRep: row['Sales Rep'],
+    projectManager: row['Project Manager'],
+    financing: row['Financing'],
+    source: row['Source'],
+    ahj: row['AHJ'],
+    qcStatus: row['QC Check - Status'],
+    ptoStatus: row['PTO - Status'],
+
+    assignedTo: row['email1']?.toLowerCase() || null,
+    duration: row['Project Duration']
   };
 }
 
