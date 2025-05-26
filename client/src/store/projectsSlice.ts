@@ -16,6 +16,8 @@ export interface Project {
   installer?: string
   utilityCompany?: string
   salesRep?: string
+  salesRepId?: string
+  technicians?: string[]
   projectManager?: string
   financing?: string
   source?: string

@@ -5,6 +5,9 @@ export interface UserOption {
   _id: string
   name: string
   email: string
+  role?: string
+  region?: string
+  org?: string
 }
 
 interface UserDropdownProps {

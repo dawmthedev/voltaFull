@@ -46,6 +46,12 @@ export class ProjectModel {
   salesRep: string;
 
   @Property()
+  salesRepId: string;
+
+  @CollectionOf(String)
+  technicians: string[];
+
+  @Property()
   projectManager: string;
 
   @Property()

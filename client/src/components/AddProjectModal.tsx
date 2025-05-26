@@ -10,8 +10,14 @@ import {
   Input,
   Select,
   Button,
-  VStack
+  VStack,
+  SimpleGrid,
+  InputGroup,
+  InputRightElement,
+  Icon
 } from '@chakra-ui/react'
+import { CalendarIcon } from '@chakra-ui/icons'
+import { Select as ChakraSelect } from 'chakra-react-select'
 import axios from 'axios'
 import { useAppDispatch } from '../store'
 import { createProject } from '../store/projectsSlice'
@@ -27,42 +33,55 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
   const dispatch = useAppDispatch()
   const [homeowner, setHomeowner] = useState('')
   const [saleDate, setSaleDate] = useState('')
-  const [products, setProducts] = useState('')
+  const [products, setProducts] = useState<string[]>([])
   const [contractAmount, setContractAmount] = useState('')
   const [status, setStatus] = useState('')
   const [stage, setStage] = useState('')
-  const [assignedTo, setAssignedTo] = useState('')
-  const [users, setUsers] = useState<UserOption[]>([])
+  const [salesRepId, setSalesRepId] = useState('')
+  const [technicians, setTechnicians] = useState<string[]>([])
+  const [salesReps, setSalesReps] = useState<UserOption[]>([])
+  const [techUsers, setTechUsers] = useState<UserOption[]>([])
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (isOpen) {
-      axios
-        .get<UserOption[]>(`${baseURL}/users`)
-        .then(res => setUsers(res.data))
-        .catch(() => setUsers([]))
-    }
+    if (!isOpen) return
+    axios
+      .get<UserOption[]>(`${baseURL}/users`)
+      .then(res => {
+        const all = res.data
+        setSalesReps(all.filter(u => u.role === 'sales'))
+        setTechUsers(all.filter(u => u.role === 'tech'))
+      })
+      .catch(() => {
+        setSalesReps([])
+        setTechUsers([])
+      })
   }, [isOpen])
 
-  const handleSubmit = () => {
-    dispatch(
+  const handleSubmit = async () => {
+    setLoading(true)
+    await dispatch(
       createProject({
         homeowner,
         saleDate,
-        products: products ? [products] : [],
+        products,
         contractAmount: Number(contractAmount),
         status,
         stage,
-        assignedTo
+        salesRepId,
+        technicians
       })
     )
+    setLoading(false)
     onClose()
     setHomeowner('')
     setSaleDate('')
-    setProducts('')
+    setProducts([])
     setContractAmount('')
     setStatus('')
     setStage('')
-    setAssignedTo('')
+    setSalesRepId('')
+    setTechnicians([])
   }
 
   return (
@@ -78,24 +97,36 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
               value={homeowner}
               onChange={e => setHomeowner(e.target.value)}
             />
-            <Input
-              type="date"
-              placeholder="Sale Date"
-              value={saleDate}
-              onChange={e => setSaleDate(e.target.value)}
+            <InputGroup>
+              <Input
+                id="saleDate"
+                aria-label="Sale Date"
+                type="date"
+                placeholder="Sale Date"
+                value={saleDate}
+                onChange={e => setSaleDate(e.target.value)}
+              />
+              <InputRightElement pointerEvents="none">
+                <Icon as={CalendarIcon} />
+              </InputRightElement>
+            </InputGroup>
+            <ChakraSelect
+              isMulti
+              options={[
+                { label: 'Solar', value: 'Solar' },
+                { label: 'Battery', value: 'Battery' },
+                { label: 'Service', value: 'Service' },
+                { label: 'Roofing', value: 'Roofing' },
+                { label: 'EV Charger', value: 'EV Charger' },
+                { label: 'HVAC', value: 'HVAC' }
+              ]}
+              placeholder="Products"
+              value={products.map(p => ({ label: p, value: p }))}
+              onChange={vals => setProducts(vals.map(v => v.value))}
             />
-            <Select
-              placeholder="Select Product"
-              value={products}
-              onChange={e => setProducts(e.target.value)}
-            >
-              <option value="Solar">Solar</option>
-              <option value="Battery">Battery</option>
-              <option value="Quiet Cool">Quiet Cool</option>
-              <option value="EV Charger">EV Charger</option>
-              <option value="Service">Service</option>
-            </Select>
             <Input
+              id="contractAmount"
+              aria-label="Contract Amount"
               placeholder="Contract Amount"
               value={contractAmount}
               onChange={e => setContractAmount(e.target.value)}
@@ -119,11 +150,42 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
               <option value="Voltaic Check">Voltaic Check</option>
               <option value="Install Scheduled">Install Scheduled</option>
             </Select>
-            <UserDropdown users={users} value={assignedTo} onChange={setAssignedTo} />
+            <Select
+              placeholder="Sales Rep"
+              value={salesRepId}
+              onChange={e => setSalesRepId(e.target.value)}
+            >
+              {salesReps.map(rep => (
+                <option key={rep._id} value={rep._id}>
+                  {rep.name} - ({rep.region || rep.org})
+                </option>
+              ))}
+            </Select>
+            <ChakraSelect
+              isMulti
+              placeholder="Assign Technician"
+              options={techUsers.map(t => ({
+                label: `${t.name} (${t.role})`,
+                value: t._id
+              }))}
+              value={techUsers
+                .filter(t => technicians.includes(t._id))
+                .map(t => ({ label: `${t.name} (${t.role})`, value: t._id }))}
+              onChange={vals => setTechnicians(vals.slice(0, 3).map(v => v.value))}
+            />
           </VStack>
+          <pre className="mt-4 text-xs bg-gray-100 p-2 rounded">
+            {JSON.stringify({ homeowner, saleDate, products, contractAmount, status, stage, salesRepId, technicians }, null, 2)}
+          </pre>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="blue" mr={3} onClick={handleSubmit}>
+          <Button
+            colorScheme="blue"
+            mr={3}
+            onClick={handleSubmit}
+            isLoading={loading}
+            disabled={!homeowner || !salesRepId || products.length === 0}
+          >
             Save
           </Button>
           <Button onClick={onClose}>Cancel</Button>
