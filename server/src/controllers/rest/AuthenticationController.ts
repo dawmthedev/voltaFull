@@ -1,5 +1,5 @@
 import { BodyParams } from "@tsed/common";
-import { Inject } from "@tsed/di";
+import { Controller, Inject } from "@tsed/di";
 import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
 import { Enum, Post, Property, Required, Returns } from "@tsed/schema";
 import { ADMIN_NOT_FOUND, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, MISSING_PARAMS } from "../../util/errors";
@@ -74,6 +74,7 @@ export class CrmDealResultCollection {
   @Property() public deals: CrmDealResultModel[];
 }
 
+@Controller("/auth")
 export class AuthenticationController {
   @Inject()
   private verificationService: VerificationService;
