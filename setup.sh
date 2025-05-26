@@ -47,5 +47,5 @@ echo "🔧  Installing client-2 dependencies..."
 # echo INFO: Dependencies installed. Run npm test after making changes.
 # npm test
 
-# echo "🚀  Starting full-stack dev environment..."
-# npm run dev
+echo "🚀  Starting full-stack dev environment..."
+npm run dev
