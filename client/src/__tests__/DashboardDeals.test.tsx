@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import DashboardDeals from '../pages/DashboardDeals';
 import { Provider } from '../components/ui/provider';
 
@@ -17,14 +17,14 @@ describe('DashboardDeals', () => {
     (global.fetch as jest.Mock).mockRestore();
   });
 
-  test('renders Deals Dashboard heading', () => {
+  test('opens add project modal', () => {
     render(
       <Provider>
         <DashboardDeals />
       </Provider>
     );
 
-    expect(screen.getByText(/Deals Dashboard/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Add Project/i })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: /Add Project/i }));
+    expect(screen.getByText(/Add New Project/i)).toBeInTheDocument();
   });
 });

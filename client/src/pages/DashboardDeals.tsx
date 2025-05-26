@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import {
   Box,
   Button,
@@ -10,18 +10,20 @@ import {
   Tr,
   Th,
   Td,
-  Input,
-  HStack
+  HStack,
+  useDisclosure
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { fetchProjects, createProject } from '../store/projectsSlice'
+import { fetchProjects } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
+import AddProjectModal from '../components/AddProjectModal'
+import Sidebar from '../components/Sidebar'
 
 const DashboardDeals: React.FC = () => {
   const dispatch = useAppDispatch()
   const projects = useAppSelector(state => state.projects.items)
-  const [homeowner, setHomeowner] = useState('')
+  const { isOpen, onOpen, onClose } = useDisclosure()
 
   useEffect(() => {
     dispatch(fetchProjects())
@@ -31,15 +33,12 @@ const DashboardDeals: React.FC = () => {
     dispatch(logout())
   }
 
-  const handleCreate = () => {
-    if (homeowner) {
-      dispatch(createProject({ homeowner }))
-      setHomeowner('')
-    }
-  }
+  const handleCreate = onOpen
 
   return (
-    <Box px={{ base: 4, md: 8 }} py={6}>
+    <Flex>
+      <Sidebar />
+      <Box px={{ base: 4, md: 8 }} py={6} flex="1">
       <Flex justify="space-between" align="center" mb={6}>
         <Heading fontSize={{ base: '2xl', md: '3xl' }}>Deals Dashboard</Heading>
         <HStack>
@@ -52,24 +51,7 @@ const DashboardDeals: React.FC = () => {
         </HStack>
       </Flex>
 
-      <Box
-        position="sticky"
-        top="0"
-        bg="white"
-        zIndex="1"
-        py={2}
-        mb={4}
-        boxShadow="sm"
-      >
-        <HStack spacing={4} flexWrap="wrap">
-          <Input
-            placeholder="Homeowner"
-            value={homeowner}
-            onChange={e => setHomeowner(e.target.value)}
-            maxW="sm"
-          />
-        </HStack>
-      </Box>
+      <Box height={4} />
 
       <Box bg="white" borderRadius="lg" boxShadow="md" overflowX="auto">
         <Table size="md" variant="simple">
@@ -91,7 +73,9 @@ const DashboardDeals: React.FC = () => {
           </Tbody>
         </Table>
       </Box>
-    </Box>
+        <AddProjectModal isOpen={isOpen} onClose={onClose} />
+      </Box>
+    </Flex>
   )
 }
 
