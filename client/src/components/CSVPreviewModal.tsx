@@ -7,6 +7,7 @@ import {
   ModalCloseButton,
   ModalBody,
   ModalFooter,
+  Box,
   Table,
   Thead,
   Tbody,
@@ -25,15 +26,18 @@ interface CSVPreviewModalProps {
   onClose: () => void
   rows: CSVRow[]
   onConfirm: (rows: CSVRow[]) => void
+  onClear?: () => void
 }
 
 const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
   isOpen,
   onClose,
   rows,
-  onConfirm
+  onConfirm,
+  onClear
 }) => {
   const [data, setData] = useState(rows)
+  const [showRaw, setShowRaw] = useState(false)
   useEffect(() => {
     setData(rows)
   }, [rows])
@@ -56,42 +60,49 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent maxH="90vh" overflowY="auto">
         <ModalHeader>Preview CSV</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Table size="sm">
-            <Thead>
-              <Tr>
-                {headers.map(h => (
-                  <Th key={h}>{h}</Th>
-                ))}
-                <Th></Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {data.map((row, i) => (
-                <Tr key={i}>
+          <Box overflowX="auto" maxW="100%">
+            <Table size="sm" whiteSpace="nowrap">
+              <Thead>
+                <Tr>
                   {headers.map(h => (
-                    <Td key={h}>
-                      <FormControl isInvalid={required.includes(h) && !row[h]}> 
-                        <Input
-                          size="sm"
-                          value={row[h]}
-                          onChange={e => handleChange(i, h, e.target.value)}
-                        />
-                      </FormControl>
-                    </Td>
+                    <Th key={h}>{h}</Th>
                   ))}
-                  <Td>
-                    <Button size="xs" onClick={() => removeRow(i)}>
-                      Remove
-                    </Button>
-                  </Td>
+                  <Th></Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
+              </Thead>
+              <Tbody>
+                {data.map((row, i) => (
+                  <Tr key={i}>
+                    {headers.map(h => (
+                      <Td key={h}>
+                        <FormControl isInvalid={required.includes(h) && !row[h]}>
+                          <Input
+                            size="sm"
+                            value={row[h]}
+                            onChange={e => handleChange(i, h, e.target.value)}
+                          />
+                        </FormControl>
+                      </Td>
+                    ))}
+                    <Td>
+                      <Button size="xs" onClick={() => removeRow(i)}>
+                        Remove
+                      </Button>
+                    </Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </Box>
+          {showRaw && (
+            <pre data-testid="raw-json" className="mt-4 text-xs overflow-x-auto">
+              {JSON.stringify(data, null, 2)}
+            </pre>
+          )}
         </ModalBody>
         <ModalFooter>
           <Button
@@ -101,6 +112,10 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
             isDisabled={!allValid || data.length === 0}
           >
             Confirm Upload
+          </Button>
+          <Button mr={3} onClick={onClear}>Clear</Button>
+          <Button mr={3} onClick={() => setShowRaw(v => !v)}>
+            {showRaw ? 'Hide Raw' : 'Show Raw'}
           </Button>
           <Button onClick={onClose}>Cancel</Button>
         </ModalFooter>
