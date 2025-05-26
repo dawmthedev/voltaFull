@@ -47,6 +47,16 @@ const DashboardDeals: React.FC = () => {
 
   const handleCreate = onOpen
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const text = await file.text()
+    const rows = parseCSV(text)
+    setCsvQueue(rows)
+    openPreview()
+    e.target.value = ''
+  }
+
 
   const transformCSVToProject = (row: CSVRow) => ({
     homeowner: row['Homeowner'],
