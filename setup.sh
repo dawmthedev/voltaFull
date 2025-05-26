@@ -31,6 +31,18 @@ if [ ! -f "$MARKER" ]; then
   echo "🔧 Installing all dependencies…"
   npm install
 
+  # Install dependencies in server directory if it exists
+  if [ -d "server" ]; then
+    echo "🔧 Installing dependencies in server directory…"
+    (cd server && npm install)
+  fi
+
+  # Install dependencies in client-new directory if it exists
+  if [ -d "client" ]; then
+    echo "🔧 Installing dependencies in client-new directory…"
+    (cd client && npm install)
+  fi
+
   # write the marker so we don’t re-install next time
   date > "$MARKER"
 else
