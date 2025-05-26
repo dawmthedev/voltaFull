@@ -17,7 +17,7 @@ afterEach(() => {
   localStorage.clear()
 })
 
-test('login flow and deals list', async () => {
+test('login flow and projects list', async () => {
   ;(global.fetch as jest.Mock)
     .mockResolvedValueOnce({
       ok: true,
@@ -25,7 +25,7 @@ test('login flow and deals list', async () => {
     })
     .mockResolvedValueOnce({
       ok: true,
-      json: () => Promise.resolve({ data: [{ id: '1', name: 'D1' }] })
+      json: () => Promise.resolve({ data: [{ _id: '1', homeowner: 'Jane' }] })
     })
 
   render(
@@ -41,6 +41,6 @@ test('login flow and deals list', async () => {
   fireEvent.click(screen.getByRole('button', { name: /sign in/i }))
 
   await waitFor(() => {
-    expect(screen.getByText('D1')).toBeInTheDocument()
+    expect(screen.getByText('Jane')).toBeInTheDocument()
   })
 })
