@@ -11,6 +11,17 @@ export interface Project {
   stage?: string
   duration?: string
   systemSize?: string
+  phone?: string
+  address?: string
+  installer?: string
+  utilityCompany?: string
+  salesRep?: string
+  projectManager?: string
+  financing?: string
+  source?: string
+  ahj?: string
+  qcStatus?: string
+  ptoStatus?: string
   assignedTo?: string
 }
 

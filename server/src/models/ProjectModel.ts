@@ -31,5 +31,38 @@ export class ProjectModel {
   systemSize: string;
 
   @Property()
+  phone: string;
+
+  @Property()
+  address: string;
+
+  @Property()
+  installer: string;
+
+  @Property()
+  utilityCompany: string;
+
+  @Property()
+  salesRep: string;
+
+  @Property()
+  projectManager: string;
+
+  @Property()
+  financing: string;
+
+  @Property()
+  source: string;
+
+  @Property()
+  ahj: string;
+
+  @Property()
+  qcStatus: string;
+
+  @Property()
+  ptoStatus: string;
+
+  @Property()
   assignedTo: string;
 }

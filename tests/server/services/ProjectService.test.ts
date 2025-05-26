@@ -12,11 +12,22 @@ describe('ProjectService csv helpers', () => {
       Homeowner: 'John',
       'Sale Date': '2024-01-01',
       Products: 'Panel;Battery',
-      'Contract Amount': '$100',
+      'Contract Amount Final': '$100',
       'Solar Install - Status': 'Open',
       Stage: 'Planning',
       'Project Duration': '6m',
       'Final System Size (Watts)': '5000',
+      Installer: 'Best Solar',
+      Phone: '555',
+      'Sales Rep': 'Sue',
+      Address: '123 St',
+      'Utility Company Text': 'PG&E',
+      'PTO - Status': 'In Progress',
+      'Project Manager': 'Bob',
+      Financing: 'Cash',
+      Source: 'Referral',
+      AHJ: 'City',
+      'QC Check - Status': 'Pending',
       email1: 'USER@TEST.COM'
     } as any;
     const proj = transformCSVToProject(row);
@@ -24,12 +35,25 @@ describe('ProjectService csv helpers', () => {
       homeowner: 'John',
       saleDate: '2024-01-01',
       products: ['Panel', 'Battery'],
-      contractAmount: 100,
       status: 'Open',
       stage: 'Planning',
-      duration: '6m',
+      contractAmount: 100,
       systemSize: '5000',
-      assignedTo: 'user@test.com'
+
+      phone: '555',
+      address: '123 St',
+      installer: 'Best Solar',
+      utilityCompany: 'PG&E',
+      salesRep: 'Sue',
+      projectManager: 'Bob',
+      financing: 'Cash',
+      source: 'Referral',
+      ahj: 'City',
+      qcStatus: 'Pending',
+      ptoStatus: 'In Progress',
+
+      assignedTo: 'user@test.com',
+      duration: '6m'
     });
   });
 });

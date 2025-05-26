@@ -95,7 +95,22 @@ const DashboardDeals: React.FC = () => {
             <Tr>
               <Th>Homeowner</Th>
               <Th>Sale Date</Th>
+              <Th>Products</Th>
               <Th>Status</Th>
+              <Th>Stage</Th>
+              <Th isNumeric>Contract Amount</Th>
+              <Th>System Size</Th>
+              <Th>Installer</Th>
+              <Th>Phone</Th>
+              <Th>Sales Rep</Th>
+              <Th>Address</Th>
+              <Th>Utility Company</Th>
+              <Th>PTO Status</Th>
+              <Th>Project Manager</Th>
+              <Th>Financing</Th>
+              <Th>Source</Th>
+              <Th>AHJ</Th>
+              <Th>QC Status</Th>
             </Tr>
           </Thead>
           <Tbody>
@@ -103,7 +118,22 @@ const DashboardDeals: React.FC = () => {
               <Tr key={p._id}>
                 <Td>{p.homeowner}</Td>
                 <Td>{p.saleDate}</Td>
+                <Td>{p.products?.join(', ')}</Td>
                 <Td>{p.status}</Td>
+                <Td>{p.stage}</Td>
+                <Td isNumeric>{p.contractAmount}</Td>
+                <Td>{p.systemSize}</Td>
+                <Td>{p.installer}</Td>
+                <Td>{p.phone}</Td>
+                <Td>{p.salesRep}</Td>
+                <Td>{p.address}</Td>
+                <Td>{p.utilityCompany}</Td>
+                <Td>{p.ptoStatus}</Td>
+                <Td>{p.projectManager}</Td>
+                <Td>{p.financing}</Td>
+                <Td>{p.source}</Td>
+                <Td>{p.ahj}</Td>
+                <Td>{p.qcStatus}</Td>
               </Tr>
             ))}
           </Tbody>
