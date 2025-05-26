@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react'
 import {
   Box,
-  Button,
   Flex,
   Heading,
   Table,
@@ -15,13 +14,13 @@ import {
   useToast,
   Stack
 } from '@chakra-ui/react'
-import { AddIcon } from '@chakra-ui/icons'
 import { fetchProjects, createProject } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
 import CSVPreviewModal, { CSVRow } from '../components/CSVPreviewModal'
 import Sidebar from '../components/Sidebar'
+import Navbar from '../components/Navbar'
 import DealCard from '../components/DealCard'
 
 const DashboardDeals: React.FC = () => {
@@ -112,63 +111,24 @@ const DashboardDeals: React.FC = () => {
   }
 
   return (
-    <Flex className="h-screen overflow-x-hidden">
-      <Sidebar />
-      <Box
-        px={{ base: 4, md: 8 }}
-        py={6}
-        flex="1"
-        overflowY="auto"
-        className="min-w-0 overflow-x-hidden"
-      >
-      <Flex
-        justify="space-between"
-        align="center"
-        mb={6}
-        position="sticky"
-        top="0"
-        zIndex="50"
-        bg="white"
-        className="shadow-sm border-b py-3"
-      >
-        <Heading
-          fontSize={{ base: 'sm', md: 'lg' }}
-          className="text-balance"
+    <Box overflowX="hidden" minH="100vh">
+      <Navbar
+        onLogout={handleLogout}
+        onCSVChange={handleUpload}
+        onAddProject={handleCreate}
+      />
+      <Flex className="overflow-x-hidden" pt={16}>
+        <Sidebar />
+        <Box
+          px={{ base: 4, md: 8 }}
+          py={6}
+          flex="1"
+          overflowY="auto"
+          className="min-w-0 overflow-x-hidden"
         >
+        <Heading fontSize={{ base: 'sm', md: 'lg' }} className="text-balance" mb={6}>
           Deals Dashboard
         </Heading>
-        <Flex flexWrap="wrap" gap="2">
-          <Button
-            onClick={handleLogout}
-            colorScheme="red"
-            variant="outline"
-            className="whitespace-nowrap"
-          >
-            Logout
-          </Button>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleUpload}
-            hidden
-            ref={inputRef}
-          />
-          <Button
-            onClick={() => inputRef.current?.click()}
-            className="whitespace-nowrap"
-          >
-            Upload CSV
-          </Button>
-          <Button
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            onClick={handleCreate}
-            className="whitespace-nowrap"
-          >
-            Add Project
-          </Button>
-        </Flex>
-      </Flex>
 
       <Box height={4} />
 
@@ -257,6 +217,7 @@ const DashboardDeals: React.FC = () => {
         />
       </Box>
     </Flex>
+    </Box>
   )
 }
 
