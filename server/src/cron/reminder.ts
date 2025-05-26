@@ -23,9 +23,10 @@ export const notifyLeads = async () => {
   logger.request("filteredPlanners-------------**", filteredPlanners);
 
   const planners = await plannerModel.find({
-    timeOfExecution: { $lte: new Date().getTime().toString(), 
-    // startDate is today
-    startDate: { $eq: new Date().toISOString().split("T")[0] }
+    timeOfExecution: {
+      $lte: new Date().getTime().toString(),
+      // startDate is today
+      startDate: { $eq: new Date().toISOString().split("T")[0] }
     }
   });
   logger.request("planners-------------", planners);
@@ -47,7 +48,7 @@ export const notifyLeads = async () => {
     }
     const leads = await dynamicModel.find();
     logger.request("leads-------------", leads);
-    leads.forEach(async (lead: any) => {
+    leads.forEach(async (lead: unknown) => {
       try {
         await NodemailerClient.sendEmailToPlanner({
           title: planner.title,
@@ -63,3 +64,7 @@ export const notifyLeads = async () => {
   });
   return "success";
 };
+
+function remind(value: unknown) {
+  // ...existing code...
+}

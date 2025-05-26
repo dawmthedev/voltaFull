@@ -1,62 +1,36 @@
-import { BodyParams, Req, Res, Response, MultipartFile } from "@tsed/common";
-import { Controller, Inject } from "@tsed/di";
-import { BadRequest, Forbidden, NotFound, Unauthorized } from "@tsed/exceptions";
-import { Enum, Post, Property, Required, Returns, Put, Get, Description, Summary } from "@tsed/schema";
-import { ADMIN_NOT_FOUND, EMAIL_EXISTS, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, INVALID_TOKEN, MISSING_PARAMS } from "../../util/errors";
+import { BodyParams } from "@tsed/common";
+import { Inject } from "@tsed/di";
+import { BadRequest, Forbidden, NotFound } from "@tsed/exceptions";
+import { Enum, Post, Property, Required, Returns } from "@tsed/schema";
+import { ADMIN_NOT_FOUND, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, MISSING_PARAMS } from "../../util/errors";
 import {
   SuccessMessageModel,
-  VerificationSuccessModel,
-  IsVerificationTokenCompleteModel,
   AdminResultModel,
-  AIResponseModel,
   CrmDealResultModel,
   CrmRateResultModel,
   SingleCrmDealResultModel,
-  CrmPayrollResultModel,
-  NewSaleResultModel,
-  UtilityBillResultModel,
-  CrmTimelineResultModel,
   CrmTimelineAvgResultModel,
   FuturePayResultModel,
   PreviousPayResultModel
 } from "../../models/RestModels";
 
-import { OpenAIService } from "../../helper/OpenAIService";
 import { SuccessResult } from "../../util/entities";
 import { VerificationService } from "../../services/VerificationService";
 import { AdminService } from "../../services/AdminService";
 import { NodemailerClient } from "../../clients/nodemailer";
-import { ADMIN_ALREADY_EXISTS, ORGANIZATION_NAME_ALREADY_EXISTS } from "../../util/errors";
-import { OrganizationService } from "../../services/OrganizationService";
 import { createPasswordHash } from "../../util";
 import { VerificationEnum } from "../../../types";
-import axios from "axios";
 import logger from "../../util/logger";
-
-type MulterFile = Express.Multer.File;
-// Then use MulterFile where you previously used Express.Multer.File
-// Define a local interface for the file, minimal based on what Multer provides
 
 export class StartVerificationParams {
   @Required() public readonly email: string;
   @Required() @Enum(VerificationEnum) public readonly type: VerificationEnum | undefined;
 }
 
-class UpdateAdminPasswordParams {
-  @Required() public readonly code: string;
-  @Required() public readonly password: string;
-}
-
 class CompleteRegistration {
   @Required() public readonly name: string;
   @Required() public readonly email: string;
   @Required() public readonly password: string;
-}
-
-class ForgetAdminPasswordParams {
-  @Required() public readonly email: string;
-  @Required() public readonly password: string;
-  @Required() public readonly code: string;
 }
 
 class AdminLoginBody {
@@ -72,12 +46,6 @@ class RegisterOrgParams {
   @Property() public readonly password: string;
   @Property() public readonly verificationToken: string;
 }
-
-class CrmDealsBody {
-  @Required() public readonly recordId: string;
-}
-
-class CrmRateBody {}
 
 export class SingleCrmDealResultCollection {
   @Property() public deals: SingleCrmDealResultModel[];
@@ -95,10 +63,6 @@ export class AhjTimeline {
   @Property() public timeline: CrmTimelineResultModel[];
 }
 
-class AIResponseCollection {
-  @Property() public responses: AIResponseModel[];
-}
-
 export class PreviousPayCollection {
   @Property() public deals: PreviousPayResultModel[];
 }
@@ -110,33 +74,11 @@ export class CrmDealResultCollection {
   @Property() public deals: CrmDealResultModel[];
 }
 
-class CrmPayBody {
-  @Required() public readonly recordId: string;
-}
-
-class timelineBody {
-  @Required() public readonly repId: string;
-}
-export class CrmPayrollResultCollection {
-  @Property(CrmPayrollResultModel)
-  public readonly payrollData: CrmPayrollResultModel[];
-}
-
-export class NewSaleResultCollection {
-  @Property(NewSaleResultModel)
-  public readonly newSaleData: NewSaleResultModel[];
-}
-
-const isSecure = process.env.NODE_ENV === "production";
-const OPENAI_COMPLETION_URL = process.env.OPENAI_COMPLETION_URL || "";
-@Controller("/auth")
 export class AuthenticationController {
   @Inject()
   private verificationService: VerificationService;
   @Inject()
   private adminService: AdminService;
-  @Inject()
-  private organizationService: OrganizationService;
 
   @Post("/start-verification")
   @(Returns(200, SuccessResult).Of(SuccessMessageModel))
@@ -177,7 +119,7 @@ export class AuthenticationController {
   @Post("/register")
   @(Returns(200, SuccessResult).Of(SuccessMessageModel))
   public async newOrg(@BodyParams() body: RegisterOrgParams) {
-    let { email, name, password } = body;
+    const { email, name, password } = body;
     let organization = await this.organizationService.findOrganization();
     if (!organization) {
       organization = await this.organizationService.createOrganization({ name: "Voltaic LLC", email });
@@ -206,7 +148,7 @@ export class AuthenticationController {
   }
   @Post("/login")
   @(Returns(200, SuccessResult).Of(AdminResultModel))
-  public async adminLogin(@BodyParams() body: AdminLoginBody, @Response() res: Response) {
+  public async adminLogin(@BodyParams() body: AdminLoginBody) {
     const { email, password } = body;
 
     logger.request("Testing Login...");
@@ -216,8 +158,6 @@ export class AuthenticationController {
     const admin = await this.adminService.findAdminByEmail(email);
     if (!admin) throw new NotFound(EMAIL_NOT_EXISTS);
     if (admin.password !== createPasswordHash({ email, password })) throw new Forbidden(INCORRECT_PASSWORD);
-    const expiresIn = 60 * 60 * 24 * 5 * 1000;
-    const options = { maxAge: expiresIn, httpOnly: true, secure: isSecure };
     const sessionCookie = await this.adminService.createSessionCookie(admin);
     // res.cookie("session", sessionCookie, options);
     return new SuccessResult(

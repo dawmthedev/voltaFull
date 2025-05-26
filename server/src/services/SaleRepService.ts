@@ -10,7 +10,7 @@ export class SaleRepService {
     return await this.saleRepModel.create({ adminId: data.adminId });
   }
 
-  public async findSaleReps(query: any = {}) {
+  public async findSaleReps(query: unknown = {}) {
     return await this.saleRepModel.find(query);
   }
 

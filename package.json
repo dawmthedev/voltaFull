@@ -3,16 +3,16 @@
   "private": true,
   "workspaces": [
     "server",
-    "client-new"
+    "client"
   ],
   "scripts": {
-    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client-new\"",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "start": "npm run dev",
     "dev:server": "npm --workspace server run dev",
-    "dev:client-new": "npm --workspace client-new run dev",
-    "test": "npm run test:server && npm run test:client-new",
+    "dev:client": "npm --workspace client run dev",
+    "test": "npm run test:server && npm run test:client",
     "test:server": "npm --workspace server run test",
-    "test:client-new": "npm --workspace client-new run test"
+    "test:client": "npm --workspace client run test"
   },
   "devDependencies": {
     "concurrently": "^8.0.0",

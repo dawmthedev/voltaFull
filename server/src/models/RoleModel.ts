@@ -1,4 +1,4 @@
-import { Model, ObjectID, Ref } from "@tsed/mongoose";
+import { Model, ObjectID } from "@tsed/mongoose";
 import { Default, Property, Required } from "@tsed/schema";
 
 @Model({ name: "role" })

@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@tsed/di";
 import { decrypt, encrypt } from "../util/crypto";
 import { Forbidden } from "@tsed/exceptions";
-import { EMAIL_NOT_VERIFIED, INCORRECT_CODE_OR_EMAIL, INVALID_VERIFICATION_TOKEN } from "../util/errors";
+import { EMAIL_NOT_VERIFIED, INCORRECT_CODE_OR_EMAIL } from "../util/errors";
 import { addMinutes, isPast } from "date-fns";
 import { VerificationType } from "../../types";
 import { generate6DigitCode } from "../util";

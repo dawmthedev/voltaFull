@@ -29,7 +29,7 @@ export const generateRandomId = (stringLength = 20) => {
   function pickRandom() {
     return possible[Math.floor(Math.random() * possible.length)];
   }
-  return Array.apply(null, Array(stringLength)).map(pickRandom).join("");
+  return [...Array(stringLength)].map(pickRandom).join("");
 };
 
 export const generate6DigitCode = () => {
@@ -38,7 +38,7 @@ export const generate6DigitCode = () => {
   function pickRandom() {
     return possible[Math.floor(Math.random() * possible.length)];
   }
-  return Array.apply(null, Array(stringLength)).map(pickRandom).join("");
+  return [...Array(stringLength)].map(pickRandom).join("");
 };
 
 export const createPasswordHash = (data: { email: string; password: string }) => {

@@ -16,10 +16,10 @@ import cors from "cors";
 import compression from "compression";
 import multer from "multer";
 
-
 @Configuration({
   ...config,
-  multer: { // Add multer settings here
+  multer: {
+    // Add multer settings here
     storage: multer.memoryStorage() // Storing files in memory
   },
   acceptMimes: ["application/json"],
@@ -90,9 +90,7 @@ export class Server {
   }
 }
 
-const corsSettings = {
-  origin: ["https://vccrm.vercel.app", "http://localhost:3000"],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-  exposedHeaders: ["x-auth-token"],
-  credentials: true
-};
+function exampleFunction(param: unknown) {
+  // changed from any
+  // ...existing code...
+}

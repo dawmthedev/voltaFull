@@ -1,4 +1,3 @@
-import { Schema } from "@tsed/mongoose";
 import { createSchema } from "../helper";
 
 export const plannerModel = createSchema({

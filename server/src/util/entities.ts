@@ -3,7 +3,7 @@ import { Property, Required, Generics, CollectionOf } from "@tsed/schema";
 
 // @tsed/json-mapper isn't able to process generics for serialization
 // so this hack keeps generics data for serialization
-const serializationMap = new WeakMap<any, any>();
+const serializationMap = new WeakMap<unknown, unknown>();
 
 @Generics("T")
 export class SuccessResult<T> {
