@@ -1,8 +1,8 @@
-import React from 'react'
-import { Navigate } from 'react-router-dom'
-import { useAppSelector } from '../store'
+import React from "react";
+import { Navigate } from "react-router-dom";
+import { useAppSelector } from "../store";
 
 export default function PrivateRoute({ children }: { children: JSX.Element }) {
-  const token = useAppSelector(state => state.auth.token)
-  return token ? children : <Navigate to="/login" replace />
+  const token = useAppSelector((state) => state.auth.token);
+  return token ? children : <Navigate to="/login" replace />;
 }
