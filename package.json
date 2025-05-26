@@ -7,7 +7,7 @@
     "client-2"
   ],
   "scripts": {
-    "dev": "concurrently \"cross-env NODE_ENV=development npm run server\" \"npm run client-2\"",
+    "dev": "concurrently \"cross-env NODE_ENV=development npm run server\" \"npm run client-new\"",
     "start": "npm run dev",
     "server": "cd server && npm run dev",
     "client": "cd client && npm run dev",
