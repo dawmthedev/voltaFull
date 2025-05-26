@@ -66,10 +66,25 @@ const DashboardDeals: React.FC = () => {
   }
 
   return (
-    <Flex>
+    <Flex className="h-screen overflow-hidden">
       <Sidebar />
-      <Box px={{ base: 4, md: 8 }} py={6} flex="1">
-      <Flex justify="space-between" align="center" mb={6}>
+      <Box
+        px={{ base: 4, md: 8 }}
+        py={6}
+        flex="1"
+        overflowY="auto"
+        className="min-w-0"
+      >
+      <Flex
+        justify="space-between"
+        align="center"
+        mb={6}
+        position="sticky"
+        top="0"
+        zIndex="10"
+        bg="white"
+        className="shadow-sm border-b py-3"
+      >
         <Heading fontSize={{ base: '2xl', md: '3xl' }}>Deals Dashboard</Heading>
         <HStack>
           <Button onClick={handleLogout} colorScheme="red" variant="outline">
