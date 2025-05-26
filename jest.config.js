@@ -3,4 +3,5 @@ module.exports = {
     "<rootDir>/client/jest.config.js",
     "<rootDir>/server/jest.config.js",
   ],
+  verbose: true,
 };
