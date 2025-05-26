@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -12,8 +12,11 @@ import {
   Button,
   VStack
 } from '@chakra-ui/react'
+import axios from 'axios'
 import { useAppDispatch } from '../store'
 import { createProject } from '../store/projectsSlice'
+import { baseURL } from '../apiConfig'
+import UserDropdown, { UserOption } from './UserDropdown'
 
 interface AddProjectModalProps {
   isOpen: boolean
@@ -28,24 +31,27 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
   const [contractAmount, setContractAmount] = useState('')
   const [status, setStatus] = useState('')
   const [stage, setStage] = useState('')
-  const [duration, setDuration] = useState('')
-  const [systemSize, setSystemSize] = useState('')
   const [assignedTo, setAssignedTo] = useState('')
+  const [users, setUsers] = useState<UserOption[]>([])
+
+  useEffect(() => {
+    if (isOpen) {
+      axios
+        .get<UserOption[]>(`${baseURL}/users`)
+        .then(res => setUsers(res.data))
+        .catch(() => setUsers([]))
+    }
+  }, [isOpen])
 
   const handleSubmit = () => {
     dispatch(
       createProject({
         homeowner,
         saleDate,
-        products: products
-          .split(',')
-          .map(p => p.trim())
-          .filter(p => p),
+        products: products ? [products] : [],
         contractAmount: Number(contractAmount),
         status,
         stage,
-        duration,
-        systemSize,
         assignedTo
       })
     )
@@ -56,8 +62,6 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
     setContractAmount('')
     setStatus('')
     setStage('')
-    setDuration('')
-    setSystemSize('')
     setAssignedTo('')
   }
 
@@ -80,49 +84,42 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({ isOpen, onClose }) =>
               value={saleDate}
               onChange={e => setSaleDate(e.target.value)}
             />
-            <Input
-              placeholder="Products (comma separated)"
+            <Select
+              placeholder="Select Product"
               value={products}
               onChange={e => setProducts(e.target.value)}
-            />
+            >
+              <option value="Solar">Solar</option>
+              <option value="Battery">Battery</option>
+              <option value="Quiet Cool">Quiet Cool</option>
+              <option value="EV Charger">EV Charger</option>
+              <option value="Service">Service</option>
+            </Select>
             <Input
               placeholder="Contract Amount"
               value={contractAmount}
               onChange={e => setContractAmount(e.target.value)}
             />
             <Select
-              placeholder="Select Status"
+              placeholder="Status"
               value={status}
               onChange={e => setStatus(e.target.value)}
             >
-              <option>Unscheduled</option>
-              <option>Active</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+              <option value="Hold">Hold</option>
+              <option value="Cancelled">Cancelled</option>
             </Select>
             <Select
-              placeholder="Select Stage"
+              placeholder="Stage"
               value={stage}
               onChange={e => setStage(e.target.value)}
             >
-              <option>NTP</option>
-              <option>Voltaic Check</option>
+              <option value="NTP">NTP</option>
+              <option value="Voltaic Check">Voltaic Check</option>
+              <option value="Install Scheduled">Install Scheduled</option>
             </Select>
-            <Input
-              type="number"
-              placeholder="Duration (days)"
-              value={duration}
-              onChange={e => setDuration(e.target.value)}
-            />
-            <Input
-              type="number"
-              placeholder="System Size (Watts)"
-              value={systemSize}
-              onChange={e => setSystemSize(e.target.value)}
-            />
-            <Input
-              placeholder="Assigned To (email)"
-              value={assignedTo}
-              onChange={e => setAssignedTo(e.target.value)}
-            />
+            <UserDropdown users={users} value={assignedTo} onChange={setAssignedTo} />
           </VStack>
         </ModalBody>
         <ModalFooter>

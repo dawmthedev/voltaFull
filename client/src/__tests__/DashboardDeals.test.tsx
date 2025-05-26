@@ -1,6 +1,8 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import DashboardDeals from '../pages/DashboardDeals';
+import axios from 'axios';
+jest.mock('axios');
 import { Provider } from '../components/ui/provider';
 
 describe('DashboardDeals', () => {
@@ -11,10 +13,12 @@ describe('DashboardDeals', () => {
         json: () => Promise.resolve({ data: [] })
       })
     ) as jest.Mock;
+    (axios.get as jest.Mock).mockResolvedValue({ data: [] });
   });
 
   afterEach(() => {
     (global.fetch as jest.Mock).mockRestore();
+    jest.resetAllMocks();
   });
 
   test('opens add project modal', () => {
