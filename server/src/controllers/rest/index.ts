@@ -5,3 +5,4 @@
 export * from "./OrganizationController";
 export * from "./AuthenticationController";
 export * from "./AdminController";
+export * from "./ProjectController";
