@@ -8,7 +8,15 @@ body,
   height: 100%;
 }
 
+html {
+  overscroll-behavior-x: none;
+}
+
 body {
   overscroll-behavior: none;
   touch-action: manipulation;
+}
+
+.text-balance {
+  text-wrap: balance;
 }
