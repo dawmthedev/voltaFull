@@ -10,7 +10,7 @@ import {
   Tr,
   Th,
   Td,
-  HStack,
+  Badge,
   useDisclosure,
   useToast,
   Stack
@@ -113,14 +113,14 @@ const DashboardDeals: React.FC = () => {
   }
 
   return (
-    <Flex className="h-screen overflow-hidden">
+    <Flex className="h-screen overflow-x-hidden">
       <Sidebar />
       <Box
         px={{ base: 4, md: 8 }}
         py={6}
         flex="1"
         overflowY="auto"
-        className="min-w-0"
+        className="min-w-0 overflow-x-hidden"
       >
       <Flex
         justify="space-between"
@@ -128,13 +128,23 @@ const DashboardDeals: React.FC = () => {
         mb={6}
         position="sticky"
         top="0"
-        zIndex="10"
+        zIndex="50"
         bg="white"
         className="shadow-sm border-b py-3"
       >
-        <Heading fontSize={{ base: '2xl', md: '3xl' }}>Deals Dashboard</Heading>
-        <HStack>
-          <Button onClick={handleLogout} colorScheme="red" variant="outline">
+        <Heading
+          fontSize={{ base: 'sm', md: 'lg' }}
+          className="text-balance"
+        >
+          Deals Dashboard
+        </Heading>
+        <Flex flexWrap="wrap" gap="2">
+          <Button
+            onClick={handleLogout}
+            colorScheme="red"
+            variant="outline"
+            className="whitespace-nowrap"
+          >
             Logout
           </Button>
           <input
@@ -144,11 +154,21 @@ const DashboardDeals: React.FC = () => {
             hidden
             ref={inputRef}
           />
-          <Button onClick={() => inputRef.current?.click()}>Upload CSV</Button>
-          <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={handleCreate}>
+          <Button
+            onClick={() => inputRef.current?.click()}
+            className="whitespace-nowrap"
+          >
+            Upload CSV
+          </Button>
+          <Button
+            leftIcon={<AddIcon />}
+            colorScheme="teal"
+            onClick={handleCreate}
+            className="whitespace-nowrap"
+          >
             Add Project
           </Button>
-        </HStack>
+        </Flex>
       </Flex>
 
       <Box height={4} />
@@ -195,7 +215,20 @@ const DashboardDeals: React.FC = () => {
               <Tr key={p._id} _hover={{ bg: 'gray.50' }}>
                 <Td fontWeight="semibold">{p.homeowner}</Td>
                 <Td>{p.saleDate}</Td>
-                <Td>{p.products?.join(', ')}</Td>
+                <Td>
+                  <Flex flexWrap="wrap" gap="1">
+                    {p.products?.map(prod => (
+                      <Badge
+                        key={prod}
+                        variant="solid"
+                        colorScheme="teal"
+                        className="whitespace-nowrap"
+                      >
+                        {prod}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </Td>
                 <Td>{p.status}</Td>
                 <Td>{p.stage}</Td>
                 <Td isNumeric>{p.contractAmount}</Td>

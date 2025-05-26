@@ -36,8 +36,19 @@ const DealCard: React.FC<DealCardProps> = ({ project }) => {
           <Text>{project.saleDate}</Text>
         </Box>
         <Box>
-          <Text fontWeight="semibold">Products</Text>
-          <Text className="truncate">{project.products?.join(', ')}</Text>
+          <Text fontWeight="semibold" mb={1}>Products</Text>
+          <Stack direction="row" flexWrap="wrap" gap={1}>
+            {project.products?.map(prod => (
+              <Badge
+                key={prod}
+                variant="solid"
+                colorScheme="teal"
+                className="whitespace-nowrap"
+              >
+                {prod}
+              </Badge>
+            ))}
+          </Stack>
         </Box>
         <Box>
           <Text fontWeight="semibold">Status</Text>
