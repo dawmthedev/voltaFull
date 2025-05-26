@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Modal,
   ModalOverlay,
@@ -14,12 +14,11 @@ import {
   Th,
   Td,
   Input,
+  FormControl,
   Button
 } from '@chakra-ui/react'
 
-export interface CSVRow {
-  [key: string]: string
-}
+import { CSVRow } from '../utils/csv'
 
 interface CSVPreviewModalProps {
   isOpen: boolean
@@ -35,7 +34,14 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
   onConfirm
 }) => {
   const [data, setData] = useState(rows)
+  useEffect(() => {
+    setData(rows)
+  }, [rows])
   const headers = data.length > 0 ? Object.keys(data[0]) : []
+  const required = ['Homeowner', 'Sale Date']
+  const isRowValid = (row: CSVRow) =>
+    required.every(f => row[f] && row[f].trim() !== '')
+  const allValid = data.every(isRowValid)
 
   const handleChange = (rowIndex: number, key: string, value: string) => {
     const copy = [...data]
@@ -68,11 +74,13 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
                 <Tr key={i}>
                   {headers.map(h => (
                     <Td key={h}>
-                      <Input
-                        size="sm"
-                        value={row[h]}
-                        onChange={e => handleChange(i, h, e.target.value)}
-                      />
+                      <FormControl isInvalid={required.includes(h) && !row[h]}> 
+                        <Input
+                          size="sm"
+                          value={row[h]}
+                          onChange={e => handleChange(i, h, e.target.value)}
+                        />
+                      </FormControl>
                     </Td>
                   ))}
                   <Td>
@@ -86,7 +94,12 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
           </Table>
         </ModalBody>
         <ModalFooter>
-          <Button colorScheme="teal" mr={3} onClick={() => onConfirm(data)}>
+          <Button
+            colorScheme="teal"
+            mr={3}
+            onClick={() => onConfirm(data)}
+            isDisabled={!allValid || data.length === 0}
+          >
             Confirm Upload
           </Button>
           <Button onClick={onClose}>Cancel</Button>
