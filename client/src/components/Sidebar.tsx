@@ -49,6 +49,11 @@ const Sidebar: React.FC = () => {
         p={4}
         w={collapsed ? '60px' : '200px'}
         display={{ base: 'none', md: 'block' }}
+        position="sticky"
+        top="0"
+        left="0"
+        className="h-screen overflow-y-auto"
+        flexShrink={0}
       >
         <IconButton
           aria-label="Toggle"
