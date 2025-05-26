@@ -31,4 +31,14 @@ describe('DashboardDeals', () => {
     fireEvent.click(screen.getByRole('button', { name: /Add Project/i }));
     expect(screen.getByText(/Add New Project/i)).toBeInTheDocument();
   });
+
+  test('shows upload csv button', () => {
+    render(
+      <Provider>
+        <DashboardDeals />
+      </Provider>
+    );
+
+    expect(screen.getByRole('button', { name: /Upload CSV/i })).toBeInTheDocument();
+  });
 });

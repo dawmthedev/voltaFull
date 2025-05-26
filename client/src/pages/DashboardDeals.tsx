@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useRef } from 'react'
 import {
   Box,
   Button,
@@ -11,7 +11,8 @@ import {
   Th,
   Td,
   HStack,
-  useDisclosure
+  useDisclosure,
+  useToast
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import { fetchProjects } from '../store/projectsSlice'
@@ -19,11 +20,14 @@ import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
 import Sidebar from '../components/Sidebar'
+import { baseURL } from '../apiConfig'
 
 const DashboardDeals: React.FC = () => {
   const dispatch = useAppDispatch()
   const projects = useAppSelector(state => state.projects.items)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const inputRef = useRef<HTMLInputElement | null>(null)
+  const toast = useToast()
 
   useEffect(() => {
     dispatch(fetchProjects())
@@ -35,6 +39,30 @@ const DashboardDeals: React.FC = () => {
 
   const handleCreate = onOpen
 
+  const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const form = new FormData()
+    form.append('file', file)
+    const res = await fetch(`${baseURL}/projects/upload`, {
+      method: 'POST',
+      body: form
+    })
+    if (res.ok) {
+      const json = await res.json()
+      dispatch(fetchProjects())
+      toast({
+        title: `${json.data.length} Projects Uploaded Successfully`,
+        status: 'success',
+        duration: 3000,
+        isClosable: true
+      })
+    } else {
+      toast({ title: 'Upload failed', status: 'error', duration: 3000, isClosable: true })
+    }
+    if (inputRef.current) inputRef.current.value = ''
+  }
+
   return (
     <Flex>
       <Sidebar />
@@ -45,6 +73,14 @@ const DashboardDeals: React.FC = () => {
           <Button onClick={handleLogout} colorScheme="red" variant="outline">
             Logout
           </Button>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleUpload}
+            hidden
+            ref={inputRef}
+          />
+          <Button onClick={() => inputRef.current?.click()}>Upload CSV</Button>
           <Button leftIcon={<AddIcon />} colorScheme="teal" onClick={handleCreate}>
             Add Project
           </Button>
