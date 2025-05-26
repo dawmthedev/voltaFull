@@ -16,13 +16,12 @@ import {
   Stack
 } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
-import { fetchProjects } from '../store/projectsSlice'
+import { fetchProjects, createProject } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
 import CSVPreviewModal, { CSVRow } from '../components/CSVPreviewModal'
 import Sidebar from '../components/Sidebar'
-import { baseURL } from '../apiConfig'
 import DealCard from '../components/DealCard'
 
 const DashboardDeals: React.FC = () => {
