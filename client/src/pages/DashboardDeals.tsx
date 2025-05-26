@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
   Box,
   Button,
@@ -20,6 +20,7 @@ import { fetchProjects } from '../store/projectsSlice'
 import { logout } from '../store/authSlice'
 import { useAppDispatch, useAppSelector } from '../store'
 import AddProjectModal from '../components/AddProjectModal'
+import CSVPreviewModal, { CSVRow } from '../components/CSVPreviewModal'
 import Sidebar from '../components/Sidebar'
 import { baseURL } from '../apiConfig'
 import DealCard from '../components/DealCard'
@@ -28,6 +29,12 @@ const DashboardDeals: React.FC = () => {
   const dispatch = useAppDispatch()
   const projects = useAppSelector(state => state.projects.items)
   const { isOpen, onOpen, onClose } = useDisclosure()
+  const {
+    isOpen: previewOpen,
+    onOpen: openPreview,
+    onClose: closePreview
+  } = useDisclosure()
+  const [csvRows, setCsvRows] = useState<CSVRow[]>([])
   const inputRef = useRef<HTMLInputElement | null>(null)
   const toast = useToast()
 
@@ -41,28 +48,68 @@ const DashboardDeals: React.FC = () => {
 
   const handleCreate = onOpen
 
+  const parseCSV = (content: string): CSVRow[] => {
+    const [headerLine, ...lines] = content.split(/\r?\n/).filter(Boolean)
+    const headers = headerLine.split(',')
+    return lines.map(line => {
+      const values = line.split(',')
+      const obj: CSVRow = {}
+      headers.forEach((h, i) => {
+        obj[h.trim()] = values[i]?.trim() || ''
+      })
+      return obj
+    })
+  }
+
+  const transformCSVToProject = (row: CSVRow) => ({
+    homeowner: row['Homeowner'],
+    saleDate: row['Sale Date'],
+    products: row['Products'] ? row['Products'].split(';') : [],
+    status: row['Solar Install - Status'] || row['Status'],
+    stage: row['Stage'],
+    contractAmount:
+      parseFloat((row['Contract Amount Final'] || '').replace(/[^0-9.]/g, '')) ||
+      0,
+    systemSize: row['Final System Size (Watts)'] || row['Sold System Size (Watts)'],
+
+    phone: row['Phone'],
+    address: row['Address'],
+    installer: row['Installer'],
+    utilityCompany: row['Utility Company Text'],
+    salesRep: row['Sales Rep'],
+    projectManager: row['Project Manager'],
+    financing: row['Financing'],
+    source: row['Source'],
+    ahj: row['AHJ'],
+    qcStatus: row['QC Check - Status'],
+    ptoStatus: row['PTO - Status'],
+
+    assignedTo: row['email1']?.toLowerCase() || null,
+    duration: row['Project Duration']
+  })
+
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
-    const form = new FormData()
-    form.append('file', file)
-    const res = await fetch(`${baseURL}/projects/upload`, {
-      method: 'POST',
-      body: form
-    })
-    if (res.ok) {
-      const json = await res.json()
-      dispatch(fetchProjects())
-      toast({
-        title: `${json.data.length} Projects Uploaded Successfully`,
-        status: 'success',
-        duration: 3000,
-        isClosable: true
-      })
-    } else {
-      toast({ title: 'Upload failed', status: 'error', duration: 3000, isClosable: true })
-    }
+    const text = await file.text()
+    const rows = parseCSV(text)
+    setCsvRows(rows)
+    openPreview()
     if (inputRef.current) inputRef.current.value = ''
+  }
+
+  const handleConfirm = async (rows: CSVRow[]) => {
+    for (const r of rows) {
+      await dispatch(createProject(transformCSVToProject(r)))
+    }
+    closePreview()
+    dispatch(fetchProjects())
+    toast({
+      title: `${rows.length} Projects Uploaded`,
+      status: 'success',
+      duration: 3000,
+      isClosable: true
+    })
   }
 
   return (
@@ -170,6 +217,12 @@ const DashboardDeals: React.FC = () => {
         </Table>
       </Box>
         <AddProjectModal isOpen={isOpen} onClose={onClose} />
+        <CSVPreviewModal
+          isOpen={previewOpen}
+          onClose={closePreview}
+          rows={csvRows}
+          onConfirm={handleConfirm}
+        />
       </Box>
     </Flex>
   )
