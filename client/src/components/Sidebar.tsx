@@ -1,32 +1,73 @@
-import React, { useState } from 'react'
-import { Box, Button, VStack, Link } from '@chakra-ui/react'
+import React from 'react'
+import {
+  Box,
+  IconButton,
+  VStack,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  useDisclosure
+} from '@chakra-ui/react'
+import { HamburgerIcon } from '@chakra-ui/icons'
+import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../store'
 
-const sections = [
-  { label: 'Deals', roles: ['admin', 'technician', 'sales'] },
-  { label: 'Projects', roles: ['admin', 'technician'] },
-  { label: 'Admin', roles: ['admin'] }
-]
-
 const Sidebar: React.FC = () => {
-  const [open, setOpen] = useState(false)
-  const role = useAppSelector(state => state.auth.user?.role || 'sales')
-  const visible = sections.filter(s => s.roles.includes(role))
-  return (
-    <Box as="nav" bg="gray.100" p={4} w={open ? '200px' : 'auto'}>
-      <Button size="sm" mb={4} onClick={() => setOpen(!open)}>
-        {open ? 'Hide' : 'Menu'}
-      </Button>
-      {open && (
-        <VStack align="start" spacing={2}>
-          {visible.map(sec => (
-            <Link href="#" key={sec.label} fontWeight="bold">
-              {sec.label}
-            </Link>
-          ))}
-        </VStack>
+  const { isOpen, onOpen, onClose } = useDisclosure()
+  const [collapsed, setCollapsed] = React.useState(false)
+  const user = useAppSelector(state => state.auth.user)
+  const links = (
+    <VStack align="start" spacing={3}>
+      <NavLink to="/deals">Deals</NavLink>
+      <NavLink to="/projects">Projects</NavLink>
+      {user?.role === 'Technician' && (
+        <NavLink to="/technician">Technician Allocation</NavLink>
       )}
-    </Box>
+      {user?.role === 'Admin' && (
+        <>
+          <NavLink to="/accounts">Accounts Payable</NavLink>
+          <NavLink to="/admin">Admin Panel</NavLink>
+        </>
+      )}
+    </VStack>
+  )
+
+  return (
+    <>
+      <IconButton
+        aria-label="Open Menu"
+        icon={<HamburgerIcon />}
+        onClick={onOpen}
+        display={{ base: 'block', md: 'none' }}
+        m={2}
+      />
+      <Box
+        as="nav"
+        bg="gray.100"
+        p={4}
+        w={collapsed ? '60px' : '200px'}
+        display={{ base: 'none', md: 'block' }}
+      >
+        <IconButton
+          aria-label="Toggle"
+          size="sm"
+          mb={4}
+          icon={<HamburgerIcon />}
+          onClick={() => setCollapsed(!collapsed)}
+        />
+        {!collapsed && links}
+      </Box>
+
+      <Drawer isOpen={isOpen} onClose={onClose} placement="left">
+        <DrawerOverlay />
+        <DrawerContent bg="gray.50">
+          <DrawerHeader>Menu</DrawerHeader>
+          <DrawerBody>{links}</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   )
 }
 
