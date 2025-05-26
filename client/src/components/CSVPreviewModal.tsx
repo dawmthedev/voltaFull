@@ -15,7 +15,8 @@ import {
   Td,
   Input,
   FormControl,
-  Button
+  Button,
+  Box
 } from '@chakra-ui/react'
 
 import { CSVRow } from '../utils/csv'
@@ -56,11 +57,12 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} size="xl">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent maxH="90vh" overflowY="auto">
         <ModalHeader>Preview CSV</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Table size="sm">
+          <Box overflowX="auto" maxW="100%">
+          <Table size="sm" whiteSpace="nowrap">
             <Thead>
               <Tr>
                 {headers.map(h => (
@@ -92,6 +94,7 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
               ))}
             </Tbody>
           </Table>
+          </Box>
         </ModalBody>
         <ModalFooter>
           <Button
@@ -101,6 +104,9 @@ const CSVPreviewModal: React.FC<CSVPreviewModalProps> = ({
             isDisabled={!allValid || data.length === 0}
           >
             Confirm Upload
+          </Button>
+          <Button mr={3} onClick={() => setData([])}>
+            Clear All
           </Button>
           <Button onClick={onClose}>Cancel</Button>
         </ModalFooter>
