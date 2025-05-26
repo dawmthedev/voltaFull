@@ -1,25 +1,28 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Box, Button, FormControl, FormLabel, Heading, Input, Stack, Text } from '@chakra-ui/react'
 import { useNavigate } from 'react-router-dom'
 
-import { useAuth } from '../hooks/useAuth'
+import { useAppDispatch, useAppSelector } from '../store'
+import { login } from '../store/authSlice'
 
 
 const LoginPage: React.FC = () => {
   const navigate = useNavigate()
-  const { signIn } = useAuth()
+  const dispatch = useAppDispatch()
+  const { token, status } = useAppSelector(state => state.auth)
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+
+  useEffect(() => {
+    if (token) navigate('/dashboard/deals', { replace: true })
+  }, [token, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
     try {
-      await signIn(email, password)
-
-      navigate('/dashboard/deals', { replace: true })
-
+      await dispatch(login({ email, password })).unwrap()
     } catch (err) {
       setError((err as Error).message)
     }
@@ -46,7 +49,7 @@ const LoginPage: React.FC = () => {
                 {error}
               </Text>
             )}
-            <Button type="submit" colorScheme="blue" size="md" rounded="md">
+            <Button type="submit" colorScheme="blue" size="md" rounded="md" isLoading={status === 'loading'}>
               Sign In
             </Button>
           </Stack>

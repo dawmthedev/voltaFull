@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingPage from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Deals from './pages/Deals';
+import DashboardDeals from './pages/DashboardDeals';
+import PrivateRoute from './components/PrivateRoute';
 
 const App: React.FC = () => {
   return (
@@ -13,7 +14,14 @@ const App: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/dashboard" element={<Navigate to="/dashboard/deals" />} />
-        <Route path="/dashboard/deals" element={<Deals />} />
+        <Route
+          path="/dashboard/deals"
+          element={
+            <PrivateRoute>
+              <DashboardDeals />
+            </PrivateRoute>
+          }
+        />
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>
