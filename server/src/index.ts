@@ -1,10 +1,13 @@
 import express from "express";
+import dotenv from "dotenv";
 import { PlatformBuilder } from "@tsed/common";
 import logger from "./util/logger";
 import { PlatformExpress } from "@tsed/platform-express";
 import { Server } from "./Server";
 import mongoose from "mongoose";
 import { Secrets } from "./util/secrets";
+
+dotenv.config();
 
 export class Application {
   private app: express.Application;
