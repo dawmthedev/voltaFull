@@ -1,15 +1,17 @@
 import React from 'react'
 import { Box, IconButton, VStack, HStack, Icon, Text } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
-import { FiGrid, FiBriefcase, FiUsers, FiDollarSign, FiSettings, FiLogOut } from 'react-icons/fi'
+import { FiGrid, FiUsers, FiDollarSign, FiLogOut } from 'react-icons/fi'
 import { useAppDispatch, useAppSelector } from '../store'
 import { logout } from '../store/authSlice'
 import SidebarItem from './SidebarItem'
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = React.useState(false)
-  const user = useAppSelector((state) => state.auth.user)
+  const user = useAppSelector(state => state.auth.user)
   const dispatch = useAppDispatch()
+
+  if (!user || user.role !== 'Admin') return null
 
   return (
     <Box
@@ -38,14 +40,6 @@ const Sidebar: React.FC = () => {
           to="/dashboard/projects"
           isOpen={isSidebarOpen}
         />
-        {user?.role === 'Technician' && (
-          <SidebarItem
-            icon={FiSettings}
-            label="Technician Allocation"
-            to="/dashboard/technician"
-            isOpen={isSidebarOpen}
-          />
-        )}
         {user?.role === 'Admin' && (
           <>
             <SidebarItem
