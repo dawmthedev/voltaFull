@@ -103,152 +103,139 @@ const ProjectsPage: React.FC = () => {
 
   return (
     <Box px={{ base: 4, md: 8 }} py={6} flex="1" overflowY="auto">
-          <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
-          <Heading size="md" className="text-balance">
-              Projects Dashboard
-            </Heading>
-            <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
-              <Button variant="outline" colorScheme="red" onClick={handleLogout}>
-                Logout
-              </Button>
-              <input
-                type="file"
-                accept=".csv"
-                onChange={handleUpload}
-                hidden
-                ref={inputRef}
-                data-testid="csv-input"
-              />
-              <Button onClick={() => inputRef.current?.click()} variant="ghost">
-                Upload CSV
-              </Button>
-              <Button
-                leftIcon={<AddIcon />}
-                colorScheme="teal"
-                onClick={handleCreate}
-              >
-                Add Project
-              </Button>
-              <UserAvatar />
-            </HStack>
-          </Flex>
-          <Box height={4} />
-
-          <Stack spacing={4} display={{ base: "block", md: "none" }}>
-            {projects.map((p) => (
-              <ProjectCard key={p._id} project={p} />
-            ))}
-          </Stack>
-
-          <Box
-            bg="white"
-            borderRadius="lg"
-            boxShadow="md"
-            overflowX="auto"
-            className="overflow-x-auto"
-            display={{ base: "none", md: "block" }}
-          >
-            <Table size="md" variant="simple">
-              <Thead bg="gray.50">
-                <Tr>
-                  <Th>Homeowner</Th>
-                  <Th>Sale Date</Th>
-                  <Th>Products</Th>
-                  <Th>Status</Th>
-                  <Th>Stage</Th>
-                  <Th isNumeric>Contract Amount</Th>
-                  <Th>System Size</Th>
-                  <Th>Installer</Th>
-                  <Th>Phone</Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    Sales Rep
-                  </Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>Address</Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    Utility Company
-                  </Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    PTO Status
-                  </Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    Project Manager
-                  </Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    Financing
-                  </Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>Source</Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>AHJ</Th>
-                  <Th display={{ base: "none", lg: "table-cell" }}>
-                    QC Status
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {projects.map((p) => (
-                  <Tr key={p._id} _hover={{ bg: "gray.50" }}>
-                    <Td fontWeight="semibold">{p.homeowner}</Td>
-                    <Td>{p.saleDate}</Td>
-                    <Td>
-                      <Flex flexWrap="wrap" gap="1">
-                        {p.products?.map((prod) => (
-                          <Badge
-                            key={prod}
-                            variant="solid"
-                            colorScheme="teal"
-                            className="whitespace-nowrap"
-                          >
-                            {prod}
-                          </Badge>
-                        ))}
-                      </Flex>
-                    </Td>
-                    <Td>{p.status}</Td>
-                    <Td>{p.stage}</Td>
-                    <Td isNumeric>{p.contractAmount}</Td>
-                    <Td>{p.systemSize}</Td>
-                    <Td>{p.installer}</Td>
-                    <Td>{p.phone}</Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.salesRep}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.address}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.utilityCompany}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.ptoStatus}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.projectManager}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.financing}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.source}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.ahj}
-                    </Td>
-                    <Td display={{ base: "none", lg: "table-cell" }}>
-                      {p.qcStatus}
-                    </Td>
-                  </Tr>
-                ))}
-              </Tbody>
-            </Table>
-          </Box>
-
-          <AddProjectModal isOpen={isOpen} onClose={onClose} />
-          <CSVPreviewModal
-            isOpen={previewOpen}
-            onClose={closePreview}
-            rows={csvQueue}
-            onConfirm={handleConfirm}
+      <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
+        <Heading size="md" className="text-balance">
+          Projects Dashboard
+        </Heading>
+        <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
+          <Button variant="outline" colorScheme="red" onClick={handleLogout}>
+            Logout
+          </Button>
+          <input
+            type="file"
+            accept=".csv"
+            onChange={handleUpload}
+            hidden
+            ref={inputRef}
+            data-testid="csv-input"
           />
-        </Box>
+          <Button onClick={() => inputRef.current?.click()} variant="ghost">
+            Upload CSV
+          </Button>
+          <Button
+            leftIcon={<AddIcon />}
+            colorScheme="teal"
+            onClick={handleCreate}
+          >
+            Add Project
+          </Button>
+          <UserAvatar />
+        </HStack>
+      </Flex>
+      <Box height={4} />
+
+      <Stack spacing={4} display={{ base: "block", md: "none" }}>
+        {projects.map((p) => (
+          <ProjectCard key={p._id} project={p} />
+        ))}
+      </Stack>
+
+      <Box
+        bg="white"
+        borderRadius="lg"
+        boxShadow="md"
+        overflowX="auto"
+        className="overflow-x-auto"
+        display={{ base: "none", md: "block" }}
+      >
+        <Table size="md" variant="simple">
+          <Thead bg="gray.50">
+            <Tr>
+              <Th>Homeowner</Th>
+              <Th>Sale Date</Th>
+              <Th>Products</Th>
+              <Th>Status</Th>
+              <Th>Stage</Th>
+              <Th isNumeric>Contract Amount</Th>
+              <Th>System Size</Th>
+              <Th>Installer</Th>
+              <Th>Phone</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>Sales Rep</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>Address</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>
+                Utility Company
+              </Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>PTO Status</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>
+                Project Manager
+              </Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>Financing</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>Source</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>AHJ</Th>
+              <Th display={{ base: "none", lg: "table-cell" }}>QC Status</Th>
+            </Tr>
+          </Thead>
+          <Tbody>
+            {projects.map((p) => (
+              <Tr key={p._id} _hover={{ bg: "gray.50" }}>
+                <Td fontWeight="semibold">{p.homeowner}</Td>
+                <Td>{p.saleDate}</Td>
+                <Td>
+                  <Flex flexWrap="wrap" gap="1">
+                    {p.products?.map((prod) => (
+                      <Badge
+                        key={prod}
+                        variant="solid"
+                        colorScheme="teal"
+                        className="whitespace-nowrap"
+                      >
+                        {prod}
+                      </Badge>
+                    ))}
+                  </Flex>
+                </Td>
+                <Td>{p.status}</Td>
+                <Td>{p.stage}</Td>
+                <Td isNumeric>{p.contractAmount}</Td>
+                <Td>{p.systemSize}</Td>
+                <Td>{p.installer}</Td>
+                <Td>{p.phone}</Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.salesRep}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.address}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.utilityCompany}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.ptoStatus}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.projectManager}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.financing}
+                </Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>{p.source}</Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>{p.ahj}</Td>
+                <Td display={{ base: "none", lg: "table-cell" }}>
+                  {p.qcStatus}
+                </Td>
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </Box>
+
+      <AddProjectModal isOpen={isOpen} onClose={onClose} />
+      <CSVPreviewModal
+        isOpen={previewOpen}
+        onClose={closePreview}
+        rows={csvQueue}
+        onConfirm={handleConfirm}
+      />
     </Box>
   );
 };
