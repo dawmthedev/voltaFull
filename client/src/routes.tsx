@@ -19,20 +19,17 @@ const AppRoutes: React.FC = () => {
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route
-        path="/dashboard"
+
+        path="/dashboard/*"
         element={
           user?.role === 'Admin' ? (
             <DashboardLayout />
           ) : (
-            <Navigate to="/login" replace />
+
+            <Navigate to="/login" />
           )
         }
-      >
-        <Route index element={<Navigate to="projects" replace />} />
-        <Route path="projects" element={<ProjectsPage />} />
-        <Route path="accounts" element={<AccountsPayablePage />} />
-        <Route path="users" element={<UserManagementPage />} />
-      </Route>
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
