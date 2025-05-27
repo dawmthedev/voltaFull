@@ -18,11 +18,9 @@ import {
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { fetchProjects, createProject } from "../store/projectsSlice";
-import { logout } from "../store/authSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
-import UserAvatar from "../components/UserAvatar";
 import { CSVRow, parseCSV } from "../utils/csv";
 import ProjectCard from "../components/ProjectCard";
 
@@ -42,10 +40,6 @@ const ProjectsPage: React.FC = () => {
   useEffect(() => {
     dispatch(fetchProjects());
   }, [dispatch]);
-
-  const handleLogout = () => {
-    dispatch(logout());
-  };
 
   const handleCreate = onOpen;
 
@@ -108,9 +102,6 @@ const ProjectsPage: React.FC = () => {
           Projects Dashboard
         </Heading>
         <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
-          <Button variant="outline" colorScheme="red" onClick={handleLogout}>
-            Logout
-          </Button>
           <input
             type="file"
             accept=".csv"
@@ -129,7 +120,6 @@ const ProjectsPage: React.FC = () => {
           >
             Add Project
           </Button>
-          <UserAvatar />
         </HStack>
       </Flex>
       <Box height={4} />
