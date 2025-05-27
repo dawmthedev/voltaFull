@@ -15,6 +15,6 @@ export class UserService {
     if (!role || (role !== ADMIN && role.toLowerCase() !== "admin")) {
       throw new Unauthorized("Access denied");
     }
-    return this.userModel.find();
+    return this.userModel.find().sort({ createdAt: -1 });
   }
 }

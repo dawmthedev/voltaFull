@@ -5,11 +5,13 @@ import { ADMIN } from '../../../server/src/util/constants';
 describe('UserService', () => {
   let userModel: any;
   let service: UserService;
+  let sortMock: jest.Mock;
 
   beforeEach(() => {
+    sortMock = jest.fn();
     userModel = {
-      find: jest.fn()
-    };
+      find: jest.fn().mockReturnValue({ sort: sortMock })
+    } as any;
     // cast as any for constructor
     service = new UserService(userModel as any);
   });
@@ -25,10 +27,11 @@ describe('UserService', () => {
 
   it('returns users when admin', async () => {
     const users = [{ id: '1', name: 'Alice' }];
-    userModel.find.mockResolvedValue(users);
+    sortMock.mockResolvedValue(users);
     const payload = { id: '1', email: 'a@test.com', role: ADMIN } as any;
     const result = await service.findAll(payload);
     expect(userModel.find).toHaveBeenCalled();
+    expect(sortMock).toHaveBeenCalledWith({ createdAt: -1 });
     expect(result).toBe(users);
   });
 });

@@ -1,4 +1,5 @@
 import { ArrayOf, Enum, Property, Required } from "@tsed/schema";
+import { Model } from "@tsed/mongoose";
 import { SocialAction } from "../../types";
 import { CategoryFieldType } from "./CategoryModel";
 
@@ -39,19 +40,14 @@ export class AdminProfileResultModel {
   @Property() public readonly imageUrl: string;
   @Property() public readonly verifyStatus: string;
 }
+@Model()
 export class AdminResultModel {
-  @Property() public readonly id: string;
-  @Property() public readonly name: string;
-  @Property() public readonly role: string;
-  @Property() public readonly docs: string;
-  @Property() public readonly company: string;
-  @Property() public readonly email: string;
-  @Property() public readonly recordID: string;
-  @Property() public readonly unlocked: string;
-  @Property() public readonly twoFactorEnabled: boolean;
-  @Property() public readonly orgId: string;
-  @Property() public token: string;
-  @Property() public readonly isSuperAdmin: boolean;
+  @Property() _id: string;
+  @Property() name: string;
+  @Property() email: string;
+  @Property() role: string;
+  @Property() phone?: string;
+  @Property() createdAt?: Date;
 }
 
 export class OrganizationResultModel {
