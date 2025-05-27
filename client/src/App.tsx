@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import LandingPage from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import UserManagementPage from './pages/UserManagementPage';
 import DashboardDeals from './pages/DashboardDeals';
 import PrivateRoute from './components/PrivateRoute';
 
@@ -19,6 +20,14 @@ const App: React.FC = () => {
           element={
             <PrivateRoute>
               <DashboardDeals />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/users"
+          element={
+            <PrivateRoute>
+              <UserManagementPage />
             </PrivateRoute>
           }
         />

@@ -16,7 +16,8 @@ class UpdateAdminParams {
   @Property() public readonly docs: string;
   @Property() public readonly isSuperAdmin: boolean;
 }
-@Controller("/admin")
+// Expose user management under /users
+@Controller("/users")
 export class AdminController {
   @Inject() private adminService: AdminService;
   @Inject() private saleRepService: SaleRepService;

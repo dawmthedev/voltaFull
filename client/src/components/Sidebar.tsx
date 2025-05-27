@@ -8,9 +8,13 @@ import {
   DrawerHeader,
   DrawerOverlay,
   DrawerContent,
-  useDisclosure
+  useDisclosure,
+  HStack,
+  Icon,
+  Text
 } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
+import { FaUsers } from 'react-icons/fa'
 import { NavLink } from 'react-router-dom'
 import { useAppSelector } from '../store'
 
@@ -18,17 +22,39 @@ const Sidebar: React.FC = () => {
   const { isOpen, onOpen, onClose } = useDisclosure()
   const [collapsed, setCollapsed] = React.useState(false)
   const user = useAppSelector(state => state.auth.user)
+  const linkProps = { px: 4, py: 2, gap: 2, _hover: { bg: 'gray.100' } }
   const links = (
     <VStack align="start" spacing={3}>
-      <NavLink to="/dashboard/deals">Deals</NavLink>
-      <NavLink to="/projects">Projects</NavLink>
+      <NavLink to="/dashboard/deals">
+        <HStack {...linkProps}>
+          <span>Deals</span>
+        </HStack>
+      </NavLink>
+      <NavLink to="/projects">
+        <HStack {...linkProps}>
+          <span>Projects</span>
+        </HStack>
+      </NavLink>
       {user?.role === 'Technician' && (
-        <NavLink to="/technician">Technician Allocation</NavLink>
+        <NavLink to="/technician">
+          <HStack {...linkProps}>
+            <span>Technician Allocation</span>
+          </HStack>
+        </NavLink>
       )}
       {user?.role === 'Admin' && (
         <>
-          <NavLink to="/accounts">Accounts Payable</NavLink>
-          <NavLink to="/admin">Admin Panel</NavLink>
+          <NavLink to="/accounts">
+            <HStack {...linkProps}>
+              <span>Accounts Payable</span>
+            </HStack>
+          </NavLink>
+          <NavLink to="/users">
+            <HStack {...linkProps}>
+              <Icon as={FaUsers} />
+              <Text display={collapsed ? 'none' : 'block'}>Users</Text>
+            </HStack>
+          </NavLink>
         </>
       )}
     </VStack>
