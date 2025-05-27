@@ -6,6 +6,7 @@ import { ADMIN_NOT_FOUND, EMAIL_NOT_EXISTS, INCORRECT_PASSWORD, MISSING_PARAMS }
 import {
   SuccessMessageModel,
   AdminResultModel,
+  AuthResultModel,
   CrmDealResultModel,
   CrmRateResultModel,
   SingleCrmDealResultModel,
@@ -17,6 +18,7 @@ import {
 import { SuccessResult } from "../../util/entities";
 import { VerificationService } from "../../services/VerificationService";
 import { AdminService } from "../../services/AdminService";
+import { AuthService } from "../../services/AuthService";
 import { NodemailerClient } from "../../clients/nodemailer";
 import { createPasswordHash } from "../../util";
 import { VerificationEnum } from "../../../types";
@@ -80,6 +82,8 @@ export class AuthenticationController {
   private verificationService: VerificationService;
   @Inject()
   private adminService: AdminService;
+  @Inject()
+  private authService: AuthService;
 
   @Post("/start-verification")
   @(Returns(200, SuccessResult).Of(SuccessMessageModel))
@@ -148,7 +152,7 @@ export class AuthenticationController {
     return new SuccessResult({ success: true, message: "Admin registration successfully completed" }, SuccessMessageModel);
   }
   @Post("/login")
-  @(Returns(200, SuccessResult).Of(AdminResultModel))
+  @(Returns(200, SuccessResult).Of(AuthResultModel))
   public async adminLogin(@BodyParams() body: AdminLoginBody) {
     const { email, password } = body;
 
@@ -159,24 +163,17 @@ export class AuthenticationController {
     const admin = await this.adminService.findAdminByEmail(email);
     if (!admin) throw new NotFound(EMAIL_NOT_EXISTS);
     if (admin.password !== createPasswordHash({ email, password })) throw new Forbidden(INCORRECT_PASSWORD);
-    const sessionCookie = await this.adminService.createSessionCookie(admin);
-    // res.cookie("session", sessionCookie, options);
+    const token = this.authService.generateToken(admin);
     return new SuccessResult(
       {
-        id: admin._id,
-        name: admin.name,
-        email: admin.email,
-        role: admin.role || "",
-        docs: admin.docs || "",
-        recordID: admin.recordID || "",
-        unlocked: admin.unlocked || "",
-        twoFactorEnabled: admin.twoFactorEnabled,
-        orgId: admin.orgId || "",
-        company: "crm",
-        token: sessionCookie,
-        isSuperAdmin: admin.isSuperAdmin
+        user: {
+          name: admin.name,
+          email: admin.email,
+          role: admin.role || ""
+        },
+        token
       },
-      AdminResultModel
+      AuthResultModel
     );
   }
 }
