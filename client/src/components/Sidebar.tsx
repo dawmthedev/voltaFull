@@ -1,22 +1,29 @@
-import React from 'react'
-import { Box, IconButton, VStack, HStack, Icon, Text } from '@chakra-ui/react'
-import { HamburgerIcon } from '@chakra-ui/icons'
-import { FiGrid, FiBriefcase, FiUsers, FiDollarSign, FiSettings, FiLogOut } from 'react-icons/fi'
-import { useAppDispatch, useAppSelector } from '../store'
-import { logout } from '../store/authSlice'
-import SidebarItem from './SidebarItem'
+import React from "react";
+import { Box, IconButton, VStack, HStack, Icon, Text } from "@chakra-ui/react";
+import { HamburgerIcon } from "@chakra-ui/icons";
+import {
+  FiGrid,
+  FiBriefcase,
+  FiUsers,
+  FiDollarSign,
+  FiSettings,
+  FiLogOut,
+} from "react-icons/fi";
+import { useAppDispatch, useAppSelector } from "../store";
+import { logout } from "../store/authSlice";
+import SidebarItem from "./SidebarItem";
 
 const Sidebar: React.FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(false)
-  const user = useAppSelector((state) => state.auth.user)
-  const dispatch = useAppDispatch()
+  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
+  const user = useAppSelector((state) => state.auth.user);
+  const dispatch = useAppDispatch();
 
   return (
     <Box
       position="sticky"
       top={0}
       h="100vh"
-      width={{ base: isSidebarOpen ? '220px' : '64px', md: '220px' }}
+      width={{ base: isSidebarOpen ? "220px" : "64px", md: "220px" }}
       transition="width 0.3s"
       bg="white"
       borderRight="1px solid #E2E8F0"
@@ -31,14 +38,20 @@ const Sidebar: React.FC = () => {
         m={2}
         onClick={() => setSidebarOpen(!isSidebarOpen)}
       />
-      <VStack flex="1" spacing={4} align="stretch" px={isSidebarOpen ? 4 : 2} pt={4}>
+      <VStack
+        flex="1"
+        spacing={4}
+        align="stretch"
+        px={isSidebarOpen ? 4 : 2}
+        pt={4}
+      >
         <SidebarItem
           icon={FiGrid}
           label="Projects"
           to="/dashboard/projects"
           isOpen={isSidebarOpen}
         />
-        {user?.role === 'Technician' && (
+        {user?.role === "Technician" && (
           <SidebarItem
             icon={FiSettings}
             label="Technician Allocation"
@@ -46,7 +59,7 @@ const Sidebar: React.FC = () => {
             isOpen={isSidebarOpen}
           />
         )}
-        {user?.role === 'Admin' && (
+        {user?.role === "Admin" && (
           <>
             <SidebarItem
               icon={FiDollarSign}
@@ -70,7 +83,7 @@ const Sidebar: React.FC = () => {
           px={2}
           py={2}
           spacing={2}
-          _hover={{ bg: 'gray.100' }}
+          _hover={{ bg: "gray.100" }}
           w="full"
         >
           <Icon as={FiLogOut} boxSize={5} />
@@ -78,7 +91,7 @@ const Sidebar: React.FC = () => {
         </HStack>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
-export default Sidebar
+export default Sidebar;
