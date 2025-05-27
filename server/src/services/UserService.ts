@@ -9,10 +9,8 @@ import { JWTPayload } from "../../types";
 export class UserService {
   constructor(@Inject(AdminModel) private userModel: MongooseModel<AdminModel>) {}
 
-  async findAll(user: JWTPayload) {
-
-    if (user?.role !== "Admin") {
-
+  async findAll(user?: JWTPayload) {
+    if (!user || user.role !== "Admin") {
       throw new Unauthorized("Access denied");
     }
     return this.userModel.find();
