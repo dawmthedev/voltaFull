@@ -3,14 +3,16 @@ import { Unauthorized } from "@tsed/exceptions";
 import { MongooseModel } from "@tsed/mongoose";
 import { AdminModel } from "../models/AdminModel";
 import { JWTPayload } from "../../types";
-import { ADMIN } from "../util/constants";
+
 
 @Injectable()
 export class UserService {
   constructor(@Inject(AdminModel) private userModel: MongooseModel<AdminModel>) {}
 
   async findAll(user: JWTPayload) {
-    if (user?.role !== ADMIN) {
+
+    if (user?.role !== "Admin") {
+
       throw new Unauthorized("Access denied");
     }
     return this.userModel.find();
