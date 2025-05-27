@@ -25,8 +25,8 @@ describe('Sidebar', () => {
         <Sidebar />
       </Provider>
     )
-    expect(screen.getByText(/Deals/i)).toBeInTheDocument()
     expect(screen.getByText(/Projects/i)).toBeInTheDocument()
+    expect(screen.getByText(/Accounts Payable/i)).toBeInTheDocument()
     expect(screen.getByText(/Users/i)).toBeInTheDocument()
   })
 })

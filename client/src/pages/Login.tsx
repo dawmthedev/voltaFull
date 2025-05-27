@@ -15,7 +15,7 @@ const LoginPage: React.FC = () => {
   const [error, setError] = useState('')
 
   useEffect(() => {
-    if (token) navigate('/dashboard/deals', { replace: true })
+    if (token) navigate('/dashboard/projects', { replace: true })
   }, [token, navigate])
 
   const handleSubmit = async (e: React.FormEvent) => {
