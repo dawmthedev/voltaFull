@@ -14,6 +14,7 @@ import {
   useToast,
   Stack,
   Button,
+  HStack,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
 import { fetchProjects, createProject } from "../store/projectsSlice";
@@ -21,7 +22,7 @@ import { logout } from "../store/authSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
-import CSVUploadDropzone from "../components/CSVUploadDropzone";
+import UserAvatar from "../components/UserAvatar";
 import { CSVRow, parseCSV } from "../utils/csv";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -38,6 +39,7 @@ const DashboardDeals: React.FC = () => {
   } = useDisclosure();
   const [csvQueue, setCsvQueue] = useState<CSVRow[]>([]);
   const toast = useToast();
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     dispatch(fetchProjects());
@@ -103,11 +105,7 @@ const DashboardDeals: React.FC = () => {
 
   return (
     <Box overflowX="hidden" minH="100vh">
-      <Navbar
-        onLogout={handleLogout}
-        onCSVChange={handleUpload}
-        onAddProject={handleCreate}
-      />
+      <Navbar />
       <Flex className="overflow-x-hidden" pt={16}>
         <Sidebar />
         <Box
@@ -117,14 +115,35 @@ const DashboardDeals: React.FC = () => {
           overflowY="auto"
           className="min-w-0 overflow-x-hidden"
         >
-          <Heading
-            fontSize={{ base: "sm", md: "lg" }}
-            className="text-balance"
-            mb={6}
-          >
-            Deals Dashboard
-          </Heading>
-
+          <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
+            <Heading size="md" className="text-balance">
+              Deals Dashboard
+            </Heading>
+            <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
+              <Button variant="outline" colorScheme="red" onClick={handleLogout}>
+                Logout
+              </Button>
+              <input
+                type="file"
+                accept=".csv"
+                onChange={handleUpload}
+                hidden
+                ref={inputRef}
+                data-testid="csv-input"
+              />
+              <Button onClick={() => inputRef.current?.click()} variant="ghost">
+                Upload CSV
+              </Button>
+              <Button
+                leftIcon={<AddIcon />}
+                colorScheme="teal"
+                onClick={handleCreate}
+              >
+                Add Project
+              </Button>
+              <UserAvatar />
+            </HStack>
+          </Flex>
           <Box height={4} />
 
           <Stack spacing={4} display={{ base: "block", md: "none" }}>
