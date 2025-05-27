@@ -8,7 +8,8 @@ import { AvailabilityModel } from "./AvailabilityModel";
 import { SaleRepModel } from "./SaleRepModel";
 import { generateRandomId } from "../util";
 
-@Model({ name: "admin" })
+// Use the new "users" collection while keeping the AdminModel name
+@Model({ name: "users" })
 export class AdminModel {
   @ObjectID("id")
   _id: string;
