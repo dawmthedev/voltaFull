@@ -16,4 +16,12 @@ describe("AdminController /users/me", () => {
     const res = await request.get("/rest/users/me").expect(401);
     expect(res.body.status).toBe(401);
   });
+
+  it("GET /api/users/check-email returns status", async () => {
+    const res = await request
+      .get("/api/users/check-email")
+      .query({ email: "new@test.com" })
+      .expect(200);
+    expect(res.body).toEqual({ exists: false, invited: false });
+  });
 });

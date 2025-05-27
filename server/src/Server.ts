@@ -28,6 +28,7 @@ import multer from "multer";
   disableComponentsScan: true,
   mount: {
     "/rest": [...Object.values(rest)],
+    "/api": [...Object.values(rest)],
     "/": [...Object.values(pages)]
   },
   swagger: [
