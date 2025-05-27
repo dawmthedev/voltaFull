@@ -22,7 +22,6 @@ import { logout } from "../store/authSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
-import UserAvatar from "../components/UserAvatar";
 import { CSVRow, parseCSV } from "../utils/csv";
 import Sidebar from "../components/Sidebar";
 import Navbar from "../components/Navbar";
@@ -145,7 +144,6 @@ const DashboardDeals: React.FC = () => {
               >
                 Add Project
               </Button>
-              <UserAvatar />
             </HStack>
           </Flex>
           <Box height={4} />
