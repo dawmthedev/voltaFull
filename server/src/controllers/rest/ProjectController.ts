@@ -2,11 +2,7 @@ import { Controller, Inject } from "@tsed/di";
 import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ProjectModel } from "../../models/ProjectModel";
-import {
-  ProjectService,
-  parseCSV,
-  transformCSVToProject
-} from "../../services/ProjectService";
+import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
 @Controller("/projects")
