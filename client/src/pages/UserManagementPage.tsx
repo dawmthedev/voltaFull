@@ -20,9 +20,16 @@ import {
   Stack,
   Input,
   Select,
-  IconButton
+  IconButton,
+  FormControl,
+  FormErrorMessage,
+  FormHelperText,
+  InputGroup,
+  InputRightElement,
+  Alert,
+  AlertIcon
 } from '@chakra-ui/react';
-import { DeleteIcon } from '@chakra-ui/icons';
+import { DeleteIcon, CheckIcon, WarningIcon, CloseIcon } from '@chakra-ui/icons';
 import CSVPreviewModal from '../components/CSVPreviewModal';
 import { parseCSV, CSVRow } from '../utils/csv';
 
@@ -41,12 +48,28 @@ const UserManagementPage: React.FC = () => {
   const [role, setRole] = useState('');
   const [phone, setPhone] = useState('');
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const handleOpen = () => { setSuccess(null); onOpen(); };
   const {
     isOpen: csvOpen,
     onOpen: openCsv,
     onClose: closeCsv
   } = useDisclosure();
   const [csvUsers, setCsvUsers] = useState<CSVRow[]>([]);
+  const [emailStatus, setEmailStatus] = useState<'valid' | 'invited' | 'exists' | 'invalid' | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
+  const isValidEmail = (val: string) => /\S+@\S+\.\S+/.test(val);
+
+  useEffect(() => {
+    if (!email || !isValidEmail(email)) return setEmailStatus('invalid');
+    fetch(`/rest/users/check-email?email=${encodeURIComponent(email)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (data.exists) setEmailStatus('exists');
+        else if (data.invited) setEmailStatus('invited');
+        else setEmailStatus('valid');
+      });
+  }, [email]);
 
   const fetchUsers = async () => {
     const res = await fetch('/rest/users');
@@ -55,12 +78,13 @@ const UserManagementPage: React.FC = () => {
   };
 
   const onSubmitInvite = async () => {
-    await fetch('/api/users/invite', {
+    await fetch('/rest/users/invite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, role, phone })
     });
     onClose();
+    setSuccess(name);
     setName('');
     setEmail('');
     setRole('');
@@ -79,7 +103,7 @@ const UserManagementPage: React.FC = () => {
 
   const confirmCsv = async (rows: CSVRow[]) => {
     await Promise.all(rows.map((r) =>
-      fetch('/api/users/invite', {
+      fetch('/rest/users/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(r)
@@ -101,7 +125,7 @@ const UserManagementPage: React.FC = () => {
         <HStack>
           <input type="file" accept=".csv" onChange={handleCsvUpload} hidden id="csv-input" />
           <Button size="sm" onClick={() => document.getElementById('csv-input')?.click()}>Upload Users</Button>
-          <Button colorScheme="teal" size="sm" onClick={onOpen}>+ Invite User</Button>
+          <Button colorScheme="teal" size="sm" onClick={handleOpen}>+ Invite User</Button>
         </HStack>
       </HStack>
       <Table size="sm">
@@ -133,7 +157,18 @@ const UserManagementPage: React.FC = () => {
           <ModalBody>
             <Stack spacing={4}>
               <Input placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />
-              <Input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+              <FormControl isInvalid={emailStatus === 'invalid' || emailStatus === 'exists'}>
+                <InputGroup>
+                  <Input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
+                  <InputRightElement>
+                    {emailStatus === 'valid' && <CheckIcon color="green.400" />}
+                    {emailStatus === 'invited' && <WarningIcon color="yellow.400" />}
+                    {emailStatus === 'exists' && <CloseIcon color="red.400" />}
+                  </InputRightElement>
+                </InputGroup>
+                {emailStatus === 'exists' && <FormErrorMessage>User already exists</FormErrorMessage>}
+                {emailStatus === 'invited' && <FormHelperText>User already invited. You may re-send.</FormHelperText>}
+              </FormControl>
               <Select placeholder="Select Role" value={role} onChange={e => setRole(e.target.value)}>
                 <option value="Admin">Admin</option>
                 <option value="Technician">Technician</option>
@@ -143,10 +178,17 @@ const UserManagementPage: React.FC = () => {
             </Stack>
           </ModalBody>
           <ModalFooter>
-            <Button onClick={onSubmitInvite}>Send Invite</Button>
+            <Button onClick={onSubmitInvite}>{emailStatus === 'invited' ? 'Resend Invite' : 'Send Invite'}</Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
+
+      {success && (
+        <Alert status="success" mt={4}>
+          <AlertIcon />
+          {success} has been invited successfully.
+        </Alert>
+      )}
 
       <CSVPreviewModal
         isOpen={csvOpen}

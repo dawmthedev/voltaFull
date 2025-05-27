@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { BadRequest, Unauthorized } from "@tsed/exceptions";
-import { BodyParams, Context } from "@tsed/platform-params";
+import { BodyParams, Context, QueryParams } from "@tsed/platform-params";
 import { Enum, Get, Post, Property, Put, Required, Returns } from "@tsed/schema";
 import { AdminResultModel, AdminRoleModel, SaleRefResultModel, SuccessMessageModel } from "../../models/RestModels";
 import { AdminService } from "../../services/AdminService";
@@ -90,9 +90,9 @@ export class AdminController {
   public async inviteUser(@BodyParams() body: InviteUserDto, @Context() context: Context) {
     await this.adminService.checkPermissions({ hasRole: [ADMIN] }, context.get("user"));
     const { name, email, role, phone } = body;
-    const exists = await this.adminService.findAdminByEmail(email);
-    if (exists) throw new BadRequest(EMAIL_EXISTS);
-    await this.adminService.inviteUser({ name, email, role, phone });
+    const status = await this.adminService.checkEmail(email);
+    if (status.exists) throw new BadRequest(EMAIL_EXISTS);
+    await this.adminService.inviteUser({ name, email, role, phone, sender: context.get("user").email });
     await NodemailerClient.sendInviteEmail({
       email,
       name,
@@ -100,6 +100,11 @@ export class AdminController {
       link: `https://volta-crm.com/register?email=${encodeURIComponent(email)}&role=${encodeURIComponent(role)}`
     });
     return new SuccessResult({ success: true, message: "Invite sent" }, SuccessMessageModel);
+  }
+
+  @Get("/check-email")
+  public async checkEmail(@QueryParams("email") email: string) {
+    return await this.adminService.checkEmail(email);
   }
 
   @Get("/me")

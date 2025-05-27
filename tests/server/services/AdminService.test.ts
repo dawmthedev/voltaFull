@@ -13,21 +13,27 @@ describe('AdminService', () => {
   let adminModel: any;
   let verifyModel: any;
   let orgModel: any;
+  let inviteModel: any;
   let service: AdminService;
 
   beforeEach(() => {
     process.env.ENCRYPTION_KEY = 'secret';
     (createSessionToken as jest.Mock).mockReset();
     adminModel = {
-      findById: jest.fn()
+      findById: jest.fn(),
+      findOne: jest.fn()
     };
     verifyModel = {
       findOne: jest.fn(),
       create: jest.fn(),
       updateOne: jest.fn()
     };
+    inviteModel = {
+      findOne: jest.fn(),
+      updateOne: jest.fn()
+    };
     orgModel = {};
-    service = new AdminService(orgModel as any, adminModel as any, verifyModel as any);
+    service = new AdminService(orgModel as any, adminModel as any, verifyModel as any, inviteModel as any);
   });
 
   describe('createSessionCookie', () => {
@@ -90,6 +96,21 @@ describe('AdminService', () => {
       await expect(service.getActiveAdmin('token')).rejects.toEqual(
         expect.objectContaining({ message: 'ADMIN_NOT_FOUND' })
       );
+    });
+  });
+
+  describe('checkEmail', () => {
+    it('returns exists when admin found', async () => {
+      adminModel.findOne.mockResolvedValue({});
+      const result = await service.checkEmail('a@test.com');
+      expect(result).toEqual({ exists: true, invited: false });
+    });
+
+    it('returns invited when invite exists', async () => {
+      adminModel.findOne.mockResolvedValue(null);
+      inviteModel.findOne.mockResolvedValue({});
+      const result = await service.checkEmail('a@test.com');
+      expect(result).toEqual({ exists: false, invited: true });
     });
   });
 });

@@ -5,6 +5,7 @@ import { encrypt } from "../util/crypto";
 import { createPasswordHash, createSessionToken, generateRandomId } from "../util";
 import { JWTPayload } from "../../types";
 import { AdminModel } from "../models/AdminModel";
+import { InviteModel } from "../models/InviteModel";
 import { MongooseModel } from "@tsed/mongoose";
 import { OrganizationModel } from "../models/OrganizationModel";
 import { VerifySessionModal } from "../models/VerifySessionModal";
@@ -15,7 +16,8 @@ export class AdminService {
   constructor(
     @Inject(OrganizationModel) private organizationService: MongooseModel<OrganizationModel>,
     @Inject(AdminModel) private admin: MongooseModel<AdminModel>,
-    @Inject(VerifySessionModal) private verifySession: MongooseModel<VerifySessionModal>
+    @Inject(VerifySessionModal) private verifySession: MongooseModel<VerifySessionModal>,
+    @Inject(InviteModel) private invites: MongooseModel<InviteModel>
   ) {}
   @Inject()
   private saleRep: SaleRepService;
@@ -142,20 +144,37 @@ export class AdminService {
     return await this.admin.find();
   }
 
+  public async checkEmail(email: string) {
+    const normalized = email.trim().toLowerCase();
+    const exists = await this.admin.findOne({ email: normalized });
+    if (exists) return { exists: true, invited: false };
+    const invite = await this.invites.findOne({ email: normalized, status: 'pending' });
+    return { exists: false, invited: !!invite };
+  }
+
   public async inviteUser(params: {
     name: string;
     email: string;
     role: string;
     phone?: string;
+    sender: string;
   }) {
-    const { name, email, role, phone } = params;
-    return await this.admin.create({
-      name,
-      email: email.trim().toLowerCase(),
-      role,
-      phone,
-      invited: true,
-      invitedAt: new Date(),
-    });
+    const { name, email, role, phone, sender } = params;
+    const normalized = email.trim().toLowerCase();
+    await this.invites.updateOne(
+      { email: normalized },
+      {
+        $set: {
+          name,
+          email: normalized,
+          phone,
+          role,
+          sender,
+          invitedAt: new Date(),
+          status: 'pending'
+        }
+      },
+      { upsert: true }
+    );
   }
 }
