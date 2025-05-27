@@ -55,14 +55,18 @@ const UserManagementPage: React.FC = () => {
     onClose: closeCsv
   } = useDisclosure();
   const [csvUsers, setCsvUsers] = useState<CSVRow[]>([]);
-  const [emailStatus, setEmailStatus] = useState<'valid' | 'invited' | 'exists' | 'invalid' | null>(null);
+  type EmailStatus = 'valid' | 'exists' | 'invited' | 'invalid' | null;
+  const [emailStatus, setEmailStatus] = useState<EmailStatus>(null);
   const [success, setSuccess] = useState<string | null>(null);
 
   const isValidEmail = (val: string) => /\S+@\S+\.\S+/.test(val);
 
   useEffect(() => {
-    if (!email || !isValidEmail(email)) return setEmailStatus('invalid');
-    fetch(`/rest/users/check-email?email=${encodeURIComponent(email)}`)
+    if (!isValidEmail(email)) {
+      setEmailStatus(email ? 'invalid' : null);
+      return;
+    }
+    fetch(`/api/users/check-email?email=${encodeURIComponent(email)}`)
       .then(res => res.json())
       .then(data => {
         if (data.exists) setEmailStatus('exists');
@@ -72,13 +76,13 @@ const UserManagementPage: React.FC = () => {
   }, [email]);
 
   const fetchUsers = async () => {
-    const res = await fetch('/rest/users');
+    const res = await fetch('/api/users');
     const json = await res.json();
     setUsers(json.data || []);
   };
 
   const onSubmitInvite = async () => {
-    await fetch('/rest/users/invite', {
+    await fetch('/api/users/invite', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, role, phone })
@@ -103,7 +107,7 @@ const UserManagementPage: React.FC = () => {
 
   const confirmCsv = async (rows: CSVRow[]) => {
     await Promise.all(rows.map((r) =>
-      fetch('/rest/users/invite', {
+      fetch('/api/users/invite', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(r)
@@ -139,7 +143,7 @@ const UserManagementPage: React.FC = () => {
         </Thead>
         <Tbody>
           {users.map((u) => (
-            <Tr key={u.id}>
+            <Tr key={u._id}>
               <Td>{u.name}</Td>
               <Td>{u.email}</Td>
               <Td>{u.role}</Td>
@@ -157,7 +161,7 @@ const UserManagementPage: React.FC = () => {
           <ModalBody>
             <Stack spacing={4}>
               <Input placeholder="Full Name" value={name} onChange={e => setName(e.target.value)} />
-              <FormControl isInvalid={emailStatus === 'invalid' || emailStatus === 'exists'}>
+              <FormControl isInvalid={emailStatus === 'exists' || emailStatus === 'invalid'}>
                 <InputGroup>
                   <Input placeholder="Email" type="email" value={email} onChange={e => setEmail(e.target.value)} />
                   <InputRightElement>
@@ -166,8 +170,10 @@ const UserManagementPage: React.FC = () => {
                     {emailStatus === 'exists' && <CloseIcon color="red.400" />}
                   </InputRightElement>
                 </InputGroup>
+                {emailStatus === 'valid' && <FormHelperText color="green.500">Valid email</FormHelperText>}
+                {emailStatus === 'invited' && <FormHelperText color="yellow.600">User already invited</FormHelperText>}
                 {emailStatus === 'exists' && <FormErrorMessage>User already exists</FormErrorMessage>}
-                {emailStatus === 'invited' && <FormHelperText>User already invited. You may re-send.</FormHelperText>}
+                {emailStatus === 'invalid' && <FormErrorMessage>Invalid email address</FormErrorMessage>}
               </FormControl>
               <Select placeholder="Select Role" value={role} onChange={e => setRole(e.target.value)}>
                 <option value="Admin">Admin</option>
