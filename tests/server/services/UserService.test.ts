@@ -1,5 +1,6 @@
 import { UserService } from '../../../server/src/services/UserService';
 import { Unauthorized } from '@tsed/exceptions';
+import { ADMIN } from '../../../server/src/util/constants';
 
 describe('UserService', () => {
   let userModel: any;
@@ -25,7 +26,7 @@ describe('UserService', () => {
   it('returns users when admin', async () => {
     const users = [{ id: '1', name: 'Alice' }];
     userModel.find.mockResolvedValue(users);
-    const payload = { id: '1', email: 'a@test.com', role: 'Admin' } as any;
+    const payload = { id: '1', email: 'a@test.com', role: ADMIN } as any;
     const result = await service.findAll(payload);
     expect(userModel.find).toHaveBeenCalled();
     expect(result).toBe(users);
