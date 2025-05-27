@@ -4,7 +4,10 @@ import LandingPage from './pages/Landing';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import UserManagementPage from './pages/UserManagementPage';
-import DashboardDeals from './pages/DashboardDeals';
+import ProjectsPage from './pages/ProjectsPage';
+import AccountsPayablePage from './pages/AccountsPayablePage';
+import TechnicianTasksPage from './pages/TechnicianTasksPage';
+import DashboardLayout from './components/DashboardLayout';
 import PrivateRoute from './components/PrivateRoute';
 
 const App: React.FC = () => {
@@ -14,23 +17,20 @@ const App: React.FC = () => {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Navigate to="/dashboard/deals" />} />
         <Route
-          path="/dashboard/deals"
+          path="/dashboard"
           element={
             <PrivateRoute>
-              <DashboardDeals />
+              <DashboardLayout />
             </PrivateRoute>
           }
-        />
-        <Route
-          path="/users"
-          element={
-            <PrivateRoute>
-              <UserManagementPage />
-            </PrivateRoute>
-          }
-        />
+        >
+          <Route index element={<Navigate to="projects" replace />} />
+          <Route path="projects" element={<ProjectsPage />} />
+          <Route path="accounts" element={<AccountsPayablePage />} />
+          <Route path="users" element={<UserManagementPage />} />
+          <Route path="technician" element={<TechnicianTasksPage />} />
+        </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Routes>
     </Router>

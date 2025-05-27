@@ -24,11 +24,9 @@ import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import UserAvatar from "../components/UserAvatar";
 import { CSVRow, parseCSV } from "../utils/csv";
-import Sidebar from "../components/Sidebar";
-import Navbar from "../components/Navbar";
-import DealCard from "../components/DealCard";
+import ProjectCard from "../components/ProjectCard";
 
-const DashboardDeals: React.FC = () => {
+const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const projects = useAppSelector((state) => state.projects.items);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -104,20 +102,10 @@ const DashboardDeals: React.FC = () => {
   };
 
   return (
-    <Box overflowX="hidden" minH="100vh">
-      <Navbar />
-      <Flex className="overflow-x-hidden" pt={16}>
-        <Sidebar />
-        <Box
-          px={{ base: 4, md: 8 }}
-          py={6}
-          flex="1"
-          overflowY="auto"
-          className="min-w-0 overflow-x-hidden"
-        >
+    <Box px={{ base: 4, md: 8 }} py={6} flex="1" overflowY="auto">
           <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
-            <Heading size="md" className="text-balance">
-              Deals Dashboard
+          <Heading size="md" className="text-balance">
+              Projects Dashboard
             </Heading>
             <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
               <Button variant="outline" colorScheme="red" onClick={handleLogout}>
@@ -148,7 +136,7 @@ const DashboardDeals: React.FC = () => {
 
           <Stack spacing={4} display={{ base: "block", md: "none" }}>
             {projects.map((p) => (
-              <DealCard key={p._id} project={p} />
+              <ProjectCard key={p._id} project={p} />
             ))}
           </Stack>
 
@@ -261,9 +249,8 @@ const DashboardDeals: React.FC = () => {
             onConfirm={handleConfirm}
           />
         </Box>
-      </Flex>
     </Box>
   );
 };
 
-export default DashboardDeals;
+export default ProjectsPage;
