@@ -141,4 +141,21 @@ export class AdminService {
   public async findAdmins() {
     return await this.admin.find();
   }
+
+  public async inviteUser(params: {
+    name: string;
+    email: string;
+    role: string;
+    phone?: string;
+  }) {
+    const { name, email, role, phone } = params;
+    return await this.admin.create({
+      name,
+      email: email.trim().toLowerCase(),
+      role,
+      phone,
+      invited: true,
+      invitedAt: new Date(),
+    });
+  }
 }

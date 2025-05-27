@@ -21,6 +21,16 @@ export class AdminModel {
   email: string;
 
   @Property()
+  phone?: string;
+
+  @Property()
+  @Default(false)
+  invited: boolean;
+
+  @Property()
+  invitedAt?: Date;
+
+  @Property()
   password: string;
 
   @Property()
