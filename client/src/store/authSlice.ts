@@ -19,6 +19,7 @@ export const login = createAsyncThunk(
   async (credentials: { email: string; password: string }) => {
     const data = await apiLogin(credentials)
     const token = data?.data?.token
+    console.log('login token', token)
     return { user: data.data, token }
   }
 )
