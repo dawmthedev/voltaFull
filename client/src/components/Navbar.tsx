@@ -1,6 +1,7 @@
 import React from 'react'
 import { Box, Button, Flex, Heading } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
+import UserAvatar from './UserAvatar'
 
 interface NavbarProps {
   onLogout: () => void
@@ -23,7 +24,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onCSVChange, onAddProject }) 
         <Heading size="md" className="whitespace-nowrap">
           Volta CRM
         </Heading>
-        <Flex gap={2} flexWrap="wrap">
+        <Flex gap={2} flexWrap="wrap" align="center">
           <Button
             onClick={onLogout}
             colorScheme="red"
@@ -51,6 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onCSVChange, onAddProject }) 
           >
             Add Project
           </Button>
+          <UserAvatar />
         </Flex>
       </Flex>
     </Box>
