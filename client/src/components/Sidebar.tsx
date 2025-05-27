@@ -1,13 +1,15 @@
 import React from 'react'
-import { Box, IconButton, VStack } from '@chakra-ui/react'
+import { Box, IconButton, VStack, HStack, Icon, Text } from '@chakra-ui/react'
 import { HamburgerIcon } from '@chakra-ui/icons'
-import { FiGrid, FiBriefcase, FiUsers, FiDollarSign, FiSettings } from 'react-icons/fi'
-import { useAppSelector } from '../store'
+import { FiGrid, FiBriefcase, FiUsers, FiDollarSign, FiSettings, FiLogOut } from 'react-icons/fi'
+import { useAppDispatch, useAppSelector } from '../store'
+import { logout } from '../store/authSlice'
 import SidebarItem from './SidebarItem'
 
 const Sidebar: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = React.useState(false)
   const user = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch()
 
   return (
     <Box
@@ -19,6 +21,8 @@ const Sidebar: React.FC = () => {
       bg="white"
       borderRight="1px solid #E2E8F0"
       flexShrink={0}
+      display="flex"
+      flexDirection="column"
     >
       <IconButton
         aria-label="Toggle sidebar"
@@ -27,7 +31,7 @@ const Sidebar: React.FC = () => {
         m={2}
         onClick={() => setSidebarOpen(!isSidebarOpen)}
       />
-      <VStack spacing={4} align="stretch" px={isSidebarOpen ? 4 : 2} pt={4}>
+      <VStack flex="1" spacing={4} align="stretch" px={isSidebarOpen ? 4 : 2} pt={4}>
         <SidebarItem
           icon={FiGrid}
           label="Projects"
@@ -59,6 +63,20 @@ const Sidebar: React.FC = () => {
           </>
         )}
       </VStack>
+      <Box mt="auto" px={isSidebarOpen ? 4 : 2} pb={4}>
+        <HStack
+          as="button"
+          onClick={() => dispatch(logout())}
+          px={2}
+          py={2}
+          spacing={2}
+          _hover={{ bg: 'gray.100' }}
+          w="full"
+        >
+          <Icon as={FiLogOut} boxSize={5} />
+          {isSidebarOpen && <Text>Logout</Text>}
+        </HStack>
+      </Box>
     </Box>
   )
 }
