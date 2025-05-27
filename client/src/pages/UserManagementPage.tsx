@@ -32,17 +32,12 @@ import {
 import { DeleteIcon, CheckIcon, WarningIcon, CloseIcon } from '@chakra-ui/icons';
 import CSVPreviewModal from '../components/CSVPreviewModal';
 import { parseCSV, CSVRow } from '../utils/csv';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  role: string;
-  phone?: string;
-}
+import { useAppDispatch, useAppSelector } from '../store';
+import { fetchUsers } from '../store/usersSlice';
 
 const UserManagementPage: React.FC = () => {
-  const [users, setUsers] = useState<User[]>([]);
+  const dispatch = useAppDispatch();
+  const users = useAppSelector(state => state.users.items);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState('');
@@ -75,11 +70,6 @@ const UserManagementPage: React.FC = () => {
       });
   }, [email]);
 
-  const fetchUsers = async () => {
-    const res = await fetch('/api/users');
-    const json = await res.json();
-    setUsers(json.data || []);
-  };
 
   const onSubmitInvite = async () => {
     await fetch('/api/users/invite', {
@@ -93,7 +83,7 @@ const UserManagementPage: React.FC = () => {
     setEmail('');
     setRole('');
     setPhone('');
-    fetchUsers();
+    dispatch(fetchUsers());
   };
 
   const handleCsvUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -115,12 +105,12 @@ const UserManagementPage: React.FC = () => {
     ));
     closeCsv();
     setCsvUsers([]);
-    fetchUsers();
+    dispatch(fetchUsers());
   };
 
   useEffect(() => {
-    fetchUsers();
-  }, []);
+    dispatch(fetchUsers());
+  }, [dispatch]);
 
   return (
     <div className="p-4">
