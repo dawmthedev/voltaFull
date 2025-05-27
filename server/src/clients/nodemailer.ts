@@ -45,4 +45,13 @@ export class NodemailerClient {
   }) {
     return postToZapier({ type: "planner", email, title, description, action });
   }
+
+  public static async sendInviteEmail(payload: {
+    email: string;
+    name: string;
+    role: string;
+    link: string;
+  }) {
+    return postToZapier({ type: "invite", ...payload });
+  }
 }
