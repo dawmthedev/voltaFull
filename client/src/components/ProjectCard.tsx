@@ -12,11 +12,11 @@ import {
 import { EditIcon } from '@chakra-ui/icons'
 import { Project } from '../store/projectsSlice'
 
-interface DealCardProps {
+interface ProjectCardProps {
   project: Project
 }
 
-const DealCard: React.FC<DealCardProps> = ({ project }) => {
+const ProjectCard: React.FC<ProjectCardProps> = ({ project }) => {
   return (
     <Box bg="white" rounded="lg" shadow="sm" p={4} className="space-y-2">
       <Stack direction="row" justify="space-between" align="center">
@@ -77,4 +77,4 @@ const DealCard: React.FC<DealCardProps> = ({ project }) => {
   )
 }
 
-export default DealCard
+export default ProjectCard

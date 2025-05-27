@@ -1,11 +1,11 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import DashboardDeals from '../pages/DashboardDeals';
+import ProjectsPage from '../pages/ProjectsPage';
 import axios from 'axios';
 jest.mock('axios');
 import { Provider } from '../components/ui/provider';
 
-describe('DashboardDeals', () => {
+describe('ProjectsPage', () => {
   beforeEach(() => {
     global.fetch = jest.fn(() =>
       Promise.resolve({
@@ -24,7 +24,7 @@ describe('DashboardDeals', () => {
   test('opens add project modal', () => {
     render(
       <Provider>
-        <DashboardDeals />
+        <ProjectsPage />
       </Provider>
     );
 
@@ -35,7 +35,7 @@ describe('DashboardDeals', () => {
   test('shows upload csv button', () => {
     render(
       <Provider>
-        <DashboardDeals />
+        <ProjectsPage />
       </Provider>
     );
 
@@ -45,7 +45,7 @@ describe('DashboardDeals', () => {
   test('opens preview modal after csv upload', async () => {
     render(
       <Provider>
-        <DashboardDeals />
+        <ProjectsPage />
       </Provider>
     )
 
