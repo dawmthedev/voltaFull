@@ -1,5 +1,5 @@
 import React from 'react'
-import { Box, Button, Flex, Heading } from '@chakra-ui/react'
+import { Flex, Button, Heading } from '@chakra-ui/react'
 import { AddIcon } from '@chakra-ui/icons'
 import UserAvatar from './UserAvatar'
 
@@ -13,49 +13,52 @@ const Navbar: React.FC<NavbarProps> = ({ onLogout, onCSVChange, onAddProject }) 
   const inputRef = React.useRef<HTMLInputElement | null>(null)
 
   return (
-    <Box
+    <Flex
       position="sticky"
       top={0}
       zIndex={50}
+      px={4}
+      py={2}
       bg="white"
+      align="center"
+      justify="space-between"
+      wrap="wrap"
       className="border-b shadow-sm"
     >
-      <Flex justify="space-between" align="center" px={4} py={2}>
-        <Heading size="md" className="whitespace-nowrap">
-          Volta CRM
-        </Heading>
-        <Flex gap={2} flexWrap="wrap" align="center">
-          <Button
-            onClick={onLogout}
-            colorScheme="red"
-            variant="outline"
-            className="whitespace-nowrap"
-          >
-            Logout
-          </Button>
-          <input
-            type="file"
-            accept=".csv"
-            onChange={onCSVChange}
-            hidden
-            ref={inputRef}
-            data-testid="csv-input"
-          />
-          <Button onClick={() => inputRef.current?.click()} className="whitespace-nowrap">
-            Upload CSV
-          </Button>
-          <Button
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            onClick={onAddProject}
-            className="whitespace-nowrap"
-          >
-            Add Project
-          </Button>
-          <UserAvatar />
-        </Flex>
+      <Heading size="md" mb={{ base: 2, md: 0 }}>
+        Volta CRM
+      </Heading>
+
+      <Flex
+        align="center"
+        gap={2}
+        wrap="wrap"
+        flexDirection={{ base: 'column', md: 'row' }}
+      >
+        <Button onClick={onLogout} colorScheme="red" variant="outline">
+          Logout
+        </Button>
+        <input
+          type="file"
+          accept=".csv"
+          onChange={onCSVChange}
+          hidden
+          ref={inputRef}
+          data-testid="csv-input"
+        />
+        <Button onClick={() => inputRef.current?.click()} variant="ghost">
+          Upload CSV
+        </Button>
+        <Button
+          leftIcon={<AddIcon />}
+          colorScheme="teal"
+          onClick={onAddProject}
+        >
+          Add Project
+        </Button>
+        <UserAvatar />
       </Flex>
-    </Box>
+    </Flex>
   )
 }
 
