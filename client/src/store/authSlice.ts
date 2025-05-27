@@ -7,8 +7,9 @@ interface AuthState {
   status: 'idle' | 'loading' | 'failed'
 }
 
+const storedUser = localStorage.getItem('authUser')
 const initialState: AuthState = {
-  user: null,
+  user: storedUser ? JSON.parse(storedUser) : null,
   token: localStorage.getItem('authToken'),
   status: 'idle'
 }
@@ -18,7 +19,6 @@ export const login = createAsyncThunk(
   async (credentials: { email: string; password: string }) => {
     const data = await apiLogin(credentials)
     const token = data?.data?.token
-    if (token) localStorage.setItem('authToken', token)
     return { user: data.data, token }
   }
 )
@@ -31,6 +31,7 @@ const authSlice = createSlice({
       state.user = null
       state.token = null
       localStorage.removeItem('authToken')
+      localStorage.removeItem('authUser')
     }
   },
   extraReducers: builder => {
@@ -42,6 +43,8 @@ const authSlice = createSlice({
         state.status = 'idle'
         state.user = action.payload.user
         state.token = action.payload.token
+        localStorage.setItem('authToken', action.payload.token ?? '')
+        localStorage.setItem('authUser', JSON.stringify(action.payload.user))
       })
       .addCase(login.rejected, state => {
         state.status = 'failed'
