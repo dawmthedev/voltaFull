@@ -4,6 +4,7 @@ import { Server } from "../../server/src/Server";
 import { AdminService } from "../../server/src/services/AdminService";
 import { VerificationService } from "../../server/src/services/VerificationService";
 import { OrganizationService } from "../../server/src/services/OrganizationService";
+import { AuthService } from "../../server/src/services/AuthService";
 import { createPasswordHash } from "../../server/src/util";
 
 describe("Authentication integration", () => {
@@ -11,9 +12,11 @@ describe("Authentication integration", () => {
   let adminService: AdminService;
   let verificationService: VerificationService;
   let organizationService: OrganizationService;
+  let authService: AuthService;
 
   beforeAll(() => {
     process.env.ENCRYPTION_KEY = "test-key";
+    process.env.JWT_SECRET = "test-secret";
   });
 
   beforeEach(PlatformTest.bootstrap(Server));
@@ -22,6 +25,7 @@ describe("Authentication integration", () => {
     adminService = PlatformTest.injector.get(AdminService)!;
     verificationService = PlatformTest.injector.get(VerificationService)!;
     organizationService = PlatformTest.injector.get(OrganizationService)!;
+    authService = PlatformTest.injector.get(AuthService)!;
   });
 
   afterEach(PlatformTest.reset);
@@ -45,7 +49,7 @@ describe("Authentication integration", () => {
       } as any;
 
       jest.spyOn(adminService, "findAdminByEmail").mockResolvedValue(admin);
-      jest.spyOn(adminService, "createSessionCookie").mockResolvedValue("token123");
+      jest.spyOn(authService, "generateToken").mockReturnValue("token123");
 
       const res = await request
         .post("/rest/auth/login")
@@ -55,18 +59,12 @@ describe("Authentication integration", () => {
       expect(res.body).toEqual({
         success: true,
         data: {
-          id: admin._id,
-          name: admin.name,
-          email: admin.email,
-          role: admin.role,
-          docs: admin.docs,
-          recordID: admin.recordID,
-          unlocked: admin.unlocked,
-          twoFactorEnabled: admin.twoFactorEnabled,
-          orgId: admin.orgId,
-          company: "crm",
-          token: "token123",
-          isSuperAdmin: admin.isSuperAdmin
+          user: {
+            name: admin.name,
+            email: admin.email,
+            role: admin.role
+          },
+          token: "token123"
         }
       });
     });

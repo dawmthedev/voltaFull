@@ -50,6 +50,17 @@ export class AdminResultModel {
   @Property() createdAt?: Date;
 }
 
+export class AuthUserModel {
+  @Property() name: string;
+  @Property() email: string;
+  @Property() role: string;
+}
+
+export class AuthResultModel {
+  @Property() user: AuthUserModel;
+  @Property() token: string;
+}
+
 export class OrganizationResultModel {
   @Property() public readonly id: string;
   @Property() public readonly name: string;
