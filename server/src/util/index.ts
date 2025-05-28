@@ -51,7 +51,7 @@ export const createSessionToken = ({ id, email, role }: { id: string; email: str
   const payload: JWTPayload = {
     id,
     email,
-    role: role || "admin"
+    role: role || "Admin"
   };
   if (!ENCRYPTION_KEY) throw new Error("ENCRYPTION_KEY not set");
   return jwt.sign(payload, ENCRYPTION_KEY, { expiresIn: "7d", audience: serverBaseUrl });

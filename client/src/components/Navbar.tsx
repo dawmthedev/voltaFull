@@ -1,6 +1,6 @@
-import React from 'react'
-import { Flex, Heading } from '@chakra-ui/react'
-import UserAvatar from './UserAvatar'
+import React from "react";
+import { Flex, Heading } from "@chakra-ui/react";
+import UserAvatar from "./UserAvatar";
 
 const Navbar: React.FC = () => (
   <Flex
@@ -15,8 +15,9 @@ const Navbar: React.FC = () => (
     boxShadow="sm"
   >
     <Heading size="md">Volta CRM</Heading>
+
     <UserAvatar />
   </Flex>
-)
+);
 
-export default Navbar
+export default Navbar;

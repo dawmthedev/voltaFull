@@ -1,14 +1,14 @@
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
-import LandingPage from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import UserManagementPage from './pages/UserManagementPage';
-import ProjectsPage from './pages/ProjectsPage';
-import AccountsPayablePage from './pages/AccountsPayablePage';
-import TechnicianTasksPage from './pages/TechnicianTasksPage';
-import DashboardLayout from './components/DashboardLayout';
-import PrivateRoute from './components/PrivateRoute';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import LandingPage from "./pages/Landing";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import UserManagementPage from "./pages/UserManagementPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import AccountsPayablePage from "./pages/AccountsPayablePage";
+import TechnicianTasksPage from "./pages/TechnicianTasksPage";
+import DashboardLayout from "./components/DashboardLayout";
+import PrivateRoute from "./components/PrivateRoute";
 
 const AppRoutes: React.FC = () => (
   <Routes>

@@ -5,7 +5,7 @@ import { useAppSelector } from "../store";
 const UserAvatar: React.FC = () => {
   const { user, status } = useAppSelector((state) => state.auth);
 
-  if (status === 'loading') return <Spinner size="sm" />;
+  if (status === "loading") return <Spinner size="sm" />;
   if (!user) return null;
 
   return (

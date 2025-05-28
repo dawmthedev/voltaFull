@@ -38,20 +38,17 @@ export class AdminModel {
   recordID: string;
 
   @Property()
-  @Default("admin")
+  @Default("Admin")
   role: string;
 
   @Property()
   @Default("null")
   docs: string;
 
-
   @Property()
   @Default("false")
   unlocked: string;
 
-
-  
   @Property()
   @Default(false)
   isSuperAdmin: boolean;

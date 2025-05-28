@@ -134,7 +134,7 @@ export class AuthenticationController {
     await this.adminService.createAdmin({
       email: email,
       name: name || "",
-      role: body.role || "admin",
+      role: body.role || "Admin",
       password: password,
       organizationId: organization?._id || ""
     });

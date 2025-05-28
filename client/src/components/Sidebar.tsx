@@ -7,10 +7,10 @@ import { logout } from "../store/authSlice";
 import UserAvatar from "./UserAvatar";
 
 const tabs = [
-  { label: 'Dashboard', icon: MdDashboard, path: '/dashboard' },
-  { label: 'Projects', icon: MdWork, path: '/projects' },
-  { label: 'Teams', icon: MdGroup, path: '/teams' },
-  { label: 'Settings', icon: MdSettings, path: '/settings' }
+  { label: "Dashboard", icon: MdDashboard, path: "/dashboard" },
+  { label: "Projects", icon: MdWork, path: "/projects" },
+  { label: "Teams", icon: MdGroup, path: "/teams" },
+  { label: "Settings", icon: MdSettings, path: "/settings" },
 ];
 
 const Sidebar: React.FC = () => {
@@ -22,14 +22,14 @@ const Sidebar: React.FC = () => {
       top={0}
       left={0}
       w="220px"
+      mt={"50px"} // Adjust for Navbar height
       h="100vh"
       bg="white"
       borderRight="1px solid #E2E8F0"
       p={4}
     >
       <VStack align="stretch" spacing={4}>
-        <UserAvatar />
-        {tabs.map(tab => (
+        {tabs.map((tab) => (
           <Button
             key={tab.path}
             as={NavLink}
@@ -37,7 +37,7 @@ const Sidebar: React.FC = () => {
             leftIcon={<Icon as={tab.icon} />}
             justifyContent="flex-start"
             variant="ghost"
-            _activeLink={{ bg: 'gray.100' }}
+            _activeLink={{ bg: "gray.100" }}
           >
             {tab.label}
           </Button>
@@ -46,6 +46,7 @@ const Sidebar: React.FC = () => {
           onClick={() => dispatch(logout())}
           justifyContent="flex-start"
           variant="ghost"
+          style={{ color: "red" }}
         >
           Logout
         </Button>
