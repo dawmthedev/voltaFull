@@ -1,11 +1,12 @@
 import React from "react";
-import { Avatar, Box, Flex, Text, Tooltip } from "@chakra-ui/react";
+import { Avatar, Box, Flex, Text, Tooltip, Spinner } from "@chakra-ui/react";
 import { useAppSelector } from "../store";
 
 const UserAvatar: React.FC = () => {
-  const user = useAppSelector((state) => state.auth.user);
+  const { user, status } = useAppSelector((state) => state.auth);
 
-  if (!user) return <p>Loading...</p>;
+  if (status === 'loading') return <Spinner size="sm" />;
+  if (!user) return null;
 
   return (
     <Tooltip label={`${user.name} (${user.role})`} placement="left" hasArrow>
