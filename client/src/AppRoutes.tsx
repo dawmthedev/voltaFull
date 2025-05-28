@@ -7,7 +7,7 @@ import UserManagementPage from "./pages/UserManagementPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import AccountsPayablePage from "./pages/AccountsPayablePage";
 import TechnicianTasksPage from "./pages/TechnicianTasksPage";
-import DashboardLayout from "./components/DashboardLayout";
+import Dashboard from "./pages/Dashboard";
 import PrivateRoute from "./components/PrivateRoute";
 
 const AppRoutes: React.FC = () => (
@@ -15,18 +15,11 @@ const AppRoutes: React.FC = () => (
     <Route path="/" element={<LandingPage />} />
     <Route path="/login" element={<Login />} />
     <Route path="/register" element={<Register />} />
-    <Route
-      path="/dashboard"
-      element={
-        <PrivateRoute>
-          <DashboardLayout />
-        </PrivateRoute>
-      }
-    >
-      <Route index element={<Navigate to="projects" replace />} />
+    <Route path="/dashboard/*" element={<PrivateRoute />}> 
+      <Route index element={<Dashboard />} />
       <Route path="projects" element={<ProjectsPage />} />
-      <Route path="accounts" element={<AccountsPayablePage />} />
-      <Route path="users" element={<UserManagementPage />} />
+      <Route path="teams" element={<UserManagementPage />} />
+      <Route path="settings" element={<AccountsPayablePage />} />
       <Route path="technician" element={<TechnicianTasksPage />} />
     </Route>
     <Route path="*" element={<Navigate to="/" />} />

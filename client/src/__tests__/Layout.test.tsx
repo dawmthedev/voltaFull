@@ -1,14 +1,16 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import Layout from '../components/Layout';
 
 const renderWithPath = (path: string) =>
   render(
     <MemoryRouter initialEntries={[path]}>
-      <Layout>
-        <div>content</div>
-      </Layout>
+      <Routes>
+        <Route element={<Layout />}>
+          <Route index element={<div>content</div>} />
+        </Route>
+      </Routes>
     </MemoryRouter>
   );
 

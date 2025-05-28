@@ -1,57 +1,85 @@
-import React from "react";
-import { Box, VStack, Button, Icon } from "@chakra-ui/react";
-import { MdDashboard, MdWork, MdGroup, MdSettings } from "react-icons/md";
-import { NavLink } from "react-router-dom";
-import { useAppDispatch } from "../store";
-import { logout } from "../store/authSlice";
-import UserAvatar from "./UserAvatar";
+import React from 'react';
+import {
+  Box,
+  VStack,
+  Button,
+  Icon,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  DrawerBody,
+} from '@chakra-ui/react';
+import { MdDashboard, MdWork, MdGroup, MdSettings } from 'react-icons/md';
+import { NavLink } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../store';
+import { logout } from '../store/authSlice';
 
-const tabs = [
-  { label: "Dashboard", icon: MdDashboard, path: "/dashboard" },
-  { label: "Projects", icon: MdWork, path: "/projects" },
-  { label: "Teams", icon: MdGroup, path: "/teams" },
-  { label: "Settings", icon: MdSettings, path: "/settings" },
-];
+interface SidebarProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
 
-  return (
-    <Box
-      position="fixed"
-      top={0}
-      left={0}
-      w="220px"
-      mt={"50px"} // Adjust for Navbar height
-      h="100vh"
-      bg="white"
-      borderRight="1px solid #E2E8F0"
-      p={4}
-    >
-      <VStack align="stretch" spacing={4}>
-        {tabs.map((tab) => (
-          <Button
-            key={tab.path}
-            as={NavLink}
-            to={tab.path}
-            leftIcon={<Icon as={tab.icon} />}
-            justifyContent="flex-start"
-            variant="ghost"
-            _activeLink={{ bg: "gray.100" }}
-          >
-            {tab.label}
-          </Button>
-        ))}
+  const adminLinks = [
+    { label: 'Dashboard', icon: MdDashboard, path: '/dashboard' },
+    { label: 'Projects', icon: MdWork, path: '/dashboard/projects' },
+    { label: 'Teams', icon: MdGroup, path: '/dashboard/teams' },
+    { label: 'Settings', icon: MdSettings, path: '/dashboard/settings' },
+  ];
+
+  const userLinks = [{ label: 'My Projects', icon: MdWork, path: '/dashboard/projects' }];
+
+  const links = user?.role === 'Admin' ? adminLinks : userLinks;
+
+  const content = (
+    <VStack align="stretch" spacing={2}>
+      {links.map((tab) => (
         <Button
-          onClick={() => dispatch(logout())}
+          key={tab.path}
+          as={NavLink}
+          to={tab.path}
+          leftIcon={<Icon as={tab.icon} />}
           justifyContent="flex-start"
           variant="ghost"
-          style={{ color: "red" }}
+          _activeLink={{ bg: 'gray.100' }}
+          onClick={onClose}
         >
-          Logout
+          {tab.label}
         </Button>
-      </VStack>
-    </Box>
+      ))}
+      <Button onClick={() => dispatch(logout())} justifyContent="flex-start" variant="ghost" color="red.500">
+        Logout
+      </Button>
+    </VStack>
+  );
+
+  return (
+    <>
+      <Box
+        as="nav"
+        role="complementary"
+        aria-label="Sidebar"
+        w="240px"
+        flexShrink={0}
+        bg="white"
+        p={4}
+        borderRightWidth="1px"
+        display={{ base: 'none', md: 'block' }}
+      >
+        {content}
+      </Box>
+      <Drawer placement="left" isOpen={isOpen} onClose={onClose} size="xs">
+        <DrawerOverlay />
+        <DrawerContent>
+          <DrawerCloseButton />
+          <DrawerBody p={4}>{content}</DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 
