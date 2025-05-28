@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
 import { login as apiLogin } from '../api/auth'
+import { baseURL } from '../apiConfig'
 
 interface AuthState {
   user: any | null
@@ -23,6 +24,18 @@ export const login = createAsyncThunk(
     return { user: data.data, token }
   }
 )
+
+export const fetchCurrentUser = createAsyncThunk('auth/fetchCurrentUser', async () => {
+  const token = localStorage.getItem('authToken')
+  const res = await fetch(`${baseURL}/users/me`, {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : ''
+    }
+  })
+  if (!res.ok) throw new Error('Failed to load user')
+  const data = await res.json()
+  return data.data
+})
 
 const authSlice = createSlice({
   name: 'auth',
@@ -50,8 +63,20 @@ const authSlice = createSlice({
       .addCase(login.rejected, state => {
         state.status = 'failed'
       })
+      .addCase(fetchCurrentUser.pending, state => {
+        state.status = 'loading'
+      })
+      .addCase(fetchCurrentUser.fulfilled, (state, action) => {
+        state.status = 'idle'
+        state.user = action.payload
+      })
+      .addCase(fetchCurrentUser.rejected, state => {
+        state.status = 'failed'
+        state.user = null
+      })
   }
 })
 
 export const { logout } = authSlice.actions
 export default authSlice.reducer
+export { fetchCurrentUser }

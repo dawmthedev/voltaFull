@@ -1,95 +1,55 @@
 import React from "react";
-import { Box, IconButton, VStack, HStack, Icon, Text } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
-import {
-  FiGrid,
-  FiBriefcase,
-  FiUsers,
-  FiDollarSign,
-  FiSettings,
-  FiLogOut,
-} from "react-icons/fi";
-import { useAppDispatch, useAppSelector } from "../store";
+import { Box, VStack, Button, Icon } from "@chakra-ui/react";
+import { MdDashboard, MdWork, MdGroup, MdSettings } from "react-icons/md";
+import { NavLink } from "react-router-dom";
+import { useAppDispatch } from "../store";
 import { logout } from "../store/authSlice";
-import SidebarItem from "./SidebarItem";
+import UserAvatar from "./UserAvatar";
+
+const tabs = [
+  { label: 'Dashboard', icon: MdDashboard, path: '/dashboard' },
+  { label: 'Projects', icon: MdWork, path: '/projects' },
+  { label: 'Teams', icon: MdGroup, path: '/teams' },
+  { label: 'Settings', icon: MdSettings, path: '/settings' }
+];
 
 const Sidebar: React.FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
-  const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
 
   return (
     <Box
-      position="sticky"
+      position="fixed"
       top={0}
+      left={0}
+      w="220px"
       h="100vh"
-      width={{ base: isSidebarOpen ? "220px" : "64px", md: "220px" }}
-      transition="width 0.3s"
       bg="white"
       borderRight="1px solid #E2E8F0"
-      flexShrink={0}
-      display="flex"
-      flexDirection="column"
+      p={4}
     >
-      <IconButton
-        aria-label="Toggle sidebar"
-        icon={<HamburgerIcon />}
-        size="sm"
-        m={2}
-        onClick={() => setSidebarOpen(!isSidebarOpen)}
-      />
-      <VStack
-        flex="1"
-        spacing={4}
-        align="stretch"
-        px={isSidebarOpen ? 4 : 2}
-        pt={4}
-      >
-        <SidebarItem
-          icon={FiGrid}
-          label="Projects"
-          to="/dashboard/projects"
-          isOpen={isSidebarOpen}
-        />
-        {user?.role === "Technician" && (
-          <SidebarItem
-            icon={FiSettings}
-            label="Technician Allocation"
-            to="/dashboard/technician"
-            isOpen={isSidebarOpen}
-          />
-        )}
-        {user?.role === "Admin" && (
-          <>
-            <SidebarItem
-              icon={FiDollarSign}
-              label="Accounts Payable"
-              to="/dashboard/accounts"
-              isOpen={isSidebarOpen}
-            />
-            <SidebarItem
-              icon={FiUsers}
-              label="Users"
-              to="/dashboard/users"
-              isOpen={isSidebarOpen}
-            />
-          </>
-        )}
-      </VStack>
-      <Box mt="auto" px={isSidebarOpen ? 4 : 2} pb={4}>
-        <HStack
-          as="button"
+      <VStack align="stretch" spacing={4}>
+        <UserAvatar />
+        {tabs.map(tab => (
+          <Button
+            key={tab.path}
+            as={NavLink}
+            to={tab.path}
+            leftIcon={<Icon as={tab.icon} />}
+            justifyContent="flex-start"
+            variant="ghost"
+            _activeLink={{ bg: 'gray.100' }}
+          >
+            {tab.label}
+          </Button>
+        ))}
+        <Button
           onClick={() => dispatch(logout())}
-          px={2}
-          py={2}
-          spacing={2}
-          _hover={{ bg: "gray.100" }}
-          w="full"
+          justifyContent="flex-start"
+          variant="ghost"
         >
-          <Icon as={FiLogOut} boxSize={5} />
-          {isSidebarOpen && <Text>Logout</Text>}
-        </HStack>
-      </Box>
+          Logout
+        </Button>
+      </VStack>
     </Box>
   );
 };
