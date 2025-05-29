@@ -23,4 +23,17 @@ describe("UsersController", () => {
 
     expect(res.body).toEqual({ success: true, data: users });
   });
+
+  it("PATCH /users/:id updates role", async () => {
+    const user = { _id: "1", role: "Technician" } as any;
+    jest.spyOn(userService, "updateRole").mockResolvedValue(user);
+
+    const res = await request
+      .patch("/rest/users/1")
+      .send({ role: "Technician" })
+      .expect(200);
+
+    expect(userService.updateRole).toHaveBeenCalledWith("1", "Technician");
+    expect(res.body).toEqual({ success: true, data: user });
+  });
 });
