@@ -26,7 +26,7 @@ export class ProjectController {
     return new SuccessResult(project, ProjectModel);
   }
 
-  @Get(":id")
+  @Get("/:id")
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async getById(@PathParams("id") id: string) {
     const project = await this.projectService.findById(id);
@@ -37,7 +37,7 @@ export class ProjectController {
     return new SuccessResult({ ...project.toObject(), payroll }, ProjectModel);
   }
 
-  @Patch(":id")
+  @Patch("/:id")
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async updateProject(
     @PathParams("id") id: string,
