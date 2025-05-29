@@ -115,7 +115,9 @@ const UserManagementPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <Box px={{ base: 4, md: 8 }} py={6} flex="1" overflowY="auto">
+
+    <div className="w-full h-full flex flex-col p-4">
+
       <HStack justify="space-between" mb={4}>
         <Text fontSize="xl" fontWeight="bold">Users</Text>
         <HStack>
@@ -124,7 +126,9 @@ const UserManagementPage: React.FC = () => {
           <Button colorScheme="teal" size="sm" onClick={handleOpen}>+ Invite User</Button>
         </HStack>
       </HStack>
-      <Stack spacing={4} display={{ base: "block", md: "none" }}>
+
+      <div className="md:hidden">
+
         {users.map((user) => (
           <div
             key={user._id || user.email}
@@ -147,7 +151,8 @@ const UserManagementPage: React.FC = () => {
             </div>
           </div>
         ))}
-      </Stack>
+
+      </div>
 
       <Box
         bg="white"
