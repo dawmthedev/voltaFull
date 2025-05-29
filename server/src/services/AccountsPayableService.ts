@@ -54,4 +54,29 @@ export class AccountsPayableService {
       { new: true }
     );
   }
+
+  public async listAllByProject() {
+    const projects = await this.payableModel
+      .find()
+      .populate('technicianId', 'name')
+      .populate('projectId', 'homeowner');
+    const map = new Map<string, any>();
+    for (const rec of projects) {
+      const pid = (rec.projectId as any)._id.toString();
+      if (!map.has(pid)) {
+        map.set(pid, {
+          projectId: pid,
+          projectName: (rec.projectId as any).homeowner,
+          payroll: [] as any[],
+        });
+      }
+      map.get(pid).payroll.push({
+        techId: (rec.technicianId as any)._id.toString(),
+        allocationPct: rec.percentage,
+        paid: rec.paid,
+        amountDue: rec.amountDue,
+      });
+    }
+    return Array.from(map.values());
+  }
 }

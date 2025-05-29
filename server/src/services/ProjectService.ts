@@ -1,6 +1,8 @@
 import { Inject, Injectable } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { ProjectModel } from "../models/ProjectModel";
+import { AccountsPayableModel } from "../models/AccountsPayableModel";
+import { AccountsPayableService } from "./AccountsPayableService";
 
 export function parseCSV(content: string): Record<string, string>[] {
   const [headerLine, ...lines] = content.split(/\r?\n/).filter(Boolean);
@@ -43,7 +45,11 @@ export function transformCSVToProject(row: Record<string, string>): Partial<Proj
 
 @Injectable()
 export class ProjectService {
-  constructor(@Inject(ProjectModel) private projectModel: MongooseModel<ProjectModel>) {}
+  constructor(
+    @Inject(ProjectModel) private projectModel: MongooseModel<ProjectModel>,
+    @Inject(AccountsPayableModel) private payableModel: MongooseModel<AccountsPayableModel>,
+    @Inject(AccountsPayableService) public payableModelService: AccountsPayableService
+  ) {}
 
   public async createProject(data: Partial<ProjectModel>) {
     return await this.projectModel.create(data);
@@ -68,5 +74,29 @@ export class ProjectService {
 
   public async updateProject(id: string, data: Partial<ProjectModel>) {
     return this.projectModel.findByIdAndUpdate(id, data, { new: true });
+  }
+
+  public async getPayroll(projectId: string) {
+    return this.payableModel.find({ projectId }).lean().exec();
+  }
+
+  public async updatePayroll(
+    projectId: string,
+    entries: { technicianId: string; percentage: number; paid?: boolean }[]
+  ) {
+    const results = [] as any[];
+    for (const entry of entries) {
+      const amountDue = (await this.projectModel
+        .findById(projectId)
+        .lean()
+        .then((p) => p?.contractAmount || 0)) * (entry.percentage / 100);
+      const record = await this.payableModel.findOneAndUpdate(
+        { projectId, technicianId: entry.technicianId },
+        { projectId, technicianId: entry.technicianId, percentage: entry.percentage, amountDue, paid: entry.paid || false },
+        { upsert: true, new: true }
+      );
+      results.push(record);
+    }
+    return results;
   }
 }
