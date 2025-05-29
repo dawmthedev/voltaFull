@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
-import { Get, Post, Returns } from "@tsed/schema";
+import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams, PathParams } from "@tsed/common";
+import { Get, Post, Patch, Returns } from "@tsed/schema";
 import { ProjectModel } from "../../models/ProjectModel";
 import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
@@ -21,6 +21,23 @@ export class ProjectController {
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async createProject(@BodyParams() body: Partial<ProjectModel>) {
     const project = await this.projectService.createProject(body);
+    return new SuccessResult(project, ProjectModel);
+  }
+
+  @Get(":id")
+  @(Returns(200, SuccessResult).Of(ProjectModel))
+  public async getById(@PathParams("id") id: string) {
+    const project = await this.projectService.findById(id);
+    return new SuccessResult(project, ProjectModel);
+  }
+
+  @Patch(":id")
+  @(Returns(200, SuccessResult).Of(ProjectModel))
+  public async updateProject(
+    @PathParams("id") id: string,
+    @BodyParams() body: Partial<ProjectModel>
+  ) {
+    const project = await this.projectService.updateProject(id, body);
     return new SuccessResult(project, ProjectModel);
   }
 

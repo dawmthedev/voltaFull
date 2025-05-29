@@ -61,4 +61,12 @@ export class ProjectService {
   public async insertMany(data: Partial<ProjectModel>[]) {
     return await this.projectModel.insertMany(data);
   }
+
+  public async findById(id: string) {
+    return this.projectModel.findById(id);
+  }
+
+  public async updateProject(id: string, data: Partial<ProjectModel>) {
+    return this.projectModel.findByIdAndUpdate(id, data, { new: true });
+  }
 }
