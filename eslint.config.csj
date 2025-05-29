@@ -1,0 +1,38 @@
+// eslint.config.cjs
+const { FlatCompat } = require("@eslint/eslintrc");
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+  recommendedConfig: true,
+});
+
+module.exports = [
+  // 1) Extend ESLint and TS-ESLint recommended rules
+  ...compat.extends(
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ),
+
+  // 2) Our overrides
+  {
+    ignores: [
+      "node_modules/**",
+      "client/jest.config.js",
+      "server/jest.config.js",
+      "server/webpack.config.js",
+      "tests/**/*.js",
+    ],
+    languageOptions: {
+      parser: "@typescript-eslint/parser",
+      parserOptions: {
+        tsconfigRootDir: __dirname,
+        project: ["./server/tsconfig.json", "./client/tsconfig.json"],
+      },
+    },
+    plugins: {
+      "@typescript-eslint": require("@typescript-eslint/eslint-plugin"),
+    },
+    rules: {
+      // project‐specific overrides
+    },
+  },
+];
