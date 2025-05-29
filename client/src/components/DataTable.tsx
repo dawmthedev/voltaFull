@@ -66,7 +66,7 @@ function DataTable<T>({
       </div>
       <div className="flex flex-col overflow-y-auto h-full">
         <div className="w-full overflow-x-auto">
-          <div className="inline-block min-w-max">
+          <div className="inline-block min-w-full sm:min-w-max">
             <table className="min-w-full bg-white border border-gray-200">
               <thead className="sticky top-0 z-10 bg-gray-50 text-xs text-gray-700 uppercase h-6 transition-all ease-in-out">
                 <tr>

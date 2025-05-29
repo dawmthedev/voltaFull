@@ -95,58 +95,56 @@ const ProjectsPage: React.FC = () => {
   ];
 
   return (
-
     <div className="flex-1 flex flex-col h-full px-4 md:px-6 bg-gray-50 dark:bg-gray-800">
-
       <div className="w-full max-w-screen-xl mx-auto">
-      <div className="flex flex-wrap justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-          Projects Dashboard
-        </h1>
-        <div className="flex flex-wrap items-center space-x-2">
-          <input
-            type="file"
-            accept=".csv"
-            onChange={handleUpload}
-            hidden
-            ref={inputRef}
-            data-testid="csv-input"
-          />
-          <button
-            onClick={() => inputRef.current?.click()}
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
-          >
-            Upload CSV
-          </button>
-          <button
-            onClick={handleCreate}
-            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
-          >
-            + Add Project
-          </button>
+        <div className="flex flex-wrap justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+            Projects Dashboard
+          </h1>
+          <div className="flex flex-wrap items-center space-x-2">
+            <input
+              type="file"
+              accept=".csv"
+              onChange={handleUpload}
+              hidden
+              ref={inputRef}
+              data-testid="csv-input"
+            />
+            <button
+              onClick={() => inputRef.current?.click()}
+              className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+            >
+              Upload CSV
+            </button>
+            <button
+              onClick={handleCreate}
+              className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+            >
+              + Add Project
+            </button>
+          </div>
         </div>
-      </div>
-      <div className="h-4" />
+        <div className="h-4" />
 
-      <div className="flex-1 w-full max-w-screen-xl mx-auto px-4 md:px-6">
-        <DataTable
-          columns={columns}
-          data={projects}
-          page={page}
-          pageSize={pageSize}
-          total={projects.length}
-          onPageChange={setPage}
-          onPageSizeChange={setPageSize}
+        <div className="flex-1 w-full max-w-screen-xl mx-auto px-4 md:px-6 bg-red-500">
+          <DataTable
+            columns={columns}
+            data={projects}
+            page={page}
+            pageSize={pageSize}
+            total={projects.length}
+            onPageChange={setPage}
+            onPageSizeChange={setPageSize}
+          />
+        </div>
+
+        <AddProjectModal isOpen={isOpen} onClose={onClose} />
+        <CSVPreviewModal
+          isOpen={previewOpen}
+          onClose={closePreview}
+          rows={csvQueue}
+          onConfirm={handleConfirm}
         />
-      </div>
-
-      <AddProjectModal isOpen={isOpen} onClose={onClose} />
-      <CSVPreviewModal
-        isOpen={previewOpen}
-        onClose={closePreview}
-        rows={csvQueue}
-        onConfirm={handleConfirm}
-      />
       </div>
     </div>
   );
