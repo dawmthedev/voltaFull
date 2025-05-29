@@ -44,7 +44,7 @@ const initialState: ProjectsState = {
 };
 
 export const fetchProjects = createAsyncThunk("projects/fetch", async () => {
-  const res = await fetch(`${baseURL}/projects`);
+  const res = await fetch(`${baseURL}/rest/projects`);
   if (!res.ok) throw new Error("Failed to load projects");
   const data = await res.json();
   const projects = data.data as Project[];
@@ -54,7 +54,7 @@ export const fetchProjects = createAsyncThunk("projects/fetch", async () => {
 export const createProject = createAsyncThunk(
   "projects/create",
   async (project: Partial<Project>) => {
-    const res = await fetch(`${baseURL}/projects`, {
+    const res = await fetch(`${baseURL}/rest/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(project),
@@ -69,7 +69,7 @@ export const createProject = createAsyncThunk(
 export const fetchProjectById = createAsyncThunk(
   "projects/fetchById",
   async (id: string) => {
-    const res = await fetch(`${baseURL}/projects/${id}`);
+    const res = await fetch(`${baseURL}/rest/projects/${id}`);
     if (!res.ok) throw new Error("Failed to load project");
     const data = await res.json();
     const p = data.data as any;
@@ -83,7 +83,7 @@ export const updateProjectPayroll = createAsyncThunk(
     { id, payroll }: { id: string; payroll: { technicianId: string; percentage: number; paid?: boolean }[] },
     { dispatch }
   ) => {
-    const res = await fetch(`${baseURL}/projects/${id}/payroll`, {
+    const res = await fetch(`${baseURL}/rest/projects/${id}/payroll`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ payroll }),
@@ -98,7 +98,7 @@ export const updateProjectPayroll = createAsyncThunk(
 export const savePayroll = createAsyncThunk(
   "projects/savePayroll",
   async ({ projectId, allocations }: { projectId: string; allocations: { technicianId: string; percent: number }[] }) => {
-    const res = await fetch(`/api/projects/${projectId}/accounts-payable`, {
+    const res = await fetch(`${baseURL}/rest/projects/${projectId}/accounts-payable`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ allocations }),
