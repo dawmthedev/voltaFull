@@ -26,7 +26,7 @@ describe("ProjectDetailPage", () => {
       <Provider>
         <MemoryRouter initialEntries={["/dashboard/projects/1"]}>
           <Routes>
-            <Route path="/dashboard/projects/:id" element={<ProjectDetailPage />} />
+            <Route path="/dashboard/projects/:projectId" element={<ProjectDetailPage />} />
           </Routes>
         </MemoryRouter>
       </Provider>

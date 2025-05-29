@@ -30,7 +30,7 @@ test("navigates to project detail page", async () => {
       <MemoryRouter initialEntries={["/dashboard/projects"]}>
         <Routes>
           <Route path="/dashboard/projects" element={<ProjectsPage />} />
-          <Route path="/dashboard/projects/:id" element={<ProjectDetailPage />} />
+          <Route path="/dashboard/projects/:projectId" element={<ProjectDetailPage />} />
         </Routes>
       </MemoryRouter>
     </Provider>

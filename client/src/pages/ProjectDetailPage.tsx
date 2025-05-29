@@ -15,7 +15,7 @@ import {
   Spinner,
   SimpleGrid,
 } from "@chakra-ui/react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   fetchProjectById,
@@ -25,8 +25,8 @@ import {
 import { fetchUsers } from "../store/usersSlice";
 
 const ProjectDetailPage: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const navigate = useNavigate();
+  const { projectId } = useParams<{ projectId: string }>();
+  const [error, setError] = useState<string | null>(null);
   const dispatch = useAppDispatch();
   const project = useAppSelector((s) => s.projects.current);
   const projectStatus = useAppSelector((s) => s.projects.currentStatus);
@@ -39,15 +39,17 @@ const ProjectDetailPage: React.FC = () => {
   const [percents, setPercents] = useState<number[]>([0, 0, 0, 0]);
 
   useEffect(() => {
-    if (!id) {
-      navigate("/dashboard/projects");
+    if (!projectId) {
+      setError("Invalid project ID");
       return;
     }
-    dispatch(fetchProjectById(id));
+    dispatch(fetchProjectById(projectId))
+      .unwrap()
+      .catch(() => setError("Failed to load project"));
     if (users.length === 0) {
       dispatch(fetchUsers());
     }
-  }, [id, dispatch]);
+  }, [projectId, dispatch, users.length]);
 
   const handleTechChange = (idx: number, val: string) => {
     setAssignedTechIds((prev) => {
@@ -78,12 +80,17 @@ const ProjectDetailPage: React.FC = () => {
     allocations.reduce((s, a) => s + a.allocationPercent, 0) > 100;
 
   const handleSave = () => {
-    if (!id) return;
-    dispatch(updateProjectPayroll({ id, technicians: allocations }));
+    if (!projectId) return;
+    dispatch(updateProjectPayroll({ id: projectId, technicians: allocations }));
   };
 
   return (
-    <Box className="bg-white text-gray-900 max-w-6xl mx-auto p-6">
+    <Box className="flex-1 flex flex-col h-full px-4 md:px-6 bg-gray-50 dark:bg-gray-800 text-gray-900">
+      {error && (
+        <Text color="red.600" textAlign="center" mb={4}>
+          {error}
+        </Text>
+      )}
       <Heading size="lg" mb={4}>
         Project Details
       </Heading>
