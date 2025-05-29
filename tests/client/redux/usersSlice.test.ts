@@ -1,4 +1,4 @@
-import reducer, { fetchUsers } from '../../../client/src/store/usersSlice'
+import reducer, { fetchUsers, updateUser } from '../../../client/src/store/usersSlice'
 
 interface User { _id?: string; name: string; email: string; role: string }
 
@@ -10,5 +10,12 @@ describe('usersSlice', () => {
     const next = reducer(pending, fetchUsers.fulfilled(users, ''))
     expect(next.items).toEqual(users)
     expect(next.status).toBe('idle')
+  })
+
+  it('handles update lifecycle', () => {
+    let state = reducer(undefined, updateUser.pending(''))
+    expect(state.status).toBe('loading')
+    state = reducer(state, updateUser.fulfilled({} as any, ''))
+    expect(state.status).toBe('idle')
   })
 })
