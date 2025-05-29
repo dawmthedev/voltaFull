@@ -25,7 +25,8 @@ export const fetchUsers = createAsyncThunk("users/fetch", async () => {
   const res = await fetch(`${baseURL}/users`);
   if (!res.ok) throw new Error("Failed to load users");
   const data = await res.json();
-  return data.data as User[];
+  const users = data.data as User[];
+  return users.map((u: any) => ({ ...u, _id: u._id || u.id }));
 });
 
 export const updateUser = createAsyncThunk(

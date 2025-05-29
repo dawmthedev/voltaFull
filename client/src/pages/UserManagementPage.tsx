@@ -96,10 +96,10 @@ const UserManagementPage: React.FC = () => {
 
   const onSubmitUpdate = async () => {
     if (!editUser) return;
+    const id = (editUser as any)._id || (editUser as any).id;
+    if (!id) return;
     try {
-      await dispatch(
-        updateUser({ id: editUser._id as string, role: editRole })
-      ).unwrap();
+      await dispatch(updateUser({ id, role: editRole })).unwrap();
       setMessage('User updated successfully.');
       setMessageType('success');
       closeEdit();
