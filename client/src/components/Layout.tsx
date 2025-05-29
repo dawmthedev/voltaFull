@@ -7,7 +7,7 @@ interface LayoutContextValue {
   closeSidebar: () => void;
 }
 
-const LayoutContext = createContext<LayoutContextValue>({ closeSidebar: () => {} });
+export const LayoutContext = createContext<LayoutContextValue>({ closeSidebar: () => {} });
 export const useLayout = () => useContext(LayoutContext);
 
 const Layout: React.FC = () => {
