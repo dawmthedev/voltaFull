@@ -115,7 +115,7 @@ const UserManagementPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-4">
+    <div className="w-full h-full flex flex-col p-4">
       <HStack justify="space-between" mb={4}>
         <Text fontSize="xl" fontWeight="bold">Users</Text>
         <HStack>
@@ -124,6 +124,31 @@ const UserManagementPage: React.FC = () => {
           <Button colorScheme="teal" size="sm" onClick={handleOpen}>+ Invite User</Button>
         </HStack>
       </HStack>
+      <div className="md:hidden">
+        {users.map((user) => (
+          <div
+            key={user._id || user.email}
+            className="bg-white rounded-lg p-4 shadow mb-4"
+          >
+            <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <span className="font-medium">Email</span>
+                <div>{user.email}</div>
+              </div>
+              <div>
+                <span className="font-medium">Role</span>
+                <div>{user.role}</div>
+              </div>
+              <div>
+                <span className="font-medium">Phone</span>
+                <div>{user.phone}</div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
       <Box
         bg="white"
         borderRadius="lg"
@@ -132,6 +157,7 @@ const UserManagementPage: React.FC = () => {
         maxH="60vh"
         overflowY="auto"
         className="overflow-x-auto"
+        display={{ base: "none", md: "block" }}
       >
         <DataTable columns={columns} data={users} />
       </Box>
