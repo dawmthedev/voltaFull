@@ -3,6 +3,7 @@ import { baseURL } from "../apiConfig";
 
 export interface Project {
   _id?: string;
+  id?: string;
   homeowner?: string;
   saleDate?: string;
   products?: string[];
@@ -45,7 +46,8 @@ export const fetchProjects = createAsyncThunk("projects/fetch", async () => {
   const res = await fetch(`${baseURL}/projects`);
   if (!res.ok) throw new Error("Failed to load projects");
   const data = await res.json();
-  return data.data as Project[];
+  const projects = data.data as Project[];
+  return projects.map((p: any) => ({ ...p, _id: p._id || p.id }));
 });
 
 export const createProject = createAsyncThunk(
@@ -58,7 +60,8 @@ export const createProject = createAsyncThunk(
     });
     if (!res.ok) throw new Error("Failed to create project");
     const data = await res.json();
-    return data.data as Project;
+    const p = data.data as any;
+    return { ...p, _id: p._id || p.id } as Project;
   }
 );
 
@@ -68,7 +71,8 @@ export const fetchProjectById = createAsyncThunk(
     const res = await fetch(`${baseURL}/projects/${id}`);
     if (!res.ok) throw new Error("Failed to load project");
     const data = await res.json();
-    return data.data as Project;
+    const p = data.data as any;
+    return { ...p, _id: p._id || p.id } as Project;
   }
 );
 
@@ -86,7 +90,8 @@ export const updateProjectPayroll = createAsyncThunk(
     if (!res.ok) throw new Error("Failed to update project payroll");
     await dispatch(fetchProjectById(id));
     const data = await res.json();
-    return data.data as Project;
+    const p = data.data as any;
+    return { ...p, _id: p._id || p.id } as Project;
   }
 );
 
