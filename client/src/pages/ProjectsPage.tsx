@@ -3,13 +3,6 @@ import {
   Box,
   Flex,
   Heading,
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  Badge,
   useDisclosure,
   useToast,
   Stack,
@@ -23,6 +16,7 @@ import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { CSVRow, parseCSV } from "../utils/csv";
 import ProjectCard from "../components/ProjectCard";
+import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -95,6 +89,27 @@ const ProjectsPage: React.FC = () => {
     });
   };
 
+  const columns: DataTableColumn[] = [
+    { header: "Homeowner", accessor: "homeowner" },
+    { header: "Sale Date", accessor: "saleDate" },
+    { header: "Products", accessor: "products" },
+    { header: "Status", accessor: "status" },
+    { header: "Stage", accessor: "stage" },
+    { header: "Contract Amount", accessor: "contractAmount", isNumeric: true },
+    { header: "System Size", accessor: "systemSize" },
+    { header: "Installer", accessor: "installer" },
+    { header: "Phone", accessor: "phone" },
+    { header: "Sales Rep", accessor: "salesRep", displayBreakpoint: "lg" },
+    { header: "Address", accessor: "address", displayBreakpoint: "lg" },
+    { header: "Utility Company", accessor: "utilityCompany", displayBreakpoint: "lg" },
+    { header: "PTO Status", accessor: "ptoStatus", displayBreakpoint: "lg" },
+    { header: "Project Manager", accessor: "projectManager", displayBreakpoint: "lg" },
+    { header: "Financing", accessor: "financing", displayBreakpoint: "lg" },
+    { header: "Source", accessor: "source", displayBreakpoint: "lg" },
+    { header: "AHJ", accessor: "ahj", displayBreakpoint: "lg" },
+    { header: "QC Status", accessor: "qcStatus", displayBreakpoint: "lg" },
+  ];
+
   return (
     <Box px={{ base: 4, md: 8 }} py={6} flex="1" overflowY="auto">
       <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
@@ -138,85 +153,7 @@ const ProjectsPage: React.FC = () => {
         className="overflow-x-auto"
         display={{ base: "none", md: "block" }}
       >
-        <Table size="md" variant="simple">
-          <Thead bg="gray.50">
-            <Tr>
-              <Th>Homeowner</Th>
-              <Th>Sale Date</Th>
-              <Th>Products</Th>
-              <Th>Status</Th>
-              <Th>Stage</Th>
-              <Th isNumeric>Contract Amount</Th>
-              <Th>System Size</Th>
-              <Th>Installer</Th>
-              <Th>Phone</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>Sales Rep</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>Address</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>
-                Utility Company
-              </Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>PTO Status</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>
-                Project Manager
-              </Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>Financing</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>Source</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>AHJ</Th>
-              <Th display={{ base: "none", lg: "table-cell" }}>QC Status</Th>
-            </Tr>
-          </Thead>
-          <Tbody>
-            {projects.map((p) => (
-              <Tr key={p._id} _hover={{ bg: "gray.50" }}>
-                <Td fontWeight="semibold">{p.homeowner}</Td>
-                <Td>{p.saleDate}</Td>
-                <Td>
-                  <Flex flexWrap="wrap" gap="1">
-                    {p.products?.map((prod) => (
-                      <Badge
-                        key={prod}
-                        variant="solid"
-                        colorScheme="teal"
-                        className="whitespace-nowrap"
-                      >
-                        {prod}
-                      </Badge>
-                    ))}
-                  </Flex>
-                </Td>
-                <Td>{p.status}</Td>
-                <Td>{p.stage}</Td>
-                <Td isNumeric>{p.contractAmount}</Td>
-                <Td>{p.systemSize}</Td>
-                <Td>{p.installer}</Td>
-                <Td>{p.phone}</Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.salesRep}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.address}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.utilityCompany}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.ptoStatus}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.projectManager}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.financing}
-                </Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>{p.source}</Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>{p.ahj}</Td>
-                <Td display={{ base: "none", lg: "table-cell" }}>
-                  {p.qcStatus}
-                </Td>
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
+        <DataTable columns={columns} data={projects} />
       </Box>
 
       <AddProjectModal isOpen={isOpen} onClose={onClose} />
