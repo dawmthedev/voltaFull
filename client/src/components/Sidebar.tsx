@@ -9,6 +9,7 @@ import {
   Drawer,
   DrawerOverlay,
   DrawerContent,
+  Slide,
 } from "@chakra-ui/react";
 import {
   FiGrid,
@@ -25,14 +26,20 @@ import ThemeToggle from "./ThemeToggle";
 interface SidebarProps {
   isOpen?: boolean;
   onClose?: () => void;
+  toggleRef?: React.RefObject<HTMLButtonElement>;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
+const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose, toggleRef }) => {
   const user = useAppSelector((state) => state.auth.user)
   const dispatch = useAppDispatch()
   const bg = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const hoverBg = useColorModeValue('gray.100', 'gray.700')
+
+  const handleClose = () => {
+    onClose?.()
+    toggleRef?.current?.focus()
+  }
 
   const content = (
     <Box
@@ -82,15 +89,25 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
 
   return (
     <>
+      {/* Mobile drawer */}
       {isOpen && (
-        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+        <Drawer
+          isOpen={isOpen}
+          placement="left"
+          onClose={handleClose}
+          finalFocusRef={toggleRef}
+        >
           <DrawerOverlay />
           <DrawerContent>{content}</DrawerContent>
         </Drawer>
       )}
-      <Box display={{ base: 'none', md: 'flex' }} position="sticky" top={0} h="100vh" flexShrink={0}>
-        {content}
-      </Box>
+
+      {/* Desktop slide */}
+      <Slide direction="left" in={isOpen} style={{ zIndex: 20 }} unmountOnExit>
+        <Box display={{ base: 'none', md: 'block' }} h="100vh" flexShrink={0}>
+          {content}
+        </Box>
+      </Slide>
     </>
   )
 };
