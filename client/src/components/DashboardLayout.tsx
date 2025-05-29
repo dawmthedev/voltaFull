@@ -1,21 +1,31 @@
 import React from 'react'
-import { Box, useColorModeValue } from '@chakra-ui/react'
+import { Box, Flex, useColorModeValue } from '@chakra-ui/react'
 import { Outlet } from 'react-router-dom'
 import Navbar from './Navbar'
 import Sidebar from './Sidebar'
 
 const DashboardLayout: React.FC = () => {
-  const bg = useColorModeValue('gray.50', 'gray.900')
+  const [isSidebarOpen, setSidebarOpen] = React.useState(true)
+  const bg = useColorModeValue('white', 'gray.800')
+  const text = useColorModeValue('gray.800', 'white')
   return (
-    <Box h="100vh" overflow="hidden" display="flex" bg={bg} color={useColorModeValue('gray.800','gray.100')}>
-      <Sidebar />
-      <Box as="main" flex="1" overflowY="auto">
+    <Flex
+      h="100vh"
+      overflow="hidden"
+      bg={bg}
+      color={text}
+      transition="background 0.2s, color 0.2s, width 0.2s"
+    >
+      {isSidebarOpen && <Sidebar isOpen={isSidebarOpen} onClose={() => setSidebarOpen(false)} />}
+      <Box flex="1" transition="width 0.2s">
         <Navbar />
-        <Box px={{ base: 4, md: 8 }} py={6}>
-          <Outlet />
+        <Box flex="1" overflowY="auto" bg={bg} transition="background 0.2s, color 0.2s">
+          <Box px={{ base: 4, md: 8 }} py={6}>
+            <Outlet />
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </Flex>
   )
 }
 
