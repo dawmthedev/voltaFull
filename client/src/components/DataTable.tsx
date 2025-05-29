@@ -35,12 +35,17 @@ function DataTable<T>({
   return (
     <div className="w-full h-full">
       <div className="hidden md:block">
-        <div className="w-full h-full max-h-[calc(100vh-4rem)] overflow-auto">
-          <table className={`${fontClass} leading-tight w-full`}>
-            <thead className="bg-gray-200 dark:bg-gray-800 sticky top-0 z-10">
+        <div className="w-full h-full max-h-screen overflow-auto bg-white dark:bg-gray-800">
+          <table
+            className={`${fontClass} leading-tight w-full bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100`}
+          >
+            <thead className="bg-gray-100 dark:bg-gray-900 sticky top-0 z-10">
               <tr>
                 {columns.map((col) => (
-                  <th key={col.key} className="text-left p-1">
+                  <th
+                    key={col.key}
+                    className="text-left p-1 text-gray-900 dark:text-gray-100"
+                  >
                     {col.header}
                   </th>
                 ))}
@@ -48,9 +53,15 @@ function DataTable<T>({
             </thead>
             <tbody>
               {data.map((item, rowIdx) => (
-                <tr key={rowIdx} className="border-b bg-white dark:bg-gray-800">
+                <tr
+                  key={rowIdx}
+                  className="border-b bg-white dark:bg-gray-800 dark:border-gray-700"
+                >
                   {columns.map((col) => (
-                    <td key={col.key} className="p-1">
+                    <td
+                      key={col.key}
+                      className="p-1 text-gray-900 dark:text-gray-100"
+                    >
                       {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
                     </td>
                   ))}
@@ -60,7 +71,7 @@ function DataTable<T>({
             <tfoot>
               <tr>
                 <td colSpan={columns.length} className="p-0">
-                  <div className="flex items-center justify-end p-2 border-t bg-white dark:bg-gray-900">
+                  <div className="flex items-center justify-end p-2 border-t bg-gray-50 dark:bg-gray-900 dark:border-gray-700">
                     <label className="mr-2">Rows</label>
                     <select
                       value={pageSize}
@@ -83,29 +94,18 @@ function DataTable<T>({
           </table>
         </div>
       </div>
-      <div className="md:hidden flex flex-col items-center">
-        {data.map((item, idx) => (
-          <div
-            key={idx}
-            className="max-w-md w-full mx-auto bg-white dark:bg-gray-700 rounded-lg p-4 shadow mb-4"
-          >
-            {renderMobileRow ? (
-              renderMobileRow(item)
-            ) : (
-              <dl className="grid grid-cols-2 gap-1 text-sm">
-                {columns.map((col) => (
-                  <React.Fragment key={col.key}>
-                    <dt className="font-medium">{col.header}</dt>
-                    <dd>
-                      {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
-                    </dd>
-                  </React.Fragment>
-                ))}
-              </dl>
-            )}
-          </div>
-        ))}
-      </div>
+      {renderMobileRow && (
+        <div className="md:hidden flex flex-col items-center bg-white dark:bg-gray-800">
+          {data.map((item, idx) => (
+            <div
+              key={idx}
+              className="max-w-md w-full mx-auto bg-white dark:bg-gray-800 rounded-lg p-4 shadow mb-4 text-gray-900 dark:text-gray-100"
+            >
+              {renderMobileRow(item)}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
