@@ -16,7 +16,15 @@ const data = [
 test('renders data rows', () => {
   render(
     <Provider>
-      <DataTable columns={columns} data={data} />
+      <DataTable
+        columns={columns}
+        data={data}
+        page={1}
+        pageSize={20}
+        total={2}
+        onPageChange={() => {}}
+        onPageSizeChange={() => {}}
+      />
     </Provider>
   );
 

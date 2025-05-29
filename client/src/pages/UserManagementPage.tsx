@@ -146,24 +146,22 @@ const UserManagementPage: React.FC = () => {
         </HStack>
       </HStack>
 
-      <div className="w-full h-full overflow-auto">
+      <div className="w-full h-full">
         <DataTable
           columns={columns}
           data={users}
-          pagination={{
-            page,
-            pageSize,
-            total: users.length,
-            onPageChange: setPage,
-            onPageSizeChange: setPageSize,
-          }}
+          page={page}
+          pageSize={pageSize}
+          total={users.length}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
           renderMobileRow={(user) => (
             <div
               key={user._id || user.email}
-              className="md:hidden bg-white rounded-lg p-4 shadow mb-4"
+              className="md:hidden bg-white rounded-lg shadow p-4 mb-4"
             >
               <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
-              <div className="grid grid-cols-2 gap-2">
+              <div className="grid grid-cols-2 gap-2 text-sm">
                 <div>
                   <span className="font-medium">Email</span>
                   <div>{user.email}</div>
@@ -172,7 +170,7 @@ const UserManagementPage: React.FC = () => {
                   <span className="font-medium">Role</span>
                   <div>{user.role}</div>
                 </div>
-                <div>
+                <div className="col-span-2">
                   <span className="font-medium">Phone</span>
                   <div>{user.phone}</div>
                 </div>

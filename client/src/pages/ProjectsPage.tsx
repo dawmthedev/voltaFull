@@ -141,18 +141,20 @@ const ProjectsPage: React.FC = () => {
       </Flex>
       <Box height={4} />
 
-      <div className="w-full h-full overflow-auto">
+      <div className="w-full h-full">
         <DataTable
           columns={columns}
           data={projects}
-          pagination={{
-            page,
-            pageSize,
-            total: projects.length,
-            onPageChange: setPage,
-            onPageSizeChange: setPageSize,
-          }}
-          renderMobileRow={(p) => <ProjectCard project={p} />}
+          page={page}
+          pageSize={pageSize}
+          total={projects.length}
+          onPageChange={setPage}
+          onPageSizeChange={setPageSize}
+          renderMobileRow={(p) => (
+            <div className="md:hidden bg-white rounded-lg shadow p-4 mb-4">
+              <ProjectCard project={p} />
+            </div>
+          )}
         />
       </div>
 
