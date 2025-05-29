@@ -1,6 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { Context, QueryParams } from "@tsed/common";
-import { Get, Patch, BodyParams, PathParams, Returns } from "@tsed/schema";
+import { Get, Patch, PathParams, Returns } from "@tsed/schema";
+import { BodyParams } from "@tsed/common";
 import { UserService } from "../../services/UserService";
 import { AdminResultModel } from "../../models/RestModels";
 import { SuccessArrayResult } from "../../util/entities";
