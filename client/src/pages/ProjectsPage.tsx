@@ -141,7 +141,7 @@ const ProjectsPage: React.FC = () => {
       </Flex>
       <Box height={4} />
 
-      <div className="w-full h-full">
+      <div className="w-full h-full px-4 md:px-0">
         <DataTable
           columns={columns}
           data={projects}

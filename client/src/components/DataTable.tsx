@@ -95,7 +95,7 @@ function DataTable<T>({
         </div>
       </div>
       {renderMobileRow && (
-        <div className="md:hidden flex flex-col items-center bg-white dark:bg-gray-800">
+        <div className="md:hidden flex flex-col items-center px-4">
           {data.map((item, idx) => (
             <div
               key={idx}
