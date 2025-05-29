@@ -1,5 +1,5 @@
 import React from "react";
-import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
+import { Table, Thead, Tbody, Tr, Th, Td, useColorModeValue } from "@chakra-ui/react";
 
 export interface DataTableColumn {
   header: string;
@@ -17,9 +17,14 @@ const DataTable: React.FC<DataTableProps> = ({ columns, data }) => {
   const getDisplay = (breakpoint?: "base" | "md" | "lg") =>
     breakpoint ? { base: "none", [breakpoint]: "table-cell" } : undefined;
 
+  const bg = useColorModeValue('white', 'gray.800')
+  const text = useColorModeValue('gray.800', 'white')
+  const border = useColorModeValue('gray.200', 'gray.700')
+
   return (
-    <Table size="sm" variant="simple">
-      <Thead bg="gray.50">
+    <Table size="sm" variant="simple" bg={bg} color={text} borderColor={border}
+      transition="background 0.2s, color 0.2s">
+      <Thead bg={useColorModeValue('gray.50', 'gray.700')}>
         <Tr>
           {columns.map((col) => (
             <Th
@@ -35,7 +40,7 @@ const DataTable: React.FC<DataTableProps> = ({ columns, data }) => {
       </Thead>
       <Tbody>
         {data.map((row, i) => (
-          <Tr key={i} _hover={{ bg: "gray.50" }}>
+          <Tr key={i} _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}>
             {columns.map((col) => {
               const value = row[col.accessor];
               return (

@@ -1,17 +1,17 @@
 import React from "react";
 import {
   Box,
-  IconButton,
   VStack,
   HStack,
   Icon,
   Text,
   useColorModeValue,
+  Drawer,
+  DrawerOverlay,
+  DrawerContent,
 } from "@chakra-ui/react";
-import { HamburgerIcon } from "@chakra-ui/icons";
 import {
   FiGrid,
-  FiBriefcase,
   FiUsers,
   FiDollarSign,
   FiSettings,
@@ -22,87 +22,46 @@ import { logout } from "../store/authSlice";
 import SidebarItem from "./SidebarItem";
 import ThemeToggle from "./ThemeToggle";
 
-const Sidebar: React.FC = () => {
-  const [isSidebarOpen, setSidebarOpen] = React.useState(false);
-  const user = useAppSelector((state) => state.auth.user);
-  const dispatch = useAppDispatch();
-  const bg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const hoverBg = useColorModeValue("gray.100", "gray.700");
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
 
-  return (
+const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose }) => {
+  const user = useAppSelector((state) => state.auth.user)
+  const dispatch = useAppDispatch()
+  const bg = useColorModeValue('white', 'gray.800')
+  const borderColor = useColorModeValue('gray.200', 'gray.700')
+  const hoverBg = useColorModeValue('gray.100', 'gray.700')
+
+  const content = (
     <Box
-      position={{ base: "fixed", md: "sticky" }}
-      top={0}
-      left={0}
+      w="220px"
       h="100vh"
-      transform={{ base: isSidebarOpen ? "translateX(0)" : "translateX(-100%)", md: "none" }}
-      transition="transform 0.3s"
-      width="220px"
       bg={bg}
       borderRight="1px solid"
       borderColor={borderColor}
-      flexShrink={0}
       display="flex"
       flexDirection="column"
-      zIndex={50}
+      transition="background 0.2s, color 0.2s"
     >
-      <IconButton
-        aria-label="Toggle sidebar"
-        icon={<HamburgerIcon />}
-        size="sm"
-        m={2}
-        onClick={() => setSidebarOpen(!isSidebarOpen)}
-      />
-      <VStack
-        flex="1"
-        spacing={4}
-        align="stretch"
-        px={isSidebarOpen ? 4 : 2}
-        pt={4}
-      >
-        <Box onClick={() => setSidebarOpen(false)}>
-          <SidebarItem
-            icon={FiGrid}
-            label="Projects"
-            to="/dashboard/projects"
-            isOpen={isSidebarOpen}
-          />
-        </Box>
-        {user?.role === "Technician" && (
-          <Box onClick={() => setSidebarOpen(false)}>
-            <SidebarItem
-              icon={FiSettings}
-              label="Technician Allocation"
-              to="/dashboard/technician"
-              isOpen={isSidebarOpen}
-            />
-          </Box>
+      <VStack flex="1" spacing={4} align="stretch" px={4} pt={4}>
+        <SidebarItem icon={FiGrid} label="Projects" to="/dashboard/projects" isOpen={true} />
+        {user?.role === 'Technician' && (
+          <SidebarItem icon={FiSettings} label="Technician Allocation" to="/dashboard/technician" isOpen={true} />
         )}
-        {user?.role === "Admin" && (
+        {user?.role === 'Admin' && (
           <>
-            <Box onClick={() => setSidebarOpen(false)}>
-              <SidebarItem
-                icon={FiDollarSign}
-                label="Accounts Payable"
-                to="/dashboard/accounts"
-                isOpen={isSidebarOpen}
-              />
-            </Box>
-            <Box onClick={() => setSidebarOpen(false)}>
-              <SidebarItem
-                icon={FiUsers}
-                label="Users"
-                to="/dashboard/users"
-                isOpen={isSidebarOpen}
-              />
-            </Box>
+            <SidebarItem icon={FiDollarSign} label="Accounts Payable" to="/dashboard/accounts" isOpen={true} />
+            <SidebarItem icon={FiUsers} label="Users" to="/dashboard/users" isOpen={true} />
           </>
         )}
       </VStack>
-      <Box mt="auto" px={isSidebarOpen ? 4 : 2} pb={4}>
-        <HStack spacing={2} mb={2} justify={isSidebarOpen ? 'space-between' : 'center'}>
-          {isSidebarOpen && <Text color={useColorModeValue('gray.600','gray.300')}>Settings</Text>}
+      <Box mt="auto" px={4} pb={4}
+        borderTop="1px solid" borderColor={borderColor}
+        transition="background 0.2s, color 0.2s">
+        <HStack spacing={2} mb={2} justify="space-between">
+          <Text color={useColorModeValue('gray.600', 'gray.300')}>Settings</Text>
           <ThemeToggle size="sm" />
         </HStack>
         <HStack
@@ -115,11 +74,25 @@ const Sidebar: React.FC = () => {
           w="full"
         >
           <Icon as={FiLogOut} boxSize={5} />
-          {isSidebarOpen && <Text>Logout</Text>}
+          <Text>Logout</Text>
         </HStack>
       </Box>
     </Box>
-  );
+  )
+
+  return (
+    <>
+      {isOpen && (
+        <Drawer isOpen={isOpen} placement="left" onClose={onClose}>
+          <DrawerOverlay />
+          <DrawerContent>{content}</DrawerContent>
+        </Drawer>
+      )}
+      <Box display={{ base: 'none', md: 'flex' }} position="sticky" top={0} h="100vh" flexShrink={0}>
+        {content}
+      </Box>
+    </>
+  )
 };
 
 export default Sidebar;
