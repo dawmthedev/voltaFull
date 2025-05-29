@@ -79,7 +79,9 @@ function DataTable<T>({
                     key={col.key}
                     className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
                   >
-                    {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
+                    {col.renderCell
+                      ? col.renderCell(item)
+                      : (item as any)[col.key]}
                   </td>
                 ))}
               </tr>
@@ -136,4 +138,3 @@ function DataTable<T>({
 }
 
 export default DataTable;
-export type { DataTableProps };
