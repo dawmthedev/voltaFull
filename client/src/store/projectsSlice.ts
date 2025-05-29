@@ -26,6 +26,7 @@ export interface Project {
   qcStatus?: string;
   ptoStatus?: string;
   assignedTo?: string;
+  payroll?: { technicianId: string; percentage: number; paid?: boolean }[];
 }
 
 interface ProjectsState {

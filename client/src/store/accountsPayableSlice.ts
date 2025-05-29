@@ -42,7 +42,7 @@ export const fetchUnpaid = createAsyncThunk("accountsPayable/fetchUnpaid", async
 
 export const markPaid = createAsyncThunk(
   "accountsPayable/markPaid",
-  async ({ projectId, payroll }: { projectId: string; payroll: PayableRecord[] }) => {
+  async ({ projectId, payroll }: { projectId: string; payroll: { technicianId: string; percentage: number; paid: boolean }[] }) => {
     const res = await fetch(`${baseURL}/projects/${projectId}/payroll`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
