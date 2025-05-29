@@ -1,8 +1,11 @@
 // eslint.config.js
 import { FlatCompat } from "@eslint/eslintrc";
+import tsEslintPlugin from "@typescript-eslint/eslint-plugin";
+import tsEslintParser from "@typescript-eslint/parser";
+
 const compat = new FlatCompat({
-  baseDirectory: __dirname,
-  recommendedConfig: true
+  baseDirectory: new URL(".", import.meta.url).pathname,
+  recommendedConfig: {},
 });
 
 export default [
@@ -19,22 +22,25 @@ export default [
       "client/jest.config.js",
       "server/jest.config.js",
       "server/webpack.config.js",
-      "tests/**/*.js"
+      "tests/**/*.js",
     ],
     languageOptions: {
-      parser: "@typescript-eslint/parser",
+      parser: tsEslintParser,
       parserOptions: {
-        tsconfigRootDir: __dirname,
-        project: ["./server/tsconfig.json", "./client/tsconfig.json"]
-      }
+        tsconfigRootDir: new URL(".", import.meta.url).pathname,
+        project: ["./server/tsconfig.json", "./client/tsconfig.json"],
+      },
     },
     plugins: {
-      "@typescript-eslint": require("@typescript-eslint/eslint-plugin")
+      "@typescript-eslint": tsEslintPlugin,
     },
     rules: {
       // project-specific overrides
-      "@typescript-eslint/no-unused-vars": ["error", { argsIgnorePattern: "^_" }],
-      "@typescript-eslint/explicit-module-boundary-types": "off"
-    }
-  }
+      "@typescript-eslint/no-unused-vars": [
+        "error",
+        { argsIgnorePattern: "^_" },
+      ],
+      "@typescript-eslint/explicit-module-boundary-types": "off",
+    },
+  },
 ];

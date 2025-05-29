@@ -5,6 +5,7 @@
     "server",
     "client"
   ],
+  "type": "module",
   "scripts": {
     "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
     "start": "npm run dev",
