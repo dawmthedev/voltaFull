@@ -63,7 +63,7 @@ export class ProjectService {
   }
 
   public async findById(id: string) {
-    return this.projectModel.findById(id);
+    return this.projectModel.findById(id).exec();
   }
 
   public async updateProject(id: string, data: Partial<ProjectModel>) {
