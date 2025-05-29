@@ -1,11 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
+  Box,
   Button,
   HStack,
   Text,
@@ -20,7 +15,6 @@ import {
   Stack,
   Input,
   Select,
-  IconButton,
   FormControl,
   FormErrorMessage,
   FormHelperText,
@@ -34,6 +28,7 @@ import CSVPreviewModal from '../components/CSVPreviewModal';
 import { parseCSV, CSVRow } from '../utils/csv';
 import { useAppDispatch, useAppSelector } from '../store';
 import { fetchUsers } from '../store/usersSlice';
+import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const UserManagementPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -108,6 +103,13 @@ const UserManagementPage: React.FC = () => {
     dispatch(fetchUsers());
   };
 
+  const columns: DataTableColumn[] = [
+    { header: 'Name', accessor: 'name' },
+    { header: 'Email', accessor: 'email' },
+    { header: 'Role', accessor: 'role' },
+    { header: 'Phone', accessor: 'phone' }
+  ];
+
   useEffect(() => {
     dispatch(fetchUsers());
   }, [dispatch]);
@@ -122,26 +124,17 @@ const UserManagementPage: React.FC = () => {
           <Button colorScheme="teal" size="sm" onClick={handleOpen}>+ Invite User</Button>
         </HStack>
       </HStack>
-      <Table size="sm">
-        <Thead>
-          <Tr>
-            <Th>Name</Th>
-            <Th>Email</Th>
-            <Th>Role</Th>
-            <Th>Phone</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {users.map((u) => (
-            <Tr key={u._id}>
-              <Td>{u.name}</Td>
-              <Td>{u.email}</Td>
-              <Td>{u.role}</Td>
-              <Td>{u.phone || ''}</Td>
-            </Tr>
-          ))}
-        </Tbody>
-      </Table>
+      <Box
+        bg="white"
+        borderRadius="lg"
+        boxShadow="md"
+        overflowX="auto"
+        maxH="60vh"
+        overflowY="auto"
+        className="overflow-x-auto"
+      >
+        <DataTable columns={columns} data={users} />
+      </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
