@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { EditIcon } from "@chakra-ui/icons";
 import { fetchProjects, createProject, Project } from "../store/projectsSlice";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -10,7 +10,6 @@ import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
   const projects = useAppSelector((state) => state.projects.items);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
@@ -76,22 +75,19 @@ const ProjectsPage: React.FC = () => {
     window.alert(`${rows.length} Projects Uploaded`);
   };
 
-  const navigateToProject = (id: string) => {
-    navigate(`/dashboard/projects/${id}`);
-  };
 
   const columns: DataTableColumn<Project>[] = [
     {
       header: "",
       key: "edit",
       renderCell: (p: Project) => (
-        <button
-          onClick={() => navigateToProject(p._id!)}
+        <Link
+          to={`/dashboard/projects/${p._id}`}
           className="p-1 hover:bg-gray-100 rounded"
           aria-label="Edit Project"
         >
           <EditIcon />
-        </button>
+        </Link>
       ),
     },
     { header: "Homeowner", key: "homeowner" },

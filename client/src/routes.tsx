@@ -26,7 +26,7 @@ const AppRoutes: React.FC = () => (
     >
       <Route index element={<Navigate to="projects" replace />} />
       <Route path="projects" element={<ProjectsPage />} />
-      <Route path="projects/:id" element={<ProjectDetailPage />} />
+      <Route path="projects/:projectId" element={<ProjectDetailPage />} />
       <Route path="accounts" element={<AccountsPayablePage />} />
       <Route path="users" element={<UserManagementPage />} />
       <Route path="technician" element={<TechnicianTasksPage />} />
