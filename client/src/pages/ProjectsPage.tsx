@@ -4,7 +4,6 @@ import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { CSVRow, parseCSV } from "../utils/csv";
-import ProjectCard from "../components/ProjectCard";
 import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const ProjectsPage: React.FC = () => {
@@ -96,9 +95,9 @@ const ProjectsPage: React.FC = () => {
   ];
 
   return (
-    <div className="p-6 flex-1 overflow-auto bg-gray-50 dark:bg-gray-800">
-      <div className="flex flex-wrap justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+    <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+      <div className="flex flex-wrap justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
           Projects Dashboard
         </h1>
         <div className="flex flex-wrap items-center space-x-2">
@@ -112,13 +111,13 @@ const ProjectsPage: React.FC = () => {
           />
           <button
             onClick={() => inputRef.current?.click()}
-            className="text-indigo-500 hover:underline"
+            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
           >
             Upload CSV
           </button>
           <button
             onClick={handleCreate}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
           >
             + Add Project
           </button>
@@ -126,7 +125,7 @@ const ProjectsPage: React.FC = () => {
       </div>
       <div className="h-4" />
 
-      <div className="w-full h-full px-4 md:px-0">
+      <div className="w-full h-full">
         <DataTable
           columns={columns}
           data={projects}
@@ -135,11 +134,6 @@ const ProjectsPage: React.FC = () => {
           total={projects.length}
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
-          renderMobileRow={(p) => (
-            <div className="md:hidden bg-white rounded-lg shadow p-4 mb-4">
-              <ProjectCard project={p} />
-            </div>
-          )}
         />
       </div>
 

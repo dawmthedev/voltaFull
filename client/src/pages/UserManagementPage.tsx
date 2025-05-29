@@ -16,6 +16,7 @@ const UserManagementPage: React.FC = () => {
   const [phone, setPhone] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [csvOpen, setCsvOpen] = useState(false);
+  const inputRef = React.useRef<HTMLInputElement | null>(null);
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
   const openCsv = () => setCsvOpen(true);
@@ -96,9 +97,9 @@ const UserManagementPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="p-6 flex-1 overflow-auto bg-gray-50 dark:bg-gray-800">
-      <div className="flex flex-wrap justify-between items-center mb-4">
-        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
+    <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+      <div className="flex flex-wrap justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
           Users
         </h1>
         <div className="flex items-center space-x-2">
@@ -107,11 +108,18 @@ const UserManagementPage: React.FC = () => {
             accept=".csv"
             onChange={handleCsvUpload}
             hidden
+            ref={inputRef}
             id="csv-input"
           />
           <button
+            onClick={() => inputRef.current?.click()}
+            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+          >
+            Upload CSV
+          </button>
+          <button
             onClick={handleOpen}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+            className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
           >
             + Invite User
           </button>
@@ -127,28 +135,6 @@ const UserManagementPage: React.FC = () => {
           total={users.length}
           onPageChange={setPage}
           onPageSizeChange={setPageSize}
-          renderMobileRow={(user) => (
-            <div
-              key={user._id || user.email}
-              className="md:hidden bg-white rounded-lg shadow p-4 mb-4"
-            >
-              <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
-              <div className="grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="font-medium">Email</span>
-                  <div>{user.email}</div>
-                </div>
-                <div>
-                  <span className="font-medium">Role</span>
-                  <div>{user.role}</div>
-                </div>
-                <div className="col-span-2">
-                  <span className="font-medium">Phone</span>
-                  <div>{user.phone}</div>
-                </div>
-              </div>
-            </div>
-          )}
         />
       </div>
 

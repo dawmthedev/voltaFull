@@ -14,7 +14,6 @@ export interface DataTableProps<T> {
   total: number;
   onPageChange: (p: number) => void;
   onPageSizeChange: (s: number) => void;
-  renderMobileRow?: (item: T) => ReactNode;
 }
 
 function DataTable<T>({
@@ -25,7 +24,6 @@ function DataTable<T>({
   total,
   onPageChange,
   onPageSizeChange,
-  renderMobileRow,
 }: DataTableProps<T>) {
   const [query, setQuery] = useState("");
 
@@ -40,8 +38,20 @@ function DataTable<T>({
     );
   }, [data, query]);
 
-  const pageData = filtered.slice((page - 1) * pageSize, page * pageSize);
+  const pageData = useMemo(
+    () => filtered.slice((page - 1) * pageSize, page * pageSize),
+    [filtered, page, pageSize]
+  );
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
+
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+    onPageChange(1);
+  };
+
+  const handlePageChange = (p: number) => onPageChange(p);
+  const handlePageSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
+    onPageSizeChange(+e.target.value);
 
   return (
     <div className="flex flex-col space-y-4">
@@ -51,13 +61,10 @@ function DataTable<T>({
           placeholder="Search..."
           className="w-full max-w-sm p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           value={query}
-          onChange={(e) => {
-            setQuery(e.target.value);
-            onPageChange(1);
-          }}
+          onChange={handleSearch}
         />
       </div>
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto w-full">
         <table className="min-w-full divide-y divide-gray-200">
           <thead className="bg-gray-50">
             <tr>
@@ -95,7 +102,7 @@ function DataTable<T>({
           <select
             className="border border-gray-300 rounded p-1"
             value={pageSize}
-            onChange={(e) => onPageSizeChange(+e.target.value)}
+            onChange={handlePageSizeChange}
           >
             {[10, 20, 50, 100].map((n) => (
               <option key={n} value={n}>
@@ -107,7 +114,7 @@ function DataTable<T>({
         <div className="space-x-2">
           <button
             disabled={page === 1}
-            onClick={() => onPageChange(page - 1)}
+            onClick={() => handlePageChange(page - 1)}
             className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
           >
             Prev
@@ -117,24 +124,15 @@ function DataTable<T>({
           </span>
           <button
             disabled={page === totalPages}
-            onClick={() => onPageChange(page + 1)}
+            onClick={() => handlePageChange(page + 1)}
             className="px-3 py-1 border rounded hover:bg-gray-100 disabled:opacity-50"
           >
             Next
           </button>
         </div>
       </div>
-      {renderMobileRow && (
-        <div className="md:hidden space-y-4">
-          {pageData.map((item, idx) => (
-            <div key={idx} className="bg-white shadow rounded-lg p-4">
-              {renderMobileRow(item)}
-            </div>
-          ))}
-        </div>
-      )}
     </div>
   );
 }
 
-export default DataTable;
+export default React.memo(DataTable);
