@@ -49,8 +49,13 @@ export class ProjectService {
     return await this.projectModel.create(data);
   }
 
-  public async getProjects() {
-    return await this.projectModel.find();
+  public async getProjects(page = 1, pageSize = 20) {
+    const skip = (page - 1) * pageSize;
+    const [items, total] = await Promise.all([
+      this.projectModel.find().skip(skip).limit(pageSize),
+      this.projectModel.countDocuments(),
+    ]);
+    return { items, total };
   }
 
   public async insertMany(data: Partial<ProjectModel>[]) {

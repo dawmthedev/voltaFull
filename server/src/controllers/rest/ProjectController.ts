@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { BodyParams, MultipartFile, PlatformMulterFile } from "@tsed/common";
+import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams } from "@tsed/common";
 import { Get, Post, Returns } from "@tsed/schema";
 import { ProjectModel } from "../../models/ProjectModel";
 import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
@@ -12,9 +12,9 @@ export class ProjectController {
 
   @Get()
   @(Returns(200, SuccessArrayResult).Of(ProjectModel))
-  public async getProjects() {
-    const projects = await this.projectService.getProjects();
-    return new SuccessArrayResult(projects, ProjectModel);
+  public async getProjects(@QueryParams('page') page: number = 1, @QueryParams('pageSize') pageSize: number = 20) {
+    const { items, total } = await this.projectService.getProjects(page, pageSize);
+    return { data: items, total };
   }
 
   @Post()

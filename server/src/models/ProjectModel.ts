@@ -1,5 +1,5 @@
 import { CollectionOf, Property } from "@tsed/schema";
-import { Model, ObjectID } from "@tsed/mongoose";
+import { Model, ObjectID, Indexed } from "@tsed/mongoose";
 
 @Model({ name: "project" })
 export class ProjectModel {
@@ -7,6 +7,7 @@ export class ProjectModel {
   _id: string;
 
   @Property()
+  @Indexed()
   homeowner: string;
 
   @Property()
