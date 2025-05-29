@@ -14,4 +14,8 @@ export class UserService {
     ]);
     return { items, total };
   }
+
+  async updateRole(id: string, role: string) {
+    return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
+  }
 }
