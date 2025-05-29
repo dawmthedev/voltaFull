@@ -1,15 +1,21 @@
 # AGENTS.md - Volta CRM Guidelines
 
-This file defines instructions for Codex and contributors working on the Volta CRM monorepo. Follow these guidelines to ensure smooth collaboration and consistent quality.
+This file defines instructions for Codex and all contributors working on the Volta CRM monorepo. Follow these rules for consistent, high-quality code and a clean history.
 
-## Vision
+## Overview
 
-Volta CRM aims to be a scalable multi-role SaaS solution. Development should proceed through small, modular iterations with a focus on a thoughtful user experience. The UI uses a sand-toned color scheme with strong contrast and avoids unnecessary bloat.
+Volta CRM is a multi-role customer management platform. The repository is a Node.js monorepo with:
+
+- **client/** – React front end using Chakra UI, Tailwind and Redux Toolkit.
+- **server/** – Ts.ED REST API backed by MongoDB via Mongoose.
+- **tests/** – Shared Jest suites for both packages.
+
+Core features include project tracking, accounts payable, user management and authentication. The architecture is modular so new modules can be added easily.
 
 ## Environment Setup
 
-1. Use **Node.js 18.x**. The exact version is specified in the `volta` block of `package.json`.
-2. Run `./setup.sh` to install dependencies for all workspaces. This script does **not** run tests.
+1. Use **Node.js 18.x** (enforced by the `volta` block in `package.json`).
+2. Run `./setup.sh` to install all workspace dependencies. The script does not run tests.
 3. Start development:
    ```bash
    npm run dev      # run client and server together
@@ -18,21 +24,22 @@ Volta CRM aims to be a scalable multi-role SaaS solution. Development should pro
    ```
 4. Configure environment variables such as `DATABASE_URL` using `server/.env.example`.
 
-## Project Structure
+## Scaling Notes
 
-- **client/** – React frontend using Chakra UI and Tailwind CSS.
-- **server/** – Ts.ED backend with MongoDB.
-- **tests/** – Shared Jest tests for client and server.
-- **package.json** – Workspace configuration that ties the projects together.
+- Server controllers live under `server/src/controllers/rest` and use services in `server/src/services`.
+- Mongoose models are in `server/src/models`.
+- Client pages live under `client/src/pages` and are routed from `client/src/routes.tsx`.
+- Redux slices are located in `client/src/store`.
+- Run `npm --workspace server run barrels` if you add or move server controllers so barrel files stay updated.
 
-## Task Guidelines for Codex
+## Contribution Guidelines
 
-- Break tasks into **1–5 file changes** to limit merge conflicts.
+- Break tasks into **1–5 file changes** to reduce conflicts.
+- Commit messages: `[VOLTA] <message>`.
+- Pull request titles: `[VOLTA] <descriptive title>`.
 - Explore related files for context before editing.
 - Follow camelCase naming for variables and functions.
-- Commit messages must follow: `[VOLTA] <message>`.
-- Title pull requests as: `[VOLTA] <descriptive title>`.
-- Provide environment setup and test commands in responses.
+- Provide setup and test commands in your Codex responses.
 - Write or update tests alongside any code changes.
 
 ## Testing Workflow
@@ -41,37 +48,36 @@ Volta CRM aims to be a scalable multi-role SaaS solution. Development should pro
    ```bash
    npm test
    ```
-2. Run specific projects:
+2. Lint code:
+   ```bash
+   npm run lint        # client
+   npm run test:lint   # server
+   ```
+3. Run specific projects if needed:
    ```bash
    npx jest --selectProjects=client
    npx jest --selectProjects=server
    ```
-3. Lint code:
-   ```bash
-   npm run lint        # inside client
-   npm run test:lint   # inside server
-   ```
-4. Ensure all tests pass before committing changes.
+4. Ensure all tests pass before committing.
 
-**Setup Note**: `setup.sh` only installs dependencies. Tests must be run manually after modifications.
+**Setup Note**: `setup.sh` only installs dependencies. Tests must be executed manually after modifications.
 
 ## CI/CD Guidelines
 
-A typical pipeline should:
-
 1. Install dependencies with `npm install`.
-2. Run linting for the client and server packages.
-3. Execute `npm test` to ensure all Jest suites succeed.
-4. Build the applications before deployment if required.
+2. Lint the client and server packages.
+3. Run `npm test` to ensure all Jest suites succeed.
+4. Build the apps before deployment if required.
 
 ## Prompting Rules for Codex
 
 - Keep changes scoped to 1–5 files per task.
-- Always run tests and mention their results. Include a note if network access prevents running commands.
-- Uphold the design principles of minimal bloat and high-contrast sand-toned UI.
-- Seek modular, incremental improvements when implementing features.
+- Always run tests and mention results. Include a note if network access prevents running commands.
+- Uphold minimal-bloat design with a sand-toned, high-contrast UI.
+- Seek modular, incremental improvements when adding features.
 
 ### Additional Recommendations
 
-- Use `pnpm dlx turbo run` for working with workspaces quickly.
-- `pnpm install --filter <project>` helps Vite, ESLint, and TypeScript recognize dependencies for a single package.
+- Use `pnpm dlx turbo run` when working with workspaces.
+- `pnpm install --filter <project>` helps Vite, ESLint and TypeScript recognize dependencies for a single package.
+
