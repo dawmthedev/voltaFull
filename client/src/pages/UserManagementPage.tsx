@@ -29,13 +29,14 @@ const UserManagementPage: React.FC = () => {
   };
   const closeEdit = () => setEditUser(null);
   const handleOpen = () => {
-    setSuccess(null);
+    setMessage(null);
     onOpen();
   };
   const [csvUsers, setCsvUsers] = useState<CSVRow[]>([]);
   type EmailStatus = "valid" | "exists" | "invited" | "invalid" | null;
   const [emailStatus, setEmailStatus] = useState<EmailStatus>(null);
-  const [success, setSuccess] = useState<string | null>(null);
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<'success' | 'error'>('success');
 
   const isValidEmail = (val: string) => /\S+@\S+\.\S+/.test(val);
 
@@ -60,7 +61,8 @@ const UserManagementPage: React.FC = () => {
       body: JSON.stringify({ name, email, role, phone }),
     });
     onClose();
-    setSuccess(name);
+    setMessage(`${name} has been invited successfully.`);
+    setMessageType('success');
     setName("");
     setEmail("");
     setRole("");
@@ -98,11 +100,12 @@ const UserManagementPage: React.FC = () => {
       await dispatch(
         updateUser({ id: editUser._id as string, role: editRole })
       ).unwrap();
-      setSuccess("User updated successfully");
+      setMessage('User updated successfully.');
+      setMessageType('success');
       closeEdit();
-      dispatch(fetchUsers());
     } catch (error) {
-      setSuccess("Failed to update user");
+      setMessage('Failed to update user.');
+      setMessageType('error');
     }
   };
 
@@ -294,9 +297,15 @@ const UserManagementPage: React.FC = () => {
           </div>
         )}
 
-        {success && (
-          <div className="mt-4 p-4 bg-green-100 text-green-700 rounded">
-            {success} has been invited successfully.
+        {message && (
+          <div
+            className={`mt-4 p-4 rounded ${
+              messageType === 'success'
+                ? 'bg-green-100 text-green-700'
+                : 'bg-red-100 text-red-700'
+            }`}
+          >
+            {message}
           </div>
         )}
 
