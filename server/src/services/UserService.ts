@@ -15,9 +15,7 @@ export class UserService {
     return { items, total };
   }
 
-
-  //this causes the suers to fail to load in find all why? 
-  // async updateRole(id: string, role: string) {
-  //   return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
-  // }
+  async updateRole(id: string, role: string) {
+    return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
+  }
 }
