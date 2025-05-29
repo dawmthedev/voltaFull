@@ -128,7 +128,7 @@ const ProjectsPage: React.FC = () => {
       </div>
       <div className="h-4" />
 
-      <div className="w-full h-full">
+      <div className="w-full max-w-screen-xl mx-auto px-4 md:px-6">
         <DataTable
           columns={columns}
           data={projects}
