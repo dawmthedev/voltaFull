@@ -82,7 +82,7 @@ const ProjectsPage: React.FC = () => {
       key: "edit",
       renderCell: (p: Project) => (
         <Link
-          to={`/dashboard/projects/${p._id}`}
+          to={`/dashboard/projects/${p._id || (p as any).id}`}
           className="p-1 hover:bg-gray-100 rounded"
           aria-label="Edit Project"
         >

@@ -9,7 +9,7 @@ describe("ProjectDetailPage", () => {
     global.fetch = jest.fn()
       .mockResolvedValueOnce({
         ok: true,
-        json: () => Promise.resolve({ data: { _id: "1", homeowner: "H", contractAmount: 100 } })
+        json: () => Promise.resolve({ data: { id: "1", homeowner: "H", contractAmount: 100 } })
       })
       .mockResolvedValueOnce({
         ok: true,

@@ -8,11 +8,11 @@ import "@testing-library/jest-dom";
 beforeEach(() => {
   (global.fetch as jest.Mock).mockResolvedValueOnce({
     ok: true,
-    json: () => Promise.resolve({ data: [{ _id: "1", homeowner: "Jane" }] }),
+    json: () => Promise.resolve({ data: [{ id: "1", homeowner: "Jane" }] }),
   })
   .mockResolvedValueOnce({
     ok: true,
-    json: () => Promise.resolve({ data: { _id: "1", homeowner: "Jane" } }),
+    json: () => Promise.resolve({ data: { id: "1", homeowner: "Jane" } }),
   })
   .mockResolvedValueOnce({
     ok: true,
