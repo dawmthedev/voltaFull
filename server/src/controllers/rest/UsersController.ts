@@ -34,15 +34,22 @@ export class UsersController {
 
   @Get()
   @(Returns(200, SuccessArrayResult).Of(AdminResultModel))
-  public async getUsers(@QueryParams("page") page: number = 1, @QueryParams("pageSize") pageSize: number = 20) {
-    const { items, total } = await this.userService.findAll(page, pageSize);
-    return { data: items, total };
+  public async getUsers(
+    @QueryParams("page") page: number = 1,
+    @QueryParams("pageSize") pageSize: number = 20
+  ) {
+    const result = await this.userService.findAll(page, pageSize);
+    const items = Array.isArray(result) ? result : result.items;
+    return new SuccessArrayResult(items, AdminResultModel);
   }
 
-  // @Patch(":id")
-  // @(Returns(200, SuccessResult).Of(AdminResultModel))
-  // async updateRole(@PathParams("id") id: string, @BodyParams("role") role: string) {
-  //   const user = await this.userService.updateRole(id, role);
-  //   return new SuccessResult(user, AdminResultModel);
-  // }
+  @Patch("/:id")
+  @(Returns(200, SuccessResult).Of(AdminResultModel))
+  async updateRole(
+    @PathParams("id") id: string,
+    @BodyParams("role") role: string
+  ) {
+    const user = await this.userService.updateRole(id, role);
+    return new SuccessResult(user, AdminResultModel);
+  }
 }
