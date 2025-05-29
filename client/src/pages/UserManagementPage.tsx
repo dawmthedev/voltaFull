@@ -1,34 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Button,
-  HStack,
-  Text,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
-  ModalFooter,
-  Stack,
-  Input,
-  Select,
-  FormControl,
-  FormErrorMessage,
-  FormHelperText,
-  InputGroup,
-  InputRightElement,
-  Alert,
-  AlertIcon,
-} from "@chakra-ui/react";
-import {
-  DeleteIcon,
-  CheckIcon,
-  WarningIcon,
-  CloseIcon,
-} from "@chakra-ui/icons";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { parseCSV, CSVRow } from "../utils/csv";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -44,16 +14,16 @@ const UserManagementPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
   const [phone, setPhone] = useState("");
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  const [csvOpen, setCsvOpen] = useState(false);
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
+  const openCsv = () => setCsvOpen(true);
+  const closeCsv = () => setCsvOpen(false);
   const handleOpen = () => {
     setSuccess(null);
     onOpen();
   };
-  const {
-    isOpen: csvOpen,
-    onOpen: openCsv,
-    onClose: closeCsv,
-  } = useDisclosure();
   const [csvUsers, setCsvUsers] = useState<CSVRow[]>([]);
   type EmailStatus = "valid" | "exists" | "invited" | "invalid" | null;
   const [emailStatus, setEmailStatus] = useState<EmailStatus>(null);
@@ -126,12 +96,12 @@ const UserManagementPage: React.FC = () => {
   }, [dispatch]);
 
   return (
-    <div className="w-full h-full flex flex-col p-4">
-      <HStack justify="space-between" mb={4}>
-        <Text fontSize="xl" fontWeight="bold">
+    <div className="p-6 flex-1 overflow-auto bg-gray-50 dark:bg-gray-800">
+      <div className="flex flex-wrap justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
           Users
-        </Text>
-        <HStack>
+        </h1>
+        <div className="flex items-center space-x-2">
           <input
             type="file"
             accept=".csv"
@@ -139,12 +109,14 @@ const UserManagementPage: React.FC = () => {
             hidden
             id="csv-input"
           />
-
-          <Button colorScheme="teal" size="sm" onClick={handleOpen}>
+          <button
+            onClick={handleOpen}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          >
             + Invite User
-          </Button>
-        </HStack>
-      </HStack>
+          </button>
+        </div>
+      </div>
 
       <div className="w-full h-full">
         <DataTable
@@ -180,82 +152,91 @@ const UserManagementPage: React.FC = () => {
         />
       </div>
 
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Invite User</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Stack spacing={4}>
-              <Input
+      {isOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-lg font-semibold">Invite User</h2>
+              <button onClick={onClose} className="text-gray-500">&times;</button>
+            </div>
+            <div className="space-y-4">
+              <input
+                className="w-full border border-gray-300 rounded p-2"
                 placeholder="Full Name"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
-              <FormControl
-                isInvalid={
-                  emailStatus === "exists" || emailStatus === "invalid"
-                }
+              <div
+                className={`space-y-1 ${
+                  emailStatus === "exists" || emailStatus === "invalid" ? "" : ""
+                }`}
               >
-                <InputGroup>
-                  <Input
+                <div className="relative">
+                  <input
+                    className="w-full border border-gray-300 rounded p-2"
                     placeholder="Email"
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                   />
-                  <InputRightElement>
-                    {emailStatus === "valid" && <CheckIcon color="green.400" />}
-                    {emailStatus === "invited" && (
-                      <WarningIcon color="yellow.400" />
+                  <div className="absolute right-2 top-2">
+                    {emailStatus === "valid" && (
+                      <span className="text-green-400">&#10003;</span>
                     )}
-                    {emailStatus === "exists" && <CloseIcon color="red.400" />}
-                  </InputRightElement>
-                </InputGroup>
+                    {emailStatus === "invited" && (
+                      <span className="text-yellow-400">&#9888;</span>
+                    )}
+                    {emailStatus === "exists" && (
+                      <span className="text-red-400">&#10005;</span>
+                    )}
+                  </div>
+                </div>
                 {emailStatus === "valid" && (
-                  <FormHelperText color="green.500">Valid email</FormHelperText>
+                  <p className="text-sm text-green-500">Valid email</p>
                 )}
                 {emailStatus === "invited" && (
-                  <FormHelperText color="yellow.600">
-                    User already invited
-                  </FormHelperText>
+                  <p className="text-sm text-yellow-600">User already invited</p>
                 )}
                 {emailStatus === "exists" && (
-                  <FormErrorMessage>User already exists</FormErrorMessage>
+                  <p className="text-sm text-red-500">User already exists</p>
                 )}
                 {emailStatus === "invalid" && (
-                  <FormErrorMessage>Invalid email address</FormErrorMessage>
+                  <p className="text-sm text-red-500">Invalid email address</p>
                 )}
-              </FormControl>
-              <Select
-                placeholder="Select Role"
+              </div>
+              <select
+                className="w-full border border-gray-300 rounded p-2"
                 value={role}
                 onChange={(e) => setRole(e.target.value)}
               >
+                <option value="">Select Role</option>
                 <option value="Admin">Admin</option>
                 <option value="Technician">Technician</option>
                 <option value="Sales Rep">Sales Rep</option>
-              </Select>
-              <Input
+              </select>
+              <input
+                className="w-full border border-gray-300 rounded p-2"
                 placeholder="Phone (optional)"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
               />
-            </Stack>
-          </ModalBody>
-          <ModalFooter>
-            <Button onClick={onSubmitInvite}>
-              {emailStatus === "invited" ? "Resend Invite" : "Send Invite"}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+            </div>
+            <div className="mt-4 text-right">
+              <button
+                onClick={onSubmitInvite}
+                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+              >
+                {emailStatus === "invited" ? "Resend Invite" : "Send Invite"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {success && (
-        <Alert status="success" mt={4}>
-          <AlertIcon />
+        <div className="mt-4 p-4 bg-green-100 text-green-700 rounded">
           {success} has been invited successfully.
-        </Alert>
+        </div>
       )}
 
       <CSVPreviewModal

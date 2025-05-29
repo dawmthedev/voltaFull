@@ -1,15 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  Box,
-  Flex,
-  Heading,
-  useDisclosure,
-  useToast,
-  Stack,
-  Button,
-  HStack,
-} from "@chakra-ui/react";
-import { AddIcon } from "@chakra-ui/icons";
 import { fetchProjects, createProject, Project } from "../store/projectsSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
@@ -23,14 +12,13 @@ const ProjectsPage: React.FC = () => {
   const projects = useAppSelector((state) => state.projects.items);
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(20);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: previewOpen,
-    onOpen: openPreview,
-    onClose: closePreview,
-  } = useDisclosure();
+  const [isOpen, setIsOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const onOpen = () => setIsOpen(true);
+  const onClose = () => setIsOpen(false);
+  const openPreview = () => setPreviewOpen(true);
+  const closePreview = () => setPreviewOpen(false);
   const [csvQueue, setCsvQueue] = useState<CSVRow[]>([]);
-  const toast = useToast();
   const inputRef = React.useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
@@ -83,12 +71,7 @@ const ProjectsPage: React.FC = () => {
     closePreview();
     setCsvQueue([]);
     dispatch(fetchProjects());
-    toast({
-      title: `${rows.length} Projects Uploaded`,
-      status: "success",
-      duration: 3000,
-      isClosable: true,
-    });
+    window.alert(`${rows.length} Projects Uploaded`);
   };
 
   const columns: DataTableColumn<Project>[] = [
@@ -113,12 +96,12 @@ const ProjectsPage: React.FC = () => {
   ];
 
   return (
-    <Box px={{ base: 4, md: 8 }} py={6} flex="1" overflowY="auto">
-      <Flex justify="space-between" align="center" wrap="wrap" mb={4}>
-        <Heading size="md" className="text-balance">
+    <div className="p-6 flex-1 overflow-auto bg-gray-50 dark:bg-gray-800">
+      <div className="flex flex-wrap justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold text-gray-900 dark:text-gray-100">
           Projects Dashboard
-        </Heading>
-        <HStack spacing={{ base: 2, md: 4 }} flexWrap="wrap">
+        </h1>
+        <div className="flex flex-wrap items-center space-x-2">
           <input
             type="file"
             accept=".csv"
@@ -127,19 +110,21 @@ const ProjectsPage: React.FC = () => {
             ref={inputRef}
             data-testid="csv-input"
           />
-          <Button onClick={() => inputRef.current?.click()} variant="ghost">
-            Upload CSV
-          </Button>
-          <Button
-            leftIcon={<AddIcon />}
-            colorScheme="teal"
-            onClick={handleCreate}
+          <button
+            onClick={() => inputRef.current?.click()}
+            className="text-indigo-500 hover:underline"
           >
-            Add Project
-          </Button>
-        </HStack>
-      </Flex>
-      <Box height={4} />
+            Upload CSV
+          </button>
+          <button
+            onClick={handleCreate}
+            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+          >
+            + Add Project
+          </button>
+        </div>
+      </div>
+      <div className="h-4" />
 
       <div className="w-full h-full px-4 md:px-0">
         <DataTable
@@ -165,7 +150,7 @@ const ProjectsPage: React.FC = () => {
         rows={csvQueue}
         onConfirm={handleConfirm}
       />
-    </Box>
+    </div>
   );
 };
 
