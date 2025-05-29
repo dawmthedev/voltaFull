@@ -98,7 +98,7 @@ const UserManagementPage: React.FC = () => {
 
   return (
 
-    <div className="flex-1 px-4 md:px-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+    <div className="flex-1 flex flex-col h-full px-4 md:px-6 bg-gray-50 dark:bg-gray-800">
 
       <div className="w-full max-w-screen-xl mx-auto">
       <div className="flex flex-wrap justify-between items-center mb-6">
@@ -129,7 +129,7 @@ const UserManagementPage: React.FC = () => {
         </div>
       </div>
 
-      <div className="w-full max-w-screen-xl mx-auto px-4 md:px-6">
+      <div className="flex-1 w-full max-w-screen-xl mx-auto px-4 md:px-6">
         <DataTable
           columns={columns}
           data={users}
