@@ -45,6 +45,15 @@ describe("ProjectController", () => {
     expect(res.body).toEqual({ success: true, data: proj });
   });
 
+  it("GET /projects/:id returns 404 when missing", async () => {
+    jest.spyOn(projectService, "findById").mockResolvedValue(null as any);
+
+    const res = await request.get("/rest/projects/1").expect(404);
+
+    expect(projectService.findById).toHaveBeenCalledWith("1");
+    expect(res.body.message).toMatch(/not found/i);
+  });
+
   it("PATCH /projects/:id updates project", async () => {
     const proj = { _id: "1", homeowner: "Jane" } as any;
     jest.spyOn(projectService, "updateProject").mockResolvedValue(proj);

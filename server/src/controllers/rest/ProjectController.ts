@@ -1,6 +1,7 @@
 import { Controller, Inject } from "@tsed/di";
 import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams, PathParams } from "@tsed/common";
 import { Get, Post, Patch, Returns } from "@tsed/schema";
+import { NotFound } from "@tsed/exceptions";
 import { ProjectModel } from "../../models/ProjectModel";
 import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
@@ -28,6 +29,9 @@ export class ProjectController {
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async getById(@PathParams("id") id: string) {
     const project = await this.projectService.findById(id);
+    if (!project) {
+      throw new NotFound(`Project with id ${id} not found`);
+    }
     return new SuccessResult(project, ProjectModel);
   }
 
