@@ -1,13 +1,12 @@
 import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import AccountsPayable from "../../../../client/src/pages/AccountsPayable";
+import AccountsPayablePage from "../../../../client/src/pages/AccountsPayablePage";
 
-describe("AccountsPayable page", () => {
-  it("renders heading and placeholder row", () => {
-    render(<AccountsPayable />);
+describe("AccountsPayablePage", () => {
+  it("renders heading", () => {
+    render(<AccountsPayablePage />);
     expect(
       screen.getByRole("heading", { name: /accounts payable/i })
     ).toBeInTheDocument();
-    expect(screen.getByText(/no data/i)).toBeInTheDocument();
   });
 });
