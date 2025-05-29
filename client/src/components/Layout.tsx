@@ -28,7 +28,7 @@ const Layout: React.FC = () => {
         )}
         <div className="flex-1 flex flex-col">
           <Navbar onToggleSidebar={toggleSidebar} toggleRef={toggleRef} />
-          <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+          <div className="flex-1 px-4 md:px-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
             <Outlet />
           </div>
         </div>
