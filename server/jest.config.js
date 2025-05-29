@@ -1,5 +1,7 @@
-/* eslint-disable */
-
 module.exports = {
-  projects: ["<rootDir>/client/jest.config.js", "<rootDir>/server/jest.config.js"]
+  displayName: 'server-tests',
+  preset: 'ts-jest',
+  testEnvironment: 'node',
+  testMatch: ['<rootDir>/tests/server/**/*.test.ts'],
+  moduleFileExtensions: ['ts','js','json'],
 };

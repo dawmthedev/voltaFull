@@ -1,7 +1,11 @@
 module.exports = {
   projects: [
-    "<rootDir>/client/jest.config.js",
-    "<rootDir>/server/jest.config.js",
+    '<rootDir>/server/jest.config.js',
+    '<rootDir>/client/jest.config.js'
   ],
-  verbose: true,
+  testMatch: [
+    '<rootDir>/tests/server/**/*.test.ts',
+    '<rootDir>/tests/client/**/*.{test,spec}.{ts,tsx}'
+  ],
+  verbose: true
 };
