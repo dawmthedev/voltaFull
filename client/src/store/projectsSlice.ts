@@ -79,19 +79,18 @@ export const fetchProjectById = createAsyncThunk(
 export const updateProjectPayroll = createAsyncThunk(
   "projects/updatePayroll",
   async (
-    { id, technicians }: { id: string; technicians: any[] },
+    { id, payroll }: { id: string; payroll: { technicianId: string; percentage: number; paid?: boolean }[] },
     { dispatch }
   ) => {
-    const res = await fetch(`${baseURL}/projects/${id}`, {
+    const res = await fetch(`${baseURL}/projects/${id}/payroll`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ technicians }),
+      body: JSON.stringify({ payroll }),
     });
     if (!res.ok) throw new Error("Failed to update project payroll");
     await dispatch(fetchProjectById(id));
     const data = await res.json();
-    const p = data.data as any;
-    return { ...p, _id: p._id || p.id } as Project;
+    return data.data;
   }
 );
 

@@ -51,6 +51,15 @@ const ProjectDetailPage: React.FC = () => {
     }
   }, [projectId, dispatch, users.length]);
 
+  useEffect(() => {
+    if (project && project.payroll) {
+      const ids = project.payroll.map((p: any) => p.technicianId);
+      const percs = project.payroll.map((p: any) => p.percentage);
+      setAssignedTechIds((prev) => ids.concat(Array(4 - ids.length).fill("")));
+      setPercents((prev) => percs.concat(Array(4 - percs.length).fill(0)));
+    }
+  }, [project]);
+
   const handleTechChange = (idx: number, val: string) => {
     setAssignedTechIds((prev) => {
       const arr = [...prev];
@@ -81,7 +90,8 @@ const ProjectDetailPage: React.FC = () => {
 
   const handleSave = () => {
     if (!projectId) return;
-    dispatch(updateProjectPayroll({ id: projectId, technicians: allocations }));
+    const payroll = allocations.map((a) => ({ technicianId: a.userId, percentage: a.allocationPercent }));
+    dispatch(updateProjectPayroll({ id: projectId, payroll }));
   };
 
   return (

@@ -3,6 +3,7 @@ import { BodyParams, MultipartFile, PlatformMulterFile, QueryParams, PathParams 
 import { Get, Post, Patch, Returns } from "@tsed/schema";
 import { NotFound } from "@tsed/exceptions";
 import { ProjectModel } from "../../models/ProjectModel";
+import { AccountsPayableModel } from "../../models/AccountsPayableModel";
 import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
@@ -29,10 +30,11 @@ export class ProjectController {
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async getById(@PathParams("id") id: string) {
     const project = await this.projectService.findById(id);
+    const payroll = await this.projectService.getPayroll(id);
     if (!project) {
       throw new NotFound(`Project with id ${id} not found`);
     }
-    return new SuccessResult(project, ProjectModel);
+    return new SuccessResult({ ...project.toObject(), payroll }, ProjectModel);
   }
 
   @Patch(":id")
@@ -52,5 +54,22 @@ export class ProjectController {
     const mapped = records.map(transformCSVToProject);
     const inserted = await this.projectService.insertMany(mapped);
     return new SuccessArrayResult(inserted, ProjectModel);
+  }
+
+  @Patch(":id/payroll")
+  @(Returns(200, SuccessArrayResult).Of(AccountsPayableModel))
+  async updatePayroll(
+    @PathParams("id") id: string,
+    @BodyParams("payroll") payroll: { technicianId: string; percentage: number; paid?: boolean }[]
+  ) {
+    const result = await this.projectService.updatePayroll(id, payroll);
+    return new SuccessArrayResult(result, AccountsPayableModel);
+  }
+
+  @Get("/accounts")
+  @(Returns(200, SuccessArrayResult))
+  async listAccounts() {
+    const res = await this.projectService.payableModelService.listAllByProject();
+    return { success: true, data: res };
   }
 }
