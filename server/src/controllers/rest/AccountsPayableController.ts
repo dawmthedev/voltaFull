@@ -5,7 +5,7 @@ import { AccountsPayableService } from "../../services/AccountsPayableService";
 import { AccountsPayableModel } from "../../models/AccountsPayableModel";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
-@Controller()
+@Controller("/")
 export class AccountsPayableController {
   @Inject()
   private service: AccountsPayableService;
