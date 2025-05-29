@@ -158,6 +158,8 @@ const ProjectsPage: React.FC = () => {
         borderRadius="lg"
         boxShadow="md"
         overflowX="auto"
+        maxH="60vh"
+        overflowY="auto"
         className="overflow-x-auto"
         display={{ base: "none", md: "block" }}
       >
