@@ -32,12 +32,14 @@ import {
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { parseCSV, CSVRow } from "../utils/csv";
 import { useAppDispatch, useAppSelector } from "../store";
-import { fetchUsers } from "../store/usersSlice";
+import { fetchUsers, User } from "../store/usersSlice";
 import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const UserManagementPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const users = useAppSelector((state) => state.users.items);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
@@ -112,11 +114,11 @@ const UserManagementPage: React.FC = () => {
     dispatch(fetchUsers());
   };
 
-  const columns: DataTableColumn[] = [
-    { header: "Name", accessor: "name" },
-    { header: "Email", accessor: "email" },
-    { header: "Role", accessor: "role" },
-    { header: "Phone", accessor: "phone" },
+  const columns: DataTableColumn<User>[] = [
+    { header: "Name", key: "name" },
+    { header: "Email", key: "email" },
+    { header: "Role", key: "role" },
+    { header: "Phone", key: "phone" },
   ];
 
   useEffect(() => {
@@ -144,43 +146,41 @@ const UserManagementPage: React.FC = () => {
         </HStack>
       </HStack>
 
-      <div className="md:hidden">
-        {users.map((user) => (
-          <div
-            key={user._id || user.email}
-            className="bg-white rounded-lg p-4 shadow mb-4"
-          >
-            <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
-            <div className="grid grid-cols-2 gap-2">
-              <div>
-                <span className="font-medium">Email</span>
-                <div>{user.email}</div>
-              </div>
-              <div>
-                <span className="font-medium">Role</span>
-                <div>{user.role}</div>
-              </div>
-              <div>
-                <span className="font-medium">Phone</span>
-                <div>{user.phone}</div>
+      <div className="w-full h-full overflow-auto">
+        <DataTable
+          columns={columns}
+          data={users}
+          pagination={{
+            page,
+            pageSize,
+            total: users.length,
+            onPageChange: setPage,
+            onPageSizeChange: setPageSize,
+          }}
+          renderMobileRow={(user) => (
+            <div
+              key={user._id || user.email}
+              className="md:hidden bg-white rounded-lg p-4 shadow mb-4"
+            >
+              <h3 className="text-lg font-semibold mb-2">{user.name}</h3>
+              <div className="grid grid-cols-2 gap-2">
+                <div>
+                  <span className="font-medium">Email</span>
+                  <div>{user.email}</div>
+                </div>
+                <div>
+                  <span className="font-medium">Role</span>
+                  <div>{user.role}</div>
+                </div>
+                <div>
+                  <span className="font-medium">Phone</span>
+                  <div>{user.phone}</div>
+                </div>
               </div>
             </div>
-          </div>
-        ))}
+          )}
+        />
       </div>
-
-      <Box
-        bg="white"
-        borderRadius="lg"
-        boxShadow="md"
-        overflowX="auto"
-        maxH="60vh"
-        overflowY="auto"
-        className="overflow-x-auto"
-        display={{ base: "none", md: "block" }}
-      >
-        <DataTable columns={columns} data={users} />
-      </Box>
 
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />

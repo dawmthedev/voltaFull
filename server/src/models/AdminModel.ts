@@ -1,5 +1,5 @@
 import { CollectionOf, Default, Property } from "@tsed/schema";
-import { Model, ObjectID, Ref } from "@tsed/mongoose";
+import { Model, ObjectID, Ref, Indexed } from "@tsed/mongoose";
 import { OrganizationModel } from "./OrganizationModel";
 import { VerifySessionModal } from "./VerifySessionModal";
 import { CategoryModel } from "./CategoryModel";
@@ -15,6 +15,7 @@ export class AdminModel {
   _id: string;
 
   @Property()
+  @Indexed()
   name: string;
 
   @Property()
@@ -64,6 +65,7 @@ export class AdminModel {
   orgId: string;
   @Property()
   @Default(() => new Date())
+  @Indexed({ background: true })
   createdAt: Date;
 
   @Property()

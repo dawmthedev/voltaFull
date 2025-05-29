@@ -7,7 +7,7 @@ import UserManagementPage from './pages/UserManagementPage';
 import ProjectsPage from './pages/ProjectsPage';
 import AccountsPayablePage from './pages/AccountsPayablePage';
 import TechnicianTasksPage from './pages/TechnicianTasksPage';
-import DashboardLayout from './components/DashboardLayout';
+import Layout from './components/Layout';
 import PrivateRoute from './components/PrivateRoute';
 
 const AppRoutes: React.FC = () => (
@@ -19,7 +19,7 @@ const AppRoutes: React.FC = () => (
       path="/dashboard"
       element={
         <PrivateRoute>
-          <DashboardLayout />
+          <Layout />
         </PrivateRoute>
       }
     >

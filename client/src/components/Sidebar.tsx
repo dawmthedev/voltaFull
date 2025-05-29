@@ -22,6 +22,7 @@ import { useAppDispatch, useAppSelector } from "../store";
 import { logout } from "../store/authSlice";
 import SidebarItem from "./SidebarItem";
 import ThemeToggle from "./ThemeToggle";
+import { useLayout } from "./Layout";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -32,6 +33,7 @@ interface SidebarProps {
 const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose, toggleRef }) => {
   const user = useAppSelector((state) => state.auth.user)
   const dispatch = useAppDispatch()
+  const { closeSidebar } = useLayout()
   const bg = useColorModeValue('white', 'gray.800')
   const borderColor = useColorModeValue('gray.200', 'gray.700')
   const hoverBg = useColorModeValue('gray.100', 'gray.700')
@@ -53,14 +55,14 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose, toggleRef }) 
       transition="background 0.2s, color 0.2s"
     >
       <VStack flex="1" spacing={4} align="stretch" px={4} pt={4}>
-        <SidebarItem icon={FiGrid} label="Projects" to="/dashboard/projects" isOpen={true} />
+        <SidebarItem icon={FiGrid} label="Projects" to="/dashboard/projects" isOpen={true} onNavigate={closeSidebar} />
         {user?.role === 'Technician' && (
-          <SidebarItem icon={FiSettings} label="Technician Allocation" to="/dashboard/technician" isOpen={true} />
+          <SidebarItem icon={FiSettings} label="Technician Allocation" to="/dashboard/technician" isOpen={true} onNavigate={closeSidebar} />
         )}
         {user?.role === 'Admin' && (
           <>
-            <SidebarItem icon={FiDollarSign} label="Accounts Payable" to="/dashboard/accounts" isOpen={true} />
-            <SidebarItem icon={FiUsers} label="Users" to="/dashboard/users" isOpen={true} />
+            <SidebarItem icon={FiDollarSign} label="Accounts Payable" to="/dashboard/accounts" isOpen={true} onNavigate={closeSidebar} />
+            <SidebarItem icon={FiUsers} label="Users" to="/dashboard/users" isOpen={true} onNavigate={closeSidebar} />
           </>
         )}
       </VStack>

@@ -1,64 +1,106 @@
-import React from "react";
-import { Table, Thead, Tbody, Tr, Th, Td, useColorModeValue } from "@chakra-ui/react";
+import React, { ReactNode, useMemo, useState } from "react";
+import { Table, Thead, Tbody, Tr, Th, Td } from "@chakra-ui/react";
 
-export interface DataTableColumn {
+export interface DataTableColumn<T> {
+  key: string;
   header: string;
-  accessor: string;
-  isNumeric?: boolean;
-  displayBreakpoint?: "base" | "md" | "lg";
+  renderCell?: (item: T) => ReactNode;
 }
 
-interface DataTableProps {
-  columns: DataTableColumn[];
-  data: Array<Record<string, any>>;
+interface Pagination {
+  page: number;
+  pageSize: number;
+  total: number;
+  onPageChange: (p: number) => void;
+  onPageSizeChange: (s: number) => void;
 }
 
-const DataTable: React.FC<DataTableProps> = ({ columns, data }) => {
-  const getDisplay = (breakpoint?: "base" | "md" | "lg") =>
-    breakpoint ? { base: "none", [breakpoint]: "table-cell" } : undefined;
+interface DataTableProps<T> {
+  columns: DataTableColumn<T>[];
+  data: T[];
+  pagination?: Pagination;
+  renderMobileRow?: (item: T) => ReactNode;
+}
 
-  const bg = useColorModeValue('white', 'gray.800')
-  const text = useColorModeValue('gray.800', 'white')
-  const border = useColorModeValue('gray.200', 'gray.700')
+function DataTable<T>({ columns, data, pagination, renderMobileRow }: DataTableProps<T>) {
+  const [virtualStart, setVirtualStart] = useState(0);
+
+  const items = useMemo(() => {
+    if (data.length > 100) {
+      return data.slice(virtualStart, virtualStart + 100);
+    }
+    return data;
+  }, [data, virtualStart]);
+
+  const pageCount = pagination ? Math.ceil(pagination.total / pagination.pageSize) : 0;
 
   return (
-    <Table size="sm" variant="simple" bg={bg} color={text} borderColor={border}
-      transition="background 0.2s, color 0.2s">
-      <Thead bg={useColorModeValue('gray.50', 'gray.700')}>
-        <Tr>
-          {columns.map((col) => (
-            <Th
-              key={col.accessor}
-              isNumeric={col.isNumeric}
-              p={2}
-              display={getDisplay(col.displayBreakpoint)}
-            >
-              {col.header}
-            </Th>
+    <div className="overflow-auto">
+      <div className="hidden md:block">
+        <Table size="sm" variant="simple">
+          <Thead>
+            <Tr>
+              {columns.map((col) => (
+                <Th key={col.key}>{col.header}</Th>
+              ))}
+            </Tr>
+          </Thead>
+          <Tbody>
+            {items.map((item, rowIdx) => (
+              <Tr key={rowIdx}>
+                {columns.map((col) => (
+                  <Td key={col.key}>
+                    {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
+                  </Td>
+                ))}
+              </Tr>
+            ))}
+          </Tbody>
+        </Table>
+      </div>
+      {renderMobileRow && (
+        <div className="md:hidden">
+          {data.map((item, idx) => (
+            <React.Fragment key={idx}>{renderMobileRow(item)}</React.Fragment>
           ))}
-        </Tr>
-      </Thead>
-      <Tbody>
-        {data.map((row, i) => (
-          <Tr key={i} _hover={{ bg: useColorModeValue('gray.50', 'gray.700') }}>
-            {columns.map((col) => {
-              const value = row[col.accessor];
-              return (
-                <Td
-                  key={col.accessor}
-                  isNumeric={col.isNumeric}
-                  p={2}
-                  display={getDisplay(col.displayBreakpoint)}
-                >
-                  {Array.isArray(value) ? value.join(", ") : value}
-                </Td>
-              );
-            })}
-          </Tr>
-        ))}
-      </Tbody>
-    </Table>
+        </div>
+      )}
+      {pagination && (
+        <div className="flex items-center justify-between p-2 gap-2">
+          <div>
+            <label className="mr-2">Page</label>
+            <select
+              value={pagination.page}
+              onChange={(e) => pagination.onPageChange(Number(e.target.value))}
+            >
+              {Array.from({ length: pageCount }, (_, i) => i + 1).map((p) => (
+                <option key={p} value={p}>
+                  {p}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="mr-2">Rows</label>
+            <select
+              value={pagination.pageSize}
+              onChange={(e) => {
+                pagination.onPageSizeChange(Number(e.target.value));
+                setVirtualStart(0);
+              }}
+            >
+              {[10, 20, 50, 100].map((s) => (
+                <option key={s} value={s}>
+                  {s}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+      )}
+    </div>
   );
-};
+}
 
 export default DataTable;
+export type { DataTableProps };

@@ -7,10 +7,11 @@ interface SidebarItemProps {
   label: string
   to: string
   isOpen: boolean
+  onNavigate?: () => void
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, to, isOpen }) => (
-  <NavLink to={to}>
+const SidebarItem: React.FC<SidebarItemProps> = ({ icon, label, to, isOpen, onNavigate }) => (
+  <NavLink to={to} onClick={onNavigate}>
     <Tooltip label={label} isDisabled={isOpen} placement="right">
       <HStack px={2} py={2} spacing={2} _hover={{ bg: 'gray.100' }}>
         <Icon as={icon} boxSize={5} />

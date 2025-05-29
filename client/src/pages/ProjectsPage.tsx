@@ -10,7 +10,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { AddIcon } from "@chakra-ui/icons";
-import { fetchProjects, createProject } from "../store/projectsSlice";
+import { fetchProjects, createProject, Project } from "../store/projectsSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
@@ -21,6 +21,8 @@ import DataTable, { DataTableColumn } from "../components/DataTable";
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
   const projects = useAppSelector((state) => state.projects.items);
+  const [page, setPage] = useState(1);
+  const [pageSize, setPageSize] = useState(20);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: previewOpen,
@@ -89,33 +91,25 @@ const ProjectsPage: React.FC = () => {
     });
   };
 
-  const columns: DataTableColumn[] = [
-    { header: "Homeowner", accessor: "homeowner" },
-    { header: "Sale Date", accessor: "saleDate" },
-    { header: "Products", accessor: "products" },
-    { header: "Status", accessor: "status" },
-    { header: "Stage", accessor: "stage" },
-    { header: "Contract Amount", accessor: "contractAmount", isNumeric: true },
-    { header: "System Size", accessor: "systemSize" },
-    { header: "Installer", accessor: "installer" },
-    { header: "Phone", accessor: "phone" },
-    { header: "Sales Rep", accessor: "salesRep", displayBreakpoint: "lg" },
-    { header: "Address", accessor: "address", displayBreakpoint: "lg" },
-    {
-      header: "Utility Company",
-      accessor: "utilityCompany",
-      displayBreakpoint: "lg",
-    },
-    { header: "PTO Status", accessor: "ptoStatus", displayBreakpoint: "lg" },
-    {
-      header: "Project Manager",
-      accessor: "projectManager",
-      displayBreakpoint: "lg",
-    },
-    { header: "Financing", accessor: "financing", displayBreakpoint: "lg" },
-    { header: "Source", accessor: "source", displayBreakpoint: "lg" },
-    { header: "AHJ", accessor: "ahj", displayBreakpoint: "lg" },
-    { header: "QC Status", accessor: "qcStatus", displayBreakpoint: "lg" },
+  const columns: DataTableColumn<Project>[] = [
+    { header: "Homeowner", key: "homeowner" },
+    { header: "Sale Date", key: "saleDate" },
+    { header: "Products", key: "products" },
+    { header: "Status", key: "status" },
+    { header: "Stage", key: "stage" },
+    { header: "Contract Amount", key: "contractAmount" },
+    { header: "System Size", key: "systemSize" },
+    { header: "Installer", key: "installer" },
+    { header: "Phone", key: "phone" },
+    { header: "Sales Rep", key: "salesRep" },
+    { header: "Address", key: "address" },
+    { header: "Utility Company", key: "utilityCompany" },
+    { header: "PTO Status", key: "ptoStatus" },
+    { header: "Project Manager", key: "projectManager" },
+    { header: "Financing", key: "financing" },
+    { header: "Source", key: "source" },
+    { header: "AHJ", key: "ahj" },
+    { header: "QC Status", key: "qcStatus" },
   ];
 
   return (
@@ -147,24 +141,20 @@ const ProjectsPage: React.FC = () => {
       </Flex>
       <Box height={4} />
 
-      <Stack spacing={4} display={{ base: "block", md: "none" }}>
-        {projects.map((p) => (
-          <ProjectCard key={p._id} project={p} />
-        ))}
-      </Stack>
-
-      <Box
-        bg="white"
-        borderRadius="lg"
-        boxShadow="md"
-        overflowX="auto"
-        maxH="60vh"
-        overflowY="auto"
-        className="overflow-x-auto"
-        display={{ base: "none", md: "block" }}
-      >
-        <DataTable columns={columns} data={projects} />
-      </Box>
+      <div className="w-full h-full overflow-auto">
+        <DataTable
+          columns={columns}
+          data={projects}
+          pagination={{
+            page,
+            pageSize,
+            total: projects.length,
+            onPageChange: setPage,
+            onPageSizeChange: setPageSize,
+          }}
+          renderMobileRow={(p) => <ProjectCard project={p} />}
+        />
+      </div>
 
       <AddProjectModal isOpen={isOpen} onClose={onClose} />
       <CSVPreviewModal

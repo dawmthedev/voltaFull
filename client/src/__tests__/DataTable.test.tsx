@@ -4,8 +4,8 @@ import DataTable from '../components/DataTable';
 import { Provider } from '../components/ui/provider';
 
 const columns = [
-  { header: 'Name', accessor: 'name' },
-  { header: 'Age', accessor: 'age', isNumeric: true },
+  { header: 'Name', key: 'name' },
+  { header: 'Age', key: 'age' },
 ];
 
 const data = [

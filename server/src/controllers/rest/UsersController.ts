@@ -1,5 +1,5 @@
 import { Controller, Inject } from "@tsed/di";
-import { Context } from "@tsed/platform-params";
+import { Context, QueryParams } from "@tsed/common";
 import { Get, Returns } from "@tsed/schema";
 import { UserService } from "../../services/UserService";
 import { AdminResultModel } from "../../models/RestModels";
@@ -33,8 +33,8 @@ export class UsersController {
 
   @Get()
   @(Returns(200, SuccessArrayResult).Of(AdminResultModel))
-  public async getUsers() {
-    const users = await this.userService.findAll();
-    return new SuccessArrayResult(users, AdminResultModel);
+  public async getUsers(@QueryParams('page') page: number = 1, @QueryParams('pageSize') pageSize: number = 20) {
+    const { items, total } = await this.userService.findAll(page, pageSize);
+    return { data: items, total };
   }
 }
