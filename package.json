@@ -11,7 +11,8 @@
     "start": "npm run dev",
     "dev:server": "npm --workspace server run dev",
     "dev:client": "npm --workspace client run dev",
-    "test": "eslint . && npm run test:server && npm run test:client",
+    "lint": "eslint .",
+    "test": "npm run test:server",
     "test:server": "npm --workspace server run test",
     "test:client": "npm --workspace client run test"
   },

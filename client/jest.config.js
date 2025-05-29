@@ -5,6 +5,10 @@ module.exports = {
   transform: {
     '^.+\\.(ts|tsx)$': 'ts-jest'
   },
+  moduleNameMapper: {
+    '^@chakra-ui/icons$': '<rootDir>/__mocks__/chakra.js',
+    '^@chakra-ui/utils/.*$': '<rootDir>/__mocks__/chakra.js'
+  },
   setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
   testMatch: ['<rootDir>/tests/client/**/*.{test,spec}.{ts,tsx}'],
   verbose: true
