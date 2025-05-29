@@ -58,6 +58,19 @@ export const createProject = createAsyncThunk(
   }
 );
 
+export const savePayroll = createAsyncThunk(
+  "projects/savePayroll",
+  async ({ projectId, allocations }: { projectId: string; allocations: { technicianId: string; percent: number }[] }) => {
+    const res = await fetch(`/api/projects/${projectId}/accounts-payable`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ allocations }),
+    });
+    if (!res.ok) throw new Error("Failed to save payroll");
+    return true;
+  }
+);
+
 const projectsSlice = createSlice({
   name: "projects",
   initialState,

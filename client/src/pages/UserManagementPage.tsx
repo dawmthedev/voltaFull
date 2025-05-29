@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { parseCSV, CSVRow } from "../utils/csv";
 import { useAppDispatch, useAppSelector } from "../store";
-import { fetchUsers, User } from "../store/usersSlice";
+import { fetchUsers, updateUser, User } from "../store/usersSlice";
 import DataTable, { DataTableColumn } from "../components/DataTable";
 
 const UserManagementPage: React.FC = () => {
@@ -21,6 +21,13 @@ const UserManagementPage: React.FC = () => {
   const onClose = () => setIsOpen(false);
   const openCsv = () => setCsvOpen(true);
   const closeCsv = () => setCsvOpen(false);
+  const [editUser, setEditUser] = useState<User | null>(null);
+  const [editRole, setEditRole] = useState("");
+  const openEdit = (user: User) => {
+    setEditUser(user);
+    setEditRole(user.role);
+  };
+  const closeEdit = () => setEditUser(null);
   const handleOpen = () => {
     setSuccess(null);
     onOpen();
@@ -85,11 +92,31 @@ const UserManagementPage: React.FC = () => {
     dispatch(fetchUsers());
   };
 
+  const onSubmitUpdate = async () => {
+    if (!editUser) return;
+    await dispatch(
+      updateUser({ id: editUser._id as string, role: editRole })
+    );
+    closeEdit();
+  };
+
   const columns: DataTableColumn<User>[] = [
     { header: "Name", key: "name" },
     { header: "Email", key: "email" },
     { header: "Role", key: "role" },
     { header: "Phone", key: "phone" },
+    {
+      header: "Actions",
+      key: "actions",
+      renderCell: (u: User) => (
+        <button
+          onClick={() => openEdit(u)}
+          className="text-indigo-600 hover:underline"
+        >
+          Edit
+        </button>
+      ),
+    },
   ];
 
   useEffect(() => {
@@ -223,6 +250,36 @@ const UserManagementPage: React.FC = () => {
                   className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
                 >
                   {emailStatus === "invited" ? "Resend Invite" : "Send Invite"}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {editUser && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">Edit User</h2>
+                <button onClick={closeEdit} className="text-gray-500">&times;</button>
+              </div>
+              <div className="space-y-4">
+                <select
+                  className="w-full border border-gray-300 rounded p-2"
+                  value={editRole}
+                  onChange={(e) => setEditRole(e.target.value)}
+                >
+                  <option value="Admin">Admin</option>
+                  <option value="Technician">Technician</option>
+                  <option value="Sales Rep">Sales Rep</option>
+                </select>
+              </div>
+              <div className="mt-4 text-right">
+                <button
+                  onClick={onSubmitUpdate}
+                  className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700"
+                >
+                  Save
                 </button>
               </div>
             </div>
