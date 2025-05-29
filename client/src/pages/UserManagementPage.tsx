@@ -115,7 +115,9 @@ const UserManagementPage: React.FC = () => {
   }, [dispatch]);
 
   return (
+
     <div className="w-full h-full flex flex-col p-4">
+
       <HStack justify="space-between" mb={4}>
         <Text fontSize="xl" fontWeight="bold">Users</Text>
         <HStack>
@@ -124,7 +126,9 @@ const UserManagementPage: React.FC = () => {
           <Button colorScheme="teal" size="sm" onClick={handleOpen}>+ Invite User</Button>
         </HStack>
       </HStack>
+
       <div className="md:hidden">
+
         {users.map((user) => (
           <div
             key={user._id || user.email}
@@ -147,6 +151,7 @@ const UserManagementPage: React.FC = () => {
             </div>
           </div>
         ))}
+
       </div>
 
       <Box
@@ -211,7 +216,7 @@ const UserManagementPage: React.FC = () => {
         rows={csvUsers}
         onConfirm={confirmCsv}
       />
-    </div>
+    </Box>
   );
 };
 
