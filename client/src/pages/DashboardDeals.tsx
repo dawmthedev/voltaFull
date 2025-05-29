@@ -105,7 +105,7 @@ const DashboardDeals: React.FC = () => {
 
   return (
     <Box overflowX="hidden" minH="100vh">
-      <Navbar />
+      <Navbar onToggleSidebar={() => {}} toggleRef={React.useRef<HTMLButtonElement | null>(null)} />
       <Flex className="overflow-x-hidden" pt={16}>
         <Sidebar />
         <Box
