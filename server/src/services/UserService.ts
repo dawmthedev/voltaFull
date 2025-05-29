@@ -10,12 +10,14 @@ export class UserService {
     const skip = (page - 1) * pageSize;
     const [items, total] = await Promise.all([
       this.userModel.find().sort({ createdAt: -1 }).skip(skip).limit(pageSize),
-      this.userModel.countDocuments(),
+      this.userModel.countDocuments()
     ]);
     return { items, total };
   }
 
-  async updateRole(id: string, role: string) {
-    return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
-  }
+
+  //this causes the suers to fail to load in find all why? 
+  // async updateRole(id: string, role: string) {
+  //   return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
+  // }
 }

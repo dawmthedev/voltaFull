@@ -94,10 +94,16 @@ const UserManagementPage: React.FC = () => {
 
   const onSubmitUpdate = async () => {
     if (!editUser) return;
-    await dispatch(
-      updateUser({ id: editUser._id as string, role: editRole })
-    );
-    closeEdit();
+    try {
+      await dispatch(
+        updateUser({ id: editUser._id as string, role: editRole })
+      ).unwrap();
+      setSuccess("User updated successfully");
+      closeEdit();
+      dispatch(fetchUsers());
+    } catch (error) {
+      setSuccess("Failed to update user");
+    }
   };
 
   const columns: DataTableColumn<User>[] = [
@@ -261,7 +267,9 @@ const UserManagementPage: React.FC = () => {
             <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-sm">
               <div className="flex justify-between items-center mb-4">
                 <h2 className="text-lg font-semibold">Edit User</h2>
-                <button onClick={closeEdit} className="text-gray-500">&times;</button>
+                <button onClick={closeEdit} className="text-gray-500">
+                  &times;
+                </button>
               </div>
               <div className="space-y-4">
                 <select

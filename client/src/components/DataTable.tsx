@@ -71,7 +71,10 @@ function DataTable<T>({
               <thead className="sticky top-0 z-10 bg-gray-50 text-xs text-gray-700 uppercase h-6 transition-all ease-in-out">
                 <tr>
                   {columns.map((col) => (
-                    <th key={col.key} className="px-2 2xl:px-6 py-3 bg-gray-200">
+                    <th
+                      key={col.key}
+                      className="px-2 2xl:px-6 py-3 bg-gray-200"
+                    >
                       {col.header}
                     </th>
                   ))}
@@ -85,7 +88,9 @@ function DataTable<T>({
                         key={col.key}
                         className="px-6 py-1.5 whitespace-nowrap text-sm text-gray-900"
                       >
-                        {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
+                        {col.renderCell
+                          ? col.renderCell(item)
+                          : (item as any)[col.key]}
                       </td>
                     ))}
                   </tr>
