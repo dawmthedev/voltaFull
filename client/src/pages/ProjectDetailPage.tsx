@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   Box,
   Heading,
@@ -12,33 +12,42 @@ import {
   Input,
   Text,
   Button,
+  Spinner,
+  SimpleGrid,
 } from "@chakra-ui/react";
-import { useParams } from "react-router-dom";
-import { baseURL } from "../apiConfig";
-import { Project } from "../store/projectsSlice";
-import { User } from "../store/usersSlice";
-import { useAppDispatch } from "../store";
-import { savePayroll } from "../store/projectsSlice";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../store";
+import {
+  fetchProjectById,
+  updateProjectPayroll,
+  Project,
+} from "../store/projectsSlice";
+import { fetchUsers } from "../store/usersSlice";
 
 const ProjectDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const [project, setProject] = useState<Project | null>(null);
-  const [techUsers, setTechUsers] = useState<User[]>([]);
+  const project = useAppSelector((s) => s.projects.current);
+  const projectStatus = useAppSelector((s) => s.projects.currentStatus);
+  const users = useAppSelector((s) => s.users.items);
+  const techUsers = useMemo(
+    () => users.filter((u) => u.role === "Technician"),
+    [users]
+  );
   const [assignedTechIds, setAssignedTechIds] = useState<string[]>(["", "", "", ""]);
   const [percents, setPercents] = useState<number[]>([0, 0, 0, 0]);
 
   useEffect(() => {
-    if (!id) return;
-    fetch(`${baseURL}/projects/${id}`)
-      .then((res) => res.json())
-      .then((d) => setProject(d.data))
-      .catch(() => setProject(null));
-    fetch(`${baseURL}/users`)
-      .then((res) => res.json())
-      .then((d) => setTechUsers(d.data.filter((u: User) => u.role === "tech")))
-      .catch(() => setTechUsers([]));
-  }, [id]);
+    if (!id) {
+      navigate("/dashboard/projects");
+      return;
+    }
+    dispatch(fetchProjectById(id));
+    if (users.length === 0) {
+      dispatch(fetchUsers());
+    }
+  }, [id, dispatch]);
 
   const handleTechChange = (idx: number, val: string) => {
     setAssignedTechIds((prev) => {
@@ -57,22 +66,24 @@ const ProjectDetailPage: React.FC = () => {
   };
 
   const allocations = assignedTechIds
-    .map((techId, i) => ({ technicianId: techId, percent: percents[i] }))
-    .filter((a) => a.technicianId);
+    .map((techId, i) => ({ userId: techId, allocationPercent: percents[i] }))
+    .filter((a) => a.userId);
 
   const totals = allocations.map((a) =>
-    ((project?.contractAmount || 0) * a.percent) / 100
+    ((project?.contractAmount || 0) * a.allocationPercent) / 100
   );
+
+  const disableSave =
+    allocations.length === 0 ||
+    allocations.reduce((s, a) => s + a.allocationPercent, 0) > 100;
 
   const handleSave = () => {
     if (!id) return;
-    dispatch(
-      savePayroll({ projectId: id, allocations })
-    );
+    dispatch(updateProjectPayroll({ id, technicians: allocations }));
   };
 
   return (
-    <Box>
+    <Box className="bg-white text-gray-900 max-w-6xl mx-auto p-6">
       <Heading size="lg" mb={4}>
         Project Details
       </Heading>
@@ -83,9 +94,45 @@ const ProjectDetailPage: React.FC = () => {
         </TabList>
         <TabPanels>
           <TabPanel>
-            <pre className="text-sm bg-gray-100 p-2 rounded">
-              {JSON.stringify(project, null, 2)}
-            </pre>
+            {projectStatus === "loading" && <Spinner aria-busy="true" />}
+            {projectStatus === "failed" && (
+              <Text color="red.500">Failed to load project</Text>
+            )}
+            {project && (
+              <Box className="bg-gray-50 p-4" as="dl">
+                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
+                  {Object.entries({
+                    homeowner: project.homeowner,
+                    saleDate: project.saleDate,
+                    products: project.products?.join(", "),
+                    status: project.status,
+                    stage: project.stage,
+                    contractAmount: project.contractAmount,
+                    systemSize: project.systemSize,
+                    installer: project.installer,
+                    phone: project.phone,
+                    address: project.address,
+                    utilityCompany: project.utilityCompany,
+                    salesRep: project.salesRep,
+                    projectManager: project.projectManager,
+                    financing: project.financing,
+                    source: project.source,
+                    ahj: project.ahj,
+                    qcStatus: project.qcStatus,
+                    ptoStatus: project.ptoStatus,
+                    duration: project.duration,
+                    assignedTo: project.assignedTo,
+                  }).map(([label, val]) => (
+                    <Box key={label} className="py-1">
+                      <Text as="dt" fontWeight="semibold" className="capitalize">
+                        {label}
+                      </Text>
+                      <Text as="dd">{val || "-"}</Text>
+                    </Box>
+                  ))}
+                </SimpleGrid>
+              </Box>
+            )}
           </TabPanel>
           <TabPanel>
             <Stack spacing={3} maxW="sm">
@@ -112,9 +159,9 @@ const ProjectDetailPage: React.FC = () => {
               ))}
               <Box>
                 {allocations.map((a, idx) => {
-                  const tech = techUsers.find((t) => t._id === a.technicianId);
+                  const tech = techUsers.find((t) => t._id === a.userId);
                   return (
-                    <Text key={a.technicianId}>
+                    <Text key={a.userId}>
                       {tech?.name || "-"}: ${totals[idx].toFixed(2)}
                     </Text>
                   );
@@ -124,7 +171,11 @@ const ProjectDetailPage: React.FC = () => {
                   {totals.reduce((s, v) => s + v, 0).toFixed(2)}
                 </Text>
               </Box>
-              <Button onClick={handleSave} colorScheme="blue">
+              <Button
+                onClick={handleSave}
+                colorScheme="blue"
+                disabled={disableSave}
+              >
                 Save Payroll
               </Button>
             </Stack>

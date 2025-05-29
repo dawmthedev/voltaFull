@@ -17,7 +17,7 @@ export interface Project {
   utilityCompany?: string;
   salesRep?: string;
   salesRepId?: string;
-  technicians?: string[];
+  technicians?: any;
   projectManager?: string;
   financing?: string;
   source?: string;
@@ -30,11 +30,15 @@ export interface Project {
 interface ProjectsState {
   items: Project[];
   status: "idle" | "loading" | "failed";
+  current: Project | null;
+  currentStatus: "idle" | "loading" | "failed";
 }
 
 const initialState: ProjectsState = {
   items: [],
   status: "idle",
+  current: null,
+  currentStatus: "idle",
 };
 
 export const fetchProjects = createAsyncThunk("projects/fetch", async () => {
@@ -53,6 +57,34 @@ export const createProject = createAsyncThunk(
       body: JSON.stringify(project),
     });
     if (!res.ok) throw new Error("Failed to create project");
+    const data = await res.json();
+    return data.data as Project;
+  }
+);
+
+export const fetchProjectById = createAsyncThunk(
+  "projects/fetchById",
+  async (id: string) => {
+    const res = await fetch(`${baseURL}/projects/${id}`);
+    if (!res.ok) throw new Error("Failed to load project");
+    const data = await res.json();
+    return data.data as Project;
+  }
+);
+
+export const updateProjectPayroll = createAsyncThunk(
+  "projects/updatePayroll",
+  async (
+    { id, technicians }: { id: string; technicians: any[] },
+    { dispatch }
+  ) => {
+    const res = await fetch(`${baseURL}/projects/${id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ technicians }),
+    });
+    if (!res.ok) throw new Error("Failed to update project payroll");
+    await dispatch(fetchProjectById(id));
     const data = await res.json();
     return data.data as Project;
   }
@@ -89,6 +121,19 @@ const projectsSlice = createSlice({
       })
       .addCase(createProject.fulfilled, (state, action) => {
         state.items.push(action.payload);
+      })
+      .addCase(fetchProjectById.pending, (state) => {
+        state.currentStatus = "loading";
+      })
+      .addCase(fetchProjectById.fulfilled, (state, action) => {
+        state.currentStatus = "idle";
+        state.current = action.payload;
+      })
+      .addCase(fetchProjectById.rejected, (state) => {
+        state.currentStatus = "failed";
+      })
+      .addCase(updateProjectPayroll.fulfilled, (state, action) => {
+        state.current = action.payload;
       });
   },
 });

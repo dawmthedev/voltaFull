@@ -34,4 +34,29 @@ describe("ProjectController", () => {
     expect(projectService.createProject).toHaveBeenCalledWith(payload);
     expect(res.body).toEqual({ success: true, data: created });
   });
+
+  it("GET /projects/:id returns project", async () => {
+    const proj = { _id: "1", homeowner: "John" } as any;
+    jest.spyOn(projectService, "findById").mockResolvedValue(proj);
+
+    const res = await request.get("/rest/projects/1").expect(200);
+
+    expect(projectService.findById).toHaveBeenCalledWith("1");
+    expect(res.body).toEqual({ success: true, data: proj });
+  });
+
+  it("PATCH /projects/:id updates project", async () => {
+    const proj = { _id: "1", homeowner: "Jane" } as any;
+    jest.spyOn(projectService, "updateProject").mockResolvedValue(proj);
+
+    const res = await request
+      .patch("/rest/projects/1")
+      .send({ homeowner: "Jane" })
+      .expect(200);
+
+    expect(projectService.updateProject).toHaveBeenCalledWith("1", {
+      homeowner: "Jane",
+    });
+    expect(res.body).toEqual({ success: true, data: proj });
+  });
 });
