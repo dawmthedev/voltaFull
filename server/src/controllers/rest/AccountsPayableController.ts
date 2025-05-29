@@ -5,19 +5,19 @@ import { AccountsPayableService } from "../../services/AccountsPayableService";
 import { AccountsPayableModel } from "../../models/AccountsPayableModel";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
-@Controller("/accounts-payable")
+@Controller()
 export class AccountsPayableController {
   @Inject()
   private service: AccountsPayableService;
 
-  @Get()
+  @Get("/accounts-payable")
   @(Returns(200, SuccessArrayResult).Of(AccountsPayableModel))
   async list(@QueryParams("paid") paid: string = "false") {
     const results = await this.service.listByPaidStatus(paid === "true");
     return new SuccessArrayResult(results, AccountsPayableModel);
   }
 
-  @Post("/projects/:projectId")
+  @Post("/projects/:projectId/accounts-payable")
   @(Returns(200, SuccessArrayResult).Of(AccountsPayableModel))
   async upsert(
     @PathParams("projectId") projectId: string,
@@ -27,7 +27,7 @@ export class AccountsPayableController {
     return new SuccessArrayResult(res, AccountsPayableModel);
   }
 
-  @Patch(":id/pay")
+  @Patch("/accounts-payable/:id/pay")
   @(Returns(200, SuccessResult).Of(AccountsPayableModel))
   async markPaid(@PathParams("id") id: string) {
     const result = await this.service.markPaid(id);
