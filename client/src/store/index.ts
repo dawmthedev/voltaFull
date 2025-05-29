@@ -3,6 +3,7 @@ import authReducer from './authSlice'
 import dealsReducer from './dealsSlice'
 import projectsReducer from './projectsSlice'
 import usersReducer from './usersSlice'
+import accountsPayableReducer from './accountsPayableSlice'
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux'
 
 export const store = configureStore({
@@ -10,7 +11,8 @@ export const store = configureStore({
     auth: authReducer,
     deals: dealsReducer,
     projects: projectsReducer,
-    users: usersReducer
+    users: usersReducer,
+    accountsPayable: accountsPayableReducer
   }
 })
 
