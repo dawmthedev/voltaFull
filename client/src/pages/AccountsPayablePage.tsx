@@ -11,29 +11,57 @@ import {
   Checkbox,
   useToast,
 } from "@chakra-ui/react";
-import { fetchUnpaid, markPaid } from "../store/accountsPayableSlice";
 import { useAppDispatch, useAppSelector } from "../store";
+import { fetchProjects, updateProjectPayroll } from "../store/projectsSlice";
+import { fetchUsers } from "../store/usersSlice";
 
 const AccountsPayablePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const records = useAppSelector((s) => s.accountsPayable.items);
+  const projects = useAppSelector((s) => s.projects.items);
+  const users = useAppSelector((s) => s.users.items);
   const toast = useToast();
 
   useEffect(() => {
-    dispatch(fetchUnpaid());
-  }, [dispatch]);
+    if (projects.length === 0) dispatch(fetchProjects());
+    if (users.length === 0) dispatch(fetchUsers());
+  }, [dispatch, projects.length, users.length]);
+
+  const rows = projects.flatMap((p) =>
+    (p.payroll || []).map((r) => ({
+      projectId: p._id || "",
+      project: p.homeowner,
+      technicianId: r.technicianId,
+      technician:
+        users.find((u) => u._id === r.technicianId)?.name || "-",
+      percentage: r.percentage,
+      amount: ((p.contractAmount || 0) * r.percentage) / 100,
+      paid: r.paid || false,
+    }))
+  );
 
   const handlePaid = async (projectId: string, techId: string) => {
-    const payroll = records.filter(r => r.projectId === projectId).map(r => ({
-      technicianId: r.techId,
-      percentage: r.allocationPct,
-      paid: r.projectId === projectId && r.techId === techId ? true : r.paid,
-    }));
+    const payroll = rows
+      .filter((r) => r.projectId === projectId)
+      .map((r) => ({
+        technicianId: r.technicianId,
+        percentage: r.percentage,
+        paid: r.technicianId === techId ? true : r.paid,
+      }));
     try {
-      await dispatch(markPaid({ projectId, payroll })).unwrap();
-      toast({ title: "Marked as paid", status: "success", duration: 2000, isClosable: true });
+      await dispatch(updateProjectPayroll({ id: projectId, payroll })).unwrap();
+      toast({
+        title: "Marked as paid",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+      });
     } catch {
-      toast({ title: "Failed to mark paid", status: "error", duration: 2000, isClosable: true });
+      toast({
+        title: "Failed to mark paid",
+        status: "error",
+        duration: 2000,
+        isClosable: true,
+      });
     }
   };
 
@@ -53,18 +81,18 @@ const AccountsPayablePage: React.FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {records.map((r, i) => (
+          {rows.map((r, i) => (
             <Tr key={i}>
-              <Td>{r.projectName}</Td>
-              <Td>{r.techId}</Td>
-              <Td>{r.allocationPct}</Td>
-              <Td>${r.amountDue.toFixed(2)}</Td>
+              <Td>{r.project}</Td>
+              <Td>{r.technician}</Td>
+              <Td>{r.percentage}</Td>
+              <Td>${r.amount.toFixed(2)}</Td>
               <Td textAlign="center">
-                <Checkbox isChecked={r.paid} onChange={() => handlePaid(r.projectId, r.techId)} />
+                <Checkbox isChecked={r.paid} onChange={() => handlePaid(r.projectId, r.technicianId)} />
               </Td>
             </Tr>
           ))}
-          {records.length === 0 && (
+          {rows.length === 0 && (
             <Tr>
               <Td colSpan={3} className="text-center">
                 No data

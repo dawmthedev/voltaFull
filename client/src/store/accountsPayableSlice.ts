@@ -21,7 +21,7 @@ const initialState: AccountsPayableState = {
 };
 
 export const fetchUnpaid = createAsyncThunk("accountsPayable/fetchUnpaid", async () => {
-  const res = await fetch(`${baseURL}/projects/accounts`);
+  const res = await fetch(`${baseURL}/rest/projects/accounts`);
   if (!res.ok) throw new Error("Failed to load payable records");
   const data = await res.json();
   const rows: PayableRecord[] = [];
@@ -43,7 +43,7 @@ export const fetchUnpaid = createAsyncThunk("accountsPayable/fetchUnpaid", async
 export const markPaid = createAsyncThunk(
   "accountsPayable/markPaid",
   async ({ projectId, payroll }: { projectId: string; payroll: { technicianId: string; percentage: number; paid: boolean }[] }) => {
-    const res = await fetch(`${baseURL}/projects/${projectId}/payroll`, {
+    const res = await fetch(`${baseURL}/rest/projects/${projectId}/payroll`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ payroll }),
