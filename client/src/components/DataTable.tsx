@@ -55,18 +55,19 @@ function DataTable<T>({
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex justify-start mb-4">
         <input
           type="text"
           placeholder="Search..."
-          className="w-full max-w-sm p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
+          className="w-full md:w-1/2 lg:w-1/3 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
           value={query}
           onChange={handleSearch}
         />
       </div>
-      <div className="overflow-x-auto w-full">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="w-full overflow-x-auto">
+        <div className="inline-block min-w-max">
+          <table className="min-w-max divide-y divide-gray-200">
+            <thead className="sticky top-0 bg-gray-50">
             <tr>
               {columns.map((col) => (
                 <th
@@ -95,6 +96,7 @@ function DataTable<T>({
             ))}
           </tbody>
         </table>
+      </div>
       </div>
       <div className="flex items-center justify-between py-3">
         <div>

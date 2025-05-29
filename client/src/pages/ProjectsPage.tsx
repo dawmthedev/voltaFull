@@ -95,7 +95,8 @@ const ProjectsPage: React.FC = () => {
   ];
 
   return (
-    <div className="flex-1 p-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+    <div className="flex-1 px-4 md:px-6 bg-gray-50 dark:bg-gray-800 overflow-auto">
+      <div className="w-full max-w-screen-xl mx-auto">
       <div className="flex flex-wrap justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
           Projects Dashboard
@@ -144,6 +145,7 @@ const ProjectsPage: React.FC = () => {
         rows={csvQueue}
         onConfirm={handleConfirm}
       />
+      </div>
     </div>
   );
 };
