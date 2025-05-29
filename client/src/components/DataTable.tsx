@@ -64,39 +64,36 @@ function DataTable<T>({
           onChange={handleSearch}
         />
       </div>
-      <div className="w-full overflow-x-auto">
-        <div className="inline-block min-w-max">
-          <table className="min-w-max divide-y divide-gray-200">
-            <thead className="sticky top-0 bg-gray-50">
-            <tr>
-              {columns.map((col) => (
-                <th
-                  key={col.key}
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {col.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {pageData.map((item, idx) => (
-              <tr key={idx} className="hover:bg-gray-100">
-                {columns.map((col) => (
-                  <td
-                    key={col.key}
-                    className="px-6 py-4 whitespace-nowrap text-sm text-gray-900"
-                  >
-                    {col.renderCell
-                      ? col.renderCell(item)
-                      : (item as any)[col.key]}
-                  </td>
+      <div className="flex flex-col overflow-y-auto h-full">
+        <div className="w-full overflow-x-auto">
+          <div className="inline-block min-w-max">
+            <table className="min-w-full bg-white border border-gray-200">
+              <thead className="sticky top-0 z-10 bg-gray-50 text-xs text-gray-700 uppercase h-6 transition-all ease-in-out">
+                <tr>
+                  {columns.map((col) => (
+                    <th key={col.key} className="px-2 2xl:px-6 py-3 bg-gray-200">
+                      {col.header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="select-none">
+                {pageData.map((item, idx) => (
+                  <tr key={idx} className="border-b">
+                    {columns.map((col) => (
+                      <td
+                        key={col.key}
+                        className="px-6 py-1.5 whitespace-nowrap text-sm text-gray-900"
+                      >
+                        {col.renderCell ? col.renderCell(item) : (item as any)[col.key]}
+                      </td>
+                    ))}
+                  </tr>
                 ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
       <div className="flex items-center justify-between py-3">
         <div>
