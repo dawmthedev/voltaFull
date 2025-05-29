@@ -43,7 +43,7 @@ export class UsersController {
     return new SuccessArrayResult(items, AdminResultModel);
   }
 
-  @Patch("/:id")
+  @Patch(":id")
   @(Returns(200, SuccessResult).Of(AdminResultModel))
   async updateRole(
     @PathParams("id") id: string,

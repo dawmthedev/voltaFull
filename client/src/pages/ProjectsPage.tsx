@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { EditIcon } from "@chakra-ui/icons";
 import { fetchProjects, createProject, Project } from "../store/projectsSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
@@ -74,6 +76,15 @@ const ProjectsPage: React.FC = () => {
   };
 
   const columns: DataTableColumn<Project>[] = [
+    {
+      header: "",
+      key: "edit",
+      renderCell: (p: Project) => (
+        <Link to={`/dashboard/projects/${p._id}`} aria-label="Edit Project">
+          <EditIcon />
+        </Link>
+      ),
+    },
     { header: "Homeowner", key: "homeowner" },
     { header: "Sale Date", key: "saleDate" },
     { header: "Products", key: "products" },
