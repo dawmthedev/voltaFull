@@ -80,4 +80,3 @@ Core features include project tracking, accounts payable, user management and au
 
 - Use `pnpm dlx turbo run` when working with workspaces.
 - `pnpm install --filter <project>` helps Vite, ESLint and TypeScript recognize dependencies for a single package.
-
