@@ -13,7 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useAppDispatch } from "../store";
 import { markPaid } from "../store/accountsPayableSlice";
-import { useGetAllPayrollQuery } from "../services/api";
+import { PayrollRecord, useGetAllPayrollQuery } from "../services/api";
+import { StatusChip } from "../components/StatusChip";
 
 const AccountsPayablePage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -57,22 +58,14 @@ const AccountsPayablePage: React.FC = () => {
           </Tr>
         </Thead>
         <Tbody>
-          {records.map((r) => (
+          {records.map((r: PayrollRecord) => (
             <Tr key={r._id}>
-              <Td>{r.project}</Td>
-              <Td>{r.technician}</Td>
-              <Td>{r.allocationPct}</Td>
+              <Td>{r.projectName}</Td>
+              <Td>{r.technicianName}</Td>
+              <Td>{r.percentage}%</Td>
               <Td>${r.amountDue.toFixed(2)}</Td>
               <Td>
-                <span className={r.paid ? "text-green-600" : "text-yellow-600"}>
-                  {r.paid ? "Paid out" : "Upcoming"}
-                </span>
-              </Td>
-              <Td textAlign="center">
-                <Checkbox
-                  isChecked={r.paid}
-                  onChange={() => handlePaid(r._id)}
-                />
+                <StatusChip stage={r.projectStage} paid={r.paid} />
               </Td>
             </Tr>
           ))}

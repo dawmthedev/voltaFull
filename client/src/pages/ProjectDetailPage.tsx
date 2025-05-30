@@ -20,10 +20,7 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
-import {
-  fetchProjectById,
-  Project,
-} from "../store/projectsSlice";
+import { fetchProjectById, Project } from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
 import { useAddPayrollMutation } from "../services/api";
 import PercentageInput from "../components/PercentageInput";
@@ -156,6 +153,23 @@ const ProjectDetailPage: React.FC = () => {
 
     try {
       await addPayroll({ projectId, payroll }).unwrap();
+
+      // Show success toast for each allocation
+      allocations.forEach((allocation) => {
+        const tech = techUsers.find((t) => t._id === allocation.userId);
+        const amount = calculateAmount(
+          totalAllocation,
+          allocation.allocationPercent
+        );
+        toast({
+          title: "Payroll Saved",
+          description: `${formatCurrency(amount)} allocated to ${tech?.name}`,
+          status: "success",
+          duration: 5000,
+          isClosable: true,
+          position: "top-right",
+        });
+      });
     } catch {
       toast({ title: "Failed to save payroll", status: "error" });
     }
