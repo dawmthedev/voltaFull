@@ -63,7 +63,7 @@ describe("ProjectDetailPage", () => {
     await screen.findByRole("button", { name: /Save Payroll/i });
 
     expect((global.fetch as jest.Mock).mock.calls[2][0]).toContain(
-      "/rest/projects/1/accounts-payable"
+      "/rest/projects/1/payroll"
     );
     expect((global.fetch as jest.Mock).mock.calls[2][1]).toMatchObject({
       method: "POST",
