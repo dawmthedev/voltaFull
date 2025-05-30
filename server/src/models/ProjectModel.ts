@@ -1,5 +1,29 @@
 import { CollectionOf, Property } from "@tsed/schema";
-import { Model, ObjectID, Indexed } from "@tsed/mongoose";
+import { Model, ObjectID, Indexed, Ref } from "@tsed/mongoose";
+import { Schema } from "mongoose";
+
+const PayrollSchema = new Schema(
+  {
+    technicianId: { type: String, required: true },
+    percentage: {
+      type: Number,
+      required: true,
+      min: 0,
+      max: 100,
+      validate: {
+        validator: Number.isFinite,
+        message: "Percentage must be a valid number"
+      }
+    },
+    amountDue: {
+      type: Number,
+      required: true,
+      min: 0
+    },
+    paid: { type: Boolean, default: false }
+  },
+  { _id: false }
+);
 
 @Model({ name: "project" })
 export class ProjectModel {
@@ -72,4 +96,15 @@ export class ProjectModel {
 
   @Property()
   assignedTo: string;
+
+  @Property()
+  piecemealPercent: number;
+
+  @Property()
+  payroll: {
+    technicianId: string;
+    percentage: number;
+    amountDue: number;
+    paid: boolean;
+  }[];
 }

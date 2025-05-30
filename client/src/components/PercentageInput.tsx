@@ -9,62 +9,62 @@ import {
 } from "@chakra-ui/react";
 
 interface PercentageInputProps {
-  value: number | "";
-  onChange: (value: number | "") => void;
+  value: number | null;
+  onChange: (value: number | null) => void;
   max?: number;
   isDisabled?: boolean;
   showWarning?: boolean;
+  remainingPercent?: number;
 }
 
-const PercentageInput: React.FC<PercentageInputProps> = ({
+export const PercentageInput: React.FC<PercentageInputProps> = ({
   value,
   onChange,
   max = 100,
   isDisabled = false,
   showWarning = true,
+  remainingPercent,
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
     if (rawValue === "") {
-      onChange("");
+      onChange(null);
       return;
     }
 
-    // Remove leading zeros
-    const cleanValue = rawValue.replace(/^0+(?=\d)/, "");
-    const numValue = Number(cleanValue);
-    // Validate number and constrain to 2 decimal places
-    if (!isNaN(numValue) && numValue >= 0) {
-      const roundedValue = Math.round(numValue * 100) / 100;
-      onChange(roundedValue > max ? max : roundedValue);
+    let numValue = Math.min(Number(rawValue), max);
+    if (isNaN(numValue) || numValue < 0) {
+      numValue = 0;
     }
+
+    if (remainingPercent != null) {
+      numValue = Math.min(numValue, remainingPercent);
+    }
+
+    onChange(numValue);
   };
 
-  const isOverMax = typeof value === "number" && value > max;
-
-  // Format display value to remove leading zeros
-  const displayValue = value === "" ? "" : Number(value).toString();
+  const isOverMax = value != null && value > (remainingPercent ?? max);
 
   return (
     <Box>
       <InputGroup w="120px">
         <Input
           type="number"
-          value={displayValue}
+          value={value ?? ""}
           onChange={handleChange}
           isDisabled={isDisabled}
           min={0}
-          max={max}
-          step="0.01"
+          max={remainingPercent ?? max}
+          step="0.1"
           isInvalid={isOverMax}
-          onWheel={(e) => e.currentTarget.blur()}
         />
-        <InputRightAddon children="%" />
+        <InputRightAddon>%</InputRightAddon>
       </InputGroup>
       {showWarning && isOverMax && (
         <Alert status="warning" mt={2} size="sm">
           <AlertIcon />
-          Cannot exceed {max}%
+          Cannot exceed {remainingPercent ?? max}%
         </Alert>
       )}
     </Box>

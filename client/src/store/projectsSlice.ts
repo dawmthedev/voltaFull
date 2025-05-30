@@ -1,33 +1,39 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { baseURL } from "../apiConfig";
 
+export interface PayrollItem {
+  technicianId: string;
+  percentage: number;
+  amountDue?: number;
+  paid?: boolean;
+}
+
 export interface Project {
   _id?: string;
-  id?: string;
-  homeowner?: string;
+  homeowner: string;
   saleDate?: string;
   products?: string[];
-  contractAmount?: number;
   status?: string;
   stage?: string;
-  duration?: string;
+  contractAmount?: number;
   systemSize?: string;
+  installer?: string;
   phone?: string;
   address?: string;
-  installer?: string;
   utilityCompany?: string;
   salesRep?: string;
   salesRepId?: string;
-  technicians?: any;
   projectManager?: string;
   financing?: string;
   source?: string;
   ahj?: string;
   qcStatus?: string;
   ptoStatus?: string;
+  duration?: string;
   assignedTo?: string;
-  payroll?: { technicianId: string; percentage: number; paid?: boolean }[];
   piecemealPercent?: number;
+  payroll?: PayrollItem[];
+  technicians?: string[];
 }
 
 interface ProjectsState {
@@ -78,29 +84,28 @@ export const fetchProjectById = createAsyncThunk(
   }
 );
 
-export interface UpdateProjectPayrollParams {
+interface UpdateProjectPayrollParams {
   id: string;
-  payroll: Array<{
+  payroll: {
     technicianId: string;
     percentage: number;
-  }>;
+    paid?: boolean;
+  }[];
   piecemealPercent: number;
 }
 
 export const updateProjectPayroll = createAsyncThunk(
   "projects/updatePayroll",
-  async (params: UpdateProjectPayrollParams) => {
-    const response = await fetch(
-      `${baseURL}/rest/projects/${params.id}/payroll`,
-      {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      }
-    );
+  async ({ id, payroll, piecemealPercent }: UpdateProjectPayrollParams) => {
+    const response = await fetch(`/api/projects/${id}/payroll`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ payroll, piecemealPercent }),
+    });
     if (!response.ok) throw new Error("Failed to update project payroll");
-    const data = await response.json();
-    return data.data;
+    return response.json();
   }
 );
 

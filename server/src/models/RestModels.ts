@@ -1,4 +1,4 @@
-import { ArrayOf, Enum, Property, Required } from "@tsed/schema";
+import { ArrayOf, Enum, Property, Required, CollectionOf as TsEdCollectionOf } from "@tsed/schema";
 import { Model } from "@tsed/mongoose";
 import { SocialAction } from "../../types";
 import { CategoryFieldType } from "./CategoryModel";
@@ -120,7 +120,6 @@ export class SingleCrmDealResultModel {
   @Property() public readonly addersTotal: string;
   @Property() public readonly installer: string;
 
-
   @Property() public readonly welcomeDate: string;
   @Property() public readonly siteSurveyDate: string;
   @Property() public readonly NTPDate: string;
@@ -131,7 +130,6 @@ export class SingleCrmDealResultModel {
   @Property() public readonly FIDate: string;
   @Property() public readonly PTODate: string;
   @Property() public readonly financing: string;
-
 
   //Newly added
 
@@ -165,7 +163,7 @@ export class SingleCrmDealResultModel {
   @Property() public readonly InvoicePTODate: string;
   @Property() public readonly FDACPServiceDate: string;
   @Property() public readonly ServicePackageSubmittedDate: string;
- 
+
   @Property() public readonly vcmessages: {
     relatedProject: string;
     type: string;
@@ -230,10 +228,6 @@ export class SingleCrmDealResultModel {
     address: string;
     fdacp: string;
 
-
-
-
-    
     BatteryPermitDate: string;
     BatteryApprovalDate: string;
     OrderBatterDate: string;
@@ -263,7 +257,7 @@ export class SingleCrmDealResultModel {
     InvoiceServiceDate: string;
     FDACPServiceDate: string;
     ServicePackageSubmittedDate: string;
-  
+
     vcmessages: {
       relatedProject: string;
       type: string;
@@ -281,14 +275,13 @@ export class SingleCrmDealResultModel {
     }[]; // Define vcmessages as an array of objects
     vccommissions: {
       user: string;
-    itemType: string;
-    relateProject: string;
-    status: string;
-    milestone: string;
-    datePaid: string;
-    amount: string;
-    paidBy: string;
-
+      itemType: string;
+      relateProject: string;
+      status: string;
+      milestone: string;
+      datePaid: string;
+      amount: string;
+      paidBy: string;
     }[]; // Define vcmessages as an array of objects
   }) {
     this.email = data.email;
@@ -314,10 +307,6 @@ export class SingleCrmDealResultModel {
     this.dealerFee = data.dealerFee;
     this.addersTotal = data.addersTotal;
 
-
-
-
-
     this.milestone = data.milestone;
     this.datePaid = data.datePaid;
     this.amount = data.amount;
@@ -327,14 +316,13 @@ export class SingleCrmDealResultModel {
     this.vccommissions = data.vccommissions;
     this.welcomeDate = data.welcomeDate;
     this.siteSurveyDate = data.siteSurveyDate;
-    this.NTPDate = data.NTPDate; 
-    this.QcChecDate = data.QcChecDate; 
+    this.NTPDate = data.NTPDate;
+    this.QcChecDate = data.QcChecDate;
     this.FLADate = data.FLADate;
-    this.SolarPermitDate = data.SolarPermitDate; 
+    this.SolarPermitDate = data.SolarPermitDate;
     this.solarInstallDate = data.solarInstallDate;
-    this.FIDate = data.FIDate; 
+    this.FIDate = data.FIDate;
     this.PTODate = data.PTODate;
-
 
     this.batteryPermitDate = data.BatteryPermitDate;
     this.batteryApprovalDate = data.BatteryApprovalDate;
@@ -349,12 +337,12 @@ export class SingleCrmDealResultModel {
     this.MPUPInstallDate = data.MPUInstallDate;
     this.MPUInspectionDate = data.MPUInspectinoDate;
     this.QuietCoolDate = data.QuietCoolDate;
-    this.InsulationDate = data.InsulationDate; 
+    this.InsulationDate = data.InsulationDate;
     this.RoofPermitDate = data.RoofPermitDate;
     this.RoofInstallDate = data.RoofInstallDate;
     this.RoofInspectionDate = data.RoofInspectionDate;
     this.RoofColorSelectionDate = data.RoofColorSelectionDate;
-    this.ServiceInspectionDate = data.ServiceInspectionDate; 
+    this.ServiceInspectionDate = data.ServiceInspectionDate;
     this.ServiceDate = data.ServiceDate;
     this.PlansServiceDate = data.PlansServiceDate;
     this.FinalInspectionServiceDate = data.FinalInspectionServiceDate;
@@ -365,18 +353,8 @@ export class SingleCrmDealResultModel {
     this.InvoicePTODate = data.InvociePTODate;
     this.FDACPServiceDate = data.FDACPServiceDate;
     this.ServicePackageSubmittedDate = data.ServicePackageSubmittedDate;
-
- 
-
-
- 
-
-
-
   }
 }
-
-
 
 export class CrmRateResultModel {
   @Property() public readonly partner: string;
@@ -385,10 +363,9 @@ export class CrmRateResultModel {
   @Property() public readonly financing: string;
   @Property() public readonly apr: string;
   @Property() public readonly feerate: string;
-
 }
 
-export class CrmTimelineAvgResultModel{
+export class CrmTimelineAvgResultModel {
   @Property() public readonly saleStage: string;
   @Property() public readonly welcometage: string;
   @Property() public readonly sstage: string;
@@ -400,10 +377,9 @@ export class CrmTimelineAvgResultModel{
   @Property() public readonly installStage: string;
   @Property() public readonly inspectStage: string;
   @Property() public readonly ptoStage: string;
-
 }
 
-export class CrmTimelineResultModel{
+export class CrmTimelineResultModel {
   @Property() public readonly saleStage: string;
   @Property() public readonly welcometage: string;
   @Property() public readonly sstage: string;
@@ -417,7 +393,6 @@ export class CrmTimelineResultModel{
   @Property() public readonly ptoStage: string;
   @Property() public readonly AHJ: string;
 }
-
 
 export class AIResponseModel {
   @Property() public response: string; // removed the readonly modifier
@@ -441,10 +416,7 @@ export class CrmDealRookieResultModel {
   @Property() public readonly milestone: string;
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
-
 }
-
-
 
 export class PreviousPayResultModel {
   @Property() public readonly homeownerName: string;
@@ -452,10 +424,7 @@ export class PreviousPayResultModel {
   @Property() public readonly datePaid: string;
   @Property() public readonly amount: string;
   @Property() public readonly salesRep: string;
-  
-
 }
-
 
 export class FuturePayResultModel {
   @Property() public readonly homeownerName: string;
@@ -467,15 +436,7 @@ export class FuturePayResultModel {
   @Property() public readonly plansReqDate: string;
   @Property() public readonly contractAmount: string;
   @Property() public readonly milestone: string;
-  
-
 }
-
-
-
-
-
-
 
 export class CrmDealResultModel {
   @Property() public readonly email: string;
@@ -498,8 +459,6 @@ export class CrmDealResultModel {
   @Property() public readonly installer: string;
   @Property() public readonly financing: string;
 }
-
-
 
 export class NewSaleResultModel {
   @Property() public readonly installer: string;
@@ -531,11 +490,6 @@ export class NewSaleResultModel {
   @Property() public readonly batteries: string; // Change to match the type you need
   @Property() public readonly batteryMode: string; // Change to match the type you need
   @Property() public readonly batteryPlacement: string; // Change to match the type you need
-
-
-
-
-
 }
 
 export class UtilityBillResultModel {
@@ -613,10 +567,11 @@ export class PayrollItemModel {
   @Property() public readonly amountDue: number;
 }
 
+@Model()
 export class AccountsByProjectResultModel {
   @Property() public readonly projectId: string;
   @Property() public readonly projectName: string;
   @Property() public readonly status: string;
-  @CollectionOf(PayrollItemModel)
+  @ArrayOf(PayrollItemModel) // Change to use ArrayOf instead of CollectionOf
   public readonly payroll: PayrollItemModel[];
 }

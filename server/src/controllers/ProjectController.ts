@@ -16,7 +16,6 @@ import {
   SimpleGrid,
   InputGroup,
   InputRightAddon,
-  useToast,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
@@ -26,7 +25,6 @@ import {
   Project,
 } from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
-import PercentageInput from "../components/PercentageInput";
 
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -45,15 +43,8 @@ const ProjectDetailPage: React.FC = () => {
     "",
     "",
   ]);
-  const [percents, setPercents] = useState<(number | null)[]>([
-    null,
-    null,
-    null,
-    null,
-  ]);
-  const [piecemealPercent, setPiecemealPercent] = useState<number | null>(10);
-
-  const toast = useToast();
+  const [percents, setPercents] = useState<number[]>([0, 0, 0, 0]);
+  const [piecemealPercent, setPiecemealPercent] = useState<number | "">(10); // default 10%
 
   useEffect(() => {
     if (!projectId) {
@@ -84,11 +75,14 @@ const ProjectDetailPage: React.FC = () => {
     });
   };
 
-  // Update the handlePercentChange function signature
-  const handlePercentChange = (idx: number, val: number | null) => {
+  // Replace the handlePercentChange function
+  const handlePercentChange = (idx: number, val: string) => {
+    const newValue = Number(val);
+    if (newValue < 0) return;
+
     setPercents((prev) => {
       const arr = [...prev];
-      arr[idx] = val;
+      arr[idx] = newValue;
       return arr;
     });
   };
@@ -99,38 +93,17 @@ const ProjectDetailPage: React.FC = () => {
     if (activeCount > 0) {
       const evenShare = 100 / activeCount;
       setPercents((prev) =>
-        prev.map((p, i) => (assignedTechIds[i] ? evenShare : null))
+        prev.map((p, i) => (assignedTechIds[i] ? evenShare : 0))
       );
     }
   };
 
-  // Format currency consistently
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(amount);
-  };
-
-  // Calculate remaining percentage for each technician
-  const getRemainingPercent = (currentIndex: number) => {
-    const otherTotal = percents.reduce(
-      (sum, p, idx) => (idx !== currentIndex && p != null ? sum + p : sum),
-      0
-    );
-    return 100 - otherTotal;
-  };
-
-  // Format with proper rounding
-  const calculateAmount = (baseAmount: number, percentage: number) => {
-    return Math.round(baseAmount * percentage) / 100;
-  };
-
+  // Modify the calculations
   const totalAllocation = useMemo(() => {
-    if (!project?.contractAmount || piecemealPercent == null) return 0;
-    return calculateAmount(project.contractAmount, piecemealPercent);
+    if (!project?.contractAmount) return 0;
+    const percentValue =
+      typeof piecemealPercent === "number" ? piecemealPercent : 0;
+    return (project.contractAmount * percentValue) / 100;
   }, [project?.contractAmount, piecemealPercent]);
 
   const allocations = assignedTechIds
@@ -150,17 +123,8 @@ const ProjectDetailPage: React.FC = () => {
     const payroll = allocations.map((a) => ({
       technicianId: a.userId,
       percentage: a.allocationPercent,
-      paid: false,
     }));
-
-    dispatch(
-      updateProjectPayroll({
-        id: projectId,
-        payroll,
-        piecemealPercent:
-          typeof piecemealPercent === "number" ? piecemealPercent : 0,
-      })
-    );
+    dispatch(updateProjectPayroll({ id: projectId, payroll }));
   };
 
   return (
@@ -228,19 +192,24 @@ const ProjectDetailPage: React.FC = () => {
             <Stack spacing={4} maxW="md">
               <Box p={4} borderWidth="1px" borderRadius="md">
                 <Text fontSize="lg" fontWeight="bold">
-                  Contract Amount:{" "}
-                  {formatCurrency(project?.contractAmount || 0)}
+                  Contract Amount: $
+                  {project?.contractAmount?.toLocaleString() || 0}
                 </Text>
                 <Stack direction="row" align="center" mt={2}>
                   <Text>Piecemeal Percentage:</Text>
-                  <PercentageInput
-                    value={piecemealPercent}
-                    onChange={setPiecemealPercent}
-                    max={100}
+                  <Input
+                    type="number"
+                    value={piecemealPercent === 0 ? "" : piecemealPercent}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      setPiecemealPercent(val === "" ? "" : Number(val));
+                    }}
+                    w="100px"
                   />
+                  <Text>%</Text>
                 </Stack>
                 <Text mt={2}>
-                  Total Allocation: {formatCurrency(totalAllocation)}
+                  Total Allocation: ${totalAllocation.toLocaleString()}
                 </Text>
               </Box>
 
@@ -261,31 +230,30 @@ const ProjectDetailPage: React.FC = () => {
                       </option>
                     ))}
                   </Select>
-                  <PercentageInput
-                    value={percents[i]}
-                    onChange={(val) => handlePercentChange(i, val)}
-                    isDisabled={!val}
-                    remainingPercent={getRemainingPercent(i)}
-                  />
+                  <InputGroup w="120px">
+                    <Input
+                      type="number"
+                      value={percents[i]}
+                      onChange={(e) => handlePercentChange(i, e.target.value)}
+                      isDisabled={!val}
+                    />
+                    <InputRightAddon children="%" />
+                  </InputGroup>
                 </Stack>
               ))}
 
               <Box p={4} borderWidth="1px" borderRadius="md">
                 {allocations.map((a, idx) => {
                   const tech = techUsers.find((t) => t._id === a.userId);
-                  const amount = calculateAmount(
-                    totalAllocation,
-                    a.allocationPercent
-                  );
                   return (
                     <Text key={a.userId}>
-                      {tech?.name || "-"}: {formatCurrency(amount)}
+                      {tech?.name || "-"}: ${totals[idx].toFixed(2)}
                     </Text>
                   );
                 })}
                 <Text fontWeight="bold" mt={2}>
-                  Total Distribution:{" "}
-                  {formatCurrency(totals.reduce((s, v) => s + v, 0))}
+                  Total Allocation: $
+                  {totals.reduce((s, v) => s + v, 0).toFixed(2)}
                 </Text>
               </Box>
 
