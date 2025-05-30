@@ -124,14 +124,7 @@ const ProjectDetailPage: React.FC = () => {
       technicianId: a.userId,
       percentage: a.allocationPercent,
     }));
-    dispatch(
-      updateProjectPayroll({
-        id: projectId,
-        payroll,
-        piecemealPercent:
-          typeof piecemealPercent === "number" ? piecemealPercent : 10,
-      })
-    );
+    dispatch(updateProjectPayroll({ id: projectId, payroll }));
   };
 
   return (

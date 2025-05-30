@@ -36,7 +36,7 @@ export class Application {
   public async startServer() {
     try {
       await this.platform.listen();
-      logger.success("Server started...");
+      logger.success("Server started successfully.");
     } catch (error) {
       logger.error(error);
     }

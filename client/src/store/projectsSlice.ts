@@ -27,6 +27,7 @@ export interface Project {
   ptoStatus?: string;
   assignedTo?: string;
   payroll?: { technicianId: string; percentage: number; paid?: boolean }[];
+  piecemealPercent?: number;
 }
 
 interface ProjectsState {
@@ -77,32 +78,49 @@ export const fetchProjectById = createAsyncThunk(
   }
 );
 
+export interface UpdateProjectPayrollParams {
+  id: string;
+  payroll: Array<{
+    technicianId: string;
+    percentage: number;
+  }>;
+  piecemealPercent: number;
+}
+
 export const updateProjectPayroll = createAsyncThunk(
   "projects/updatePayroll",
-  async (
-    { id, payroll }: { id: string; payroll: { technicianId: string; percentage: number; paid?: boolean }[] },
-    { dispatch }
-  ) => {
-    const res = await fetch(`${baseURL}/rest/projects/${id}/payroll`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ payroll }),
-    });
-    if (!res.ok) throw new Error("Failed to update project payroll");
-    await dispatch(fetchProjectById(id));
-    const data = await res.json();
+  async (params: UpdateProjectPayrollParams) => {
+    const response = await fetch(
+      `${baseURL}/rest/projects/${params.id}/payroll`,
+      {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(params),
+      }
+    );
+    if (!response.ok) throw new Error("Failed to update project payroll");
+    const data = await response.json();
     return data.data;
   }
 );
 
 export const savePayroll = createAsyncThunk(
   "projects/savePayroll",
-  async ({ projectId, allocations }: { projectId: string; allocations: { technicianId: string; percent: number }[] }) => {
-    const res = await fetch(`${baseURL}/rest/projects/${projectId}/accounts-payable`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ allocations }),
-    });
+  async ({
+    projectId,
+    allocations,
+  }: {
+    projectId: string;
+    allocations: { technicianId: string; percent: number }[];
+  }) => {
+    const res = await fetch(
+      `${baseURL}/rest/projects/${projectId}/accounts-payable`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ allocations }),
+      }
+    );
     if (!res.ok) throw new Error("Failed to save payroll");
     return true;
   }

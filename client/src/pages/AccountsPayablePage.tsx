@@ -12,27 +12,37 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useAppDispatch, useAppSelector } from "../store";
-import { fetchProjects, updateProjectPayroll } from "../store/projectsSlice";
+import {
+  fetchProjects,
+  updateProjectPayroll,
+  fetchProjectById,
+} from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
 
 const AccountsPayablePage: React.FC = () => {
   const dispatch = useAppDispatch();
   const projects = useAppSelector((s) => s.projects.items);
   const users = useAppSelector((s) => s.users.items);
+  const project = useAppSelector((state) => state.projects.current);
   const toast = useToast();
-
+  const projectId = useAppSelector((state) => state.projects.current._id);
   useEffect(() => {
     if (projects.length === 0) dispatch(fetchProjects());
     if (users.length === 0) dispatch(fetchUsers());
   }, [dispatch, projects.length, users.length]);
+
+  useEffect(() => {
+    if (projectId) {
+      dispatch(fetchProjectById(projectId));
+    }
+  }, [projectId, dispatch]);
 
   const rows = projects.flatMap((p) =>
     (p.payroll || []).map((r) => ({
       projectId: p._id || "",
       project: p.homeowner,
       technicianId: r.technicianId,
-      technician:
-        users.find((u) => u._id === r.technicianId)?.name || "-",
+      technician: users.find((u) => u._id === r.technicianId)?.name || "-",
       percentage: r.percentage,
       amount: ((p.contractAmount || 0) * r.percentage) / 100,
       paid: r.paid || false,
@@ -48,7 +58,13 @@ const AccountsPayablePage: React.FC = () => {
         paid: r.technicianId === techId ? true : r.paid,
       }));
     try {
-      await dispatch(updateProjectPayroll({ id: projectId, payroll })).unwrap();
+      await dispatch(
+        updateProjectPayroll({
+          id: projectId,
+          payroll,
+          piecemealPercent: project?.piecemealPercent || 10, // Use existing or default
+        })
+      ).unwrap();
       toast({
         title: "Marked as paid",
         status: "success",
@@ -88,7 +104,10 @@ const AccountsPayablePage: React.FC = () => {
               <Td>{r.percentage}</Td>
               <Td>${r.amount.toFixed(2)}</Td>
               <Td textAlign="center">
-                <Checkbox isChecked={r.paid} onChange={() => handlePaid(r.projectId, r.technicianId)} />
+                <Checkbox
+                  isChecked={r.paid}
+                  onChange={() => handlePaid(r.projectId, r.technicianId)}
+                />
               </Td>
             </Tr>
           ))}

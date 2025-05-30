@@ -4,5 +4,5 @@ export const urls = {
   production: "https://voltaiccrm-7dd827fb5012.herokuapp.com",
 };
 
-const env = process.env.REACT_APP_STAGE || 'development';
+const env = process.env.REACT_APP_STAGE || "development";
 export const baseURL = urls[env] || urls.development;

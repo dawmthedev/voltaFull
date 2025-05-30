@@ -14,7 +14,7 @@ export class ProjectController {
 
   @Get()
   @(Returns(200, SuccessArrayResult).Of(ProjectModel))
-  public async getProjects(@QueryParams('page') page: number = 1, @QueryParams('pageSize') pageSize: number = 20) {
+  public async getProjects(@QueryParams("page") page: number = 1, @QueryParams("pageSize") pageSize: number = 20) {
     const { items, total } = await this.projectService.getProjects(page, pageSize);
     return { data: items, total };
   }
@@ -30,19 +30,15 @@ export class ProjectController {
   @(Returns(200, SuccessResult).Of(ProjectModel))
   public async getById(@PathParams("id") id: string) {
     const project = await this.projectService.findById(id);
-    const payroll = await this.projectService.getPayroll(id);
     if (!project) {
       throw new NotFound(`Project with id ${id} not found`);
     }
-    return new SuccessResult({ ...project.toObject(), payroll }, ProjectModel);
+    return new SuccessResult(project, ProjectModel);
   }
 
   @Patch("/:id")
   @(Returns(200, SuccessResult).Of(ProjectModel))
-  public async updateProject(
-    @PathParams("id") id: string,
-    @BodyParams() body: Partial<ProjectModel>
-  ) {
+  public async updateProject(@PathParams("id") id: string, @BodyParams() body: Partial<ProjectModel>) {
     const project = await this.projectService.updateProject(id, body);
     return new SuccessResult(project, ProjectModel);
   }
@@ -67,7 +63,7 @@ export class ProjectController {
   }
 
   @Get("/accounts")
-  @(Returns(200, SuccessArrayResult))
+  @Returns(200, SuccessArrayResult)
   async listAccounts() {
     const res = await this.projectService.payableModelService.listAllByProject();
     return { success: true, data: res };

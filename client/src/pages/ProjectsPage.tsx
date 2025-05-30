@@ -75,7 +75,6 @@ const ProjectsPage: React.FC = () => {
     window.alert(`${rows.length} Projects Uploaded`);
   };
 
-
   const columns: DataTableColumn<Project>[] = [
     {
       header: "",
@@ -96,6 +95,11 @@ const ProjectsPage: React.FC = () => {
     { header: "Status", key: "status" },
     { header: "Stage", key: "stage" },
     { header: "Contract Amount", key: "contractAmount" },
+    {
+      header: "Piecemeal %",
+      key: "piecemealPercent",
+      renderCell: (p: Project) => `${p.piecemealPercent || 0}%`,
+    },
     { header: "System Size", key: "systemSize" },
     { header: "Installer", key: "installer" },
     { header: "Phone", key: "phone" },

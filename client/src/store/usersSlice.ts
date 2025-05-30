@@ -22,7 +22,7 @@ const initialState: UsersState = {
 };
 
 export const fetchUsers = createAsyncThunk("users/fetch", async () => {
-  const res = await fetch(`${baseURL}/users`);
+  const res = await fetch(`${baseURL}/rest/users`);
   if (!res.ok) throw new Error("Failed to load users");
   const data = await res.json();
   const users = data.data as User[];
@@ -31,11 +31,8 @@ export const fetchUsers = createAsyncThunk("users/fetch", async () => {
 
 export const updateUser = createAsyncThunk(
   "users/update",
-  async (
-    { id, role }: { id: string; role: string },
-    { dispatch }
-  ) => {
-    const res = await fetch(`${baseURL}/users/${id}`, {
+  async ({ id, role }: { id: string; role: string }, { dispatch }) => {
+    const res = await fetch(`${baseURL}/rest/users/${id}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ role }),
