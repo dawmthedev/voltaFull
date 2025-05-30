@@ -29,14 +29,21 @@ The client now relies on MongoDB only and no QuickBase token is needed.
 
 ### Server environment variables
 
-Set `DATABASE_URL` with your MongoDB connection string before starting the
-server. Example:
+Create a `.env` file in `server` (copy `.env.example`) and provide the
+following variables:
 
-```dotenv
-DATABASE_URL=mongodb://<user>:<pass>@host:port/dbname
-```
-
-See `server/.env.example` for more variables.
+- `DATABASE_URL` – MongoDB connection string, e.g.
+  `mongodb://<user>:<pass>@host:port/dbname`
+- `PORT` – port the API listens on (default `4000`)
+- `NODE_ENV` – environment mode (`development` by default)
+- `ENCRYPTION_KEY` – secret used for encryption
+- `EMAIL` – email account used to send notifications
+- `PASSWORD` – password for the above account
+- `SUPER_USER_EMAIL` – email granted admin privileges
+- `OPENAI_API_KEY` – optional key for AI features
+- `REACT_APP_STAGE` – environment stage for the client
+- `OPENAI_COMPLETION_URL` – optional OpenAI completion endpoint
+- `JWT_SECRET` – secret used to sign JWTs
 
 ## Running the applications
 
