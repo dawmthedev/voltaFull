@@ -21,7 +21,7 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   fetchProjectById,
-  updateProjectPayroll,
+  savePayroll,
   Project,
 } from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
@@ -131,16 +131,14 @@ const ProjectDetailPage: React.FC = () => {
 
   const handleSave = () => {
     if (!projectId) return;
-    const payroll = allocations.map((a) => ({
+    const allocationsPayload = allocations.map((a) => ({
       technicianId: a.userId,
-      percentage: a.allocationPercent,
+      percent: a.allocationPercent,
     }));
     dispatch(
-      updateProjectPayroll({
-        id: projectId,
-        payroll,
-        piecemealPercent:
-          typeof piecemealPercent === "number" ? piecemealPercent : 10,
+      savePayroll({
+        projectId,
+        allocations: allocationsPayload,
       })
     );
   };
