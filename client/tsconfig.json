@@ -14,11 +14,7 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react-jsx",
-    "baseUrl": "src",
-    "paths": {
-      "react-icons/fi": ["icons"],
-      "@chakra-ui/icons": ["icons"]
-    }
+    "baseUrl": "src"
   },
   "include": ["src", "src/**/*.tsx"]
 }
