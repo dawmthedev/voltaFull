@@ -41,3 +41,6 @@ export class AccountsPayableModel {
   @Ref(() => ProjectModel)
   project: Ref<ProjectModel>;
 }
+
+@Model({ name: "payroll" })
+export class PayrollModel extends AccountsPayableModel {}
