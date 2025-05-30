@@ -30,7 +30,7 @@ export interface Project {
   qcStatus?: string;
   ptoStatus?: string;
   duration?: string;
-  assignedTo?: string;
+  assignedTo?: string | null; // Make it optional and nullable
   piecemealPercent?: number;
   payroll?: PayrollItem[];
   technicians?: string[];
@@ -64,7 +64,10 @@ export const createProject = createAsyncThunk(
     const res = await fetch(`${baseURL}/rest/projects`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(project),
+      body: JSON.stringify({
+        ...project,
+        assignedTo: project.assignedTo || undefined, // Convert null to undefined
+      }),
     });
     if (!res.ok) throw new Error("Failed to create project");
     const data = await res.json();

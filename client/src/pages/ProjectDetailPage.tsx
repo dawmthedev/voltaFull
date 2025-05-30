@@ -112,12 +112,14 @@ const ProjectDetailPage: React.FC = () => {
   };
 
   // Calculate remaining percentage for each technician
-  const getRemainingPercent = (currentIndex: number) => {
+  const getRemainingPercent = (currentIndex: number): number => {
     const otherTotal = percents.reduce(
-      (sum, p, idx) => (idx !== currentIndex && p != null ? sum + p : sum),
+      (sum: number, p: number | null, idx: number) =>
+        idx !== currentIndex && p != null ? sum + p : sum,
       0
     );
-    return 100 - otherTotal;
+    // Ensure we always return a number
+    return Math.max(0, 100 - otherTotal);
   };
 
   // Format with proper rounding
@@ -131,7 +133,10 @@ const ProjectDetailPage: React.FC = () => {
   }, [project?.contractAmount, piecemealPercent]);
 
   const allocations = assignedTechIds
-    .map((techId, i) => ({ userId: techId, allocationPercent: percents[i] }))
+    .map((techId, i) => ({
+      userId: techId,
+      allocationPercent: percents[i] ?? 0, // Provide default of 0
+    }))
     .filter((a) => a.userId);
 
   const totals = allocations.map(
@@ -148,7 +153,7 @@ const ProjectDetailPage: React.FC = () => {
     if (!projectId) return;
     const payroll = allocations.map((a) => ({
       technicianId: a.userId,
-      percentage: a.allocationPercent,
+      percentage: a.allocationPercent || 0, // Ensure we always have a number
     }));
 
     try {
@@ -176,142 +181,169 @@ const ProjectDetailPage: React.FC = () => {
   };
 
   return (
-    <Box className="flex-1 flex flex-col h-full px-4 md:px-6 bg-gray-50 dark:bg-gray-800 text-gray-900">
-      {error && (
-        <Text color="red.600" textAlign="center" mb={4}>
-          {error}
-        </Text>
-      )}
-      <Heading size="lg" mb={4}>
-        Project Details
-      </Heading>
-      <Tabs>
-        <TabList>
-          <Tab>Project</Tab>
-          <Tab>Payroll</Tab>
-        </TabList>
-        <TabPanels>
-          <TabPanel>
-            {projectStatus === "loading" && <Spinner aria-busy="true" />}
-            {projectStatus === "failed" && (
-              <Text color="red.500">Failed to load project</Text>
-            )}
-            {project && (
-              <Box className="bg-gray-50 p-4" as="dl">
-                <SimpleGrid columns={{ base: 1, md: 2 }} spacing={2}>
-                  {Object.entries({
-                    homeowner: project.homeowner,
-                    saleDate: project.saleDate,
-                    products: project.products?.join(", "),
-                    status: project.status,
-                    stage: project.stage,
-                    contractAmount: project.contractAmount,
-                    systemSize: project.systemSize,
-                    installer: project.installer,
-                    phone: project.phone,
-                    address: project.address,
-                    utilityCompany: project.utilityCompany,
-                    salesRep: project.salesRep,
-                    projectManager: project.projectManager,
-                    financing: project.financing,
-                    source: project.source,
-                    ahj: project.ahj,
-                    qcStatus: project.qcStatus,
-                    ptoStatus: project.ptoStatus,
-                    duration: project.duration,
-                    assignedTo: project.assignedTo,
-                  }).map(([label, val]) => (
-                    <Box key={label} className="py-1">
-                      <Text
-                        as="dt"
-                        fontWeight="semibold"
-                        className="capitalize"
-                      >
-                        {label}
-                      </Text>
-                      <Text as="dd">{val || "-"}</Text>
-                    </Box>
-                  ))}
-                </SimpleGrid>
-              </Box>
-            )}
-          </TabPanel>
-          <TabPanel>
-            <Stack spacing={4} maxW="md">
-              <Box p={4} borderWidth="1px" borderRadius="md">
-                <Text fontSize="lg" fontWeight="bold">
-                  Contract Amount:{" "}
-                  {formatCurrency(project?.contractAmount || 0)}
-                </Text>
-                <Stack direction="row" align="center" mt={2}>
-                  <Text>Piecemeal Percentage:</Text>
-                  <PercentageInput
-                    value={piecemealPercent}
-                    onChange={setPiecemealPercent}
-                    max={100}
-                  />
-                </Stack>
-                <Text mt={2}>
-                  Total Allocation: {formatCurrency(totalAllocation)}
-                </Text>
-              </Box>
+    <Box className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-800 dark:to-gray-900">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {error && (
+          <div className="mb-6 rounded-lg bg-red-50 dark:bg-red-900/20 p-4 animate-in fade-in slide-in-from-top-4">
+            <Text className="text-red-600 dark:text-red-400 text-center font-medium">
+              {error}
+            </Text>
+          </div>
+        )}
 
-              {assignedTechIds.map((val, i) => (
-                <Stack key={i} direction="row" align="center">
-                  <Text w="100px">Technician {i + 1}</Text>
-                  <Select
-                    placeholder="Select Technician"
-                    value={val}
-                    onChange={(e) => {
-                      handleTechChange(i, e.target.value);
-                      distributePercentages();
-                    }}
-                  >
-                    {techUsers.map((t) => (
-                      <option key={t._id} value={t._id || ""}>
-                        {t.name}
-                      </option>
+        <div className="flex flex-col gap-6">
+          <header className="flex items-center justify-between">
+            <Heading className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100">
+              Project Details
+            </Heading>
+          </header>
+
+          <Tabs className="space-y-6">
+            <TabList className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
+              <Tab className="px-4 py-2 -mb-px text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent ui-selected:border-blue-500 ui-selected:text-blue-600 dark:ui-selected:text-blue-400 transition-colors">
+                Project
+              </Tab>
+              <Tab className="px-4 py-2 -mb-px text-sm font-medium text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 border-b-2 border-transparent ui-selected:border-blue-500 ui-selected:text-blue-600 dark:ui-selected:text-blue-400 transition-colors">
+                Payroll
+              </Tab>
+            </TabList>
+
+            <TabPanels className="mt-4">
+              <TabPanel>
+                {projectStatus === "loading" ? (
+                  <div className="flex items-center justify-center h-64">
+                    <Spinner className="text-blue-500" />
+                  </div>
+                ) : projectStatus === "failed" ? (
+                  <div className="text-center text-red-500 py-12">
+                    Failed to load project
+                  </div>
+                ) : project ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm">
+                    {Object.entries({
+                      homeowner: project.homeowner,
+                      saleDate: project.saleDate,
+                      products: project.products?.join(", "),
+                      status: project.status,
+                      stage: project.stage,
+                      contractAmount: project.contractAmount,
+                      systemSize: project.systemSize,
+                      installer: project.installer,
+                      phone: project.phone,
+                      address: project.address,
+                      utilityCompany: project.utilityCompany,
+                      salesRep: project.salesRep,
+                      projectManager: project.projectManager,
+                      financing: project.financing,
+                      source: project.source,
+                      ahj: project.ahj,
+                      qcStatus: project.qcStatus,
+                      ptoStatus: project.ptoStatus,
+                      duration: project.duration,
+                      assignedTo: project.assignedTo,
+                    }).map(([label, val]) => (
+                      <Box key={label} className="py-1">
+                        <Text
+                          as="dt"
+                          fontWeight="semibold"
+                          className="capitalize"
+                        >
+                          {label}
+                        </Text>
+                        <Text as="dd">{val || "-"}</Text>
+                      </Box>
                     ))}
-                  </Select>
-                  <PercentageInput
-                    value={percents[i]}
-                    onChange={(val) => handlePercentChange(i, val)}
-                    isDisabled={!val}
-                    remainingPercent={getRemainingPercent(i)}
-                  />
-                </Stack>
-              ))}
+                  </div>
+                ) : null}
+              </TabPanel>
 
-              <Box p={4} borderWidth="1px" borderRadius="md">
-                {allocations.map((a, idx) => {
-                  const tech = techUsers.find((t) => t._id === a.userId);
-                  const amount = calculateAmount(
-                    totalAllocation,
-                    a.allocationPercent
-                  );
-                  return (
-                    <Text key={a.userId}>
-                      {tech?.name || "-"}: {formatCurrency(amount)}
+              <TabPanel>
+                <div className="max-w-2xl space-y-6">
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm space-y-4">
+                    <Text className="text-lg font-semibold">
+                      Contract Amount:{" "}
+                      {formatCurrency(project?.contractAmount || 0)}
                     </Text>
-                  );
-                })}
-                <Text fontWeight="bold" mt={2}>
-                  Total Distribution:{" "}
-                  {formatCurrency(totals.reduce((s, v) => s + v, 0))}
-                </Text>
-              </Box>
 
-              <Button
-                onClick={handleSave}
-                colorScheme="blue"
-                isDisabled={disableSave}
-              >
-                Save Payroll
-              </Button>
-            </Stack>
-          </TabPanel>
-        </TabPanels>
-      </Tabs>
+                    <div className="flex items-center gap-4">
+                      <Text>Piecemeal Percentage:</Text>
+                      <div className="w-32">
+                        <PercentageInput
+                          value={piecemealPercent}
+                          onChange={setPiecemealPercent}
+                          max={100}
+                          className="w-full"
+                        />
+                      </div>
+                    </div>
+
+                    <Text className="font-medium">
+                      Total Allocation: {formatCurrency(totalAllocation)}
+                    </Text>
+                  </div>
+
+                  {/* Technician allocation section */}
+                  <div className="space-y-4">
+                    {assignedTechIds.map((val, i) => (
+                      <div key={i} className="flex items-center gap-4">
+                        <Text w="100px">Technician {i + 1}</Text>
+                        <Select
+                          placeholder="Select Technician"
+                          value={val}
+                          onChange={(e) => {
+                            handleTechChange(i, e.target.value);
+                            distributePercentages();
+                          }}
+                        >
+                          {techUsers.map((t) => (
+                            <option key={t._id} value={t._id || ""}>
+                              {t.name}
+                            </option>
+                          ))}
+                        </Select>
+                        <PercentageInput
+                          value={percents[i]}
+                          onChange={(val) => handlePercentChange(i, val)}
+                          isDisabled={!val}
+                          remainingPercent={getRemainingPercent(i)}
+                        />
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Summary section */}
+                  <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm space-y-3">
+                    {allocations.map((a, idx) => {
+                      const tech = techUsers.find((t) => t._id === a.userId);
+                      const amount = calculateAmount(
+                        totalAllocation,
+                        a.allocationPercent
+                      );
+                      return (
+                        <Text key={a.userId}>
+                          {tech?.name || "-"}: {formatCurrency(amount)}
+                        </Text>
+                      );
+                    })}
+                    <Text fontWeight="bold" mt={2}>
+                      Total Distribution:{" "}
+                      {formatCurrency(totals.reduce((s, v) => s + v, 0))}
+                    </Text>
+                  </div>
+
+                  <Button
+                    onClick={handleSave}
+                    isDisabled={disableSave}
+                    className="w-full sm:w-auto px-8 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors disabled:opacity-50"
+                  >
+                    Save Payroll
+                  </Button>
+                </div>
+              </TabPanel>
+            </TabPanels>
+          </Tabs>
+        </div>
+      </div>
     </Box>
   );
 };

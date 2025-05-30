@@ -6,8 +6,8 @@
     "skipLibCheck": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "strict": true,
     "forceConsistentCasingInFileNames": true,
-    "strict": false,
     "module": "esnext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
@@ -18,7 +18,8 @@
     "paths": {
       "react-icons/fi": ["icons"],
       "@chakra-ui/icons": ["icons"]
-    }
+    },
+    "types": ["node", "zod"]
   },
   "include": ["src", "src/**/*.tsx"]
 }

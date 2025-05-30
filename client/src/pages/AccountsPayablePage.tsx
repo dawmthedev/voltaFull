@@ -42,43 +42,66 @@ const AccountsPayablePage: React.FC = () => {
   };
 
   return (
-    <Box p={4} className="overflow-x-auto bg-gray-50">
-      <Heading size="md" mb={4}>
-        Accounts Payable
-      </Heading>
-      <Table size="sm" className="min-w-max">
-        <Thead className="sticky top-0 bg-white">
-          <Tr>
-            <Th>Project</Th>
-            <Th>Technician</Th>
-            <Th>Allocation %</Th>
-            <Th>Payout</Th>
-            <Th>Status</Th>
-            <Th textAlign="center">Paid</Th>
-          </Tr>
-        </Thead>
-        <Tbody>
-          {records.map((r: PayrollRecord) => (
-            <Tr key={r._id}>
-              <Td>{r.projectName}</Td>
-              <Td>{r.technicianName}</Td>
-              <Td>{r.percentage}%</Td>
-              <Td>${r.amountDue.toFixed(2)}</Td>
-              <Td>
-                <StatusChip stage={r.projectStage} paid={r.paid} />
-              </Td>
-            </Tr>
-          ))}
-          {records.length === 0 && (
-            <Tr>
-              <Td colSpan={6} className="text-center">
-                No data
-              </Td>
-            </Tr>
-          )}
-        </Tbody>
-      </Table>
-    </Box>
+    <div className="flex-1 flex flex-col min-h-screen bg-gray-50 dark:bg-gray-800">
+      {/* Header */}
+      <div className="w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 py-4">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+            Accounts Payable
+          </h1>
+        </div>
+      </div>
+
+      {/* Table Container */}
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-4">
+        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
+          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <tr>
+                <th scope="col" className="px-6 py-3">
+                  Project
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Technician
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Allocation %
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Payout
+                </th>
+                <th scope="col" className="px-6 py-3">
+                  Status
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {records.map((r: PayrollRecord) => (
+                <tr
+                  key={r._id}
+                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                >
+                  <td className="px-6 py-4">{r.projectName}</td>
+                  <td className="px-6 py-4">{r.technicianName}</td>
+                  <td className="px-6 py-4">{r.percentage}%</td>
+                  <td className="px-6 py-4">${r.amountDue.toFixed(2)}</td>
+                  <td className="px-6 py-4">
+                    <StatusChip stage={r.projectStage} paid={r.paid} />
+                  </td>
+                </tr>
+              ))}
+              {records.length === 0 && (
+                <tr className="bg-white dark:bg-gray-800">
+                  <td colSpan={5} className="px-6 py-4 text-center">
+                    No data
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   );
 };
 

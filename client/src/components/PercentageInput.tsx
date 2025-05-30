@@ -15,6 +15,7 @@ interface PercentageInputProps {
   isDisabled?: boolean;
   showWarning?: boolean;
   remainingPercent?: number;
+  className?: string; // Add this line
 }
 
 export const PercentageInput: React.FC<PercentageInputProps> = ({
@@ -24,6 +25,7 @@ export const PercentageInput: React.FC<PercentageInputProps> = ({
   isDisabled = false,
   showWarning = true,
   remainingPercent,
+  className, // Add this
 }) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const rawValue = e.target.value;
@@ -47,7 +49,7 @@ export const PercentageInput: React.FC<PercentageInputProps> = ({
   const isOverMax = value != null && value > (remainingPercent ?? max);
 
   return (
-    <Box>
+    <Box className={className}>
       <InputGroup w="120px">
         <Input
           type="number"

@@ -114,14 +114,27 @@ const ProjectsPage: React.FC = () => {
     { header: "QC Status", key: "qcStatus" },
   ];
 
+  const tableActions = {
+    label: "Actions",
+    items: [
+      {
+        label: "Log Items",
+        action: (selected: Project[]) => {
+          console.log("Logging selected items:", selected);
+          // Implement your logging logic here
+        },
+      },
+    ],
+  };
+
   return (
-    <div className="flex-1 flex flex-col h-full px-4 md:px-6 bg-gray-50 dark:bg-gray-800">
-      <div className="w-full max-w-screen-xl mx-auto">
-        <div className="flex flex-wrap justify-between items-center mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800 overflow-hidden">
+      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-center mb-4 sm:mb-6 gap-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
             Projects Dashboard
           </h1>
-          <div className="flex flex-wrap items-center space-x-2">
+          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
             <input
               type="file"
               accept=".csv"
@@ -132,21 +145,20 @@ const ProjectsPage: React.FC = () => {
             />
             <button
               onClick={() => inputRef.current?.click()}
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
             >
               Upload CSV
             </button>
             <button
               onClick={handleCreate}
-              className="inline-flex items-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
             >
               + Add Project
             </button>
           </div>
         </div>
-        <div className="h-4" />
 
-        <div className="flex-1 w-full max-w-screen-xl mx-auto px-4 md:px-6 ">
+        <div className="flex-1 overflow-hidden -mx-2 sm:mx-0">
           <DataTable
             columns={columns}
             data={projects}
@@ -155,6 +167,8 @@ const ProjectsPage: React.FC = () => {
             total={projects.length}
             onPageChange={setPage}
             onPageSizeChange={setPageSize}
+            allowSelection={true}
+            actions={tableActions}
           />
         </div>
 
