@@ -6,6 +6,7 @@ import { ProjectModel } from "../../models/ProjectModel";
 import { AccountsPayableModel } from "../../models/AccountsPayableModel";
 import { ProjectService, parseCSV, transformCSVToProject } from "../../services/ProjectService";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
+import { AccountsByProjectResultModel } from "../../models/RestModels";
 
 @Controller("/projects")
 export class ProjectController {
@@ -63,9 +64,9 @@ export class ProjectController {
   }
 
   @Get("/accounts")
-  @Returns(200, SuccessArrayResult)
+  @(Returns(200, SuccessArrayResult).Of(AccountsByProjectResultModel))
   async listAccounts() {
     const res = await this.projectService.payableModelService.listAllByProject();
-    return { success: true, data: res };
+    return new SuccessArrayResult(res, AccountsByProjectResultModel);
   }
 }

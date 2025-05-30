@@ -56,10 +56,10 @@ export class AccountsPayableService {
   }
 
   public async listAllByProject() {
-    const projects = await this.payableModel
-      .find()
-      .populate('technicianId', 'name')
-      .populate('projectId', 'homeowner');
+      const projects = await this.payableModel
+        .find()
+        .populate('technicianId', 'name')
+        .populate('projectId', 'homeowner status');
     const map = new Map<string, any>();
     for (const rec of projects) {
       const pid = (rec.projectId as any)._id.toString();
@@ -67,6 +67,7 @@ export class AccountsPayableService {
         map.set(pid, {
           projectId: pid,
           projectName: (rec.projectId as any).homeowner,
+          status: (rec.projectId as any).status,
           payroll: [] as any[],
         });
       }
