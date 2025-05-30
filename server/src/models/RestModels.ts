@@ -605,3 +605,18 @@ export class SaleRefResultModel {
   @Property() public readonly createdAt: Date;
   @Property() public readonly updatedAt: Date;
 }
+
+export class PayrollItemModel {
+  @Property() public readonly techId: string;
+  @Property() public readonly allocationPct: number;
+  @Property() public readonly paid: boolean;
+  @Property() public readonly amountDue: number;
+}
+
+export class AccountsByProjectResultModel {
+  @Property() public readonly projectId: string;
+  @Property() public readonly projectName: string;
+  @Property() public readonly status: string;
+  @CollectionOf(PayrollItemModel)
+  public readonly payroll: PayrollItemModel[];
+}

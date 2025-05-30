@@ -47,4 +47,24 @@ describe('AccountsPayableService', () => {
     await service.markPaid('1');
     expect(payableModel.findByIdAndUpdate).toHaveBeenCalled();
   });
+
+  it('lists accounts grouped by project with status', async () => {
+    const docs = [
+      {
+        projectId: { _id: 'p1', homeowner: 'Home', status: 'Paid out' },
+        technicianId: { _id: 't1', name: 'Tech' },
+        percentage: 50,
+        paid: false,
+        amountDue: 100
+      }
+    ];
+    payableModel.find.mockReturnValue({
+      populate: jest.fn().mockReturnValue({
+        populate: jest.fn().mockResolvedValue(docs)
+      })
+    });
+
+    const res = await service.listAllByProject();
+    expect(res[0].status).toBe('Paid out');
+  });
 });
