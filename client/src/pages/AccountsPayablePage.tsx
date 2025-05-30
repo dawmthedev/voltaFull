@@ -25,7 +25,7 @@ const AccountsPayablePage: React.FC = () => {
   const users = useAppSelector((s) => s.users.items);
   const project = useAppSelector((state) => state.projects.current);
   const toast = useToast();
-  const projectId = useAppSelector((state) => state.projects.current._id);
+  const projectId = useAppSelector((state) => state.projects.current?._id);
   useEffect(() => {
     if (projects.length === 0) dispatch(fetchProjects());
     if (users.length === 0) dispatch(fetchUsers());

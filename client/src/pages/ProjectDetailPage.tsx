@@ -25,6 +25,7 @@ import {
   Project,
 } from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
+import PercentageInput from "../components/PercentageInput";
 
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
@@ -75,14 +76,10 @@ const ProjectDetailPage: React.FC = () => {
     });
   };
 
-  // Replace the handlePercentChange function
-  const handlePercentChange = (idx: number, val: string) => {
-    const newValue = Number(val);
-    if (newValue < 0) return;
-
+  const handlePercentChange = (idx: number, val: number | "") => {
     setPercents((prev) => {
       const arr = [...prev];
-      arr[idx] = newValue;
+      arr[idx] = val === "" ? 0 : val;
       return arr;
     });
   };
@@ -98,21 +95,35 @@ const ProjectDetailPage: React.FC = () => {
     }
   };
 
-  // Modify the calculations
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(amount);
+  };
+
+  // Update totalAllocation calculation
   const totalAllocation = useMemo(() => {
     if (!project?.contractAmount) return 0;
     const percentValue =
       typeof piecemealPercent === "number" ? piecemealPercent : 0;
-    return (project.contractAmount * percentValue) / 100;
+    return Math.round((project.contractAmount * percentValue) / 100);
   }, [project?.contractAmount, piecemealPercent]);
 
+  // Update allocation calculations
   const allocations = assignedTechIds
-    .map((techId, i) => ({ userId: techId, allocationPercent: percents[i] }))
+    .map((techId, i) => ({
+      userId: techId,
+      allocationPercent: Math.min(percents[i], 100),
+    }))
     .filter((a) => a.userId);
 
-  const totals = allocations.map(
-    (a) => (totalAllocation * a.allocationPercent) / 100
-  );
+  const totals = allocations.map((a) => {
+    const amount = (totalAllocation * a.allocationPercent) / 100;
+    return Math.round(amount);
+  });
 
   const disableSave =
     allocations.length === 0 ||
@@ -204,19 +215,14 @@ const ProjectDetailPage: React.FC = () => {
                 </Text>
                 <Stack direction="row" align="center" mt={2}>
                   <Text>Piecemeal Percentage:</Text>
-                  <Input
-                    type="number"
-                    value={piecemealPercent === 0 ? "" : piecemealPercent}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      setPiecemealPercent(val === "" ? "" : Number(val));
-                    }}
-                    w="100px"
+                  <PercentageInput
+                    value={piecemealPercent}
+                    onChange={setPiecemealPercent}
+                    max={100}
                   />
-                  <Text>%</Text>
                 </Stack>
                 <Text mt={2}>
-                  Total Allocation: ${totalAllocation.toLocaleString()}
+                  Total Allocation: {formatCurrency(totalAllocation)}
                 </Text>
               </Box>
 
@@ -237,15 +243,12 @@ const ProjectDetailPage: React.FC = () => {
                       </option>
                     ))}
                   </Select>
-                  <InputGroup w="120px">
-                    <Input
-                      type="number"
-                      value={percents[i]}
-                      onChange={(e) => handlePercentChange(i, e.target.value)}
-                      isDisabled={!val}
-                    />
-                    <InputRightAddon children="%" />
-                  </InputGroup>
+                  <PercentageInput
+                    value={percents[i]}
+                    onChange={(val) => handlePercentChange(i, val)}
+                    isDisabled={!val}
+                    max={100}
+                  />
                 </Stack>
               ))}
 
@@ -254,13 +257,13 @@ const ProjectDetailPage: React.FC = () => {
                   const tech = techUsers.find((t) => t._id === a.userId);
                   return (
                     <Text key={a.userId}>
-                      {tech?.name || "-"}: ${totals[idx].toFixed(2)}
+                      {tech?.name || "-"}: {formatCurrency(totals[idx])}
                     </Text>
                   );
                 })}
                 <Text fontWeight="bold" mt={2}>
-                  Total Allocation: $
-                  {totals.reduce((s, v) => s + v, 0).toFixed(2)}
+                  Total Distribution:{" "}
+                  {formatCurrency(totals.reduce((s, v) => s + v, 0))}
                 </Text>
               </Box>
 
