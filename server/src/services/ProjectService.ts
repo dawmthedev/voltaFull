@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { ProjectModel } from "../models/ProjectModel";
-import { AccountsPayableModel } from "../models/AccountsPayableModel";
+import { PayrollModel } from "../models/AccountsPayableModel";
 import { AccountsPayableService } from "./AccountsPayableService";
 
 export function parseCSV(content: string): Record<string, string>[] {
@@ -47,7 +47,7 @@ export function transformCSVToProject(row: Record<string, string>): Partial<Proj
 export class ProjectService {
   constructor(
     @Inject(ProjectModel) private projectModel: MongooseModel<ProjectModel>,
-    @Inject(AccountsPayableModel) private payableModel: MongooseModel<AccountsPayableModel>,
+    @Inject(PayrollModel) private payableModel: MongooseModel<PayrollModel>,
     @Inject(AccountsPayableService) public payableModelService: AccountsPayableService
   ) {}
 

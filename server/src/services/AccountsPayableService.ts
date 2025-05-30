@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BadRequest } from "@tsed/exceptions";
-import { AccountsPayableModel } from "../models/AccountsPayableModel";
+import { AccountsPayableModel, PayrollModel } from "../models/AccountsPayableModel";
 import { ProjectModel } from "../models/ProjectModel";
 
 interface AllocationInput {
@@ -12,13 +12,32 @@ interface AllocationInput {
 @Injectable()
 export class AccountsPayableService {
   constructor(
-    @Inject(AccountsPayableModel)
-    private payableModel: MongooseModel<AccountsPayableModel>,
+    @Inject(PayrollModel)
+    private payrollModel: MongooseModel<PayrollModel>,
     @Inject(ProjectModel)
-    private projectModel: MongooseModel<ProjectModel>
+    private projectModel: MongooseModel<ProjectModel>,
+    @Inject(AccountsPayableModel)
+    private legacyModel: MongooseModel<AccountsPayableModel>
   ) {}
 
+  private migrated = false;
+
+  private async ensureMigrated() {
+    if (this.migrated) return;
+    const count = await this.payrollModel.countDocuments();
+    if (count === 0) {
+      const docs = await this.legacyModel.find().lean();
+      if (docs.length) {
+        await this.payrollModel.insertMany(
+          docs.map(({ _id, ...d }) => d as any)
+        );
+      }
+    }
+    this.migrated = true;
+  }
+
   public async upsertAllocations(projectId: string, allocations: AllocationInput[]) {
+    await this.ensureMigrated();
     const total = allocations.reduce((sum, a) => sum + a.percentage, 0);
     if (total > 100) {
       throw new BadRequest("Total allocation percentage cannot exceed 100");
@@ -27,10 +46,10 @@ export class AccountsPayableService {
     const project = await this.projectModel.findById(projectId).lean();
     const contract = project?.contractAmount || 0;
 
-    const results: AccountsPayableModel[] = [];
+    const results: PayrollModel[] = [];
     for (const alloc of allocations) {
       const amountDue = (contract * alloc.percentage) / 100;
-      const record = await this.payableModel.findOneAndUpdate(
+      const record = await this.payrollModel.findOneAndUpdate(
         { projectId, technicianId: alloc.technicianId },
         { projectId, technicianId: alloc.technicianId, percentage: alloc.percentage, amountDue },
         { upsert: true, new: true }
@@ -41,14 +60,16 @@ export class AccountsPayableService {
   }
 
   public async listByPaidStatus(paid: boolean) {
-    return this.payableModel
+    await this.ensureMigrated();
+    return this.payrollModel
       .find({ paid })
       .populate("technicianId", "name")
       .populate("projectId", "homeowner");
   }
 
   public async markPaid(id: string) {
-    return this.payableModel.findByIdAndUpdate(
+    await this.ensureMigrated();
+    return this.payrollModel.findByIdAndUpdate(
       id,
       { paid: true, paidAt: new Date() },
       { new: true }
@@ -56,7 +77,8 @@ export class AccountsPayableService {
   }
 
   public async listAllByProject() {
-      const projects = await this.payableModel
+      await this.ensureMigrated();
+      const projects = await this.payrollModel
         .find()
         .populate('technicianId', 'name')
         .populate('projectId', 'homeowner status');

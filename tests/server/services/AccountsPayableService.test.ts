@@ -3,6 +3,7 @@ import { AccountsPayableService } from '../../../server/src/services/AccountsPay
 describe('AccountsPayableService', () => {
   let payableModel: any;
   let projectModel: any;
+  let legacyModel: any;
   let service: AccountsPayableService;
 
   beforeEach(() => {
@@ -14,7 +15,8 @@ describe('AccountsPayableService', () => {
     projectModel = {
       findById: jest.fn()
     } as any;
-    service = new AccountsPayableService(payableModel, projectModel);
+    legacyModel = { find: jest.fn() } as any;
+    service = new AccountsPayableService(payableModel, projectModel, legacyModel);
   });
 
   it('validates allocation percentages', async () => {
@@ -66,5 +68,15 @@ describe('AccountsPayableService', () => {
 
     const res = await service.listAllByProject();
     expect(res[0].status).toBe('Paid out');
+  });
+
+  it('migrates legacy records on first use', async () => {
+    payableModel.countDocuments = jest.fn().mockResolvedValue(0);
+    legacyModel.find.mockReturnValue({ lean: () => Promise.resolve([{ a: 1 }]) });
+    payableModel.insertMany = jest.fn();
+
+    await service.listByPaidStatus(false);
+
+    expect(payableModel.insertMany).toHaveBeenCalled();
   });
 });
