@@ -37,9 +37,9 @@ if [ ! -f "$MARKER" ]; then
     (cd server && npm install)
   fi
 
-  # Install dependencies in client-new directory if it exists
+  # Install dependencies in client directory if it exists
   if [ -d "client" ]; then
-    echo "🔧 Installing dependencies in client-new directory…"
+    echo "🔧 Installing dependencies in client directory…"
     (cd client && npm install)
   fi
 
@@ -50,5 +50,5 @@ else
 fi
 
 # ─── 4) Fire up server + client-new ─────────────────────────────────────────
-echo "🚀 Starting server & client-new…"
+echo "🚀 Starting server & client…"
 npm run dev
