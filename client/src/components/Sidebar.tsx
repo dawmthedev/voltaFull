@@ -106,7 +106,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen = true, onClose, toggleRef }) 
 
       {/* Desktop slide */}
       <Slide direction="left" in={isOpen} style={{ zIndex: 20 }} unmountOnExit>
-        <Box display={{ base: 'none', md: 'block' }} h="100vh" flexShrink={0}>
+        <Box className="hidden md:block h-screen flex-shrink-0">
           {content}
         </Box>
       </Slide>

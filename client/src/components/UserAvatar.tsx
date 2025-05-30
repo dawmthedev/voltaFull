@@ -19,7 +19,7 @@ const UserAvatar: React.FC = () => {
           borderRadius="10px"
           size="sm"
         />
-        <Box lineHeight="short" display={{ base: "none", md: "block" }}>
+        <Box lineHeight="short" className="hidden md:block">
           <Text fontSize="sm" className="font-semibold">
             {user.name}
           </Text>

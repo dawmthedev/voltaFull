@@ -17,6 +17,13 @@ npm install
 npm run dev
 ```
 
+## UI Layout Guidelines
+
+Layout and responsive design use **Tailwind CSS**. Chakra UI components are still
+used for widgets, but spacing and breakpoints should rely on Tailwind classes.
+Apply responsive prefixes like `md:` or `lg:` when adjusting styles across
+screen sizes.
+
 After making changes you can run the full test suite with:
 
 ```bash
