@@ -2,9 +2,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { baseURL } from "../apiConfig";
 
 export interface PayableRecord {
-  projectId: string;
-  projectName: string;
-  techId: string;
+  _id: string;
+  project: string;
+  technician: string;
   allocationPct: number;
   amountDue: number;
   paid: boolean;
@@ -20,37 +20,32 @@ const initialState: AccountsPayableState = {
   status: "idle",
 };
 
-export const fetchUnpaid = createAsyncThunk("accountsPayable/fetchUnpaid", async () => {
-  const res = await fetch(`${baseURL}/rest/projects/accounts`);
-  if (!res.ok) throw new Error("Failed to load payable records");
-  const data = await res.json();
-  const rows: PayableRecord[] = [];
-  data.data.forEach((p: any) => {
-    p.payroll.forEach((r: any) => {
-      rows.push({
-        projectId: p.projectId,
-        projectName: p.projectName,
-        techId: r.techId,
-        allocationPct: r.allocationPct,
-        amountDue: r.amountDue,
-        paid: r.paid,
-      });
-    });
-  });
-  return rows;
-});
+export const fetchUnpaid = createAsyncThunk(
+  "accountsPayable/fetchUnpaid",
+  async () => {
+    const res = await fetch(`${baseURL}/rest/accounts-payable?paid=false`);
+    if (!res.ok) throw new Error("Failed to load payable records");
+    const data = await res.json();
+    return (data.data as any[]).map((r: any) => ({
+      _id: r._id,
+      project: (r.projectId as any).homeowner,
+      technician: (r.technicianId as any).name,
+      allocationPct: r.percentage,
+      amountDue: r.amountDue,
+      paid: r.paid,
+    })) as PayableRecord[];
+  }
+);
 
 export const markPaid = createAsyncThunk(
   "accountsPayable/markPaid",
-  async ({ projectId, payroll }: { projectId: string; payroll: { technicianId: string; percentage: number; paid: boolean }[] }) => {
-    const res = await fetch(`${baseURL}/rest/projects/${projectId}/payroll`, {
+  async (id: string) => {
+    const res = await fetch(`${baseURL}/rest/accounts-payable/${id}/pay`, {
       method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ payroll }),
     });
     if (!res.ok) throw new Error("Failed to mark record paid");
     const data = await res.json();
-    return data.data as any;
+    return data.data as PayableRecord;
   }
 );
 
@@ -70,8 +65,8 @@ const accountsPayableSlice = createSlice({
       .addCase(fetchUnpaid.rejected, (state) => {
         state.status = "failed";
       })
-      .addCase(markPaid.pending, (state) => {
-        state.status = "loading";
+      .addCase(markPaid.pending, (state, action) => {
+        state.items = state.items.filter((r) => r._id !== action.meta.arg);
       })
       .addCase(markPaid.fulfilled, (state) => {
         state.status = "idle";
