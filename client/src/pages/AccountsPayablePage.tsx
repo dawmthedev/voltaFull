@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Box,
   Heading,
@@ -11,21 +11,19 @@ import {
   Checkbox,
   useToast,
 } from "@chakra-ui/react";
-import { useAppDispatch, useAppSelector } from "../store";
-import { fetchUnpaid, markPaid } from "../store/accountsPayableSlice";
+import { useAppDispatch } from "../store";
+import { markPaid } from "../store/accountsPayableSlice";
+import { useGetAllPayrollQuery } from "../services/api";
 
 const AccountsPayablePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const records = useAppSelector((s) => s.accountsPayable.items);
+  const { data: records = [], refetch } = useGetAllPayrollQuery();
   const toast = useToast();
-
-  useEffect(() => {
-    dispatch(fetchUnpaid());
-  }, [dispatch]);
 
   const handlePaid = async (id: string) => {
     try {
       await dispatch(markPaid(id)).unwrap();
+      refetch();
       toast({
         title: "Marked as paid",
         status: "success",

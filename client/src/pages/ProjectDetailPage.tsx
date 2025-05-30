@@ -22,10 +22,10 @@ import { useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import {
   fetchProjectById,
-  updateProjectPayroll,
   Project,
 } from "../store/projectsSlice";
 import { fetchUsers } from "../store/usersSlice";
+import { useAddPayrollMutation } from "../services/api";
 import PercentageInput from "../components/PercentageInput";
 
 const ProjectDetailPage: React.FC = () => {
@@ -145,22 +145,20 @@ const ProjectDetailPage: React.FC = () => {
     allocations.length === 0 ||
     allocations.reduce((s, a) => s + a.allocationPercent, 0) > 100;
 
-  const handleSave = () => {
+  const [addPayroll] = useAddPayrollMutation();
+
+  const handleSave = async () => {
     if (!projectId) return;
     const payroll = allocations.map((a) => ({
       technicianId: a.userId,
       percentage: a.allocationPercent,
-      paid: false,
     }));
 
-    dispatch(
-      updateProjectPayroll({
-        id: projectId,
-        payroll,
-        piecemealPercent:
-          typeof piecemealPercent === "number" ? piecemealPercent : 0,
-      })
-    );
+    try {
+      await addPayroll({ projectId, payroll }).unwrap();
+    } catch {
+      toast({ title: "Failed to save payroll", status: "error" });
+    }
   };
 
   return (

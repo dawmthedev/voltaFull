@@ -38,6 +38,6 @@ describe('AccountsPayablePage', () => {
 
     expect(await screen.findByText('Home')).toBeInTheDocument();
     expect(screen.getByText('Upcoming')).toBeInTheDocument();
-    expect((global.fetch as jest.Mock).mock.calls[0][0]).toContain('/rest/accounts-payable');
+    expect((global.fetch as jest.Mock).mock.calls[0][0]).toContain('/rest/payroll');
   });
 });
