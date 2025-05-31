@@ -4,19 +4,27 @@ describe('AccountsPayableService', () => {
   let payableModel: any;
   let projectModel: any;
   let legacyModel: any;
+  let adminModel: any;
   let service: AccountsPayableService;
 
   beforeEach(() => {
     payableModel = {
       findOneAndUpdate: jest.fn(),
       find: jest.fn(),
-      findByIdAndUpdate: jest.fn()
+      findByIdAndUpdate: jest.fn(),
     } as any;
     projectModel = {
-      findById: jest.fn()
+      findById: jest.fn(),
+      find: jest.fn(),
     } as any;
     legacyModel = { find: jest.fn() } as any;
-    service = new AccountsPayableService(payableModel, projectModel, legacyModel);
+    adminModel = { find: jest.fn() } as any;
+    service = new AccountsPayableService(
+      payableModel,
+      projectModel,
+      legacyModel,
+      adminModel
+    );
   });
 
   it('validates allocation percentages', async () => {
@@ -29,7 +37,8 @@ describe('AccountsPayableService', () => {
   });
 
   it('upserts allocations with computed amount', async () => {
-    projectModel.findById.mockResolvedValue({ contractAmount: 1000 });
+    projectModel.findById.mockResolvedValue({ contractAmount: 1000, homeowner: 'Home' });
+    adminModel.find.mockResolvedValue([{ _id: 't1', name: 'Tech' }]);
     payableModel.findOneAndUpdate.mockResolvedValue({});
 
     await service.upsertAllocations('p1', [
@@ -39,7 +48,14 @@ describe('AccountsPayableService', () => {
     expect(projectModel.findById).toHaveBeenCalledWith('p1');
     expect(payableModel.findOneAndUpdate).toHaveBeenCalledWith(
       { projectId: 'p1', technicianId: 't1' },
-      { projectId: 'p1', technicianId: 't1', percentage: 50, amountDue: 500 },
+      {
+        projectId: 'p1',
+        technicianId: 't1',
+        technicianName: 'Tech',
+        projectName: 'Home',
+        percentage: 50,
+        amountDue: 500,
+      },
       { upsert: true, new: true }
     );
   });
@@ -53,21 +69,25 @@ describe('AccountsPayableService', () => {
   it('lists accounts grouped by project with status', async () => {
     const docs = [
       {
-        projectId: { _id: 'p1', homeowner: 'Home', status: 'Paid out' },
-        technicianId: { _id: 't1', name: 'Tech' },
+        projectId: 'p1',
+        projectName: 'Home',
+        technicianId: 't1',
+        technicianName: 'Tech',
         percentage: 50,
         paid: false,
-        amountDue: 100
-      }
+        amountDue: 100,
+      },
     ];
-    payableModel.find.mockReturnValue({
-      populate: jest.fn().mockReturnValue({
-        populate: jest.fn().mockResolvedValue(docs)
-      })
-    });
+    payableModel.find.mockResolvedValue(docs);
+    projectModel.find.mockReturnValue({
+      lean: jest.fn().mockResolvedValue([
+        { _id: 'p1', homeowner: 'Home', status: 'Paid out' },
+      ]),
+    } as any);
 
     const res = await service.listAllByProject();
     expect(res[0].status).toBe('Paid out');
+    expect(res[0].projectName).toBe('Home');
   });
 
   it('migrates legacy records on first use', async () => {
