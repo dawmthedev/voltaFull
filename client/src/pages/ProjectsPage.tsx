@@ -7,6 +7,8 @@ import AddProjectModal from "../components/AddProjectModal";
 import CSVPreviewModal from "../components/CSVPreviewModal";
 import { CSVRow, parseCSV } from "../utils/csv";
 import DataTable, { DataTableColumn } from "../components/DataTable";
+import PageContainer from "../components/PageContainer";
+import PageHeader from "../components/PageHeader";
 
 const ProjectsPage: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -82,7 +84,7 @@ const ProjectsPage: React.FC = () => {
       renderCell: (p: Project) => (
         <Link
           to={`/dashboard/projects/${p._id || (p as any).id}`}
-          className="p-1 hover:bg-gray-100 rounded"
+          className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-600 dark:text-gray-300"
           aria-label="Edit Project"
         >
           <EditIcon />
@@ -127,39 +129,44 @@ const ProjectsPage: React.FC = () => {
     ],
   };
 
-  return (
-    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800">
-      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6 pb-6">
-        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 whitespace-nowrap">
-            Projects Dashboard
-          </h1>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
-            <input
-              type="file"
-              accept=".csv"
-              onChange={handleUpload}
-              hidden
-              ref={inputRef}
-              data-testid="csv-input"
-            />
-            <button
-              onClick={() => inputRef.current?.click()}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm whitespace-nowrap"
-            >
-              Upload CSV
-            </button>
-            <button
-              onClick={handleCreate}
-              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm whitespace-nowrap"
-            >
-              + Add Project
-            </button>
-          </div>
-        </div>
+  const actionButtons = (
+    <>
+      <input
+        type="file"
+        accept=".csv"
+        onChange={handleUpload}
+        hidden
+        ref={inputRef}
+      />
+      <button
+        onClick={() => inputRef.current?.click()}
+        className="flex-1 sm:flex-none min-w-[120px] px-4 py-2.5 bg-teal-600 text-white 
+          rounded-xl text-sm font-medium shadow-lg active:scale-95 transition-transform
+          hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+      >
+        Upload CSV
+      </button>
+      <button
+        onClick={handleCreate}
+        className="flex-1 sm:flex-none min-w-[120px] px-4 py-2.5 bg-teal-600 text-white 
+          rounded-xl text-sm font-medium shadow-lg active:scale-95 transition-transform
+          hover:bg-teal-700 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2"
+      >
+        + Add Project
+      </button>
+    </>
+  );
 
-        <div className="w-full overflow-x-auto rounded-lg shadow-md bg-white dark:bg-gray-900">
-          <div className="min-w-full">
+  return (
+    <PageContainer>
+      <PageHeader title="Projects" actions={actionButtons} />
+
+      <div
+        className="overflow-hidden rounded-t-2xl sm:rounded-xl shadow-lg 
+        bg-white dark:bg-gray-900 transition-all duration-300"
+      >
+        <div className="overflow-x-auto">
+          <div className="min-w-max sm:min-w-full">
             <DataTable
               columns={columns}
               data={projects}
@@ -170,19 +177,32 @@ const ProjectsPage: React.FC = () => {
               onPageSizeChange={setPageSize}
               allowSelection={true}
               actions={tableActions}
+              className="w-full"
             />
           </div>
         </div>
-
-        <AddProjectModal isOpen={isOpen} onClose={onClose} />
-        <CSVPreviewModal
-          isOpen={previewOpen}
-          onClose={closePreview}
-          rows={csvQueue}
-          onConfirm={handleConfirm}
-        />
       </div>
-    </div>
+
+      {/* Mobile-optimized loading skeleton */}
+      {projects.length === 0 && (
+        <div className="space-y-4 animate-pulse p-4">
+          {[...Array(5)].map((_, i) => (
+            <div
+              key={i}
+              className="h-16 bg-gray-200 dark:bg-gray-700 rounded-xl"
+            />
+          ))}
+        </div>
+      )}
+
+      <AddProjectModal isOpen={isOpen} onClose={onClose} />
+      <CSVPreviewModal
+        isOpen={previewOpen}
+        onClose={closePreview}
+        rows={csvQueue}
+        onConfirm={handleConfirm}
+      />
+    </PageContainer>
   );
 };
 

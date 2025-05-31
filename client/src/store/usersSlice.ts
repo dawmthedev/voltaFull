@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { baseURL } from "../apiConfig";
+import { userService } from "../services/userService";
 
 export interface User {
   _id?: string;
@@ -30,17 +31,9 @@ export const fetchUsers = createAsyncThunk("users/fetch", async () => {
 });
 
 export const updateUser = createAsyncThunk(
-  "users/update",
-  async ({ id, role }: { id: string; role: string }, { dispatch }) => {
-    const res = await fetch(`${baseURL}/rest/users/${id}`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ role }),
-    });
-    if (!res.ok) throw new Error("Failed to update user");
-    await dispatch(fetchUsers());
-    const data = await res.json();
-    return data.data as User;
+  "users/updateUser",
+  async ({ id, role }: { id: string; role: string }) => {
+    return await userService.updateRole(id, role);
   }
 );
 

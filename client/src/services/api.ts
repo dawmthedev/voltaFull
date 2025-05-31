@@ -25,7 +25,9 @@ export const api = createApi({
       providesTags: ["Payroll"],
       transformResponse: (res: { data: PayrollResponse[] }) => res.data,
     }),
-    addPayroll: builder.mutation< void,{
+    addPayroll: builder.mutation<
+      void,
+      {
         projectId: string;
         payroll: {
           technicianId: string;
@@ -49,3 +51,22 @@ export const api = createApi({
 });
 
 export const { useGetAllPayrollQuery, useAddPayrollMutation } = api;
+
+export const apiService = {
+  updateUserRole: async (userId: string, role: string) => {
+    const response = await fetch(`/rest/users/${userId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ role }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.message || "Failed to update user");
+    }
+
+    return await response.json();
+  },
+};

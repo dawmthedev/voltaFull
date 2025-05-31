@@ -1,6 +1,12 @@
 import React, { createContext, useContext, useState } from "react";
 import { Outlet } from "react-router-dom";
-import { AnimatePresence, motion, AnimatePresenceProps } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  LazyMotion,
+  domAnimation,
+  m,
+} from "framer-motion";
 import Sidebar from "./Sidebar";
 import Navbar from "./Navbar";
 
@@ -19,6 +25,15 @@ interface NavbarProps {
   className?: string;
 }
 
+// Create a type-safe wrapper for AnimatePresence
+const SafeAnimatePresence: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => (
+  <LazyMotion features={domAnimation}>
+    <m.div>{children}</m.div>
+  </LazyMotion>
+);
+
 const Layout: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const toggleRef = React.useRef<HTMLButtonElement>(null);
@@ -29,25 +44,17 @@ const Layout: React.FC = () => {
     toggleRef.current?.focus();
   };
 
-  // Cast AnimatePresence as any to bypass TypeScript error temporarily
-  // This is safe because we know the component works as expected
-  const AnimatePresenceWrapper = AnimatePresence as any;
-
   return (
     <LayoutContext.Provider value={{ closeSidebar }}>
-      <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
-        <AnimatePresenceWrapper
-          initial={false}
-          mode="wait"
-          onExitComplete={() => null}
-        >
+      <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors">
+        <SafeAnimatePresence>
           {isSidebarOpen && (
             <motion.div
               initial={{ x: -240 }}
               animate={{ x: 0 }}
               exit={{ x: -240 }}
               transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              className="z-20"
+              className="z-20 flex-shrink-0"
             >
               <Sidebar
                 isOpen={isSidebarOpen}
@@ -56,16 +63,16 @@ const Layout: React.FC = () => {
               />
             </motion.div>
           )}
-        </AnimatePresenceWrapper>
+        </SafeAnimatePresence>
 
-        <div className="flex-1 flex flex-col">
+        <div className="flex-1 flex flex-col min-w-0">
           <Navbar
             onToggleSidebar={toggleSidebar}
             toggleRef={toggleRef}
-            className="z-10 backdrop-blur-sm bg-white/80 dark:bg-gray-800/80"
+            className="z-10 glass-panel sticky top-0"
           />
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-gray-50 dark:bg-gray-900">
-            <div className="container mx-auto px-4 py-8">
+          <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 relative">
+            <div className="section-container">
               <Outlet />
             </div>
           </main>

@@ -1,0 +1,47 @@
+/* Prevent rubber band scrolling on iOS */
+.overscroll-none {
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Better tap targets */
+@media (max-width: 640px) {
+  button,
+  a {
+    min-height: 44px;
+  }
+
+  .touch-target {
+    padding: 12px;
+  }
+}
+
+/* Hide scrollbars but keep functionality */
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* Active state for touch devices */
+@media (hover: none) {
+  .active\:scale-95:active {
+    transform: scale(0.95);
+  }
+}
+
+/* Mobile-specific animations */
+.slide-up {
+  animation: slide-up 0.3s ease-out;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
