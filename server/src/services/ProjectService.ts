@@ -98,63 +98,51 @@ export class ProjectService {
   }
 
   async getPayrollWithDetails() {
-    console.log("Starting aggregation pipeline...");
-
     const payroll = await this.payableModel
       .aggregate([
         {
-          $addFields: {
-            projectObjId: { $toObjectId: "$projectId" },
-            technicianObjId: { $toObjectId: "$technicianId" }
+          $lookup: {
+            from: "projects",
+            localField: "projectId",
+            foreignField: "_id",
+            as: "projectId"
           }
         },
+        { $unwind: { path: "$projectId", preserveNullAndEmptyArrays: true } },
         {
           $lookup: {
-            from: "Projects", // Verify this matches your actual collection name
-            localField: "projectObjId",
+            from: "users",
+            localField: "technicianId",
             foreignField: "_id",
-            as: "projectData"
+            as: "technicianId"
           }
         },
-        {
-          $lookup: {
-            from: "Users", // Verify this matches your actual collection name
-            localField: "technicianObjId",
-            foreignField: "_id",
-            as: "technicianData"
-          }
-        },
-        {
-          $unwind: {
-            path: "$projectData",
-            preserveNullAndEmptyArrays: true
-          }
-        },
-        {
-          $unwind: {
-            path: "$technicianData",
-            preserveNullAndEmptyArrays: true
-          }
-        },
+        { $unwind: { path: "$technicianId", preserveNullAndEmptyArrays: true } },
         {
           $project: {
-            _id: 1,
-            projectId: "$projectId",
-            projectName: { $ifNull: ["$projectData.homeownerName", "Project Not Found"] },
-            projectStage: { $ifNull: ["$projectData.currentStage", "Stage Unknown"] },
-            technicianId: "$technicianId",
-            technicianName: {
-              $ifNull: [{ $concat: ["$technicianData.firstName", " ", "$technicianData.lastName"] }, "Technician Not Found"]
-            },
             percentage: 1,
             amountDue: 1,
-            paid: 1
+            paid: 1,
+            projectId: {
+              _id: "$projectId._id",
+              homeownerName: "$projectId.homeowner",
+              currentStage: "$projectId.stage"
+            },
+            technicianId: {
+              _id: "$technicianId._id",
+              firstName: { $arrayElemAt: [{ $split: ["$technicianId.name", " "] }, 0] },
+              lastName: {
+                $arrayElemAt: [
+                  { $split: ["$technicianId.name", " "] },
+                  1
+                ]
+              }
+            }
           }
         }
       ])
       .exec();
 
-    console.log("Aggregation complete. Results:", payroll);
     return payroll;
   }
 }

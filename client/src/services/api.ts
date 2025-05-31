@@ -38,7 +38,20 @@ export const api = createApi({
     getAllPayroll: builder.query<PayrollRecord[], void>({
       query: () => "/projects/payroll/list",
       providesTags: ["Payroll"],
-      transformResponse: (res: { data: PayrollRecord[] }) => res.data,
+      transformResponse: (res: { data: PayrollResponse[] }) =>
+        res.data.map((p) => ({
+          _id: p._id,
+          projectId: p.projectId?._id ?? "",
+          technicianId: p.technicianId?._id ?? "",
+          projectName: p.projectId?.homeownerName ?? "Project Not Found",
+          projectStage: p.projectId?.currentStage ?? "Stage Unknown",
+          technicianName: p.technicianId
+            ? `${p.technicianId.firstName} ${p.technicianId.lastName}`
+            : "Technician Not Found",
+          percentage: p.percentage,
+          amountDue: p.amountDue,
+          paid: p.paid,
+        })),
     }),
     addPayroll: builder.mutation<
       void,
