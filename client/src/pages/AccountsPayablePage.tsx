@@ -61,43 +61,69 @@ const AccountsPayablePage: React.FC = () => {
         <div className="w-full overflow-x-auto rounded-lg shadow-md bg-white dark:bg-gray-900">
           <div className="min-w-full">
             <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+              <thead className="bg-gray-50 dark:bg-gray-700">
                 <tr>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                  >
                     Project
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                  >
                     Technician
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                  >
                     Allocation %
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                  >
                     Payout
                   </th>
-                  <th scope="col" className="px-6 py-3">
+                  <th
+                    scope="col"
+                    className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+                  >
                     Status
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700">
                 {records.map((r: PayrollRecord) => (
                   <tr
                     key={r._id}
-                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    className="hover:bg-gray-50 dark:hover:bg-gray-700"
                   >
-                    <td className="px-6 py-4">{getProjectName(r)}</td>
-                    <td className="px-6 py-4">{getTechnicianName(r)}</td>
-                    <td className="px-6 py-4">{r.percentage}%</td>
-                    <td className="px-6 py-4">${r.amountDue.toFixed(2)}</td>
-                    <td className="px-6 py-4">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                      {getProjectName(r)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                      {getTechnicianName(r)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                      {r.percentage}%
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-300">
+                      ${r.amountDue.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
                       <StatusChip stage={r.projectStage} paid={r.paid} />
                     </td>
                   </tr>
                 ))}
                 {records.length === 0 && (
-                  <tr className="bg-white dark:bg-gray-800">
-                    <td colSpan={5} className="px-6 py-4 text-center">
+                  <tr>
+                    <td
+                      colSpan={5}
+                      className="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400"
+                    >
                       No data
                     </td>
                   </tr>
