@@ -28,7 +28,7 @@ export class PayrollModel {
 
   @Property()
   @Required()
-  amountDue: number;
+  amountDue: number; // Make sure this is a simple number field without any transforms
 
   @Property()
   paid: boolean = false;

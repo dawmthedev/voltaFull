@@ -1,4 +1,11 @@
-import React, { ReactNode, useMemo, useState } from "react";
+import React, { ReactNode, useMemo, useRef, useState } from "react";
+import { useVirtualizer } from "@tanstack/react-virtual";
+import type { VirtualItem as TanstackVirtualItem } from "@tanstack/react-virtual";
+
+// Update interface to match Tanstack's VirtualItem
+interface VirtualItem extends TanstackVirtualItem {
+  index: number;
+}
 
 export interface DataTableColumn<T> {
   key: string;
@@ -37,6 +44,8 @@ function DataTable<T extends Record<string, any>>({
   const [selectedAction, setSelectedAction] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
 
+  const parentRef = useRef<HTMLDivElement>(null);
+
   const filtered = useMemo(() => {
     if (!query) return data;
     const q = query.toLowerCase();
@@ -48,10 +57,13 @@ function DataTable<T extends Record<string, any>>({
     );
   }, [data, query]);
 
-  const pageData = useMemo(
-    () => filtered.slice((page - 1) * pageSize, page * pageSize),
-    [filtered, page, pageSize]
-  );
+  const rowVirtualizer = useVirtualizer({
+    count: filtered.length,
+    getScrollElement: () => parentRef.current,
+    estimateSize: () => 45,
+    overscan: 5,
+  });
+
   const totalPages = Math.ceil(filtered.length / pageSize) || 1;
 
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,8 +78,8 @@ function DataTable<T extends Record<string, any>>({
   const handleSelectAll = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSelected: Record<string, boolean> = {};
     if (e.target.checked) {
-      pageData.forEach((item, idx) => {
-        newSelected[idx.toString()] = true;
+      rowVirtualizer.getVirtualItems().forEach((virtualRow) => {
+        newSelected[virtualRow.index.toString()] = true;
       });
     }
     setSelected(newSelected);
@@ -82,10 +94,16 @@ function DataTable<T extends Record<string, any>>({
 
   const handleAction = () => {
     if (!selectedAction) return;
-    const selectedItems = pageData.filter((_, idx) => selected[idx]);
+    const selectedVirtualItems = rowVirtualizer
+      .getVirtualItems()
+      .filter((virtualRow) => selected[virtualRow.index]);
+    const selectedData = selectedVirtualItems.map(
+      (virtual) => filtered[virtual.index]
+    );
+
     const action = actions?.items.find((i) => i.label === selectedAction);
     if (action) {
-      action.action(selectedItems);
+      action.action(selectedData);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
     }
@@ -164,54 +182,74 @@ function DataTable<T extends Record<string, any>>({
           </div>
         </div>
 
-        <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-          <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-            <tr>
-              {allowSelection && (
-                <th scope="col" className="p-4">
-                  <div className="flex items-center">
-                    <input
-                      type="checkbox"
-                      onChange={handleSelectAll}
-                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                    />
-                  </div>
-                </th>
-              )}
-              {columns.map((col) => (
-                <th key={col.key} scope="col" className="px-6 py-3">
-                  {col.header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {pageData.map((item, idx) => (
-              <tr
-                key={idx}
-                className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-              >
-                {allowSelection && (
-                  <td className="w-4 p-4">
-                    <div className="flex items-center">
-                      <input
-                        type="checkbox"
-                        checked={!!selected[idx]}
-                        onChange={() => handleSelect(idx.toString())}
-                        className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                    </div>
-                  </td>
-                )}
-                {columns.map((col) => (
-                  <td key={col.key} className="px-6 py-4 whitespace-nowrap">
-                    {col.renderCell ? col.renderCell(item) : item[col.key]}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="relative">
+          <div ref={parentRef} className="overflow-auto h-[600px]">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  {allowSelection && (
+                    <th scope="col" className="p-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          onChange={handleSelectAll}
+                          className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                        />
+                      </div>
+                    </th>
+                  )}
+                  {columns.map((col) => (
+                    <th key={col.key} scope="col" className="px-6 py-3">
+                      {col.header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody>
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const item = filtered[virtualRow.index];
+                  return (
+                    <tr
+                      key={virtualRow.index}
+                      className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                    >
+                      {allowSelection && (
+                        <td className="w-4 p-4">
+                          <div className="flex items-center">
+                            <input
+                              type="checkbox"
+                              checked={!!selected[virtualRow.index]}
+                              onChange={() =>
+                                handleSelect(virtualRow.index.toString())
+                              }
+                              className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                            />
+                          </div>
+                        </td>
+                      )}
+                      {columns.map((col) => (
+                        <td
+                          key={col.key}
+                          className="px-6 py-4 whitespace-nowrap"
+                        >
+                          {col.renderCell
+                            ? col.renderCell(item)
+                            : item[col.key]}
+                        </td>
+                      ))}
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          {/* Add loading skeleton */}
+          {false && (
+            <div className="absolute inset-0 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm">
+              Loading...
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex items-center justify-between py-3">
         <div>

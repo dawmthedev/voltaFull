@@ -25,16 +25,15 @@ export const api = createApi({
       providesTags: ["Payroll"],
       transformResponse: (res: { data: PayrollResponse[] }) => res.data,
     }),
-    addPayroll: builder.mutation<
-      void,
-      {
+    addPayroll: builder.mutation< void,{
         projectId: string;
         payroll: {
           technicianId: string;
           technicianName: string;
           projectName: string;
           percentage: number;
-          amountDue: number;
+          // amountDue: number; // This is the calculated amount from the client
+          amountDue: number; // This is the calculated amount from the client
           paid: boolean;
         }[];
       }
@@ -42,7 +41,7 @@ export const api = createApi({
       query: (payload) => ({
         url: `/payroll/create`,
         method: "POST",
-        body: payload,
+        body: payload, // Sends the exact payload to backend
       }),
       invalidatesTags: ["Payroll"],
     }),

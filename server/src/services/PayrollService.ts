@@ -7,6 +7,7 @@ import { AdminModel } from "../models/AdminModel";
 interface PayrollEntry {
   technicianId: string;
   percentage: number;
+  amountDue: number;
 }
 
 @Injectable()
@@ -23,16 +24,12 @@ export class PayrollService {
     const projectName = project?.homeowner || "Unknown";
 
     const techIds = [...new Set(entries.map((e) => e.technicianId))];
-    const technicians = await this.adminModel
-      .find({ _id: { $in: techIds } })
-      .lean();
-    const techMap = new Map(
-      technicians.map((t) => [t._id.toString(), t.name as string])
-    );
+    const technicians = await this.adminModel.find({ _id: { $in: techIds } }).lean();
+    const techMap = new Map(technicians.map((t) => [t._id.toString(), t.name as string]));
 
     const results: PayrollModel[] = [];
     for (const entry of entries) {
-      const amountDue = (contract * entry.percentage) / 100;
+      const amountDue = entry.amountDue || "Eror: Amount not provided";
       const technicianName = techMap.get(entry.technicianId) || "Unknown";
       const doc = await this.payrollModel.create({
         projectId,
@@ -57,10 +54,6 @@ export class PayrollService {
   }
 
   async markPaid(id: string) {
-    return this.payrollModel.findByIdAndUpdate(
-      id,
-      { paid: true, paidAt: new Date() },
-      { new: true }
-    );
+    return this.payrollModel.findByIdAndUpdate(id, { paid: true, paidAt: new Date() }, { new: true });
   }
 }

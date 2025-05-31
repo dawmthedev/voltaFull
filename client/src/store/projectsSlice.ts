@@ -1,3 +1,4 @@
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { baseURL } from "../apiConfig";
 
@@ -133,6 +134,29 @@ export const savePayroll = createAsyncThunk(
     return true;
   }
 );
+
+export const projectsApi = createApi({
+  reducerPath: "projectsApi",
+  baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
+  tagTypes: ["Project"],
+  endpoints: (builder) => ({
+    getProjects: builder.query({
+      query: ({ page, pageSize }) =>
+        `/projects?page=${page}&pageSize=${pageSize}`,
+      providesTags: ["Project"],
+    }),
+    updateProject: builder.mutation({
+      query: ({ id, ...patch }) => ({
+        url: `/projects/${id}`,
+        method: "PATCH",
+        body: patch,
+      }),
+      invalidatesTags: ["Project"],
+    }),
+  }),
+});
+
+export const { useGetProjectsQuery, useUpdateProjectMutation } = projectsApi;
 
 const projectsSlice = createSlice({
   name: "projects",

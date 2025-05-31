@@ -47,13 +47,15 @@ const LoginPage: React.FC = () => {
       className="min-h-screen flex flex-col items-center justify-center px-4"
       bg={bg}
     >
-      <ScaleFade in={isOpen} initialScale={0.9} className="w-full max-w-md">
+      {/* <Button size="sm" mb={4} onClick={onToggle}>Toggle Login</Button> */}
+      <ScaleFade in={isOpen} initialScale={0.9} className="w-full">
         <Box
           bg={panelBg}
           p={8}
           rounded="xl"
           shadow="xl"
-          className="w-full transition-all"
+          className="w-full max-w-md transition-all"
+          transform={{ base: "scale(0.5)", sm: "scale(0.75)", md: "scale(1)" }}
         >
           <Heading mb={6} size="lg" textAlign="center">
             Login to Volta

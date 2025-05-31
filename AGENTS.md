@@ -109,7 +109,66 @@ behavior.
 - Uphold minimal-bloat design with a sand-toned, high-contrast UI.
 - Seek modular, incremental improvements when adding features.
 
-### Additional Recommendations
+## UI/UX Guidelines
 
-- Use `pnpm dlx turbo run` when working with workspaces.
-- `pnpm install --filter <project>` helps Vite, ESLint and TypeScript recognize dependencies for a single package.
+### Visual Design System
+
+- Use a consistent color palette:
+  ```css
+  colors: {
+    primary: '#3182CE',    // Brand blue
+    accent: '#38B2AC',     // Teal accent
+    neutral: '#1A202C',    // Dark text
+    surface: '#F7FAFC',    // Light background
+  }
+  ```
+- Maintain spacing rhythm with Tailwind's spacing scale
+- Use elevation levels via shadow utilities:
+  - Cards: `shadow-md`
+  - Modals: `shadow-lg`
+  - Dropdowns: `shadow-sm`
+
+### Component Guidelines
+
+- Cards and panels should use rounded-lg for consistency
+- Forms should implement:
+  ```tsx
+  <FormControl className="space-y-4">
+    <FormLabel className="text-sm font-medium text-gray-700">
+    <Input className="w-full px-3 py-2 border rounded-md" />
+    <FormHelperText className="text-xs text-gray-500" />
+  </FormControl>
+  ```
+- Tables should use sticky headers and virtualization for large datasets
+
+### Animation Principles
+
+- Use subtle transitions for state changes:
+  ```tsx
+  className = "transition-all duration-200 ease-in-out";
+  ```
+- Progressive loading sequences:
+  ```tsx
+  <Transition
+    show={isOpen}
+    enter="transition duration-100 ease-out"
+    enterFrom="transform scale-95 opacity-0"
+    enterTo="transform scale-100 opacity-100"
+  />
+  ```
+- Skeleton loading states for async content
+
+### Performance Guidelines
+
+- Implement code-splitting at route level
+- Use React.lazy() for heavy components
+- Optimize images with next/image or similar
+- Cache expensive computations with useMemo
+- Debounce scroll/resize event handlers
+
+### Responsive Design
+
+- Mobile-first approach using Tailwind breakpoints
+- Critical tap targets minimum 44x44px
+- Drawer navigation on mobile, sidebar on desktop
+- Maintain 16px base font size for readability

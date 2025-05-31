@@ -85,6 +85,7 @@ export class ProjectService {
       technicianName: string;
       projectName: string;
       percentage: number;
+      amountDue: number; // This should be used directly
       paid?: boolean;
     }[]
   ) {
@@ -93,19 +94,10 @@ export class ProjectService {
       throw new Error("Project not found");
     }
 
-    // Ensure project has a homeowner name
-    if (!project.homeowner) {
-      throw new Error("Project homeowner name is required");
-    }
-
     const results = [];
     for (const entry of entries) {
-      // Validate required fields
-      if (!entry.technicianName) {
-        throw new Error(`Technician name is required for technician ID: ${entry.technicianId}`);
-      }
-
-      const amountDue = (project.contractAmount || 0) * (entry.percentage / 100);
+      // Add logging to debug the values
+      console.log("Received entry:", entry);
 
       const payrollRecord = {
         projectId,
@@ -113,9 +105,12 @@ export class ProjectService {
         technicianName: entry.technicianName,
         projectName: project.homeowner,
         percentage: entry.percentage,
-        amountDue,
+        amountDue: entry.amountDue, // Use the exact amount from the client
         paid: entry.paid || false
       };
+
+      // Add logging to debug the created record
+      console.log("Creating payroll record:", payrollRecord);
 
       const record = await this.payableModel.findOneAndUpdate({ projectId, technicianId: entry.technicianId }, payrollRecord, {
         upsert: true,

@@ -25,6 +25,11 @@ import { fetchUsers } from "../store/usersSlice";
 import { useAddPayrollMutation } from "../services/api";
 import PercentageInput from "../components/PercentageInput";
 
+interface Allocation {
+  userId: string;
+  allocationPercent: number;
+}
+
 const ProjectDetailPage: React.FC = () => {
   const { projectId } = useParams<{ projectId: string }>();
   const [error, setError] = useState<string | null>(null);
@@ -122,26 +127,47 @@ const ProjectDetailPage: React.FC = () => {
     return Math.max(0, 100 - otherTotal);
   };
 
-  // Format with proper rounding
-  const calculateAmount = (baseAmount: number, percentage: number) => {
-    return Math.round(baseAmount * percentage) / 100;
-  };
-
   const totalAllocation = useMemo(() => {
     if (!project?.contractAmount || piecemealPercent == null) return 0;
-    return calculateAmount(project.contractAmount, piecemealPercent);
+    // Convert to cents to avoid floating point issues
+    return Math.floor((project.contractAmount * piecemealPercent) / 100);
   }, [project?.contractAmount, piecemealPercent]);
 
-  const allocations = assignedTechIds
+  // Move allocations definition before it's used
+  const allocations: Allocation[] = assignedTechIds
     .map((techId, i) => ({
       userId: techId,
-      allocationPercent: percents[i] ?? 0, // Provide default of 0
+      allocationPercent: percents[i] ?? 0,
     }))
     .filter((a) => a.userId);
 
-  const totals = allocations.map(
-    (a) => (totalAllocation * a.allocationPercent) / 100
-  );
+  const payrollEntries = allocations.map((allocation: Allocation) => {
+    const tech = techUsers.find((t) => t._id === allocation.userId);
+    // Convert to cents for calculation to avoid floating point issues
+    const techAmount = Math.floor(
+      (totalAllocation * allocation.allocationPercent) / 100
+    );
+
+    // const techAmount = 1;
+
+    // alert(
+    //   `Technician: ${tech?.name || "Unknown"}, Amount: ${formatCurrency(
+    //     techAmount
+    //   )}, Percentage: ${allocation.allocationPercent}%`
+    // );
+
+    return {
+      technicianId: allocation.userId,
+      technicianName: tech?.name || "",
+      projectName: project?.homeowner || "",
+      percentage: allocation.allocationPercent,
+      amountDue: techAmount, // This should now be correct
+      paid: false,
+    };
+  });
+
+  // Remove the separate totals calculation and use the amounts from payrollEntries
+  const totals = payrollEntries.map((entry) => entry.amountDue);
 
   const disableSave =
     allocations.length === 0 ||
@@ -160,36 +186,19 @@ const ProjectDetailPage: React.FC = () => {
       return;
     }
 
-    const payrollEntries = allocations.map((allocation) => {
-      const tech = techUsers.find((t) => t._id === allocation.userId);
-      if (!tech?.name) {
-        throw new Error(`Missing technician information`);
-      }
+    // Step 3: Send to API
 
-      return {
-        technicianId: allocation.userId,
-        technicianName: tech.name,
-        projectName: project.homeowner,
-        percentage: allocation.allocationPercent,
-        amountDue: calculateAmount(
-          totalAllocation,
-          allocation.allocationPercent
-        ),
-        paid: false,
-      };
-    });
-
-    if (payrollEntries.length === 0) {
-      toast({
-        title: "Error",
-        description: "No payroll entries to save",
-        status: "error",
-        duration: 5000,
-      });
-      return;
-    }
+    console.log("Step 3 - Preparing to save payroll...");
+    console.log("Project ID:", projectId);
+    console.log("Payroll Entries:", payrollEntries);
+    // alert("Saving here");
 
     try {
+      console.log("Step 3 - Payload:", {
+        projectId,
+        payroll: payrollEntries,
+      });
+
       await addPayroll({
         projectId,
         payroll: payrollEntries,
@@ -354,13 +363,9 @@ const ProjectDetailPage: React.FC = () => {
                   <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm space-y-3">
                     {allocations.map((a, idx) => {
                       const tech = techUsers.find((t) => t._id === a.userId);
-                      const amount = calculateAmount(
-                        totalAllocation,
-                        a.allocationPercent
-                      );
                       return (
                         <Text key={a.userId}>
-                          {tech?.name || "-"}: {formatCurrency(amount)}
+                          {tech?.name || "-"}: {formatCurrency(totals[idx])}
                         </Text>
                       );
                     })}
