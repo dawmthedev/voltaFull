@@ -78,18 +78,48 @@ export class ProjectService {
     return this.payableModel.find({ projectId }).lean().exec();
   }
 
-  public async updatePayroll(projectId: string, entries: { technicianId: string; percentage: number; paid?: boolean }[]) {
-    const results = [] as any[];
+  public async updatePayroll(
+    projectId: string,
+    entries: {
+      technicianId: string;
+      technicianName: string;
+      projectName: string;
+      percentage: number;
+      paid?: boolean;
+    }[]
+  ) {
+    const project = await this.projectModel.findById(projectId).lean();
+    if (!project) {
+      throw new Error("Project not found");
+    }
+
+    // Ensure project has a homeowner name
+    if (!project.homeowner) {
+      throw new Error("Project homeowner name is required");
+    }
+
+    const results = [];
     for (const entry of entries) {
-      const amountDue =
-        (await this.projectModel
-          .findById(projectId)
-          .lean()
-          .then((p) => p?.contractAmount || 0)) *
-        (entry.percentage / 100);
+      // Validate required fields
+      if (!entry.technicianName) {
+        throw new Error(`Technician name is required for technician ID: ${entry.technicianId}`);
+      }
+
+      const amountDue = (project.contractAmount || 0) * (entry.percentage / 100);
+
+      const payrollRecord = {
+        projectId,
+        technicianId: entry.technicianId,
+        technicianName: entry.technicianName,
+        projectName: project.homeowner,
+        percentage: entry.percentage,
+        amountDue,
+        paid: entry.paid || false
+      };
+
       const record = await this.payableModel.findOneAndUpdate(
         { projectId, technicianId: entry.technicianId },
-        { projectId, technicianId: entry.technicianId, percentage: entry.percentage, amountDue, paid: entry.paid || false },
+        payrollRecord,
         { upsert: true, new: true }
       );
       results.push(record);
@@ -132,10 +162,7 @@ export class ProjectService {
               _id: "$technicianId._id",
               firstName: { $arrayElemAt: [{ $split: ["$technicianId.name", " "] }, 0] },
               lastName: {
-                $arrayElemAt: [
-                  { $split: ["$technicianId.name", " "] },
-                  1
-                ]
+                $arrayElemAt: [{ $split: ["$technicianId.name", " "] }, 1]
               }
             }
           }

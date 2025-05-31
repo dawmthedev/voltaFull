@@ -6,7 +6,7 @@ export interface PayrollRecord {
   projectId: string;
   technicianId: string;
   projectName: string;
-  projectStage: string;
+  projectStage: string; // Add this field
   technicianName: string;
   percentage: number;
   amountDue: number;
@@ -44,7 +44,7 @@ export const api = createApi({
           projectId: p.projectId?._id ?? "",
           technicianId: p.technicianId?._id ?? "",
           projectName: p.projectId?.homeownerName ?? "Project Not Found",
-          projectStage: p.projectId?.currentStage ?? "Stage Unknown",
+          projectStage: p.projectId?.currentStage ?? "Unknown", // Add this line
           technicianName: p.technicianId
             ? `${p.technicianId.firstName} ${p.technicianId.lastName}`
             : "Technician Not Found",
@@ -57,14 +57,24 @@ export const api = createApi({
       void,
       {
         projectId: string;
-        payroll: { technicianId: string; percentage: number }[];
+        payroll: {
+          technicianId: string;
+          technicianName: string; // Required
+          projectName: string; // Required
+          percentage: number;
+          amountDue: number;
+          paid: boolean;
+        }[];
       }
     >({
-      query: ({ projectId, payroll }) => ({
-        url: `/projects/${projectId}/payroll`,
-        method: "POST",
-        body: { payroll },
-      }),
+      query: ({ projectId, payroll }) => {
+        console.log("API Service Payload:", { projectId, payroll });
+        return {
+          url: `/projects/${projectId}/payroll`,
+          method: "POST",
+          body: { payroll },
+        };
+      },
       invalidatesTags: ["Payroll"],
     }),
   }),

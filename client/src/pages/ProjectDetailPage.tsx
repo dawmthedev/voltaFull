@@ -150,33 +150,81 @@ const ProjectDetailPage: React.FC = () => {
   const [addPayroll] = useAddPayrollMutation();
 
   const handleSave = async () => {
-    if (!projectId) return;
-    const payroll = allocations.map((a) => ({
-      technicianId: a.userId,
-      percentage: a.allocationPercent || 0, // Ensure we always have a number
-    }));
+    if (!projectId || !project?.homeowner) {
+      toast({
+        title: "Error",
+        description: "Project information is missing",
+        status: "error",
+        duration: 5000,
+      });
+      return;
+    }
 
-    try {
-      await addPayroll({ projectId, payroll }).unwrap();
+    const payrollEntries = [];
 
-      // Show success toast for each allocation
-      allocations.forEach((allocation) => {
-        const tech = techUsers.find((t) => t._id === allocation.userId);
-        const amount = calculateAmount(
+    for (const allocation of allocations) {
+      const tech = techUsers.find((t) => t._id === allocation.userId);
+
+      if (!tech?.name) {
+        toast({
+          title: "Error",
+          description: `Missing technician information for allocation`,
+          status: "error",
+          duration: 5000,
+        });
+        return;
+      }
+
+      payrollEntries.push({
+        technicianId: allocation.userId,
+        technicianName: tech.name, // Required field
+        projectName: project.homeowner, // Required field
+        percentage: allocation.allocationPercent,
+        amountDue: calculateAmount(
           totalAllocation,
           allocation.allocationPercent
-        );
+        ),
+        paid: false,
+      });
+    }
+
+    if (payrollEntries.length === 0) {
+      toast({
+        title: "Error",
+        description: "No payroll entries to save",
+        status: "error",
+        duration: 5000,
+      });
+      return;
+    }
+
+    try {
+      await addPayroll({
+        projectId,
+        payroll: payrollEntries,
+      }).unwrap();
+
+      payrollEntries.forEach((entry) => {
         toast({
           title: "Payroll Saved",
-          description: `${formatCurrency(amount)} allocated to ${tech?.name}`,
+          description: `${formatCurrency(entry.amountDue)} allocated to ${entry.technicianName}`,
           status: "success",
           duration: 5000,
           isClosable: true,
           position: "top-right",
         });
       });
-    } catch {
-      toast({ title: "Failed to save payroll", status: "error" });
+    } catch (error) {
+      console.error("Save Payroll Error:", error);
+      toast({
+        title: "Failed to save payroll",
+        description:
+          error instanceof Error
+            ? error.message
+            : "An error occurred while saving the payroll",
+        status: "error",
+        duration: 5000,
+      });
     }
   };
 

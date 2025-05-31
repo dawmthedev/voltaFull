@@ -14,6 +14,14 @@ const payrollSchema = new Schema(
       ref: "User",
       required: true
     },
+    projectName: {  // Add this field
+      type: String,
+      required: true
+    },
+    technicianName: {  // Add this field
+      type: String,
+      required: true
+    },
     percentage: {
       type: Number,
       required: true

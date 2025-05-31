@@ -15,6 +15,14 @@ export class PayrollModel {
   technicianId: string;
 
   @Property()
+  @Required() // Add Required decorator
+  projectName: string;
+
+  @Property()
+  @Required() // Add Required decorator
+  technicianName: string;
+
+  @Property()
   @Required()
   percentage: number;
 
