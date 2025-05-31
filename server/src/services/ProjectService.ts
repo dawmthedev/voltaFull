@@ -117,11 +117,10 @@ export class ProjectService {
         paid: entry.paid || false
       };
 
-      const record = await this.payableModel.findOneAndUpdate(
-        { projectId, technicianId: entry.technicianId },
-        payrollRecord,
-        { upsert: true, new: true }
-      );
+      const record = await this.payableModel.findOneAndUpdate({ projectId, technicianId: entry.technicianId }, payrollRecord, {
+        upsert: true,
+        new: true
+      });
       results.push(record);
     }
     return results;
