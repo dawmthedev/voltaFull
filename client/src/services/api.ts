@@ -13,26 +13,32 @@ export interface PayrollRecord {
   paid: boolean;
 }
 
+interface PayrollResponse {
+  _id: string;
+  projectId: {
+    _id: string;
+    homeownerName: string;
+    currentStage: string;
+  };
+  technicianId: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+  };
+  percentage: number;
+  amountDue: number;
+  paid: boolean;
+}
+
 export const api = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: `${baseURL}/rest` }),
   tagTypes: ["Payroll"],
   endpoints: (builder) => ({
     getAllPayroll: builder.query<PayrollRecord[], void>({
-      query: () => "/payroll",
+      query: () => "/projects/payroll/list",
       providesTags: ["Payroll"],
-      transformResponse: (res: { data: any[] }) =>
-        res.data.map((r) => ({
-          _id: r._id,
-          projectId: r.projectId._id,
-          projectName: r.projectName,
-          projectStage: r.projectStage,
-          technicianId: r.technicianId._id,
-          technicianName: r.technicianName,
-          percentage: r.percentage,
-          amountDue: r.amountDue,
-          paid: r.paid,
-        })),
+      transformResponse: (res: { data: PayrollRecord[] }) => res.data,
     }),
     addPayroll: builder.mutation<
       void,

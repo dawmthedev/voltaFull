@@ -3,6 +3,7 @@ import { MongooseModel } from "@tsed/mongoose";
 import { ProjectModel } from "../models/ProjectModel";
 import { PayrollModel } from "../models/AccountsPayableModel";
 import { AccountsPayableService } from "./AccountsPayableService";
+import { ObjectId } from "mongodb";
 
 export function parseCSV(content: string): Record<string, string>[] {
   const [headerLine, ...lines] = content.split(/\r?\n/).filter(Boolean);
@@ -57,10 +58,7 @@ export class ProjectService {
 
   public async getProjects(page = 1, pageSize = 20) {
     const skip = (page - 1) * pageSize;
-    const [items, total] = await Promise.all([
-      this.projectModel.find().skip(skip).limit(pageSize),
-      this.projectModel.countDocuments(),
-    ]);
+    const [items, total] = await Promise.all([this.projectModel.find().skip(skip).limit(pageSize), this.projectModel.countDocuments()]);
     return { items, total };
   }
 
@@ -80,16 +78,15 @@ export class ProjectService {
     return this.payableModel.find({ projectId }).lean().exec();
   }
 
-  public async updatePayroll(
-    projectId: string,
-    entries: { technicianId: string; percentage: number; paid?: boolean }[]
-  ) {
+  public async updatePayroll(projectId: string, entries: { technicianId: string; percentage: number; paid?: boolean }[]) {
     const results = [] as any[];
     for (const entry of entries) {
-      const amountDue = (await this.projectModel
-        .findById(projectId)
-        .lean()
-        .then((p) => p?.contractAmount || 0)) * (entry.percentage / 100);
+      const amountDue =
+        (await this.projectModel
+          .findById(projectId)
+          .lean()
+          .then((p) => p?.contractAmount || 0)) *
+        (entry.percentage / 100);
       const record = await this.payableModel.findOneAndUpdate(
         { projectId, technicianId: entry.technicianId },
         { projectId, technicianId: entry.technicianId, percentage: entry.percentage, amountDue, paid: entry.paid || false },
@@ -98,5 +95,66 @@ export class ProjectService {
       results.push(record);
     }
     return results;
+  }
+
+  async getPayrollWithDetails() {
+    console.log("Starting aggregation pipeline...");
+
+    const payroll = await this.payableModel
+      .aggregate([
+        {
+          $addFields: {
+            projectObjId: { $toObjectId: "$projectId" },
+            technicianObjId: { $toObjectId: "$technicianId" }
+          }
+        },
+        {
+          $lookup: {
+            from: "Projects", // Verify this matches your actual collection name
+            localField: "projectObjId",
+            foreignField: "_id",
+            as: "projectData"
+          }
+        },
+        {
+          $lookup: {
+            from: "Users", // Verify this matches your actual collection name
+            localField: "technicianObjId",
+            foreignField: "_id",
+            as: "technicianData"
+          }
+        },
+        {
+          $unwind: {
+            path: "$projectData",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $unwind: {
+            path: "$technicianData",
+            preserveNullAndEmptyArrays: true
+          }
+        },
+        {
+          $project: {
+            _id: 1,
+            projectId: "$projectId",
+            projectName: { $ifNull: ["$projectData.homeownerName", "Project Not Found"] },
+            projectStage: { $ifNull: ["$projectData.currentStage", "Stage Unknown"] },
+            technicianId: "$technicianId",
+            technicianName: {
+              $ifNull: [{ $concat: ["$technicianData.firstName", " ", "$technicianData.lastName"] }, "Technician Not Found"]
+            },
+            percentage: 1,
+            amountDue: 1,
+            paid: 1
+          }
+        }
+      ])
+      .exec();
+
+    console.log("Aggregation complete. Results:", payroll);
+    return payroll;
   }
 }

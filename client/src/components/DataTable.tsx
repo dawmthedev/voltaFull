@@ -93,15 +93,7 @@ function DataTable<T extends Record<string, any>>({
 
   return (
     <div className="flex flex-col space-y-4">
-      <div className="flex justify-start mb-4">
-        <input
-          type="text"
-          placeholder="Search..."
-          className="w-full md:w-1/2 lg:w-1/3 p-2 border border-gray-300 rounded-lg focus:ring-indigo-500 focus:border-indigo-500"
-          value={query}
-          onChange={handleSearch}
-        />
-      </div>
+      <div className="flex justify-start mb-4"></div>
       <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
         <div className="flex items-center justify-between flex-column md:flex-row flex-wrap space-y-4 md:space-y-0 py-4 bg-white dark:bg-gray-900">
           {allowSelection && actions && (

@@ -128,13 +128,13 @@ const ProjectsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800 overflow-hidden">
-      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6">
-        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-center mb-4 sm:mb-6 gap-3">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800">
+      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6 pb-6">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100 whitespace-nowrap">
             Projects Dashboard
           </h1>
-          <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-center sm:justify-end">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
             <input
               type="file"
               accept=".csv"
@@ -145,31 +145,33 @@ const ProjectsPage: React.FC = () => {
             />
             <button
               onClick={() => inputRef.current?.click()}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm whitespace-nowrap"
             >
               Upload CSV
             </button>
             <button
               onClick={handleCreate}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
+              className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm whitespace-nowrap"
             >
               + Add Project
             </button>
           </div>
         </div>
 
-        <div className="flex-1 overflow-hidden -mx-2 sm:mx-0">
-          <DataTable
-            columns={columns}
-            data={projects}
-            page={page}
-            pageSize={pageSize}
-            total={projects.length}
-            onPageChange={setPage}
-            onPageSizeChange={setPageSize}
-            allowSelection={true}
-            actions={tableActions}
-          />
+        <div className="w-full overflow-x-auto rounded-lg shadow-md bg-white dark:bg-gray-900">
+          <div className="min-w-full">
+            <DataTable
+              columns={columns}
+              data={projects}
+              page={page}
+              pageSize={pageSize}
+              total={projects.length}
+              onPageChange={setPage}
+              onPageSizeChange={setPageSize}
+              allowSelection={true}
+              actions={tableActions}
+            />
+          </div>
         </div>
 
         <AddProjectModal isOpen={isOpen} onClose={onClose} />

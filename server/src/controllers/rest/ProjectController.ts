@@ -69,4 +69,32 @@ export class ProjectController {
     const res = await this.projectService.payableModelService.listAllByProject();
     return new SuccessArrayResult(res, AccountsByProjectResultModel);
   }
+
+  @Get("/:id/payroll-details")
+  @Returns(200, SuccessResult)
+  public async getProjectPayrollDetails(@PathParams("id") id: string) {
+    const project = await this.projectService.findById(id);
+    if (!project) {
+      throw new NotFound(`Project with id ${id} not found`);
+    }
+    return new SuccessResult({
+      projectId: project._id,
+      homeownerName: project.homeownerName,
+      currentStage: project.currentStage
+    });
+  }
+
+  @Get("/payroll/list")
+  @Returns(200, SuccessArrayResult)
+  async listPayrollWithDetails() {
+    try {
+      console.log("Fetching payroll details...");
+      const payroll = await this.projectService.getPayrollWithDetails();
+      console.log("Payroll results:", JSON.stringify(payroll, null, 2));
+      return new SuccessArrayResult(payroll);
+    } catch (error) {
+      console.error("Error fetching payroll:", error);
+      throw error;
+    }
+  }
 }

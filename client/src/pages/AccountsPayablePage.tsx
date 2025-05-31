@@ -42,63 +42,61 @@ const AccountsPayablePage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-screen bg-gray-50 dark:bg-gray-800">
-      {/* Header */}
-      <div className="w-full border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
-        <div className="max-w-7xl mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100">
+    <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800">
+      <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6 pb-6">
+        <div className="flex flex-col sm:flex-row sm:flex-wrap justify-between items-start sm:items-center mb-4 sm:mb-6 gap-3">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-gray-100">
             Accounts Payable
           </h1>
         </div>
-      </div>
 
-      {/* Table Container */}
-      <div className="flex-1 w-full max-w-7xl mx-auto px-4 py-4">
-        <div className="relative overflow-x-auto shadow-md sm:rounded-lg">
-          <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
-            <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
-              <tr>
-                <th scope="col" className="px-6 py-3">
-                  Project
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Technician
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Allocation %
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Payout
-                </th>
-                <th scope="col" className="px-6 py-3">
-                  Status
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              {records.map((r: PayrollRecord) => (
-                <tr
-                  key={r._id}
-                  className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
-                >
-                  <td className="px-6 py-4">{r.projectName}</td>
-                  <td className="px-6 py-4">{r.technicianName}</td>
-                  <td className="px-6 py-4">{r.percentage}%</td>
-                  <td className="px-6 py-4">${r.amountDue.toFixed(2)}</td>
-                  <td className="px-6 py-4">
-                    <StatusChip stage={r.projectStage} paid={r.paid} />
-                  </td>
+        <div className="w-full overflow-x-auto rounded-lg shadow-md bg-white dark:bg-gray-900">
+          <div className="min-w-full">
+            <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+              <thead className="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                  <th scope="col" className="px-6 py-3">
+                    Project
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Technician
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Allocation %
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Payout
+                  </th>
+                  <th scope="col" className="px-6 py-3">
+                    Status
+                  </th>
                 </tr>
-              ))}
-              {records.length === 0 && (
-                <tr className="bg-white dark:bg-gray-800">
-                  <td colSpan={5} className="px-6 py-4 text-center">
-                    No data
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {records.map((r: PayrollRecord) => (
+                  <tr
+                    key={r._id}
+                    className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
+                  >
+                    <td className="px-6 py-4">{r.projectName}</td>
+                    <td className="px-6 py-4">{r.technicianName}</td>
+                    <td className="px-6 py-4">{r.percentage}%</td>
+                    <td className="px-6 py-4">${r.amountDue.toFixed(2)}</td>
+                    <td className="px-6 py-4">
+                      <StatusChip stage={r.projectStage} paid={r.paid} />
+                    </td>
+                  </tr>
+                ))}
+                {records.length === 0 && (
+                  <tr className="bg-white dark:bg-gray-800">
+                    <td colSpan={5} className="px-6 py-4 text-center">
+                      No data
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
