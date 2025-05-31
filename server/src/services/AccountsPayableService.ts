@@ -1,8 +1,10 @@
 import { Inject, Injectable } from "@tsed/di";
 import { MongooseModel } from "@tsed/mongoose";
 import { BadRequest } from "@tsed/exceptions";
-import { AccountsPayableModel, PayrollModel } from "../models/AccountsPayableModel";
+import { AccountsPayableModel } from "../models/AccountsPayableModel";
+import { PayrollModel } from "../models/PayrollModel";
 import { ProjectModel } from "../models/ProjectModel";
+import { AdminModel } from "../models/AdminModel";
 
 interface AllocationInput {
   technicianId: string;
@@ -17,7 +19,9 @@ export class AccountsPayableService {
     @Inject(ProjectModel)
     private projectModel: MongooseModel<ProjectModel>,
     @Inject(AccountsPayableModel)
-    private legacyModel: MongooseModel<AccountsPayableModel>
+    private legacyModel: MongooseModel<AccountsPayableModel>,
+    @Inject(AdminModel)
+    private adminModel: MongooseModel<AdminModel>
   ) {}
 
   private migrated = false;
@@ -45,13 +49,30 @@ export class AccountsPayableService {
 
     const project = await this.projectModel.findById(projectId).lean();
     const contract = project?.contractAmount || 0;
+    const projectName = project?.homeowner || "Unknown";
+
+    const techIds = [...new Set(allocations.map((a) => a.technicianId))];
+    const technicians = await this.adminModel
+      .find({ _id: { $in: techIds } })
+      .lean();
+    const techMap = new Map(
+      technicians.map((t) => [t._id.toString(), t.name as string])
+    );
 
     const results: PayrollModel[] = [];
     for (const alloc of allocations) {
       const amountDue = (contract * alloc.percentage) / 100;
+      const technicianName = techMap.get(alloc.technicianId) || "Unknown";
       const record = await this.payrollModel.findOneAndUpdate(
         { projectId, technicianId: alloc.technicianId },
-        { projectId, technicianId: alloc.technicianId, percentage: alloc.percentage, amountDue },
+        {
+          projectId,
+          technicianId: alloc.technicianId,
+          technicianName,
+          projectName,
+          percentage: alloc.percentage,
+          amountDue,
+        },
         { upsert: true, new: true }
       );
       results.push(record);
@@ -61,10 +82,7 @@ export class AccountsPayableService {
 
   public async listByPaidStatus(paid: boolean) {
     await this.ensureMigrated();
-    return this.payrollModel
-      .find({ paid })
-      .populate("technicianId", "name")
-      .populate("projectId", "homeowner");
+    return this.payrollModel.find({ paid }).lean();
   }
 
   public async markPaid(id: string) {
@@ -77,24 +95,30 @@ export class AccountsPayableService {
   }
 
   public async listAllByProject() {
-      await this.ensureMigrated();
-      const projects = await this.payrollModel
-        .find()
-        .populate('technicianId', 'name')
-        .populate('projectId', 'homeowner status');
+    await this.ensureMigrated();
+    const records = await this.payrollModel.find().lean();
+    const projectIds = [...new Set(records.map((r) => r.projectId))];
+    const projects = await this.projectModel
+      .find({ _id: { $in: projectIds } })
+      .lean();
+    const projMap = new Map(
+      projects.map((p) => [p._id.toString(), { name: p.homeowner, status: p.status }])
+    );
+
     const map = new Map<string, any>();
-    for (const rec of projects) {
-      const pid = (rec.projectId as any)._id.toString();
+    for (const rec of records) {
+      const pid = rec.projectId.toString();
       if (!map.has(pid)) {
+        const proj = projMap.get(pid) || { name: rec.projectName, status: undefined };
         map.set(pid, {
           projectId: pid,
-          projectName: (rec.projectId as any).homeowner,
-          status: (rec.projectId as any).status,
+          projectName: proj.name,
+          status: proj.status,
           payroll: [] as any[],
         });
       }
       map.get(pid).payroll.push({
-        techId: (rec.technicianId as any)._id.toString(),
+        techId: rec.technicianId,
         allocationPct: rec.percentage,
         paid: rec.paid,
         amountDue: rec.amountDue,
