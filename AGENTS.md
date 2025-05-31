@@ -12,6 +12,39 @@ Volta CRM is a multi-role customer management platform. The repository is a Node
 
 Core features include project tracking, accounts payable, user management and authentication. The architecture is modular so new modules can be added easily.
 
+### Application Flow
+
+1. **Registration and Login** – users register and authenticate through the
+   routes exposed by `AuthenticationController`. Once logged in, the React client
+   stores the session token and directs users to `/dashboard`.
+2. **Dashboard** – `client/src/routes.tsx` defines the main routes under the
+   dashboard. Pages include projects, accounts payable, user management and
+   technician tasks.
+3. **API Calls** – pages dispatch Redux thunks located in `client/src/store` to
+   call the REST endpoints implemented in `server/src/controllers/rest`.
+
+### Key Features
+
+- **Project Tracking** – create and update projects via `ProjectController` and
+  manage payroll allocations.
+- **Accounts Payable** – `AccountsPayableController` and its service handle
+  allocations and payment status.
+- **User Management** – admins invite and manage users using `AdminController`
+  and related services.
+- **Technician Tasks** – technicians can view assigned tasks from the payroll and
+  project modules.
+- **Authentication** – `AuthenticationController` issues tokens and verifies
+  registrations.
+
+### Backend Consistency
+
+The server uses Ts.ED controllers paired with dedicated services and Mongoose
+models, ensuring each resource follows a typed schema. Services such as
+`AccountsPayableService` migrate legacy data and validate percentage totals while
+`AdminService` manages session cookies. Running `npm --workspace server run
+barrels` keeps controller exports aligned, and tests under `tests/server` guard
+behavior.
+
 ## Environment Setup
 
 1. Use **Node.js 18.x** (enforced by the `volta` block in `package.json`).
