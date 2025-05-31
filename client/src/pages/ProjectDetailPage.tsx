@@ -160,33 +160,24 @@ const ProjectDetailPage: React.FC = () => {
       return;
     }
 
-    const payrollEntries = [];
-
-    for (const allocation of allocations) {
+    const payrollEntries = allocations.map((allocation) => {
       const tech = techUsers.find((t) => t._id === allocation.userId);
-
       if (!tech?.name) {
-        toast({
-          title: "Error",
-          description: `Missing technician information for allocation`,
-          status: "error",
-          duration: 5000,
-        });
-        return;
+        throw new Error(`Missing technician information`);
       }
 
-      payrollEntries.push({
+      return {
         technicianId: allocation.userId,
-        technicianName: tech.name, // Required field
-        projectName: project.homeowner, // Required field
+        technicianName: tech.name,
+        projectName: project.homeowner,
         percentage: allocation.allocationPercent,
         amountDue: calculateAmount(
           totalAllocation,
           allocation.allocationPercent
         ),
         paid: false,
-      });
-    }
+      };
+    });
 
     if (payrollEntries.length === 0) {
       toast({

@@ -83,18 +83,4 @@ export class ProjectController {
       currentStage: project.currentStage
     });
   }
-
-  @Get("/payroll/list")
-  @Returns(200, SuccessArrayResult)
-  async listPayrollWithDetails() {
-    try {
-      console.log("Fetching payroll details...");
-      const payroll = await this.projectService.getPayrollWithDetails();
-      console.log("Payroll results:", JSON.stringify(payroll, null, 2));
-      return new SuccessArrayResult(payroll);
-    } catch (error) {
-      console.error("Error fetching payroll:", error);
-      throw error;
-    }
-  }
 }

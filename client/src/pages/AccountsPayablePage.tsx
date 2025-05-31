@@ -41,6 +41,14 @@ const AccountsPayablePage: React.FC = () => {
     }
   };
 
+  const getProjectName = (record: PayrollRecord): string => {
+    return record.projectName || "Project Not Found";
+  };
+
+  const getTechnicianName = (record: PayrollRecord): string => {
+    return record.technicianName || "Technician Not Found";
+  };
+
   return (
     <div className="flex-1 flex flex-col h-full bg-gray-50 dark:bg-gray-800">
       <div className="w-full max-w-screen-xl mx-auto px-2 sm:px-4 md:px-6 pb-6">
@@ -78,8 +86,8 @@ const AccountsPayablePage: React.FC = () => {
                     key={r._id}
                     className="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600"
                   >
-                    <td className="px-6 py-4">{r.projectName}</td>
-                    <td className="px-6 py-4">{r.technicianName}</td>
+                    <td className="px-6 py-4">{getProjectName(r)}</td>
+                    <td className="px-6 py-4">{getTechnicianName(r)}</td>
                     <td className="px-6 py-4">{r.percentage}%</td>
                     <td className="px-6 py-4">${r.amountDue.toFixed(2)}</td>
                     <td className="px-6 py-4">

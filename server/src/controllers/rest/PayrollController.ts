@@ -5,18 +5,28 @@ import { PayrollService } from "../../services/PayrollService";
 import { PayrollModel } from "../../models/PayrollModel";
 import { SuccessArrayResult, SuccessResult } from "../../util/entities";
 
-@Controller("/")
+@Controller("/payroll")
 export class PayrollController {
   @Inject()
   private service: PayrollService;
 
-  @Post("/projects/:projectId/payroll")
+  @Post("/create")
   @(Returns(200, SuccessArrayResult).Of(PayrollModel))
   async create(
-    @PathParams("projectId") projectId: string,
-    @BodyParams("payroll") payroll: { technicianId: string; percentage: number }[]
+    @BodyParams()
+    body: {
+      projectId: string;
+      payroll: {
+        technicianId: string;
+        technicianName: string;
+        projectName: string;
+        percentage: number;
+        amountDue: number;
+        paid: boolean;
+      }[];
+    }
   ) {
-    const res = await this.service.insert(projectId, payroll);
+    const res = await this.service.insert(body.projectId, body.payroll);
     return new SuccessArrayResult(res, PayrollModel);
   }
 
@@ -39,5 +49,17 @@ export class PayrollController {
   async markPaid(@PathParams("payrollId") payrollId: string) {
     const res = await this.service.markPaid(payrollId);
     return new SuccessResult(res, PayrollModel);
+  }
+
+  @Get("/list-details")
+  @Returns(200, SuccessArrayResult)
+  async listPayrollWithDetails() {
+    try {
+      const payroll = await this.service.listAll(); // Use PayrollService instead of ProjectService
+      return new SuccessArrayResult(payroll);
+    } catch (error) {
+      console.error("Error fetching payroll:", error);
+      throw error;
+    }
   }
 }
