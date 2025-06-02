@@ -1,26 +1,56 @@
-import React from "react";
-import { IconButton, useColorMode } from "@chakra-ui/react";
+import React, { useEffect, useState } from "react";
 import { FiSun, FiMoon } from "react-icons/fi";
 
 interface ThemeToggleProps {
-  size?: string;
-  className?: string; // Add this line
+  size?: "sm" | "md" | "lg";
+  className?: string;
 }
 
 const ThemeToggle: React.FC<ThemeToggleProps> = ({
   size = "md",
   className,
 }) => {
-  const { colorMode, toggleColorMode } = useColorMode();
+  const [darkMode, setDarkMode] = useState(false);
+
+  useEffect(() => {
+    // Check if user has dark mode preference saved in localStorage
+    const isDark = localStorage.theme === 'dark' || 
+      (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    setDarkMode(isDark);
+    updateTheme(isDark);
+  }, []);
+
+  const toggleColorMode = () => {
+    const newDarkMode = !darkMode;
+    setDarkMode(newDarkMode);
+    updateTheme(newDarkMode);
+  };
+
+  const updateTheme = (isDark: boolean) => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
+      localStorage.theme = 'dark';
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.theme = 'light';
+    }
+  };
+
+  // Define size classes for button based on size prop
+  const sizeClasses = {
+    sm: "p-1",
+    md: "p-2",
+    lg: "p-3"
+  }[size];
+
   return (
-    <IconButton
+    <button
       aria-label="Toggle color mode"
-      icon={colorMode === "light" ? <FiMoon /> : <FiSun />}
-      variant="ghost"
       onClick={toggleColorMode}
-      size={size as any}
-      className={className}
-    />
+      className={`rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 ${sizeClasses} ${className || ''}`}
+    >
+      {darkMode ? <FiSun className="h-5 w-5" /> : <FiMoon className="h-5 w-5" />}
+    </button>
   );
 };
 

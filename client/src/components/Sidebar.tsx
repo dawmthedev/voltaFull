@@ -1,23 +1,12 @@
 import React from "react";
 import {
-  Box,
-  VStack,
-  HStack,
-  Icon,
-  Text,
-  useColorModeValue,
-  Drawer,
-  DrawerOverlay,
-  DrawerContent,
-  Slide,
-} from "@chakra-ui/react";
-import {
-  FiGrid,
-  FiUsers,
-  FiDollarSign,
-  FiSettings,
-  FiLogOut,
-} from "react-icons/fi";
+  FaThLarge,
+  FaUsersCog,
+  FaFileInvoiceDollar,
+  FaCog,
+  FaUserCircle,
+  FaSignOutAlt,
+} from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../store";
 import { logout } from "../store/authSlice";
 import SidebarItem from "./SidebarItem";
@@ -38,9 +27,7 @@ const Sidebar: React.FC<SidebarProps> = ({
   const user = useAppSelector((state) => state.auth.user);
   const dispatch = useAppDispatch();
   const { closeSidebar } = useLayout();
-  const bg = useColorModeValue("white", "gray.800");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
-  const hoverBg = useColorModeValue("gray.100", "gray.700");
+  // Tailwind handles colors via dark: prefix
 
   const handleClose = () => {
     onClose?.();
@@ -48,39 +35,31 @@ const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const content = (
-    <Box
-      w={{ base: "full", md: "240px" }}
-      h="100vh"
-      bg={bg}
-      borderRight="1px solid"
-      borderColor={borderColor}
-      display="flex"
-      flexDirection="column"
-      className="shadow-lg transform transition-all duration-300 ease-in-out 
-        backdrop-blur-sm bg-white/90 dark:bg-gray-800/90
-        md:translate-x-0 touch-pan-y overscroll-none"
+    <div
+      className="w-full md:w-64 h-screen bg-white dark:bg-gray-900 border-r border-gray-200 
+      dark:border-gray-700 flex flex-col shadow-lg transform transition-all duration-300 ease-in-out 
+      md:translate-x-0 touch-pan-y overscroll-none"
     >
-      <VStack flex="1" spacing={4} align="stretch" px={6} pt={6}>
-        <Box className="mb-8 flex items-center justify-between">
-          <Text
-            className="text-2xl font-bold bg-gradient-to-r from-teal-600 to-cyan-600 
+      <div className="flex-1 flex flex-col gap-4 px-4 pt-5">
+        <div className="mb-8 flex items-center justify-between">
+          <span
+            className="text-2xl font-bold bg-gradient-to-r from-teal-500 to-cyan-500 
             bg-clip-text text-transparent"
           >
             Volta
-          </Text>
+          </span>
           <button
             onClick={onClose}
-            className="md:hidden rounded-full p-2 hover:bg-gray-100 dark:hover:bg-gray-700
-              active:scale-95 transition-transform"
+            className="md:hidden rounded-full p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800 active:scale-95 transition-transform"
           >
             ×
           </button>
-        </Box>
+        </div>
 
         {/* Mobile-optimized navigation items */}
-        <div className="space-y-1">
+        <div className="space-y-1.5">
           <SidebarItem
-            icon={FiGrid}
+            icon={FaThLarge}
             label="Projects"
             to="/dashboard/projects"
             isOpen={true}
@@ -88,7 +67,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           />
           {user?.role === "Technician" && (
             <SidebarItem
-              icon={FiSettings}
+              icon={FaCog}
               label="Technician Allocation"
               to="/dashboard/technician"
               isOpen={true}
@@ -98,14 +77,14 @@ const Sidebar: React.FC<SidebarProps> = ({
           {user?.role === "Admin" && (
             <>
               <SidebarItem
-                icon={FiDollarSign}
+                icon={FaFileInvoiceDollar}
                 label="Accounts Payable"
                 to="/dashboard/accounts"
                 isOpen={true}
                 onNavigate={closeSidebar}
               />
               <SidebarItem
-                icon={FiUsers}
+                icon={FaUsersCog}
                 label="Users"
                 to="/dashboard/users"
                 isOpen={true}
@@ -114,64 +93,59 @@ const Sidebar: React.FC<SidebarProps> = ({
             </>
           )}
           <SidebarItem
-            icon={FiUsers} // Changed from FiUser to FiUsers for profile
+            icon={FaUserCircle}
             label="Profile"
             to="/dashboard/profile"
             isOpen={true}
             onNavigate={closeSidebar}
           />
         </div>
-      </VStack>
+      </div>
 
-      <Box
-        mt="auto"
-        px={6}
-        pb={6}
-        borderTop="1px solid"
-        borderColor={borderColor}
-        className="backdrop-blur-sm bg-gray-50/50 dark:bg-gray-800/50"
+      <div
+        className="mt-auto px-4 pb-4 border-t border-gray-200 dark:border-gray-700"
       >
-        <HStack spacing={3} mb={4} justify="space-between" className="py-4">
-          <Text className="text-gray-600 dark:text-gray-400 font-medium">
+        <div className="flex justify-between items-center py-4 mb-4 gap-3">
+          <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Settings
-          </Text>
+          </span>
           <ThemeToggle size="sm" />
-        </HStack>
+        </div>
         <button
           onClick={() => dispatch(logout())}
-          className="w-full px-4 py-2 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200 flex items-center gap-2 group"
+          className="w-full px-3 py-2.5 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-150 flex items-center gap-3 group"
         >
-          <Icon
-            as={FiLogOut}
-            className="transform group-hover:-translate-x-1 transition-transform"
+          <FaSignOutAlt 
+            className="h-5 w-5 transform group-hover:scale-105 transition-transform"
           />
-          <Text>Logout</Text>
+          <span>Logout</span>
         </button>
-      </Box>
-    </Box>
+      </div>
+    </div>
   );
 
   return (
     <>
       {/* Mobile drawer with touch gestures */}
       {isOpen && (
-        <Box className="touch-pan-y overscroll-none md:hidden">
-          <Drawer
-            isOpen={isOpen}
-            placement="left"
-            onClose={handleClose}
-            finalFocusRef={toggleRef}
-          >
-            <DrawerOverlay backdropFilter="blur(4px)" />
-            <DrawerContent maxW="85%">{content}</DrawerContent>
-          </Drawer>
-        </Box>
+        <div className="touch-pan-y overscroll-none md:hidden fixed inset-0 z-50">
+          {/* Backdrop */}
+          <div 
+            className="fixed inset-0 bg-black/30 dark:bg-black/60 backdrop-blur-sm"
+            onClick={handleClose}
+          ></div>
+          {/* Drawer content */}
+          <div className="fixed inset-y-0 left-0 max-w-[85%] w-full">
+            {content}
+          </div>
+        </div>
       )}
 
       {/* Desktop slide */}
-      <Slide direction="left" in={isOpen} style={{ zIndex: 20 }} unmountOnExit>
-        <Box className="hidden md:block h-screen flex-shrink-0">{content}</Box>
-      </Slide>
+      <div 
+        className={`hidden md:block h-screen flex-shrink-0 z-20 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+        {content}
+      </div>
     </>
   );
 };

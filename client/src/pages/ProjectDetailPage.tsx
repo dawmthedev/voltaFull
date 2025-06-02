@@ -204,15 +204,43 @@ const ProjectDetailPage: React.FC = () => {
         payroll: payrollEntries,
       }).unwrap();
 
+      // Show success toasts for each allocation
       payrollEntries.forEach((entry) => {
-        toast({
-          title: "Payroll Saved",
-          description: `${formatCurrency(entry.amountDue)} allocated to ${entry.technicianName}`,
-          status: "success",
-          duration: 5000,
-          isClosable: true,
-          position: "top-right",
-        });
+        const toastId = `toast-${entry.technicianId}-${Date.now()}`;
+        const toast = document.createElement('div');
+        toast.id = toastId;
+        toast.className = 'fixed top-4 right-4 z-50 w-80 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800 rounded-lg shadow-lg transform transition-all duration-300 translate-x-0';
+        toast.innerHTML = `
+          <div class="flex items-start">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-green-600 dark:text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+              </svg>
+            </div>
+            <div class="ml-3 w-0 flex-1">
+              <p class="text-sm font-medium text-green-800 dark:text-green-200">Payroll Saved</p>
+              <p class="mt-1 text-sm text-green-700 dark:text-green-300">${formatCurrency(entry.amountDue)} allocated to ${entry.technicianName}</p>
+            </div>
+            <div class="ml-4 flex-shrink-0 flex">
+              <button onclick="document.getElementById('${toastId}').remove()" class="inline-flex text-green-400 hover:text-green-600 dark:hover:text-green-300 focus:outline-none">
+                <span class="sr-only">Close</span>
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(toast);
+        
+        // Auto-remove the toast after 5 seconds
+        setTimeout(() => {
+          const toastElement = document.getElementById(toastId);
+          if (toastElement) {
+            toastElement.classList.add('translate-x-full', 'opacity-0');
+            setTimeout(() => toastElement.remove(), 300);
+          }
+        }, 5000);
       });
     } catch (error) {
       console.error("Save Payroll Error:", error);
@@ -306,82 +334,118 @@ const ProjectDetailPage: React.FC = () => {
               </TabPanel>
 
               <TabPanel>
-                <div className="max-w-2xl space-y-6">
-                  <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm space-y-4">
-                    <Text className="text-lg font-semibold">
-                      Contract Amount:{" "}
-                      {formatCurrency(project?.contractAmount || 0)}
-                    </Text>
+                <div className="max-w-2xl mx-auto space-y-8 py-6">
+                  {/* Contract and Piecemeal Section */}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-5">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+                      Contract Details
+                    </h3>
+                    <div className="space-y-3">
+                      <p className="text-gray-700 dark:text-gray-300">
+                        <span className="font-medium text-gray-800 dark:text-gray-200">Contract Amount:</span>{" "}
+                        {formatCurrency(project?.contractAmount || 0)}
+                      </p>
 
-                    <div className="flex items-center gap-4">
-                      <Text>Piecemeal Percentage:</Text>
-                      <div className="w-32">
-                        <PercentageInput
-                          value={piecemealPercent}
-                          onChange={setPiecemealPercent}
-                          max={100}
-                          className="w-full"
-                        />
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-2">
+                        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Piecemeal Percentage:
+                        </label>
+                        <div className="w-full sm:w-36">
+                          <PercentageInput
+                            value={piecemealPercent}
+                            onChange={setPiecemealPercent}
+                            max={100}
+                            className="w-full"
+                          />
+                        </div>
                       </div>
+
+                      <p className="text-gray-700 dark:text-gray-300 pt-2">
+                        <span className="font-medium text-gray-800 dark:text-gray-200">Total Allocation for Piecemeal:</span>{" "}
+                        <span className="text-teal-600 dark:text-teal-400 font-semibold">
+                          {formatCurrency(totalAllocation)}
+                        </span>
+                      </p>
                     </div>
-
-                    <Text className="font-medium">
-                      Total Allocation: {formatCurrency(totalAllocation)}
-                    </Text>
                   </div>
 
-                  {/* Technician allocation section */}
-                  <div className="space-y-4">
-                    {assignedTechIds.map((val, i) => (
-                      <div key={i} className="flex items-center gap-4">
-                        <Text w="100px">Technician {i + 1}</Text>
-                        <Select
-                          placeholder="Select Technician"
-                          value={val}
-                          onChange={(e) => {
-                            handleTechChange(i, e.target.value);
-                            distributePercentages();
-                          }}
-                        >
-                          {techUsers.map((t) => (
-                            <option key={t._id} value={t._id || ""}>
-                              {t.name}
-                            </option>
-                          ))}
-                        </Select>
-                        <PercentageInput
-                          value={percents[i]}
-                          onChange={(val) => handlePercentChange(i, val)}
-                          isDisabled={!val}
-                          remainingPercent={getRemainingPercent(i)}
-                        />
-                      </div>
-                    ))}
+                  {/* Technician Allocation Section */}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-5">
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+                      Technician Allocation
+                    </h3>
+                    <div className="space-y-6">
+                      {assignedTechIds.map((val, i) => (
+                        <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+                          <label htmlFor={`tech-${i}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 md:col-span-1">
+                            Technician {i + 1}
+                          </label>
+                          <div className="md:col-span-1">
+                            <select
+                              id={`tech-${i}`}
+                              value={val}
+                              onChange={(e) => {
+                                handleTechChange(i, e.target.value);
+                                distributePercentages();
+                              }}
+                              className="block w-full rounded-md border-gray-300 dark:border-gray-600 shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-200 px-3 py-2.5 h-[42px]"
+                            >
+                              <option value="" disabled>Select Technician</option>
+                              {techUsers.map((t) => (
+                                <option key={t._id} value={t._id || ""}>
+                                  {t.name}
+                                </option>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="md:col-span-1">
+                            <PercentageInput
+                              value={percents[i]}
+                              onChange={(newVal) => handlePercentChange(i, newVal)}
+                              isDisabled={!val}
+                              remainingPercent={getRemainingPercent(i)}
+                              className="w-full"
+                            />
+                          </div>
+                        </div>
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Summary section */}
-                  <div className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm space-y-3">
+                  {/* Summary Section */}
+                  <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 space-y-4">
+                     <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-4 border-b border-gray-200 dark:border-gray-700 pb-3">
+                      Payroll Summary
+                    </h3>
                     {allocations.map((a, idx) => {
                       const tech = techUsers.find((t) => t._id === a.userId);
                       return (
-                        <Text key={a.userId}>
-                          {tech?.name || "-"}: {formatCurrency(totals[idx])}
-                        </Text>
+                        <p key={a.userId} className="text-sm text-gray-700 dark:text-gray-300 flex justify-between">
+                          <span>{tech?.name || "-"}:</span>
+                          <span className="font-medium text-gray-800 dark:text-gray-200">{formatCurrency(totals[idx])}</span>
+                        </p>
                       );
                     })}
-                    <Text fontWeight="bold" mt={2}>
-                      Total Distribution:{" "}
-                      {formatCurrency(totals.reduce((s, v) => s + v, 0))}
-                    </Text>
+                    <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-4">
+                      <p className="text-md font-semibold text-gray-900 dark:text-white flex justify-between">
+                        <span>Total Distribution:</span>
+                        <span>
+                          {formatCurrency(totals.reduce((s, v) => s + v, 0))}
+                        </span>
+                      </p>
+                    </div>
                   </div>
 
-                  <Button
-                    onClick={handleSave}
-                    isDisabled={disableSave}
-                    className="w-full sm:w-auto px-8 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow-sm transition-colors disabled:opacity-50"
-                  >
-                    Save Payroll
-                  </Button>
+                  <div className="pt-4 flex justify-end">
+                    <button
+                      type="button"
+                      onClick={handleSave}
+                      disabled={disableSave}
+                      className="px-8 py-3 bg-teal-600 hover:bg-teal-700 text-white font-semibold rounded-lg shadow-md hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-opacity-75 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Save Payroll
+                    </button>
+                  </div>
                 </div>
               </TabPanel>
             </TabPanels>

@@ -1,5 +1,4 @@
 import React from "react";
-import { Flex, Heading, IconButton, useColorModeValue } from "@chakra-ui/react";
 import { FiMenu } from "react-icons/fi";
 import UserAvatar from "./UserAvatar";
 
@@ -13,38 +12,23 @@ const Navbar: React.FC<NavbarProps> = ({
   toggleRef,
   className,
 }) => {
-  const bg = useColorModeValue("white", "gray.800");
-  const text = useColorModeValue("gray.800", "white");
-  const borderColor = useColorModeValue("gray.200", "gray.700");
   return (
-    <Flex
-      as="nav"
-      position="sticky"
-      top={0}
-      zIndex="sticky"
-      px={4}
-      py={2}
-      bg={bg}
-      color={text}
-      justify="space-between"
-      align="center"
-      borderBottom="1px solid"
-      borderColor={borderColor}
-      transition="background 0.2s, color 0.2s"
-      className={className}
+    <nav 
+      className={`flex justify-between items-center px-4 sm:px-6 lg:px-8 py-3 ${className || ''}`}
     >
-      <Flex align="center" gap={2}>
-        <IconButton
+      <div className="flex items-center gap-2">
+        <button
           ref={toggleRef}
           aria-label="Toggle sidebar"
-          icon={<FiMenu />}
-          variant="ghost"
           onClick={onToggleSidebar}
-        />
-        <Heading size="md">Volta CRM</Heading>
-      </Flex>
-      <UserAvatar />
-    </Flex>
+          className="p-2 rounded-md text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        >
+          <FiMenu />
+        </button>
+        <h1 className="text-xl font-semibold text-gray-800 dark:text-gray-200 hidden sm:block">Volta CRM</h1>
+      </div>
+      <UserAvatar />  
+    </nav>
   );
 };
 

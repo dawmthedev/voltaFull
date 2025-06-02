@@ -46,7 +46,7 @@ const Layout: React.FC = () => {
 
   return (
     <LayoutContext.Provider value={{ closeSidebar }}>
-      <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-900 transition-colors">
+      <div className="flex h-screen overflow-hidden bg-gray-50 dark:bg-gray-950 transition-colors">
         <SafeAnimatePresence>
           {isSidebarOpen && (
             <motion.div
@@ -69,10 +69,10 @@ const Layout: React.FC = () => {
           <Navbar
             onToggleSidebar={toggleSidebar}
             toggleRef={toggleRef}
-            className="z-10 glass-panel sticky top-0"
+            className="z-10 sticky top-0 bg-gray-50/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-800"
           />
-          <main className="flex-1 overflow-auto bg-gray-50 dark:bg-gray-900 relative">
-            <div className="section-container">
+          <main className="flex-1 overflow-auto bg-gray-100 dark:bg-gray-900 relative">
+            <div className="p-4 sm:p-6 lg:p-8">
               <Outlet />
             </div>
           </main>

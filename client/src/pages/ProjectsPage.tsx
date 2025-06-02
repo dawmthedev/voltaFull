@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { EditIcon } from "@chakra-ui/icons";
+import { FaEdit } from "react-icons/fa";
 import { fetchProjects, createProject, Project } from "../store/projectsSlice";
 import { useAppDispatch, useAppSelector } from "../store";
 import AddProjectModal from "../components/AddProjectModal";
@@ -87,7 +87,7 @@ const ProjectsPage: React.FC = () => {
           className="p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded text-gray-600 dark:text-gray-300"
           aria-label="Edit Project"
         >
-          <EditIcon />
+          <FaEdit className="h-4 w-4" />
         </Link>
       ),
     },
