@@ -1,16 +1,4 @@
 import React, { useState, useEffect } from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  FormLabel,
-  Heading,
-  Input,
-  ScaleFade,
-  Text,
-  useDisclosure,
-  useColorModeValue,
-} from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 
 import { useAppDispatch, useAppSelector } from "../store";
@@ -23,7 +11,7 @@ const LoginPage: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  const { isOpen, onToggle } = useDisclosure({ defaultIsOpen: true });
+  const [isVisible, setIsVisible] = useState(true);
 
   useEffect(() => {
     if (token) navigate("/dashboard/projects", { replace: true });
@@ -39,10 +27,9 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const bg = useColorModeValue("blue.50", "gray.900");
-  const panelBg = useColorModeValue("white", "gray.700");
+  // Removed color mode values in favor of Tailwind dark mode
   return (
-    <Box className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-teal-500 to-cyan-600">
+    <div className="min-h-screen flex flex-col items-center justify-center relative overflow-hidden bg-gradient-to-br from-teal-500 to-cyan-600">
       {/* Simplified wave background */}
       <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-teal-500/30 to-cyan-600/30 backdrop-blur-xl">
         <div className="absolute inset-0 opacity-20">
@@ -60,15 +47,9 @@ const LoginPage: React.FC = () => {
         </div>
       </div>
 
-      <ScaleFade in={isOpen} initialScale={0.9}>
-        <Box
-          bg={panelBg}
-          p={8}
-          rounded="xl"
-          shadow="2xl"
-          className="w-full max-w-md backdrop-blur-xl bg-white/95 dark:bg-gray-800/95 
-            border border-white/20 transform transition-all duration-300"
-        >
+      <div className={`transform transition-all duration-500 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-90'}`}>
+        <div className="w-full max-w-md p-8 rounded-xl shadow-2xl backdrop-blur-xl bg-white/95 dark:bg-gray-800/95 
+          border border-white/20 transform transition-all duration-300">
           <div className="mb-8 text-center">
             <div className="inline-block p-4 mb-4">
               {/* Simple, professional logo placeholder */}
@@ -79,79 +60,80 @@ const LoginPage: React.FC = () => {
                 V
               </div>
             </div>
-            <Heading
-              mb={2}
-              size="lg"
-              className="text-gray-900 dark:text-white font-medium"
-            >
+            <h1 className="text-2xl mb-2 text-gray-900 dark:text-white font-medium">
               Welcome to Volta
-            </Heading>
-            <Text className="text-gray-600 dark:text-gray-400">
+            </h1>
+            <p className="text-gray-600 dark:text-gray-400">
               Sign in to your account
-            </Text>
+            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-5">
-            <FormControl>
-              <FormLabel className="text-gray-700 dark:text-gray-300">
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Email address
-              </FormLabel>
-              <Input
+              </label>
+              <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
-                  focus:border-teal-500 focus:ring-teal-500"
+                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
+                  focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 rounded-md shadow-sm"
+                required
               />
-            </FormControl>
-            <FormControl>
-              <FormLabel className="text-gray-700 dark:text-gray-300">
+            </div>
+            <div className="mb-4">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                 Password
-              </FormLabel>
-              <Input
+              </label>
+              <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600
-                  focus:border-teal-500 focus:ring-teal-500"
+                className="w-full px-3 py-2 bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600
+                  focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500 rounded-md shadow-sm"
+                required
               />
-            </FormControl>
+            </div>
 
             {error && (
-              <Text color="red.300" fontSize="sm" className="animate-shake">
+              <p className="text-red-500 text-sm mt-1 animate-shake">
                 {error}
-              </Text>
+              </p>
             )}
 
-            <Button
+            <button
               type="submit"
-              isLoading={status === "loading"}
-              className="w-full py-2 bg-teal-600 hover:bg-teal-700 text-white rounded-lg
-                transition-all duration-200 font-medium"
+              disabled={status === "loading"}
+              className="w-full py-2 px-4 bg-teal-600 hover:bg-teal-700 text-white rounded-lg
+                transition-all duration-200 font-medium flex items-center justify-center"
             >
-              Sign In
-            </Button>
+              {status === "loading" ? (
+                <>
+                  <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Loading...
+                </>
+              ) : "Sign In"}
+            </button>
           </form>
 
-          <Text
-            fontSize="sm"
-            textAlign="center"
-            mt={6}
-            className="text-gray-600 dark:text-gray-400"
-          >
+          <p className="text-sm text-center mt-6 text-gray-600 dark:text-gray-400">
             Don't have an account?{" "}
             <a
-              href="#"
+              href="/register"
               className="text-teal-600 hover:text-teal-700 dark:text-teal-400 
               dark:hover:text-teal-300 font-medium"
             >
               Sign up
             </a>
-          </Text>
-        </Box>
-      </ScaleFade>
-    </Box>
+          </p>
+        </div>
+      </div>
+    </div>
   );
 };
 

@@ -11,6 +11,10 @@ import TechnicianTasksPage from "./pages/TechnicianTasksPage";
 import Layout from "./components/Layout";
 import PrivateRoute from "./components/PrivateRoute";
 import ProfilePage from "./pages/ProfilePage";
+import ProductTemplatesPage from "./pages/ProductTemplatesPage";
+// MapDashboard functionality is now merged into ProjectDashboard
+import TechnicianDashboard from "./pages/TechnicianDashboard"; // Import the Technician Dashboard
+import ProjectDashboard from "./pages/ProjectDashboard"; // Import the Project Dashboard
 
 const AppRoutes: React.FC = () => (
   <Routes>
@@ -32,6 +36,12 @@ const AppRoutes: React.FC = () => (
       <Route path="users" element={<UserManagementPage />} />
       <Route path="technician" element={<TechnicianTasksPage />} />
       <Route path="profile" element={<ProfilePage />} />
+      <Route path="product-templates" element={<ProductTemplatesPage />} />
+      {/* Map dashboard merged into project-locations */}
+      <Route path="technicians" element={<TechnicianDashboard />} />
+      {/* Technician dashboard route */}
+      <Route path="project-locations" element={<ProjectDashboard />} />
+      {/* Project locations dashboard for visualizing project locations on a map */}
     </Route>
     <Route path="*" element={<Navigate to="/" />} />
   </Routes>

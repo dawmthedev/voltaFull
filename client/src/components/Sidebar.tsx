@@ -6,6 +6,8 @@ import {
   FaCog,
   FaUserCircle,
   FaSignOutAlt,
+  FaMap,
+  FaUsers,
 } from "react-icons/fa";
 import { useAppDispatch, useAppSelector } from "../store";
 import { logout } from "../store/authSlice";
@@ -90,6 +92,39 @@ const Sidebar: React.FC<SidebarProps> = ({
                 isOpen={true}
                 onNavigate={closeSidebar}
               />
+              <SidebarItem
+                icon={(props) => (
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    {...props}
+                  >
+                    <path d="M11.644 1.59a.75.75 0 0 1 .712 0l9.75 5.25a.75.75 0 0 1 0 1.32l-9.75 5.25a.75.75 0 0 1-.712 0l-9.75-5.25a.75.75 0 0 1 0-1.32l9.75-5.25Z" />
+                    <path d="m3.265 10.602 7.668 4.129a2.25 2.25 0 0 0 2.134 0l7.668-4.13 1.37.739a.75.75 0 0 1 0 1.32l-9.75 5.25a.75.75 0 0 1-.71 0l-9.75-5.25a.75.75 0 0 1 0-1.32l1.37-.738Z" />
+                    <path d="m10.933 19.231-7.668-4.13-1.37.739a.75.75 0 0 0 0 1.32l9.75 5.25c.221.12.489.12.71 0l9.75-5.25a.75.75 0 0 0 0-1.32l-1.37-.738-7.668 4.13a2.25 2.25 0 0 1-2.134-.001Z" />
+                  </svg>
+                )}
+                label="Product Templates"
+                to="/dashboard/product-templates"
+                isOpen={true}
+                onNavigate={closeSidebar}
+              />
+              {/* Project Map functionality merged into Project Locations */}
+              <SidebarItem
+                icon={FaUsers}
+                label="Technician Map"
+                to="/dashboard/technicians"
+                isOpen={true}
+                onNavigate={closeSidebar}
+              />
+              <SidebarItem
+                icon={FaMap}
+                label="Project Locations"
+                to="/dashboard/project-locations"
+                isOpen={true}
+                onNavigate={closeSidebar}
+              />
             </>
           )}
           <SidebarItem
@@ -102,9 +137,7 @@ const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
 
-      <div
-        className="mt-auto px-4 pb-4 border-t border-gray-200 dark:border-gray-700"
-      >
+      <div className="mt-auto px-4 pb-4 border-t border-gray-200 dark:border-gray-700">
         <div className="flex justify-between items-center py-4 mb-4 gap-3">
           <span className="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider">
             Settings
@@ -115,9 +148,7 @@ const Sidebar: React.FC<SidebarProps> = ({
           onClick={() => dispatch(logout())}
           className="w-full px-3 py-2.5 text-gray-600 dark:text-gray-300 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100 transition-colors duration-150 flex items-center gap-3 group"
         >
-          <FaSignOutAlt 
-            className="h-5 w-5 transform group-hover:scale-105 transition-transform"
-          />
+          <FaSignOutAlt className="h-5 w-5 transform group-hover:scale-105 transition-transform" />
           <span>Logout</span>
         </button>
       </div>
@@ -130,7 +161,7 @@ const Sidebar: React.FC<SidebarProps> = ({
       {isOpen && (
         <div className="touch-pan-y overscroll-none md:hidden fixed inset-0 z-50">
           {/* Backdrop */}
-          <div 
+          <div
             className="fixed inset-0 bg-black/30 dark:bg-black/60 backdrop-blur-sm"
             onClick={handleClose}
           ></div>
@@ -142,8 +173,9 @@ const Sidebar: React.FC<SidebarProps> = ({
       )}
 
       {/* Desktop slide */}
-      <div 
-        className={`hidden md:block h-screen flex-shrink-0 z-20 transition-transform duration-300 ease-in-out ${isOpen ? 'translate-x-0' : '-translate-x-full'}`}>
+      <div
+        className={`hidden md:block h-screen flex-shrink-0 z-20 transition-transform duration-300 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
+      >
         {content}
       </div>
     </>

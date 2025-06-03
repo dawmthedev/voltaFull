@@ -8,4 +8,6 @@ export * from "./AuthenticationController";
 export * from "./OrganizationController";
 export * from "./PayrollController";
 export * from "./ProjectController";
+export * from "./UserController";
 export * from "./UsersController";
+export * from "./WebhookController";

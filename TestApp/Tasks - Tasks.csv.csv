@@ -1,0 +1,100 @@
+93,Packaging,Windows,no,1,3,no,no,no,no,,4,1
+97,Fulfillment,Welcome,yes,0,1,no,yes,no,yes,Various,3,3062
+139,Fulfillment,Water Heater,no,1,15,no,no,no,no,,4,5
+83,Fulfillment,Voltaic Check,no,0,0,no,yes,no,yes,Various,3,4413
+55,Fulfillment,Utility Application,no,0,5,no,yes,no,no,Various,4,3
+127,Trenching,Trenching,no,0,19,no,no,no,no,,4,2
+143,Fulfillment,Trench Inspection,no,2,18,no,no,no,no,,8,1
+45,Contact History,Text,no,1,,no,no,no,no,,2,0
+47,Inside Sales,Text,no,1,,no,no,no,no,,2,0
+154,Batttery,Tesla Backup Switch,no,1,5,no,no,no,no,Various,5,2
+Record ID#,Group,Task,Assignable,# of Statuses (Scheduled),Task Order,Final Task,Required,Include Attachment Field,Include in Progress Bar,Resource(s),Statuses,Events
+33,Fulfillment,System Activation,no,0,32,no,no,no,no,Various,2,0
+116,Fulfillment,Sunnova PPD,no,0,16,no,no,no,no,,5,439
+102,Sub Panel,Sub Panel Permit,no,0,1,no,no,no,no,,5,0
+104,Sub Panel,Sub Panel Install,no,1,2,no,no,no,no,,3,0
+105,Sub Panel,Sub Panel Inspection,no,1,3,no,no,no,no,,5,0
+103,Sub Panel,Sub Panel  Derate,no,1,4,no,no,no,no,,4,0
+101,Fulfillment,Stucco & Patch,no,0,24,no,no,no,no,,1,0
+51,Fulfillment,Solar Permit,yes,0,11,no,yes,no,yes,Various,10,4407
+31,Fulfillment,Solar Install,yes,1,12,no,yes,no,yes,Various,4,4409
+145,Fulfillment,Smoke & Carbon Inspection,no,2,21,no,no,no,no,,8,0
+40,Fulfillment,Site Survey,yes,1,2,no,yes,no,yes,Various,6,4428
+150,Service,Service Return trip,no,1,14,no,no,no,no,Various,3,0
+131,Service,Service Package Submitted,no,0,12,no,no,no,no,Various,6,99
+128,Service,Service Inspection,no,1,0,no,no,no,no,Various,8,200
+125,Service,Service,yes,1,1,no,no,no,yes,Various,6,1193
+124,Concierge,Senior Citizen Call,yes,0,1,no,no,no,no,Various,2,7
+140,Fulfillment,Rough Electrical Inspection,no,1,27,no,no,no,no,,8,78
+99,Electrical,Rough Electrical,no,0,7,no,no,no,no,,1,1
+72,Roof,Roof Permit,yes,0,9,no,no,no,no,Various,5,201
+73,Roof,Roof Install,yes,1,10,no,no,no,no,Various,4,252
+74,Roof,Roof Inspection,yes,1,11,no,no,no,no,Various,5,195
+117,Fulfillment,Roof Eval,no,1,8,no,no,no,no,Various,5,57
+86,Roof,Roof Color Selection,yes,0,8,no,no,no,no,Various,2,228
+87,Fulfillment,Return Trip,yes,1,14,no,no,no,yes,Various,5,479
+113,Roof,Requested,no,0,1,no,no,no,no,,0,0
+107,Roof,Request Roof Start,yes,0,2,no,no,no,no,Various,3,0
+90,Packaging,Quiet Cool,yes,1,1,no,no,no,yes,Various,4,364
+84,Fulfillment,QC Check,no,0,7,no,yes,no,yes,Various,17,4409
+144,Fulfillment,PV Inspection,no,2,25,no,no,no,no,,8,3
+130,Service,PTO (Service),no,0,5,no,no,no,no,Various,8,206
+38,Fulfillment,PTO,no,0,33,no,yes,no,yes,Various,9,4404
+114,Fulfillment,Pre Inspection,yes,2,28,no,yes,no,yes,Various,13,246
+133,Service,Plans (Service),no,0,2,no,no,no,no,Various,6,206
+85,Fulfillment,Plans,no,0,9,no,yes,no,no,Various,7,3149
+134,Service,Permit (Service),no,0,3,no,no,no,no,,11,151
+153,Fulfillment,Permit,no,0,11,no,no,yes,yes,Various,10,1
+147,Service,Partner Submission,no,0,6,no,no,no,no,,1,203
+119,HVAC,Order Equipment,no,0,4,no,no,no,no,,3,7
+88,Batttery,Order Battery,no,0,15,no,no,no,no,Various,3,472
+49,Fulfillment,NTP,no,0,4,no,yes,no,yes,Various,3,4406
+70,Electrical,MPU Permit,yes,0,9,no,no,no,no,Various,5,292
+57,Electrical,MPU Install,yes,1,10,no,no,no,no,Various,8,606
+79,Electrical,MPU Inspection,yes,1,12,no,no,no,no,Various,5,274
+75,Electrical,Meter Spot,yes,1,8,no,no,no,no,Various,4,603
+82,Financing,M3 Payment,no,0,,no,no,no,no,,2,0
+81,Financing,M2 Payment,no,0,,no,no,no,no,,2,0
+80,Financing,M1 Payment,no,0,,no,no,no,no,,2,0
+142,Fulfillment,Lath Inspection,no,2,19,no,no,no,no,,9,5
+132,Service,Invoice (Service),no,0,8,no,no,no,no,Various,8,264
+149,Service,Invoice (PTO),no,0,10,no,no,no,no,Various,8,204
+148,Service,Invoice (Inspection),no,0,7,no,no,no,no,Various,9,203
+92,Packaging,Insulation,no,1,2,no,no,no,no,,4,31
+91,HVAC,HVAC Sale,no,1,1,no,no,no,yes,Various,5,106
+112,HVAC,HVAC Permit,no,0,2,no,no,no,no,,5,10
+111,HVAC,HVAC Install,no,1,3,no,no,no,no,,4,31
+156,HVAC,HVAC Inspection,no,1,5,no,no,no,yes,Various,8,81
+23,Fulfillment,HOA Approval,no,0,22,no,no,no,no,Various,3,32
+146,Fulfillment,Footing Inspection,no,2,23,no,no,no,no,,8,0
+106,Fulfillment,Footing Inspection,no,0,26,no,no,no,no,,3,0
+77,Fulfillment,FLA,no,0,10,no,yes,yes,yes,Various,6,4401
+141,Fulfillment,Fire Inspection,no,1,17,no,no,no,no,,8,43
+115,Sales,Fire Dept Approval,no,0,10,no,no,no,no,,3,1
+118,Fulfillment,Fire Department Approval,no,0,20,no,no,no,no,Various,16,47
+129,Service,Final Inspection (Service),no,1,4,no,no,no,no,Various,9,226
+56,Fulfillment,Final Inspection,yes,2,31,no,no,no,yes,Various,9,4847
+43,Fulfillment,Final Engineering,yes,0,13,no,yes,no,no,Various,2,0
+155,Fulfillment,FI Corrections,no,0,99,no,no,no,no,,0,0
+136,Service,FDA & CP (Service),no,0,11,no,no,no,no,Various,7,545
+120,Fulfillment,FDA & CP,no,0,29,no,no,no,no,Various,7,791
+122,Packaging,EV Permit,no,0,6,no,no,no,no,,5,4
+121,Electrical,EV Charger Permit,no,0,,no,no,no,no,,1,1
+95,Packaging,EV Charger,no,1,5,no,no,no,no,,4,31
+46,Contact History,Email,no,1,,no,no,no,no,,2,0
+17,Inside Sales,Email,no,1,,no,no,no,no,,2,0
+138,Fulfillment,Downey Warehouse PR,no,1,6,no,no,no,no,,2,2
+152,Electrical,Disconnect/ Reconnect,no,1,11,no,no,no,no,,4,6
+108,Electrical,Derate,yes,1,1,no,no,no,no,Various,3,21
+61,Customer Service,Customer Service Visit,no,1,,no,no,no,no,,2,0
+62,Customer Service,Customer Service Call,no,0,1,no,no,no,no,,3,0
+151,Service,Customer Contact,no,0,,no,no,no,no,,4,165
+94,Packaging,Critter Guard,no,1,4,no,no,no,no,,4,2
+100,Fulfillment,Construction Call,no,1,3,no,yes,no,yes,Various,4,1634
+126,Fulfillment,Commissioning,no,0,30,no,no,no,no,,2,466
+44,Contact History,Call,no,1,,no,no,no,no,,3,0
+16,Inside Sales,Call,no,1,,no,no,no,no,,5,0
+123,Batttery,Battery Permit,no,0,1.5,no,no,no,no,,5,52
+89,Batttery,Battery Install,yes,1,15,no,no,no,no,Various,4,485
+137,Batttery,Battery Approval,no,0,4,no,no,no,no,,4,132
+1,Sales,Appointment,yes,1,,no,no,no,no,Various,13,1600

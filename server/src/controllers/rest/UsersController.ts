@@ -1,6 +1,6 @@
 import { Controller, Inject } from "@tsed/di";
 import { Context, QueryParams, PathParams, BodyParams } from "@tsed/platform-params";
-import { Get, Patch, Returns } from "@tsed/schema";
+import { Get, Patch, Post, Returns } from "@tsed/schema";
 import { UserService } from "../../services/UserService";
 import { AdminResultModel } from "../../models/RestModels";
 import { SuccessArrayResult } from "../../util/entities";
@@ -43,7 +43,7 @@ export class UsersController {
     return new SuccessArrayResult(items, AdminResultModel);
   }
 
-  @Patch(":id")
+  @Post(":id/role")
   @(Returns(200, SuccessResult).Of(AdminResultModel))
   async updateRole(
     @PathParams("id") id: string,

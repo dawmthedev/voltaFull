@@ -56,8 +56,13 @@ const usersSlice = createSlice({
       .addCase(updateUser.pending, (state) => {
         state.status = "loading";
       })
-      .addCase(updateUser.fulfilled, (state) => {
+      .addCase(updateUser.fulfilled, (state, action) => {
         state.status = "idle";
+        // Update the user in the state
+        const index = state.items.findIndex(user => user._id === action.payload.id);
+        if (index !== -1) {
+          state.items[index].role = action.payload.role;
+        }
       })
       .addCase(updateUser.rejected, (state) => {
         state.status = "failed";

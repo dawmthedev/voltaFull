@@ -1,0 +1,504 @@
+Record ID#,Group,Task,Related Task,Status,Held/Not Held,Order,Start Step,In Progress Step,Final Step,Date Created,Date Only,Show Date,Show Time,Require Notes,Activity,# of Events (Post Sales),Group & Task
+1,Sales,Appointment,1,Cancelled,Not Held,,no,no,no,01-05-16 7:56 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+2,Sales,Appointment,1,Sold,Held,,no,no,no,01-05-16 7:56 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+4,Sales,Appointment,1,Incomplete,Held,,no,no,no,01-05-16 7:56 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+6,Sales,Appointment,1,Scheduled,,,no,no,no,01-05-16 7:57 PM,no,yes,yes,no,Active,1599,Sales & Appointment &
+112,Sales,Appointment,1,Disqualified,Not Held,,no,no,no,03-14-18 1:31 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+157,Sales,Appointment,1,No Sale,Held,,no,no,no,11-19-18 5:02 PM,no,yes,yes,yes,Active,0,Sales & Appointment &
+160,Sales,Appointment,1,Unscheduled,,,no,no,no,06-08-19 5:09 AM,no,no,no,no,Active,0,Sales & Appointment &
+176,Sales,Appointment,1,Credit Decline,Held,,no,no,no,09-17-19 10:45 AM,no,yes,yes,no,Active,0,Sales & Appointment &
+256,Sales,Appointment,1,No Show,Not Held,,no,no,no,09-01-21 9:07 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+257,Sales,Appointment,1,One Legger,Not Held,,no,no,no,09-01-21 9:07 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+258,Sales,Appointment,1,Rescheuled,Not Held,,no,no,no,09-01-21 9:10 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+259,Sales,Appointment,1,Duplicate,Not Held,,no,no,no,09-01-21 9:10 PM,no,yes,yes,no,Active,0,Sales & Appointment &
+266,Sales,Appointment,1,Follow-Up,Held,,no,no,no,10-16-21 10:35 AM,no,yes,yes,no,Active,0,Sales & Appointment &
+521,Batttery,Battery Approval,137,In Queue,,,no,no,no,04-17-24 10:09 AM,no,no,no,no,Active,131,Batttery & Battery Approval &
+522,Batttery,Battery Approval,137,Sent,,,no,no,no,04-17-24 10:09 AM,yes,no,no,no,Active,0,Batttery & Battery Approval &
+523,Batttery,Battery Approval,137,Approved,,,no,no,no,04-17-24 10:10 AM,yes,no,no,no,Active,1,Batttery & Battery Approval &
+524,Batttery,Battery Approval,137,Rejected,,,no,no,no,04-17-24 10:10 AM,yes,no,no,no,Active,0,Batttery & Battery Approval &
+272,Batttery,Battery Install,89,Unscheduled,,1,yes,no,no,01-18-22 6:19 PM,no,no,no,no,Active,261,Batttery & Battery Install &
+273,Batttery,Battery Install,89,Scheduled,,2,no,no,no,01-18-22 6:19 PM,no,yes,yes,no,Active,2,Batttery & Battery Install &
+274,Batttery,Battery Install,89,Complete,,4,no,no,yes,01-18-22 6:19 PM,no,yes,yes,no,Active,211,Batttery & Battery Install &
+275,Batttery,Battery Install,89,Cancelled,,3,no,no,yes,01-18-22 6:19 PM,no,yes,yes,no,Active,2,Batttery & Battery Install &
+439,Batttery,Battery Permit,123,Submitted,,,no,no,no,11-09-23 11:43 AM,yes,no,no,no,Active,11,Batttery & Battery Permit &
+440,Batttery,Battery Permit,123,Rejected,,,no,no,no,11-09-23 11:43 AM,yes,no,no,no,Active,0,Batttery & Battery Permit &
+441,Batttery,Battery Permit,123,Resubmitted,,,no,no,no,11-09-23 11:43 AM,yes,no,no,no,Active,3,Batttery & Battery Permit &
+442,Batttery,Battery Permit,123,Received,,,no,no,no,11-09-23 11:43 AM,yes,no,no,no,Active,38,Batttery & Battery Permit &
+656,Batttery,Battery Permit,123,In Queue,,,no,no,no,11-19-24 8:22 AM,no,no,no,no,Active,0,Batttery & Battery Permit &
+40,Inside Sales,Call,16,Contacted,,,no,no,no,02-17-16 9:37 AM,no,no,no,no,Active,0,Inside Sales & Call &
+41,Inside Sales,Call,16,No Answer,,,no,no,no,02-17-16 9:37 AM,no,no,no,no,Active,0,Inside Sales & Call &
+42,Inside Sales,Call,16,Scheduled,,,no,no,no,02-17-16 9:38 AM,no,yes,yes,no,Active,0,Inside Sales & Call &
+52,Contact History,Call,44,Contacted,,,no,no,no,10-04-16 7:00 AM,no,no,no,no,Active,0,Contact History & Call &
+53,Contact History,Call,44,No Answer,,,no,no,no,10-04-16 7:00 AM,no,no,no,no,Active,0,Contact History & Call &
+54,Contact History,Call,44,Scheduled,,,no,no,no,10-04-16 7:01 AM,no,yes,yes,no,Active,0,Contact History & Call &
+305,Inside Sales,Call,16,,,,no,no,no,01-25-23 2:09 PM,no,no,no,no,,0,Inside Sales & Call &
+306,Inside Sales,Call,16,Not Done,,,no,no,no,01-25-23 2:10 PM,yes,no,no,no,,0,Inside Sales & Call &
+453,Fulfillment,Commissioning,126,In Queue,,,no,no,no,02-13-24 6:16 PM,no,no,no,no,Active,0,Fulfillment & Commissioning &
+454,Fulfillment,Commissioning,126,Completed,,,no,no,no,02-15-24 6:21 PM,yes,no,no,no,Active,2,Fulfillment & Commissioning &
+327,Fulfillment,Construction Call,100,Unscheduled,,1,yes,no,no,02-11-23 5:19 PM,no,no,no,no,Active,1,Fulfillment & Construction Call &
+328,Fulfillment,Construction Call,100,Scheduled,,2,no,no,no,02-11-23 5:19 PM,no,yes,yes,no,Active,0,Fulfillment & Construction Call &
+329,Fulfillment,Construction Call,100,Complete,,4,no,no,yes,02-11-23 5:19 PM,no,yes,yes,no,Active,0,Fulfillment & Construction Call &
+330,Fulfillment,Construction Call,100,Cancelled,,3,no,no,no,02-11-23 5:19 PM,no,yes,yes,no,Active,0,Fulfillment & Construction Call &
+288,Packaging,Critter Guard,94,In Queue,,1,yes,no,no,09-02-22 2:04 PM,no,no,no,no,Active,0,Packaging & Critter Guard &
+289,Packaging,Critter Guard,94,Scheduled,,2,no,no,no,09-02-22 2:04 PM,no,yes,yes,no,Active,0,Packaging & Critter Guard &
+290,Packaging,Critter Guard,94,Complete,,3,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,1,Packaging & Critter Guard &
+291,Packaging,Critter Guard,94,Cancelled,,4,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,0,Packaging & Critter Guard &
+634,Service,Customer Contact,151,In Queue,,,no,no,no,06-25-24 7:17 AM,no,no,no,no,Active,164,Service & Customer Contact &
+635,Service,Customer Contact,151,Call 1 Sent,,,no,no,no,06-25-24 7:24 AM,yes,no,no,no,Active,0,Service & Customer Contact &
+636,Service,Customer Contact,151,Call 2 Sent,,,no,no,no,06-25-24 7:25 AM,yes,no,no,no,Active,0,Service & Customer Contact &
+637,Service,Customer Contact,151,Call 3 Sent,,,no,no,no,06-25-24 7:25 AM,yes,no,no,no,Active,1,Service & Customer Contact &
+161,Customer Service,Customer Service Call,62,Incomplete,,,no,no,no,07-19-19 11:44 AM,no,no,no,no,Active,0,Customer Service & Customer Service Call &
+162,Customer Service,Customer Service Call,62,Complete,,,no,no,no,07-19-19 11:44 AM,no,no,no,no,Active,0,Customer Service & Customer Service Call &
+638,Customer Service,Customer Service Call,62,Complete,,,no,no,no,06-25-24 7:25 AM,yes,no,no,no,Active,0,Customer Service & Customer Service Call &
+158,Customer Service,Customer Service Visit,61,Scheduled,,,no,no,no,05-23-19 6:09 PM,no,yes,yes,no,Active,0,Customer Service & Customer Service Visit &
+159,Customer Service,Customer Service Visit,61,Complete,,,no,no,no,05-23-19 6:09 PM,no,no,no,no,Active,0,Customer Service & Customer Service Visit &
+364,Electrical,Derate,108,In Queue,,,no,no,no,06-08-23 3:22 PM,no,no,no,no,Active,21,Electrical & Derate &
+365,Electrical,Derate,108,Scheduled,,,no,no,no,06-08-23 3:22 PM,yes,no,no,no,Active,0,Electrical & Derate &
+366,Electrical,Derate,108,Complete,,,no,no,yes,06-08-23 3:22 PM,yes,no,no,no,Active,0,Electrical & Derate &
+640,Electrical,Disconnect/ Reconnect,152,Unscheduled,,,no,no,no,07-09-24 11:21 AM,no,no,no,no,Active,0,Electrical & Disconnect/ Reconnect &
+641,Electrical,Disconnect/ Reconnect,152,Scheduled,,,no,no,no,07-09-24 11:21 AM,yes,no,no,no,Active,0,Electrical & Disconnect/ Reconnect &
+642,Electrical,Disconnect/ Reconnect,152,Cancelled,,,no,no,no,07-09-24 11:22 AM,yes,no,no,no,Active,1,Electrical & Disconnect/ Reconnect &
+643,Electrical,Disconnect/ Reconnect,152,Complete,,,no,no,no,07-09-24 11:22 AM,yes,no,no,no,Active,5,Electrical & Disconnect/ Reconnect &
+525,Fulfillment,Downey Warehouse PR,138,Scheduled,,,no,no,no,04-25-24 3:42 PM,yes,no,no,no,Active,1,Fulfillment & Downey Warehouse PR &
+526,Fulfillment,Downey Warehouse PR,138,Complete,,,no,no,no,04-25-24 3:43 PM,yes,no,no,no,Active,1,Fulfillment & Downey Warehouse PR &
+55,Inside Sales,Email,17,Scheduled,,,no,no,no,10-04-16 7:05 AM,no,yes,yes,no,Active,0,Inside Sales & Email &
+56,Inside Sales,Email,17,Sent,,,no,no,no,10-12-16 5:22 PM,no,no,no,no,Active,0,Inside Sales & Email &
+57,Contact History,Email,46,Scheduled,,,no,no,no,10-12-16 5:39 PM,no,yes,yes,no,Active,0,Contact History & Email &
+58,Contact History,Email,46,Sent,,,no,no,no,10-12-16 6:33 PM,no,no,no,no,Active,0,Contact History & Email &
+296,Packaging,EV Charger,95,In Queue,,1,yes,no,no,01-16-23 12:13 PM,no,no,no,no,Active,2,Packaging & EV Charger &
+297,Packaging,EV Charger,95,Scheduled,,2,no,no,no,01-16-23 12:13 PM,no,yes,yes,no,Active,0,Packaging & EV Charger &
+298,Packaging,EV Charger,95,Complete,,3,no,no,yes,01-16-23 12:13 PM,no,yes,yes,no,Active,16,Packaging & EV Charger &
+299,Packaging,EV Charger,95,Cancelled,,4,no,no,yes,01-16-23 12:13 PM,no,yes,yes,no,Active,0,Packaging & EV Charger &
+431,Electrical,EV Charger Permit,121,Rejected,,,no,no,no,10-19-23 9:59 AM,no,no,no,no,,1,Electrical & EV Charger Permit &
+432,Packaging,EV Permit,122,Submitted,,,yes,no,no,10-27-23 9:01 AM,no,yes,no,no,Active,1,Packaging & EV Permit &
+433,Packaging,EV Permit,122,Rejected,,,no,no,no,10-27-23 9:02 AM,no,yes,no,no,Active,0,Packaging & EV Permit &
+434,Packaging,EV Permit,122,Resubmitted,,,no,no,no,10-27-23 9:02 AM,no,yes,no,no,Active,0,Packaging & EV Permit &
+435,Packaging,EV Permit,122,Approved,,,no,no,no,10-27-23 9:02 AM,no,yes,no,no,Active,0,Packaging & EV Permit &
+437,Packaging,EV Permit,122,Received,,,no,no,yes,10-27-23 11:58 AM,no,yes,no,no,Active,2,Packaging & EV Permit &
+417,Fulfillment,FDA & CP,120,In Queue,,1,yes,no,no,09-07-23 7:40 AM,no,no,no,no,Active,51,Fulfillment & FDA & CP &
+418,Fulfillment,FDA & CP,120,Submitted,,2,no,yes,no,09-07-23 7:41 AM,no,no,no,no,Active,6,Fulfillment & FDA & CP &
+419,Fulfillment,FDA & CP,120,Rejected,,3,no,yes,no,09-07-23 7:41 AM,no,no,no,no,Active,0,Fulfillment & FDA & CP &
+420,Fulfillment,FDA & CP,120,Approved,,4,no,no,yes,09-07-23 7:41 AM,no,no,no,no,Active,154,Fulfillment & FDA & CP &
+428,Fulfillment,FDA & CP,120,Resubmitted,,5,no,yes,no,09-25-23 8:52 AM,no,no,no,no,Active,4,Fulfillment & FDA & CP &
+450,Fulfillment,FDA & CP,120,Recalled,,6,no,no,no,01-31-24 6:24 PM,yes,no,no,no,Active,0,Fulfillment & FDA & CP &
+534,Fulfillment,FDA & CP,120,Prepped,,,no,no,no,05-15-24 3:10 PM,yes,no,no,no,Active,0,Fulfillment & FDA & CP &
+515,Service,FDA & CP (Service),136,In Queue,,1,yes,no,no,04-15-24 10:30 AM,no,no,no,no,Active,530,Service & FDA & CP (Service) &
+516,Service,FDA & CP (Service),136,Submitted,,2,no,yes,no,04-15-24 10:30 AM,no,no,no,no,Active,8,Service & FDA & CP (Service) &
+517,Service,FDA & CP (Service),136,Rejected,,3,no,yes,no,04-15-24 10:30 AM,no,no,no,no,Active,1,Service & FDA & CP (Service) &
+518,Service,FDA & CP (Service),136,Approved,,4,no,no,yes,04-15-24 10:30 AM,no,no,no,no,Active,4,Service & FDA & CP (Service) &
+519,Service,FDA & CP (Service),136,Resubmitted,,5,no,yes,no,04-15-24 10:31 AM,no,no,no,no,Active,1,Service & FDA & CP (Service) &
+520,Service,FDA & CP (Service),136,Recalled,,6,no,no,no,04-15-24 10:31 AM,yes,no,no,no,Active,0,Service & FDA & CP (Service) &
+533,Service,FDA & CP (Service),136,Prepped,,,no,no,no,05-15-24 3:10 PM,yes,no,no,no,Active,1,Service & FDA & CP (Service) &
+108,Fulfillment,Final Engineering,43,In Queue,,1,yes,no,no,02-05-18 11:59 AM,yes,no,no,no,Active,0,Fulfillment & Final Engineering &
+109,Fulfillment,Final Engineering,43,Complete,,2,no,no,yes,02-05-18 11:59 AM,yes,yes,yes,no,Active,0,Fulfillment & Final Engineering &
+145,Fulfillment,Final Inspection,56,Cancelled,,3,no,no,yes,06-24-18 6:06 PM,yes,yes,yes,no,Active,214,Fulfillment & Final Inspection &
+146,Fulfillment,Final Inspection,56,Scheduled,,2,no,no,no,06-24-18 6:06 PM,no,yes,yes,no,Active,471,Fulfillment & Final Inspection &
+239,Fulfillment,Final Inspection,56,Unscheduled,,1,yes,no,no,05-10-21 5:13 AM,no,no,no,no,Active,3414,Fulfillment & Final Inspection &
+240,Fulfillment,Final Inspection,56,Scheduled,,2,no,no,no,05-10-21 5:13 AM,no,yes,yes,no,Inactive,12,Fulfillment & Final Inspection &
+332,Fulfillment,Final Inspection,56,Corrections,,4,no,no,no,02-13-23 2:06 PM,no,no,no,no,Active,61,Fulfillment & Final Inspection &
+337,Fulfillment,Final Inspection,56,Rescheduled,,5,no,no,no,03-13-23 1:14 PM,no,no,no,no,Active,5,Fulfillment & Final Inspection &
+396,Fulfillment,Final Inspection,56,Corrections Completed,,6,no,no,yes,08-01-23 6:56 PM,yes,no,no,no,Active,171,Fulfillment & Final Inspection &
+585,Fulfillment,Final Inspection,56,Complete,,7,no,no,yes,05-21-24 7:33 AM,yes,no,no,no,Active,453,Fulfillment & Final Inspection &
+616,Fulfillment,Final Inspection,56,Missed,,,no,no,no,06-05-24 10:13 AM,yes,no,no,no,Active,9,Fulfillment & Final Inspection &
+474,Service,Final Inspection (Service),129,Cancelled,,,no,no,no,03-27-24 6:12 PM,yes,no,no,no,Active,7,Service & Final Inspection (Service) &
+475,Service,Final Inspection (Service),129,Complete,,,no,no,no,03-27-24 6:12 PM,yes,no,no,no,Active,18,Service & Final Inspection (Service) &
+476,Service,Final Inspection (Service),129,Unscheduled,,,no,no,no,03-27-24 6:13 PM,no,no,no,no,Active,19,Service & Final Inspection (Service) &
+477,Service,Final Inspection (Service),129,Scheduled,,,no,no,no,03-27-24 6:13 PM,yes,no,no,no,Active,0,Service & Final Inspection (Service) &
+478,Service,Final Inspection (Service),129,Corrections,,,no,no,no,03-27-24 6:13 PM,yes,no,no,no,Active,8,Service & Final Inspection (Service) &
+479,Service,Final Inspection (Service),129,Rescheduled,,,no,no,no,03-27-24 6:13 PM,yes,no,no,no,Active,0,Service & Final Inspection (Service) &
+480,Service,Final Inspection (Service),129,Corrections Completed,,,no,no,no,03-27-24 6:14 PM,yes,no,no,no,Active,3,Service & Final Inspection (Service) &
+481,Service,Final Inspection (Service),129,In Queue,,,no,no,no,03-27-24 6:24 PM,no,no,no,no,Active,189,Service & Final Inspection (Service) &
+613,Service,Final Inspection (Service),129,Missed,,,no,no,no,06-05-24 10:12 AM,yes,no,no,no,Active,1,Service & Final Inspection (Service) &
+402,Fulfillment,Fire Department Approval,118,In Queue,,1,no,no,no,08-09-23 10:33 AM,no,no,no,no,Active,0,Fulfillment & Fire Department Approval &
+403,Fulfillment,Fire Department Approval,118,Submitted,,2,no,no,no,08-09-23 11:19 AM,no,no,no,no,Active,2,Fulfillment & Fire Department Approval &
+404,Fulfillment,Fire Department Approval,118,Rejected,,3,no,no,no,08-09-23 11:20 AM,no,no,no,no,Active,2,Fulfillment & Fire Department Approval &
+405,Fulfillment,Fire Department Approval,118,Approved,,4,no,no,no,08-09-23 11:20 AM,yes,no,no,no,Active,14,Fulfillment & Fire Department Approval &
+406,Fulfillment,Fire Department Approval,118,Received,,5,no,no,no,08-09-23 11:20 AM,no,no,no,no,Active,19,Fulfillment & Fire Department Approval &
+407,Fulfillment,Fire Department Approval,118,Resubmitted,,6,no,no,no,08-09-23 11:20 AM,no,no,no,no,Active,2,Fulfillment & Fire Department Approval &
+413,Fulfillment,Fire Department Approval,118,Received,,,no,no,no,08-15-23 11:58 AM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+414,Fulfillment,Fire Department Approval,118,Rejected,,,no,no,no,08-16-23 1:29 PM,no,no,no,no,,1,Fulfillment & Fire Department Approval &
+415,Fulfillment,Fire Department Approval,118,Received,,,no,no,no,08-18-23 12:07 PM,no,no,no,no,,1,Fulfillment & Fire Department Approval &
+416,Fulfillment,Fire Department Approval,118,Received,,,no,no,no,08-24-23 12:15 PM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+421,Fulfillment,Fire Department Approval,118,Submitted,,,no,no,no,09-07-23 4:02 PM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+422,Fulfillment,Fire Department Approval,118,Submitted,,,no,no,no,09-08-23 9:42 AM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+423,Fulfillment,Fire Department Approval,118,Resubmit,,,no,no,no,09-11-23 3:21 PM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+424,Fulfillment,Fire Department Approval,118,Received,,,no,no,no,09-12-23 9:03 AM,no,no,no,no,,1,Fulfillment & Fire Department Approval &
+425,Fulfillment,Fire Department Approval,118,Submitted,,,no,no,no,09-12-23 2:24 PM,no,no,no,no,,0,Fulfillment & Fire Department Approval &
+427,Fulfillment,Fire Department Approval,118,Received,,,no,no,no,09-18-23 2:06 PM,no,no,no,no,,1,Fulfillment & Fire Department Approval &
+389,Sales,Fire Dept Approval,115,"Submit, Approved",,,no,no,no,07-24-23 2:45 PM,no,no,no,no,,0,Sales & Fire Dept Approval &
+390,Sales,Fire Dept Approval,115,Submitted,,,no,no,no,07-24-23 2:45 PM,no,no,no,no,,0,Sales & Fire Dept Approval &
+391,Sales,Fire Dept Approval,115,Pending,,,no,no,no,07-24-23 2:46 PM,no,no,no,yes,,1,Sales & Fire Dept Approval &
+542,Fulfillment,Fire Inspection,141,Cancelled,,3,no,no,yes,05-21-24 7:14 AM,yes,yes,yes,no,Active,10,Fulfillment & Fire Inspection &
+543,Fulfillment,Fire Inspection,141,Complete,,4,no,no,yes,05-21-24 7:14 AM,yes,yes,yes,no,Active,23,Fulfillment & Fire Inspection &
+544,Fulfillment,Fire Inspection,141,Unscheduled,,1,yes,no,no,05-21-24 7:14 AM,no,no,no,no,Active,0,Fulfillment & Fire Inspection &
+545,Fulfillment,Fire Inspection,141,Scheduled,,2,no,no,no,05-21-24 7:14 AM,no,yes,yes,no,Active,2,Fulfillment & Fire Inspection &
+546,Fulfillment,Fire Inspection,141,Corrections,,4,no,no,no,05-21-24 7:14 AM,no,no,no,no,Active,6,Fulfillment & Fire Inspection &
+547,Fulfillment,Fire Inspection,141,Rescheduled,,5,no,no,no,05-21-24 7:14 AM,no,no,no,no,Active,0,Fulfillment & Fire Inspection &
+548,Fulfillment,Fire Inspection,141,Corrections Completed,,6,no,no,yes,05-21-24 7:14 AM,yes,no,no,no,Active,0,Fulfillment & Fire Inspection &
+620,Fulfillment,Fire Inspection,141,Missed,,,no,no,no,06-05-24 10:15 AM,yes,no,no,no,Active,0,Fulfillment & Fire Inspection &
+185,Fulfillment,FLA,77,In Queue,,1,no,no,no,05-08-21 7:48 AM,no,no,no,no,Active,3034,Fulfillment & FLA &
+186,Fulfillment,FLA,77,Sent,,3,yes,no,yes,05-08-21 7:48 AM,no,yes,yes,no,Active,4,Fulfillment & FLA &
+250,Fulfillment,FLA,77,Received,,2,no,yes,yes,07-08-21 8:21 PM,no,yes,yes,no,Active,5,Fulfillment & FLA &
+251,Fulfillment,FLA,77,Approved,,4,no,no,yes,07-08-21 9:41 PM,no,yes,yes,no,Active,1353,Fulfillment & FLA &
+267,Fulfillment,FLA,77,Revision,,2,no,yes,no,11-02-21 2:46 PM,no,yes,yes,no,Active,0,Fulfillment & FLA &
+629,Fulfillment,FLA,77,Denied,,,no,no,no,06-14-24 9:35 AM,yes,no,no,no,Active,2,Fulfillment & FLA &
+578,Fulfillment,Footing Inspection,146,Cancelled,,3,no,no,yes,05-21-24 7:20 AM,yes,yes,yes,no,Active,0,Fulfillment & Footing Inspection &
+579,Fulfillment,Footing Inspection,146,Scheduled,,2,no,no,no,05-21-24 7:20 AM,no,yes,yes,no,Active,0,Fulfillment & Footing Inspection &
+580,Fulfillment,Footing Inspection,146,Unscheduled,,1,yes,no,no,05-21-24 7:20 AM,no,no,no,no,Active,0,Fulfillment & Footing Inspection &
+581,Fulfillment,Footing Inspection,146,Scheduled,,2,no,no,no,05-21-24 7:20 AM,no,yes,yes,no,Active,0,Fulfillment & Footing Inspection &
+582,Fulfillment,Footing Inspection,146,Corrections,,4,no,no,no,05-21-24 7:20 AM,no,no,no,no,Active,0,Fulfillment & Footing Inspection &
+583,Fulfillment,Footing Inspection,146,Rescheduled,,5,no,no,no,05-21-24 7:20 AM,no,no,no,no,Active,0,Fulfillment & Footing Inspection &
+584,Fulfillment,Footing Inspection,146,Corrections Completed,,6,no,no,yes,05-21-24 7:20 AM,yes,no,no,no,Active,0,Fulfillment & Footing Inspection &
+617,Fulfillment,Footing Inspection,146,Missed,,,no,no,no,06-05-24 10:14 AM,yes,no,no,no,Active,0,Fulfillment & Footing Inspection &
+358,Fulfillment,Footing Inspection,106,Pending Date,,,no,no,no,05-09-23 10:08 AM,no,no,no,no,,0,Fulfillment & Footing Inspection  &
+359,Fulfillment,Footing Inspection,106,Scheduled,,,no,no,no,05-09-23 10:08 AM,yes,no,no,no,,0,Fulfillment & Footing Inspection  &
+625,Fulfillment,Footing Inspection,106,Missed,,,no,no,no,06-05-24 10:19 AM,yes,no,no,no,Active,0,Fulfillment & Footing Inspection  &
+106,Fulfillment,HOA Approval,23,In Queue,,1,yes,no,no,02-04-18 1:48 PM,yes,no,no,no,Active,14,Fulfillment & HOA Approval &
+107,Fulfillment,HOA Approval,23,Approved,,3,no,no,yes,02-04-18 1:48 PM,yes,no,no,no,Active,18,Fulfillment & HOA Approval &
+148,Fulfillment,HOA Approval,23,Submitted,,2,no,yes,no,06-24-18 7:13 PM,no,no,no,no,Active,0,Fulfillment & HOA Approval &
+666,HVAC,HVAC Inspection,156,In Queue,,,no,no,no,04-09-25 12:16 PM,no,no,no,no,Active,81,HVAC & HVAC Inspection &
+667,HVAC,HVAC Inspection,156,Cancelled,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+668,HVAC,HVAC Inspection,156,Scheduled,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+669,HVAC,HVAC Inspection,156,Unscheduled,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+670,HVAC,HVAC Inspection,156,Corrections,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+671,HVAC,HVAC Inspection,156,Corrections Completed,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+672,HVAC,HVAC Inspection,156,Complete,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+673,HVAC,HVAC Inspection,156,Missed,,,no,no,no,04-09-25 1:26 PM,no,no,no,no,Active,0,HVAC & HVAC Inspection &
+372,HVAC,HVAC Install,111,Unscheduled,,,no,no,no,06-21-23 1:48 PM,yes,no,no,no,Active,9,HVAC & HVAC Install &
+373,HVAC,HVAC Install,111,Scheduled,,,no,no,no,06-21-23 1:48 PM,yes,no,no,no,Active,3,HVAC & HVAC Install &
+374,HVAC,HVAC Install,111,Complete,,,no,no,no,06-21-23 1:48 PM,yes,no,no,no,Active,19,HVAC & HVAC Install &
+375,HVAC,HVAC Install,111,Cancelled,,,no,no,no,06-21-23 1:49 PM,yes,no,no,no,Active,0,HVAC & HVAC Install &
+367,HVAC,HVAC Permit,112,In Queue,,,no,no,no,06-21-23 1:46 PM,no,no,no,no,Active,9,HVAC & HVAC Permit &
+368,HVAC,HVAC Permit,112,Submitted,,,no,no,no,06-21-23 1:47 PM,no,no,no,no,Active,1,HVAC & HVAC Permit &
+369,HVAC,HVAC Permit,112,Corrections,,,no,no,no,06-21-23 1:47 PM,yes,no,no,no,Active,0,HVAC & HVAC Permit &
+370,HVAC,HVAC Permit,112,Approved,,,no,no,no,06-21-23 1:47 PM,yes,no,no,no,Active,0,HVAC & HVAC Permit &
+371,HVAC,HVAC Permit,112,Received,,,no,no,no,06-21-23 1:47 PM,yes,no,no,no,Active,0,HVAC & HVAC Permit &
+280,HVAC,HVAC Sale,91,In Queue,,1,yes,no,no,09-02-22 2:04 PM,no,no,no,no,Active,5,HVAC & HVAC Sale &
+281,HVAC,HVAC Sale,91,Scheduled,,3,no,no,no,09-02-22 2:04 PM,no,yes,yes,no,Active,9,HVAC & HVAC Sale &
+282,HVAC,HVAC Sale,91,Complete,,4,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,39,HVAC & HVAC Sale &
+283,HVAC,HVAC Sale,91,Cancelled,,5,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,1,HVAC & HVAC Sale &
+300,HVAC,HVAC Sale,91,Pending MPU,,2,no,yes,no,01-16-23 12:31 PM,no,no,no,no,Active,0,HVAC & HVAC Sale &
+301,Packaging,Insulation,92,In Queue,,1,yes,no,no,01-16-23 12:35 PM,no,no,no,no,Active,1,Packaging & Insulation &
+302,Packaging,Insulation,92,Scheduled,,2,no,no,no,01-16-23 12:35 PM,no,yes,yes,no,Active,0,Packaging & Insulation &
+303,Packaging,Insulation,92,Complete,,3,no,no,yes,01-16-23 12:35 PM,no,yes,yes,no,Active,11,Packaging & Insulation &
+304,Packaging,Insulation,92,Cancelled,,4,no,no,yes,01-16-23 12:35 PM,no,yes,yes,no,Active,0,Packaging & Insulation &
+586,Service,Invoice (Inspection),148,In Queue,,,no,no,no,05-22-24 1:52 PM,no,no,no,no,Active,196,Service & Invoice (Inspection) &
+587,Service,Invoice (Inspection),148,Submitted,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,5,Service & Invoice (Inspection) &
+588,Service,Invoice (Inspection),148,Approved,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+589,Service,Invoice (Inspection),148,Prepped,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+590,Service,Invoice (Inspection),148,Partial Payment Received,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+591,Service,Invoice (Inspection),148,Paid in Full,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+592,Service,Invoice (Inspection),148,Resubmitted,,,no,no,no,05-22-24 1:52 PM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+615,Service,Invoice (Inspection),148,Missed,,,no,no,no,06-05-24 10:13 AM,yes,no,no,no,Active,0,Service & Invoice (Inspection) &
+631,Service,Invoice (Inspection),148,In Review,,,no,no,no,06-21-24 1:03 PM,yes,no,no,no,Active,1,Service & Invoice (Inspection) &
+593,Service,Invoice (PTO),149,In Queue,,,no,no,no,05-22-24 1:53 PM,no,no,no,no,Active,200,Service & Invoice (PTO) &
+594,Service,Invoice (PTO),149,Submitted,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,1,Service & Invoice (PTO) &
+595,Service,Invoice (PTO),149,Approved,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,2,Service & Invoice (PTO) &
+596,Service,Invoice (PTO),149,Prepped,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,0,Service & Invoice (PTO) &
+597,Service,Invoice (PTO),149,Partial Payment Received,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,0,Service & Invoice (PTO) &
+598,Service,Invoice (PTO),149,Paid in Full,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,1,Service & Invoice (PTO) &
+599,Service,Invoice (PTO),149,Resubmitted,,,no,no,no,05-22-24 1:53 PM,yes,no,no,no,Active,0,Service & Invoice (PTO) &
+632,Service,Invoice (PTO),149,In Review,,,no,no,no,06-21-24 1:03 PM,yes,no,no,no,Active,0,Service & Invoice (PTO) &
+482,Service,Invoice (Service),132,In Queue,,,no,no,no,03-29-24 7:07 AM,no,no,no,no,Active,238,Service & Invoice (Service) &
+487,Service,Invoice (Service),132,Submitted,,,no,no,no,04-03-24 2:25 PM,yes,no,no,no,Active,6,Service & Invoice (Service) &
+488,Service,Invoice (Service),132,Approved,,,no,no,no,04-03-24 2:25 PM,yes,no,no,no,Active,2,Service & Invoice (Service) &
+489,Service,Invoice (Service),132,Prepped,,,no,no,no,04-03-24 3:06 PM,yes,no,no,no,Active,0,Service & Invoice (Service) &
+490,Service,Invoice (Service),132,Partial Payment Received,,,no,no,no,04-06-24 12:23 PM,yes,no,no,no,Active,8,Service & Invoice (Service) &
+491,Service,Invoice (Service),132,Paid in Full,,,no,no,no,04-06-24 12:23 PM,yes,no,no,no,Active,9,Service & Invoice (Service) &
+503,Service,Invoice (Service),132,Resubmitted,,,no,no,no,04-09-24 10:26 AM,yes,no,no,no,Active,1,Service & Invoice (Service) &
+633,Service,Invoice (Service),132,In Review,,,no,no,no,06-21-24 1:04 PM,yes,no,no,no,Active,0,Service & Invoice (Service) &
+549,Fulfillment,Lath Inspection,142,Cancelled,,3,no,no,yes,05-21-24 7:17 AM,yes,yes,yes,no,Active,1,Fulfillment & Lath Inspection &
+550,Fulfillment,Lath Inspection,142,Scheduled,,2,no,no,no,05-21-24 7:17 AM,no,yes,yes,no,Active,0,Fulfillment & Lath Inspection &
+551,Fulfillment,Lath Inspection,142,Unscheduled,,1,yes,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Lath Inspection &
+552,Fulfillment,Lath Inspection,142,Scheduled,,2,no,no,no,05-21-24 7:17 AM,no,yes,yes,no,Active,0,Fulfillment & Lath Inspection &
+553,Fulfillment,Lath Inspection,142,Corrections,,4,no,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Lath Inspection &
+554,Fulfillment,Lath Inspection,142,Rescheduled,,5,no,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Lath Inspection &
+555,Fulfillment,Lath Inspection,142,Corrections Completed,,6,no,no,yes,05-21-24 7:17 AM,yes,no,no,no,Active,0,Fulfillment & Lath Inspection &
+621,Fulfillment,Lath Inspection,142,Missed,,,no,no,no,06-05-24 10:15 AM,yes,no,no,no,Active,0,Fulfillment & Lath Inspection &
+649,Fulfillment,Lath Inspection,142,Complete,,,no,no,no,09-28-24 8:25 AM,yes,no,no,no,Active,4,Fulfillment & Lath Inspection &
+207,Financing,M1 Payment,80,Pending,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M1 Payment &
+208,Financing,M1 Payment,80,Received,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M1 Payment &
+209,Financing,M2 Payment,81,Pending,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M2 Payment &
+210,Financing,M2 Payment,81,Received,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M2 Payment &
+211,Financing,M3 Payment,82,Pending,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M3 Payment &
+212,Financing,M3 Payment,82,Received,,,no,no,no,05-08-21 8:27 AM,no,no,no,no,Active,0,Financing & M3 Payment &
+205,Electrical,Meter Spot,75,In Queue,,1,yes,no,no,05-08-21 7:50 AM,no,no,no,no,Active,59,Electrical & Meter Spot &
+206,Electrical,Meter Spot,75,Complete,,4,no,no,yes,05-08-21 7:50 AM,no,yes,yes,no,Active,274,Electrical & Meter Spot &
+255,Electrical,Meter Spot,75,Scheduled,,3,no,yes,no,09-01-21 6:50 PM,no,yes,yes,no,Active,31,Electrical & Meter Spot &
+292,Electrical,Meter Spot,75,Requested,,2,no,no,yes,10-26-22 9:13 AM,no,yes,no,no,Active,74,Electrical & Meter Spot &
+213,Electrical,MPU Inspection,79,Unscheduled,,1,yes,no,no,05-10-21 3:32 AM,no,no,no,no,Active,134,Electrical & MPU Inspection &
+214,Electrical,MPU Inspection,79,Scheduled,,2,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,0,Electrical & MPU Inspection &
+215,Electrical,MPU Inspection,79,Complete,,4,no,no,yes,05-10-21 3:32 AM,no,yes,yes,no,Active,22,Electrical & MPU Inspection &
+216,Electrical,MPU Inspection,79,Cancelled,,3,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,0,Electrical & MPU Inspection &
+612,Electrical,MPU Inspection,79,Missed,,,no,no,no,06-05-24 10:11 AM,yes,no,no,no,Active,0,Electrical & MPU Inspection &
+144,Electrical,MPU Install,57,Complete,,4,no,no,yes,06-23-18 8:04 PM,no,yes,yes,no,Active,147,Electrical & MPU Install &
+147,Electrical,MPU Install,57,Scheduled,,2,no,no,no,06-24-18 7:11 PM,yes,yes,yes,no,Active,10,Electrical & MPU Install &
+223,Electrical,MPU Install,57,Cancelled,,3,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,8,Electrical & MPU Install &
+226,Electrical,MPU Install,57,Pending Meter Spot,,1,yes,no,no,05-10-21 3:48 AM,no,no,no,no,Active,77,Electrical & MPU Install &
+317,Electrical,MPU Install,57,Rejected; red-Lines Ready for Pickup,,,no,no,no,01-30-23 11:36 AM,no,no,no,no,,0,Electrical & MPU Install &
+426,Electrical,MPU Install,57,Rescheduled,,,no,no,no,09-17-23 11:11 AM,no,no,no,no,Inactive,0,Electrical & MPU Install &
+459,Electrical,MPU Install,57,Pending D/R Date,,,no,no,no,03-13-24 11:18 AM,no,no,no,no,Active,0,Electrical & MPU Install &
+657,Electrical,MPU Install,57,Pending Install,,,no,no,no,11-20-24 1:45 PM,yes,no,no,no,Active,0,Electrical & MPU Install &
+195,Electrical,MPU Permit,70,In Queue,,1,yes,no,no,05-08-21 7:48 AM,yes,no,no,no,Active,90,Electrical & MPU Permit &
+196,Electrical,MPU Permit,70,Approved; Ready for Pickup,,3,no,no,no,05-08-21 7:48 AM,yes,no,no,no,Active,2,Electrical & MPU Permit &
+227,Electrical,MPU Permit,70,Submitted,,2,no,no,no,05-10-21 3:48 AM,no,no,no,no,Active,9,Electrical & MPU Permit &
+228,Electrical,MPU Permit,70,Rejected; Red-Lines Ready for Pickup,,3,no,no,no,05-10-21 3:48 AM,no,no,no,no,Active,0,Electrical & MPU Permit &
+229,Electrical,MPU Permit,70,Received,,4,no,no,yes,05-10-21 3:48 AM,no,no,no,no,Active,101,Electrical & MPU Permit &
+120,Fulfillment,NTP,49,In Queue,,1,yes,no,no,03-27-18 9:43 AM,yes,no,no,no,Active,2859,Fulfillment & NTP &
+121,Fulfillment,NTP,49,Submitted,,2,no,no,no,03-27-18 9:43 AM,yes,yes,yes,no,Active,68,Fulfillment & NTP &
+122,Fulfillment,NTP,49,Granted,,3,no,no,yes,03-27-18 9:43 AM,yes,yes,yes,no,Active,1452,Fulfillment & NTP &
+269,Batttery,Order Battery,88,In Queue,,1,yes,no,no,01-18-22 6:19 PM,no,no,no,no,Active,386,Batttery & Order Battery &
+270,Batttery,Order Battery,88,Order Placed,,2,no,yes,no,01-18-22 6:19 PM,yes,yes,yes,no,Active,5,Batttery & Order Battery &
+271,Batttery,Order Battery,88,Order Delivered,,3,no,no,yes,01-18-22 6:19 PM,yes,yes,yes,no,Active,67,Batttery & Order Battery &
+408,HVAC,Order Equipment,119,In Queue,,,no,no,no,08-10-23 12:50 PM,yes,no,no,no,Active,7,HVAC & Order Equipment &
+409,HVAC,Order Equipment,119,Order Delivered,,,no,no,no,08-10-23 12:52 PM,yes,no,no,no,Active,0,HVAC & Order Equipment &
+410,HVAC,Order Equipment,119,Order Placed,,,no,no,no,08-10-23 12:53 PM,yes,no,no,no,Active,0,HVAC & Order Equipment &
+600,Service,Partner Submission,147,In Queue,,,no,no,no,05-22-24 2:50 PM,yes,no,no,no,Active,203,Service & Partner Submission &
+647,Fulfillment,Permit,153,In Queue,,,no,no,no,09-23-24 12:04 PM,yes,no,no,no,Inactive,0,Fulfillment & Permit &
+648,Fulfillment,Permit,153,Completed,,,no,no,no,09-23-24 12:04 PM,yes,no,no,no,Inactive,0,Fulfillment & Permit &
+658,Fulfillment,Permit,153,Approved; Ready for Pickup,,3,no,no,yes,12-03-24 11:11 AM,yes,no,no,no,Active,0,Fulfillment & Permit &
+659,Fulfillment,Permit,153,Submitted,,2,yes,no,no,12-03-24 11:11 AM,no,no,no,no,Active,0,Fulfillment & Permit &
+660,Fulfillment,Permit,153,Rejected; Red-Lines Ready for Pickup,,3,no,no,yes,12-03-24 11:11 AM,no,no,no,no,Active,0,Fulfillment & Permit &
+661,Fulfillment,Permit,153,Permit Received,,4,no,no,yes,12-03-24 11:11 AM,no,no,no,no,Active,1,Fulfillment & Permit &
+662,Fulfillment,Permit,153,Resubmitted,,5,no,no,no,12-03-24 11:11 AM,yes,no,no,no,Active,0,Fulfillment & Permit &
+663,Fulfillment,Permit,153,Awaiting Plans,,6,no,no,no,12-03-24 11:11 AM,yes,no,no,no,Active,0,Fulfillment & Permit &
+664,Fulfillment,Permit,153,Approved; Ready for Pickup,,3,no,no,yes,12-03-24 11:11 AM,yes,no,no,no,Inactive,0,Fulfillment & Permit &
+665,Fulfillment,Permit,153,Ready to Resubmit,,7,no,yes,no,12-03-24 11:11 AM,no,no,no,no,Active,0,Fulfillment & Permit &
+497,Service,Permit (Service),134,In Queue,,1,no,no,no,04-08-24 2:19 PM,yes,no,no,no,Active,133,Service & Permit (Service) &
+498,Service,Permit (Service),134,Requested,,,no,no,no,04-08-24 2:20 PM,yes,no,no,no,Inactive,0,Service & Permit (Service) &
+499,Service,Permit (Service),134,Revision,,,no,no,no,04-08-24 2:21 PM,yes,no,no,no,Inactive,0,Service & Permit (Service) &
+500,Service,Permit (Service),134,Approved; Ready for Pickup,,2,no,no,no,04-08-24 2:21 PM,yes,no,no,no,Active,3,Service & Permit (Service) &
+501,Service,Permit (Service),134,Resubmitted,,5,no,no,no,04-08-24 2:21 PM,yes,no,no,no,Active,1,Service & Permit (Service) &
+502,Service,Permit (Service),134,Permit Overdue,,,no,no,no,04-08-24 2:22 PM,yes,no,no,no,Inactive,0,Service & Permit (Service) &
+603,Service,Permit (Service),134,Submitted,,2,yes,no,no,05-30-24 3:19 PM,no,no,no,no,Active,3,Service & Permit (Service) &
+604,Service,Permit (Service),134,Rejected; Red-Lines Ready for Pickup,,3,no,no,yes,05-30-24 3:19 PM,no,no,no,no,Active,0,Service & Permit (Service) &
+605,Service,Permit (Service),134,Permit Received,,4,no,no,yes,05-30-24 3:19 PM,no,no,no,no,Active,11,Service & Permit (Service) &
+608,Service,Permit (Service),134,Awaiting Plans,,6,no,no,no,05-30-24 3:19 PM,yes,no,no,no,Active,0,Service & Permit (Service) &
+609,Service,Permit (Service),134,Resubmitted,,5,no,no,no,05-30-24 3:25 PM,yes,no,no,no,Inactive,0,Service & Permit (Service) &
+244,Fulfillment,Plans,85,In Queue,,1,yes,no,no,05-25-21 8:45 AM,yes,no,no,no,Active,2464,Fulfillment & Plans &
+245,Fulfillment,Plans,85,Complete,,6,no,no,yes,05-25-21 8:45 AM,yes,no,no,no,Active,661,Fulfillment & Plans &
+295,Fulfillment,Plans,85,Requested,,2,no,yes,no,01-16-23 11:58 AM,yes,no,no,no,Active,12,Fulfillment & Plans &
+331,Fulfillment,Plans,85,Revision,,3,no,yes,no,02-13-23 1:18 PM,no,no,no,no,Active,8,Fulfillment & Plans &
+336,Fulfillment,Plans,85,Plans Resubmitted,,4,no,no,no,03-13-23 12:58 PM,no,no,no,no,Active,2,Fulfillment & Plans &
+363,Fulfillment,Plans,85,Plans Overdue,,5,no,no,no,05-16-23 2:21 PM,no,no,no,no,Active,2,Fulfillment & Plans &
+630,Fulfillment,Plans,85,More Info Required,,,no,no,no,06-20-24 1:34 PM,yes,no,no,no,Active,0,Fulfillment & Plans &
+486,Service,Plans (Service),133,In Queue,,1,no,no,no,04-02-24 12:27 PM,no,no,no,no,Active,183,Service & Plans (Service) &
+492,Service,Plans (Service),133,Requested,,2,no,no,no,04-06-24 2:04 PM,yes,no,no,no,Active,1,Service & Plans (Service) &
+493,Service,Plans (Service),133,Revision,,3,no,no,no,04-06-24 2:04 PM,yes,no,no,no,Active,1,Service & Plans (Service) &
+494,Service,Plans (Service),133,Complete,,4,no,no,no,04-06-24 2:04 PM,yes,no,no,no,Active,21,Service & Plans (Service) &
+495,Service,Plans (Service),133,Plans Resubmitted,,5,no,no,no,04-06-24 2:04 PM,yes,no,no,no,Active,0,Service & Plans (Service) &
+496,Service,Plans (Service),133,Plans Overdue,,6,no,no,no,04-06-24 2:05 PM,yes,no,no,no,Active,0,Service & Plans (Service) &
+377,Fulfillment,Pre Inspection,114,Cancelled,,,no,no,yes,07-19-23 11:09 AM,yes,no,no,no,Active,59,Fulfillment & Pre Inspection &
+378,Fulfillment,Pre Inspection,114,Complete,,,no,no,yes,07-19-23 11:09 AM,yes,no,no,no,Active,108,Fulfillment & Pre Inspection &
+379,Fulfillment,Pre Inspection,114,Unscheduled,,,no,no,no,07-19-23 11:09 AM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+380,Fulfillment,Pre Inspection,114,Scheduled,,,no,no,no,07-19-23 11:09 AM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+381,Fulfillment,Pre Inspection,114,Corrections,,,no,no,no,07-19-23 11:10 AM,yes,no,no,no,Active,2,Fulfillment & Pre Inspection &
+382,Fulfillment,Pre Inspection,114,Rescheduled,,,no,no,no,07-19-23 11:10 AM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+384,Fulfillment,Pre Inspection,114,Complete,,,no,no,yes,07-19-23 12:53 PM,yes,no,no,no,Active,16,Fulfillment & Pre Inspection &
+385,Fulfillment,Pre Inspection,114,Unschedule,,,no,no,no,07-19-23 12:53 PM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+386,Fulfillment,Pre Inspection,114,Scheduled,,,no,no,no,07-19-23 12:54 PM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+387,Fulfillment,Pre Inspection,114,Corrections,,,no,no,yes,07-19-23 12:54 PM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+388,Fulfillment,Pre Inspection,114,Rescheduled,,,no,no,no,07-19-23 12:54 PM,yes,no,no,no,,0,Fulfillment & Pre Inspection &
+401,Fulfillment,Pre Inspection,114,Corrections Completed,,,no,no,yes,08-08-23 12:17 PM,yes,no,no,no,Active,61,Fulfillment & Pre Inspection &
+618,Fulfillment,Pre Inspection,114,Missed,,,no,no,no,06-05-24 10:14 AM,yes,no,no,no,Active,0,Fulfillment & Pre Inspection &
+85,Fulfillment,PTO,38,In Queue,,1,yes,no,no,01-08-18 7:16 AM,yes,no,no,no,Active,3349,Fulfillment & PTO &
+320,Fulfillment,PTO,38,Rejected,,4,yes,no,yes,02-01-23 10:49 AM,yes,no,no,no,Active,5,Fulfillment & PTO &
+321,Fulfillment,PTO,38,Re - Submitted,,5,yes,no,no,02-01-23 10:49 AM,yes,no,no,no,Active,2,Fulfillment & PTO &
+322,Fulfillment,PTO,38,Approved,,6,yes,no,yes,02-01-23 10:50 AM,yes,no,no,no,Active,886,Fulfillment & PTO &
+323,Fulfillment,PTO,38,Submitted,,3,yes,no,no,02-01-23 10:50 AM,yes,no,no,no,Active,40,Fulfillment & PTO &
+324,Fulfillment,PTO,38,Prepped,,2,yes,no,no,02-08-23 9:08 AM,no,no,no,no,Active,21,Fulfillment & PTO &
+335,Fulfillment,PTO,38,Deemed Valid,,,yes,no,no,03-08-23 9:28 AM,yes,no,no,no,Active,25,Fulfillment & PTO &
+644,Fulfillment,PTO,38,Conditional PTO,,,no,no,no,07-10-24 10:58 AM,yes,no,no,no,Active,0,Fulfillment & PTO &
+655,Fulfillment,PTO,38,PTO not required,,,no,no,yes,11-11-24 11:30 AM,yes,no,no,no,Active,0,Fulfillment & PTO &
+467,Service,PTO (Service),130,In Queue,,,no,no,no,03-27-24 6:10 PM,no,no,no,no,Active,179,Service & PTO (Service) &
+468,Service,PTO (Service),130,Rejected,,,no,no,no,03-27-24 6:10 PM,yes,no,no,no,Active,0,Service & PTO (Service) &
+469,Service,PTO (Service),130,Re-Submitted,,,no,no,no,03-27-24 6:10 PM,yes,no,no,no,Active,0,Service & PTO (Service) &
+470,Service,PTO (Service),130,Approved,,,no,no,no,03-27-24 6:11 PM,yes,no,no,no,Active,2,Service & PTO (Service) &
+471,Service,PTO (Service),130,Submitted,,,no,no,no,03-27-24 6:11 PM,yes,no,no,no,Active,3,Service & PTO (Service) &
+472,Service,PTO (Service),130,Prepped,,,no,no,no,03-27-24 6:11 PM,yes,no,no,no,Active,0,Service & PTO (Service) &
+473,Service,PTO (Service),130,Deemed Valid,,,no,no,no,03-27-24 6:11 PM,yes,no,no,no,Active,0,Service & PTO (Service) &
+485,Service,PTO (Service),130,Complete,,,no,no,no,03-29-24 7:36 AM,yes,no,no,no,Active,3,Service & PTO (Service) &
+564,Fulfillment,PV Inspection,144,Cancelled,,3,no,no,yes,05-21-24 7:19 AM,yes,yes,yes,no,Active,3,Fulfillment & PV Inspection &
+565,Fulfillment,PV Inspection,144,Scheduled,,2,no,no,no,05-21-24 7:19 AM,no,yes,yes,no,Active,0,Fulfillment & PV Inspection &
+566,Fulfillment,PV Inspection,144,Unscheduled,,1,yes,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & PV Inspection &
+567,Fulfillment,PV Inspection,144,Scheduled,,2,no,no,no,05-21-24 7:19 AM,no,yes,yes,no,Active,0,Fulfillment & PV Inspection &
+568,Fulfillment,PV Inspection,144,Corrections,,4,no,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & PV Inspection &
+569,Fulfillment,PV Inspection,144,Rescheduled,,5,no,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & PV Inspection &
+570,Fulfillment,PV Inspection,144,Corrections Completed,,6,no,no,yes,05-21-24 7:19 AM,yes,no,no,no,Active,0,Fulfillment & PV Inspection &
+623,Fulfillment,PV Inspection,144,Missed,,,no,no,no,06-05-24 10:15 AM,yes,no,no,no,Active,0,Fulfillment & PV Inspection &
+241,Fulfillment,QC Check,84,In Queue,,1,yes,no,no,05-25-21 7:58 AM,no,no,no,no,Active,2919,Fulfillment & QC Check &
+242,Fulfillment,QC Check,84,Pass,,2,no,no,yes,05-25-21 7:58 AM,no,no,no,no,Active,1209,Fulfillment & QC Check &
+243,Fulfillment,QC Check,84,Fail (Roof),,3,no,no,yes,05-25-21 7:58 AM,no,no,no,yes,Inactive,0,Fulfillment & QC Check &
+247,Fulfillment,QC Check,84,Pass with Electrical,,2,no,no,yes,07-08-21 8:14 PM,no,no,no,no,Active,87,Fulfillment & QC Check &
+248,Fulfillment,QC Check,84,Fail (Non-Permitted Structure),,4,no,no,yes,07-08-21 8:14 PM,no,no,no,yes,Inactive,0,Fulfillment & QC Check &
+249,Fulfillment,QC Check,84,Fail (PPW Issue),,5,no,no,yes,07-08-21 8:14 PM,no,no,no,yes,Inactive,0,Fulfillment & QC Check &
+260,Fulfillment,QC Check,84,Pass with Roof Waiver,,2,no,no,yes,09-13-21 8:48 AM,no,no,no,no,Inactive,0,Fulfillment & QC Check &
+261,Fulfillment,QC Check,84,Pass with Roof,,2,no,no,yes,09-13-21 8:48 AM,no,no,no,no,Inactive,7,Fulfillment & QC Check &
+268,Fulfillment,QC Check,84,Fail (Electrical),,6,no,no,yes,11-03-21 2:00 PM,no,no,no,yes,Inactive,0,Fulfillment & QC Check &
+293,Fulfillment,QC Check,84,Fail,,3,no,no,yes,11-18-22 7:55 AM,no,no,no,no,Active,43,Fulfillment & QC Check &
+294,Fulfillment,QC Check,84,Incomplete,,3,no,no,no,11-18-22 8:00 AM,no,no,no,no,Active,19,Fulfillment & QC Check &
+339,Fulfillment,QC Check,84,Pass with Roofing,,,no,no,no,03-25-23 10:47 AM,no,no,no,no,,0,Fulfillment & QC Check &
+429,Fulfillment,QC Check,84,Partial Pass,,,no,no,no,09-30-23 11:24 AM,no,no,no,no,Active,4,Fulfillment & QC Check &
+451,Fulfillment,QC Check,84,More Info Required,,,no,no,no,02-06-24 6:04 PM,yes,no,no,no,Active,8,Fulfillment & QC Check &
+452,Fulfillment,QC Check,84,Pass with Roofing,,,no,no,yes,02-06-24 6:08 PM,yes,no,no,no,Active,11,Fulfillment & QC Check &
+460,Fulfillment,QC Check,84,Pass with PCS,,,no,no,yes,03-25-24 8:36 PM,yes,no,no,no,Active,15,Fulfillment & QC Check &
+601,Fulfillment,QC Check,84,Pass with,,,no,no,yes,05-28-24 5:15 PM,yes,no,no,no,Active,86,Fulfillment & QC Check &
+276,Packaging,Quiet Cool,90,In Queue,,1,yes,no,no,09-02-22 2:04 PM,no,no,no,no,Active,114,Packaging & Quiet Cool &
+277,Packaging,Quiet Cool,90,Scheduled,,2,no,no,no,09-02-22 2:04 PM,no,yes,yes,no,Active,2,Packaging & Quiet Cool &
+278,Packaging,Quiet Cool,90,Complete,,3,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,201,Packaging & Quiet Cool &
+279,Packaging,Quiet Cool,90,Cancelled,,4,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,15,Packaging & Quiet Cool &
+360,Roof,Request Roof Start,107,In Queue,,,no,no,no,05-12-23 4:21 PM,no,no,no,no,Active,0,Roof & Request Roof Start &
+361,Roof,Request Roof Start,107,Pending Permit,,,no,no,no,05-12-23 4:21 PM,yes,no,no,no,Active,0,Roof & Request Roof Start &
+362,Roof,Request Roof Start,107,Complete,,,no,no,yes,05-12-23 4:22 PM,yes,no,no,no,Active,0,Roof & Request Roof Start &
+262,Fulfillment,Return Trip,87,Unscheduled,,1,no,no,no,10-13-21 10:50 AM,no,no,no,no,Active,1,Fulfillment & Return Trip &
+263,Fulfillment,Return Trip,87,Scheduled,,2,no,no,no,10-13-21 10:50 AM,no,no,no,no,Active,31,Fulfillment & Return Trip &
+264,Fulfillment,Return Trip,87,Complete,,4,no,no,no,10-13-21 10:50 AM,yes,no,no,no,Active,432,Fulfillment & Return Trip &
+265,Fulfillment,Return Trip,87,Cancelled,,3,no,no,no,10-13-21 10:50 AM,no,no,no,no,Active,7,Fulfillment & Return Trip &
+357,Fulfillment,Return Trip,87,In Queue,,5,no,no,no,05-03-23 10:37 AM,no,no,no,no,Active,1,Fulfillment & Return Trip &
+252,Roof,Roof Color Selection,86,In Queue,,1,yes,no,no,08-03-21 12:49 AM,no,no,no,no,Active,128,Roof & Roof Color Selection &
+253,Roof,Roof Color Selection,86,Complete,,2,no,no,yes,08-03-21 12:49 AM,no,yes,yes,no,Active,74,Roof & Roof Color Selection &
+397,Fulfillment,Roof Eval,117,In Queue,,,yes,no,no,08-03-23 3:28 PM,yes,no,no,no,Active,1,Fulfillment & Roof Eval &
+398,Fulfillment,Roof Eval,117,Scheduled,,,no,yes,no,08-03-23 3:29 PM,yes,no,no,no,Active,1,Fulfillment & Roof Eval &
+399,Fulfillment,Roof Eval,117,Pass,,,no,no,yes,08-03-23 3:29 PM,yes,no,no,no,Active,15,Fulfillment & Roof Eval &
+400,Fulfillment,Roof Eval,117,Fail,,,no,no,yes,08-03-23 3:30 PM,yes,no,no,no,Active,20,Fulfillment & Roof Eval &
+645,Fulfillment,Roof Eval,117,Requested,,,no,yes,no,08-20-24 8:16 PM,yes,no,no,no,Active,3,Fulfillment & Roof Eval &
+218,Roof,Roof Inspection,74,Unscheduled,,1,yes,no,no,05-10-21 3:32 AM,no,no,no,no,Active,23,Roof & Roof Inspection &
+219,Roof,Roof Inspection,74,Scheduled,,2,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,0,Roof & Roof Inspection &
+220,Roof,Roof Inspection,74,Complete,,4,no,no,yes,05-10-21 3:32 AM,no,yes,yes,no,Active,18,Roof & Roof Inspection &
+222,Roof,Roof Inspection,74,Cancelled,,3,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,0,Roof & Roof Inspection &
+611,Roof,Roof Inspection,74,Missed,,,no,no,no,06-05-24 10:11 AM,yes,no,no,no,Active,0,Roof & Roof Inspection &
+201,Roof,Roof Install,73,Unscheduled,,1,yes,no,no,05-08-21 7:50 AM,no,no,no,no,Active,13,Roof & Roof Install &
+202,Roof,Roof Install,73,Scheduled,,2,no,no,no,05-08-21 7:50 AM,no,yes,yes,no,Active,11,Roof & Roof Install &
+203,Roof,Roof Install,73,Complete,,4,no,no,yes,05-08-21 7:50 AM,no,yes,yes,no,Active,95,Roof & Roof Install &
+224,Roof,Roof Install,73,Cancelled,,3,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,0,Roof & Roof Install &
+193,Roof,Roof Permit,72,In Queue,,1,yes,no,no,05-08-21 7:48 AM,no,no,no,no,Active,151,Roof & Roof Permit &
+194,Roof,Roof Permit,72,Approved; Ready for Pickup,,3,no,no,no,05-08-21 7:48 AM,yes,yes,yes,no,Active,2,Roof & Roof Permit &
+230,Roof,Roof Permit,72,Submitted,,2,no,no,no,05-10-21 3:48 AM,no,yes,yes,no,Active,1,Roof & Roof Permit &
+231,Roof,Roof Permit,72,Rejected; Red-Lines Ready for Pickup,,3,no,no,no,05-10-21 3:48 AM,no,yes,yes,no,Active,0,Roof & Roof Permit &
+232,Roof,Roof Permit,72,Received,,4,no,no,yes,05-10-21 3:48 AM,no,yes,yes,no,Active,39,Roof & Roof Permit &
+311,Electrical,Rough Electrical,99,Passed,,,no,no,no,01-28-23 10:36 AM,yes,no,no,yes,,1,Electrical & Rough Electrical  &
+535,Fulfillment,Rough Electrical Inspection,140,Cancelled,,3,no,no,yes,05-21-24 7:14 AM,yes,yes,yes,no,Active,18,Fulfillment & Rough Electrical Inspection &
+536,Fulfillment,Rough Electrical Inspection,140,Complete,,4,no,no,yes,05-21-24 7:14 AM,yes,yes,yes,no,Active,26,Fulfillment & Rough Electrical Inspection &
+537,Fulfillment,Rough Electrical Inspection,140,Unscheduled,,1,yes,no,no,05-21-24 7:14 AM,no,no,no,no,Active,2,Fulfillment & Rough Electrical Inspection &
+538,Fulfillment,Rough Electrical Inspection,140,Scheduled,,2,no,no,no,05-21-24 7:14 AM,no,yes,yes,no,Active,0,Fulfillment & Rough Electrical Inspection &
+539,Fulfillment,Rough Electrical Inspection,140,Corrections,,4,no,no,no,05-21-24 7:14 AM,no,no,no,no,Active,23,Fulfillment & Rough Electrical Inspection &
+540,Fulfillment,Rough Electrical Inspection,140,Rescheduled,,5,no,no,no,05-21-24 7:14 AM,no,no,no,no,Active,0,Fulfillment & Rough Electrical Inspection &
+541,Fulfillment,Rough Electrical Inspection,140,Corrections Completed,,6,no,no,yes,05-21-24 7:14 AM,yes,no,no,no,Active,2,Fulfillment & Rough Electrical Inspection &
+619,Fulfillment,Rough Electrical Inspection,140,Missed,,,no,no,no,06-05-24 10:14 AM,yes,no,no,no,Active,4,Fulfillment & Rough Electrical Inspection &
+443,Concierge,Senior Citizen Call,124,In Queue,,,no,no,no,12-06-23 4:04 PM,yes,no,no,no,Active,7,Concierge & Senior Citizen Call &
+444,Concierge,Senior Citizen Call,124,Complete,,,no,no,no,12-06-23 4:04 PM,yes,no,no,no,Active,0,Concierge & Senior Citizen Call &
+445,Service,Service,125,In Queue,,1,yes,no,no,01-02-24 9:58 AM,no,no,no,no,Active,1057,Service & Service &
+446,Service,Service,125,Need to schedule,,2,no,no,no,01-02-24 10:13 AM,no,no,no,no,Active,4,Service & Service &
+447,Service,Service,125,Scheduled,,3,no,yes,no,01-02-24 10:13 AM,no,yes,yes,no,Active,10,Service & Service &
+448,Service,Service,125,Complete,,5,no,no,yes,01-02-24 10:14 AM,no,yes,yes,no,Active,116,Service & Service &
+449,Service,Service,125,Incomplete,,4,no,yes,no,01-02-24 10:14 AM,no,yes,yes,no,Active,4,Service & Service &
+531,Service,Service,125,Ready to Schedule,,,no,no,no,05-07-24 8:23 PM,yes,no,no,no,Active,2,Service & Service &
+461,Service,Service Inspection,128,In Queue,,,no,no,no,03-27-24 10:24 AM,yes,no,no,no,Active,152,Service & Service Inspection &
+462,Service,Service Inspection,128,Scheduled,,,no,no,no,03-27-24 10:24 AM,yes,no,no,no,Active,2,Service & Service Inspection &
+463,Service,Service Inspection,128,Complete,,,no,no,no,03-27-24 10:25 AM,yes,no,no,no,Active,42,Service & Service Inspection &
+464,Service,Service Inspection,128,Cancelled,,,no,no,no,03-27-24 10:51 AM,yes,no,no,no,Active,0,Service & Service Inspection &
+465,Service,Service Inspection,128,Corrections,,,no,no,no,03-27-24 10:52 AM,yes,no,no,no,Active,0,Service & Service Inspection &
+466,Service,Service Inspection,128,Corrections Completed,,,no,no,no,03-27-24 10:52 AM,yes,no,no,no,Active,0,Service & Service Inspection &
+532,Service,Service Inspection,128,Ready to Schedule,,,no,no,no,05-07-24 8:24 PM,yes,no,no,no,Active,4,Service & Service Inspection &
+614,Service,Service Inspection,128,Missed,,,no,no,no,06-05-24 10:13 AM,yes,no,no,no,Active,0,Service & Service Inspection &
+484,Service,Service Package Submitted,131,In Queue,,,yes,no,no,03-29-24 7:08 AM,no,no,no,no,Active,98,Service & Service Package Submitted &
+504,Service,Service Package Submitted,131,Submitted,,,no,no,no,04-11-24 4:29 PM,no,no,no,no,Active,0,Service & Service Package Submitted &
+505,Service,Service Package Submitted,131,Rejected,,,no,no,no,04-11-24 4:29 PM,no,no,no,no,Active,0,Service & Service Package Submitted &
+506,Service,Service Package Submitted,131,Approved,,,no,no,yes,04-11-24 4:29 PM,no,no,no,no,Active,0,Service & Service Package Submitted &
+507,Service,Service Package Submitted,131,Resubmitted,,,no,no,no,04-11-24 4:29 PM,no,no,no,no,Active,1,Service & Service Package Submitted &
+508,Service,Service Package Submitted,131,Recalled,,,no,no,no,04-11-24 4:29 PM,no,no,no,no,Active,0,Service & Service Package Submitted &
+626,Service,Service Return trip,150,Scheduled,,,no,no,no,06-10-24 3:23 PM,yes,no,no,no,Active,0,Service & Service Return trip &
+627,Service,Service Return trip,150,In Queue,,,no,no,no,06-10-24 3:23 PM,no,no,no,no,Active,0,Service & Service Return trip &
+628,Service,Service Return trip,150,Complete,,,no,no,no,06-10-24 3:24 PM,yes,no,no,no,Active,0,Service & Service Return trip &
+98,Fulfillment,Site Survey,40,In Queue,,1,yes,no,no,02-04-18 1:26 PM,no,no,no,no,Active,5,Fulfillment & Site Survey &
+99,Fulfillment,Site Survey,40,Scheduled,,3,no,no,no,02-04-18 1:26 PM,no,yes,yes,no,Active,95,Fulfillment & Site Survey &
+100,Fulfillment,Site Survey,40,Complete,,5,no,no,yes,02-04-18 1:26 PM,no,yes,yes,no,Active,1739,Fulfillment & Site Survey &
+246,Fulfillment,Site Survey,40,Unscheduled,,2,no,yes,no,07-08-21 7:53 PM,no,no,no,no,Active,2554,Fulfillment & Site Survey &
+254,Fulfillment,Site Survey,40,Cancelled,,6,no,no,yes,08-30-21 3:03 PM,no,yes,yes,no,Active,34,Fulfillment & Site Survey &
+338,Fulfillment,Site Survey,40,Rescheduled,,4,no,no,no,03-14-23 7:35 AM,yes,yes,yes,no,Active,1,Fulfillment & Site Survey &
+571,Fulfillment,Smoke & Carbon Inspection,145,Cancelled,,3,no,no,yes,05-21-24 7:19 AM,yes,yes,yes,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+572,Fulfillment,Smoke & Carbon Inspection,145,Scheduled,,2,no,no,no,05-21-24 7:19 AM,no,yes,yes,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+573,Fulfillment,Smoke & Carbon Inspection,145,Unscheduled,,1,yes,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+574,Fulfillment,Smoke & Carbon Inspection,145,Scheduled,,2,no,no,no,05-21-24 7:19 AM,no,yes,yes,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+575,Fulfillment,Smoke & Carbon Inspection,145,Corrections,,4,no,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+576,Fulfillment,Smoke & Carbon Inspection,145,Rescheduled,,5,no,no,no,05-21-24 7:19 AM,no,no,no,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+577,Fulfillment,Smoke & Carbon Inspection,145,Corrections Completed,,6,no,no,yes,05-21-24 7:19 AM,yes,no,no,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+624,Fulfillment,Smoke & Carbon Inspection,145,Missed,,,no,no,no,06-05-24 10:16 AM,yes,no,no,no,Active,0,Fulfillment & Smoke & Carbon Inspection &
+75,Fulfillment,Solar Install,31,Unscheduled,,1,yes,no,no,01-08-18 7:16 AM,no,no,no,no,Active,3281,Fulfillment & Solar Install &
+76,Fulfillment,Solar Install,31,Scheduled,,2,no,no,no,01-08-18 7:16 AM,no,yes,yes,no,Active,35,Fulfillment & Solar Install &
+77,Fulfillment,Solar Install,31,Complete,,4,no,no,yes,01-08-18 7:16 AM,no,yes,yes,no,Active,1054,Fulfillment & Solar Install &
+225,Fulfillment,Solar Install,31,Cancelled,,3,no,no,no,05-10-21 3:32 AM,no,yes,yes,no,Active,36,Fulfillment & Solar Install &
+123,Fulfillment,Solar Permit,51,In Queue,,1,no,no,no,03-27-18 9:43 AM,yes,no,no,no,Active,3090,Fulfillment & Solar Permit &
+124,Fulfillment,Solar Permit,51,Approved; Ready for Pickup,,3,no,no,yes,03-27-18 9:43 AM,yes,no,no,no,Active,27,Fulfillment & Solar Permit &
+233,Fulfillment,Solar Permit,51,Submitted,,2,yes,no,no,05-10-21 3:48 AM,no,no,no,no,Active,90,Fulfillment & Solar Permit &
+234,Fulfillment,Solar Permit,51,Rejected; Red-Lines Ready for Pickup,,3,no,no,yes,05-10-21 3:48 AM,no,no,no,no,Active,28,Fulfillment & Solar Permit &
+235,Fulfillment,Solar Permit,51,Permit Received,,4,no,no,yes,05-10-21 3:48 AM,no,no,no,no,Active,1156,Fulfillment & Solar Permit &
+334,Fulfillment,Solar Permit,51,Resubmitted,,5,no,no,no,03-07-23 10:07 AM,yes,no,no,no,Active,11,Fulfillment & Solar Permit &
+376,Fulfillment,Solar Permit,51,LOST,,,no,no,no,06-21-23 3:21 PM,no,no,no,no,,0,Fulfillment & Solar Permit &
+412,Fulfillment,Solar Permit,51,Awaiting Plans,,6,no,no,no,08-11-23 2:12 PM,yes,no,no,no,Active,3,Fulfillment & Solar Permit &
+602,Fulfillment,Solar Permit,51,Approved; Ready for Pickup,,3,no,no,yes,05-30-24 3:19 PM,yes,no,no,no,Inactive,0,Fulfillment & Solar Permit &
+646,Fulfillment,Solar Permit,51,Ready to Resubmit,,7,no,yes,no,09-19-24 1:06 PM,no,no,no,no,Active,2,Fulfillment & Solar Permit &
+333,Fulfillment,Stucco & Patch,101,Scheduled,,,no,no,no,02-27-23 9:14 PM,no,no,no,no,,0,Fulfillment & Stucco & Patch  &
+345,Sub Panel,Sub Panel  Derate,103,Derate install,,,no,no,no,04-02-23 9:26 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel  Derate &
+346,Sub Panel,Sub Panel  Derate,103,In Queue,,,no,no,no,04-02-23 9:26 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel  Derate &
+347,Sub Panel,Sub Panel  Derate,103,Completed,,,no,no,no,04-02-23 9:28 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel  Derate &
+355,Sub Panel,Sub Panel  Derate,103,Scheduled,,,no,no,no,04-02-23 9:34 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel  Derate &
+351,Sub Panel,Sub Panel Inspection,105,In Queue,,,no,no,no,04-02-23 9:32 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Inspection  &
+352,Sub Panel,Sub Panel Inspection,105,Scheduled,,,no,no,no,04-02-23 9:32 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Inspection  &
+353,Sub Panel,Sub Panel Inspection,105,Corrections,,,no,no,no,04-02-23 9:32 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Inspection  &
+354,Sub Panel,Sub Panel Inspection,105,Passed,,,no,no,no,04-02-23 9:34 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Inspection  &
+610,Sub Panel,Sub Panel Inspection,105,Missed,,,no,no,no,06-05-24 10:10 AM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Inspection  &
+348,Sub Panel,Sub Panel Install,104,In Queue,,,no,no,no,04-02-23 9:29 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Install &
+349,Sub Panel,Sub Panel Install,104,Scheduled,,,no,no,no,04-02-23 9:30 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Install &
+350,Sub Panel,Sub Panel Install,104,Completed,,,no,no,no,04-02-23 9:31 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Install &
+340,Sub Panel,Sub Panel Permit,102,In Queue,,,no,no,no,04-02-23 9:23 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Permit  &
+341,Sub Panel,Sub Panel Permit,102,Submitted,,,no,no,no,04-02-23 9:24 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Permit  &
+342,Sub Panel,Sub Panel Permit,102,Corrections,,,no,no,no,04-02-23 9:24 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Permit  &
+343,Sub Panel,Sub Panel Permit,102,Approved,,,no,no,no,04-02-23 9:24 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Permit  &
+344,Sub Panel,Sub Panel Permit,102,Received,,,no,no,no,04-02-23 9:25 PM,yes,no,no,no,Active,0,Sub Panel & Sub Panel Permit  &
+392,Fulfillment,Sunnova PPD,116,In Queue,,1,yes,no,no,07-28-23 3:38 PM,no,no,no,no,Active,198,Fulfillment & Sunnova PPD &
+393,Fulfillment,Sunnova PPD,116,Submitted,,2,no,yes,no,07-28-23 3:38 PM,yes,no,no,no,Active,2,Fulfillment & Sunnova PPD &
+394,Fulfillment,Sunnova PPD,116,Rejected,,3,no,yes,no,07-28-23 3:38 PM,yes,no,no,no,Active,12,Fulfillment & Sunnova PPD &
+395,Fulfillment,Sunnova PPD,116,Approved,,4,no,no,yes,07-28-23 3:38 PM,yes,no,no,no,Active,100,Fulfillment & Sunnova PPD &
+411,Fulfillment,Sunnova PPD,116,Resubmitted,,,no,no,no,08-11-23 10:24 AM,yes,no,no,no,Active,1,Fulfillment & Sunnova PPD &
+87,Fulfillment,System Activation,33,In Queue,,1,yes,no,no,01-08-18 7:16 AM,yes,no,no,no,Active,0,Fulfillment & System Activation &
+88,Fulfillment,System Activation,33,Complete,,2,no,no,yes,01-08-18 7:16 AM,yes,yes,yes,no,Active,0,Fulfillment & System Activation &
+650,Batttery,Tesla Backup Switch,154,Pending Permit,,,no,no,no,10-07-24 12:55 PM,yes,no,no,no,Active,0,Batttery & Tesla Backup Switch &
+651,Batttery,Tesla Backup Switch,154,Requested,,,no,no,no,10-07-24 12:55 PM,yes,no,no,no,Active,0,Batttery & Tesla Backup Switch &
+652,Batttery,Tesla Backup Switch,154,Scheduled,,,no,no,no,10-07-24 12:55 PM,yes,no,no,no,Active,0,Batttery & Tesla Backup Switch &
+653,Batttery,Tesla Backup Switch,154,Completed,,,no,no,no,10-07-24 12:56 PM,yes,no,no,no,Active,1,Batttery & Tesla Backup Switch &
+654,Batttery,Tesla Backup Switch,154,Cancelled,,,no,no,no,10-07-24 12:57 PM,yes,no,no,no,Active,1,Batttery & Tesla Backup Switch &
+114,Contact History,Text,45,Scheduled,,,no,no,no,03-17-18 8:59 AM,no,yes,yes,no,Active,0,Contact History & Text &
+115,Contact History,Text,45,Sent,,,no,no,no,03-17-18 8:59 AM,no,yes,yes,no,Active,0,Contact History & Text &
+116,Inside Sales,Text,47,Scheduled,,,no,no,no,03-17-18 8:59 AM,no,yes,yes,no,Active,0,Inside Sales & Text &
+117,Inside Sales,Text,47,Sent,,,no,no,no,03-17-18 8:59 AM,no,yes,yes,no,Active,0,Inside Sales & Text &
+557,Fulfillment,Trench Inspection,143,Cancelled,,3,no,no,yes,05-21-24 7:17 AM,yes,yes,yes,no,Active,0,Fulfillment & Trench Inspection &
+558,Fulfillment,Trench Inspection,143,Scheduled,,2,no,no,no,05-21-24 7:17 AM,no,yes,yes,no,Active,1,Fulfillment & Trench Inspection &
+559,Fulfillment,Trench Inspection,143,Unscheduled,,1,yes,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Trench Inspection &
+560,Fulfillment,Trench Inspection,143,Scheduled,,2,no,no,no,05-21-24 7:17 AM,no,yes,yes,no,Active,0,Fulfillment & Trench Inspection &
+561,Fulfillment,Trench Inspection,143,Corrections,,4,no,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Trench Inspection &
+562,Fulfillment,Trench Inspection,143,Rescheduled,,5,no,no,no,05-21-24 7:17 AM,no,no,no,no,Active,0,Fulfillment & Trench Inspection &
+563,Fulfillment,Trench Inspection,143,Corrections Completed,,6,no,no,yes,05-21-24 7:17 AM,yes,no,no,no,Active,0,Fulfillment & Trench Inspection &
+622,Fulfillment,Trench Inspection,143,Missed,,,no,no,no,06-05-24 10:15 AM,yes,no,no,no,Active,0,Fulfillment & Trench Inspection &
+455,Trenching,Trenching,127,In Queue,,,no,no,no,02-24-24 7:00 PM,no,no,no,no,Active,0,Trenching & Trenching &
+456,Trenching,Trenching,127,Dig Alert,,,no,no,no,02-24-24 7:00 PM,yes,no,no,no,Active,0,Trenching & Trenching &
+457,Trenching,Trenching,127,Trenching,,,no,no,no,02-24-24 7:00 PM,yes,no,no,no,Active,0,Trenching & Trenching &
+458,Trenching,Trenching,127,Backfill,,,no,no,no,02-24-24 7:00 PM,yes,no,no,no,Active,1,Trenching & Trenching &
+137,Fulfillment,Utility Application,55,In Queue,,1,yes,no,no,06-19-18 9:43 PM,no,no,no,no,Active,0,Fulfillment & Utility Application &
+138,Fulfillment,Utility Application,55,Submitted,,2,no,no,no,06-19-18 9:43 PM,no,no,no,no,Active,0,Fulfillment & Utility Application &
+139,Fulfillment,Utility Application,55,Approved,,3,no,no,yes,06-19-18 9:43 PM,no,no,no,no,Active,3,Fulfillment & Utility Application &
+430,Fulfillment,Utility Application,55,Rejected,,,no,no,no,10-10-23 9:40 AM,no,no,no,no,,0,Fulfillment & Utility Application &
+236,Fulfillment,Voltaic Check,83,In Queue,,1,yes,no,no,05-10-21 5:08 AM,no,no,no,no,Active,2386,Fulfillment & Voltaic Check &
+237,Fulfillment,Voltaic Check,83,Complete,,3,no,no,yes,05-10-21 5:08 AM,no,no,no,no,Active,2070,Fulfillment & Voltaic Check &
+238,Fulfillment,Voltaic Check,83,Needs Attention,,2,no,no,no,05-10-21 5:08 AM,no,no,no,no,Active,3,Fulfillment & Voltaic Check &
+527,Fulfillment,Water Heater,139,In Queue,,,no,no,no,04-29-24 11:03 AM,yes,no,no,no,Active,0,Fulfillment & Water Heater &
+528,Fulfillment,Water Heater,139,Scheduled,,,no,no,no,04-29-24 11:03 AM,yes,no,no,no,Active,0,Fulfillment & Water Heater &
+529,Fulfillment,Water Heater,139,Complete,,,no,no,yes,04-29-24 11:04 AM,yes,no,no,no,Active,4,Fulfillment & Water Heater &
+530,Fulfillment,Water Heater,139,Incomplete,,,no,no,no,04-29-24 11:04 AM,yes,no,no,no,Active,1,Fulfillment & Water Heater &
+307,Fulfillment,Welcome,97,In Queue,,1,yes,no,no,01-25-23 3:21 PM,yes,no,no,yes,Active,3,Fulfillment & Welcome &
+309,Fulfillment,Welcome,97,Incomplete,,3,no,no,yes,01-25-23 4:23 PM,yes,yes,no,yes,Active,1,Fulfillment & Welcome &
+310,Fulfillment,Welcome,97,Complete,,2,no,no,yes,01-25-23 4:23 PM,yes,yes,no,no,Active,653,Fulfillment & Welcome &
+284,Packaging,Windows,93,In Queue,,1,yes,no,no,09-02-22 2:04 PM,no,no,no,no,Active,0,Packaging & Windows &
+285,Packaging,Windows,93,Scheduled,,2,no,no,no,09-02-22 2:04 PM,no,yes,yes,no,Active,0,Packaging & Windows &
+286,Packaging,Windows,93,Complete,,3,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,1,Packaging & Windows &
+287,Packaging,Windows,93,Cancelled,,4,no,no,yes,09-02-22 2:04 PM,no,yes,yes,no,Active,0,Packaging & Windows &

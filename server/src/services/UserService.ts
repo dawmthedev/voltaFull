@@ -15,7 +15,12 @@ export class UserService {
     return { items, total };
   }
 
+  async findById(id: string) {
+    return this.userModel.findById(id);
+  }
+
   async updateRole(id: string, role: string) {
+    console.log(`UserService: Updating user ${id} role to ${role}`);
     return this.userModel.findByIdAndUpdate(id, { role }, { new: true });
   }
 }
