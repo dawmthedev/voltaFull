@@ -1,5 +1,5 @@
-import React from 'react';
-import { Product } from '../../types/task';
+import React, { useState } from 'react';
+import { Product, ProjectProduct, ProjectEvent } from '../../types/task';
 import { 
   IoSunny, // Solar
   IoThunderstorm, // HVAC
@@ -9,16 +9,27 @@ import {
   IoAlertCircle,
   IoCheckmarkCircle,
   IoTime,
-  IoPause
+  IoPause,
+  IoChevronDown,
+  IoChevronUp
 } from 'react-icons/io5';
+import WorkflowDisplay from './WorkflowDisplay';
 
 interface ProductCardProps {
-  product: Product;
+  product: Product | ProjectProduct;
   onClick?: () => void;
   onEdit?: () => void;
+  onStatusUpdate?: (productId: string, eventId: string, statusId: string) => Promise<void>;
 }
 
-export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, onEdit }) => {
+// Type guard to check if the product is a ProjectProduct
+const isProjectProduct = (product: Product | ProjectProduct): product is ProjectProduct => {
+  return 'productTemplateId' in product && 'events' in product;
+};
+
+export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, onEdit, onStatusUpdate }) => {
+  const [showWorkflow, setShowWorkflow] = useState(false);
+  
   // Calculate completion percentage
   const totalTasks = product.tasks.length;
   const completedTasks = product.tasks.filter(task => task.status === 'completed').length;
@@ -82,19 +93,22 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, onEd
   return (
     <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-shadow p-4">
       <div className="relative">
-        {onEdit && (
-          <button 
+        <div className="absolute top-0 right-0 flex space-x-1">
+          {/* Workflow toggle button */}
+          <button
             onClick={(e) => {
               e.stopPropagation();
-              onEdit();
+              setShowWorkflow(!showWorkflow);
             }}
-            className="absolute top-0 right-0 p-1 text-gray-400 hover:text-gray-600 focus:outline-none"
+            className="p-1 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 focus:outline-none"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-            </svg>
+            {showWorkflow ? (
+              <IoChevronUp className="h-5 w-5" />
+            ) : (
+              <IoChevronDown className="h-5 w-5" />
+            )}
           </button>
-        )}
+        </div>
         
         <div 
           onClick={onClick}
@@ -137,6 +151,19 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onClick, onEd
               ></div>
             </div>
           </div>
+          
+          {/* Workflow section - conditionally displayed */}
+          {showWorkflow && onStatusUpdate && isProjectProduct(product) && (
+            <div 
+              className="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+              onClick={(e) => e.stopPropagation()} // Prevent click from bubbling to card
+            >
+              <WorkflowDisplay 
+                product={product} 
+                onStatusUpdate={onStatusUpdate} 
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>

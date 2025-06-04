@@ -2,10 +2,10 @@ import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
-  size?: "sm" | "md" | "lg";
+  size?: "xs" | "sm" | "md" | "lg"; // Added 'xs'
   isLoading?: boolean;
   className?: string;
-  children: React.ReactNode; // Add this line to explicitly type children
+  children: React.ReactNode;
 }
 
 const Button: React.FC<ButtonProps> = ({
@@ -31,6 +31,7 @@ const Button: React.FC<ButtonProps> = ({
   };
 
   const sizes = {
+    xs: "px-2.5 py-1 text-xs", // Added 'xs' styles
     sm: "px-3 py-1.5 text-sm",
     md: "px-4 py-2 text-base",
     lg: "px-6 py-3 text-lg",

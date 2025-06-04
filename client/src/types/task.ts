@@ -30,6 +30,7 @@ export interface ProductTemplate {
   description?: string;
   type: ProductType;
   defaultEvents: EventTemplate[];
+  isPublished: boolean; // Flag to indicate if template is published and selectable
   createdAt: string;
   updatedAt: string;
 }
@@ -40,6 +41,25 @@ export interface EventTemplate {
   description?: string;
   defaultTasks: TaskTemplate[];
   order: number;
+  statuses: StatusTemplate[];
+}
+
+export interface StatusTemplate {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+  isFinal: boolean; // Indicates if this is the final status (will be shown in green)
+}
+
+export interface Status {
+  id: string;
+  name: string;
+  description?: string;
+  order: number;
+  isFinal: boolean; // Indicates if this is the final status (will be shown in green)
+  timestamp?: string; // When the status was set
+  setBy?: string; // User ID who set this status
 }
 
 export interface TaskTemplate {
@@ -57,8 +77,12 @@ export interface ProjectProduct {
   projectId: string;
   productTemplateId: string;
   productTemplate: ProductTemplate;
+  name: string; // Product name
+  description?: string; // Product description
+  type: ProductType; // Product type
   events: ProjectEvent[];
   status: ProductStatus;
+  tasks: Task[]; // Tasks associated with this product
   createdAt: string;
   updatedAt: string;
 }
@@ -72,6 +96,8 @@ export interface ProjectEvent {
   scheduledDate?: string;
   completedDate?: string;
   status: EventStatus;
+  currentStatusId: string; // ID of the current status in the statuses array
+  statuses: Status[];
   tasks: Task[];
   order: number;
 }

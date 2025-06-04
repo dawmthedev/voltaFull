@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../store";
 import { fetchProjectById } from "../store/projectsSlice";
-import { Project } from "../types/task";
+import { Project, Status } from "../types/task";
 import { fetchUsers } from "../store/usersSlice";
 import { useAddPayrollMutation } from "../services/api";
 import PercentageInput from "../components/PercentageInput";
@@ -10,7 +10,7 @@ import PercentageInput from "../components/PercentageInput";
 // Task Management Components
 import ProductsList from "../components/products/ProductsList";
 import ProductCard from "../components/products/ProductCard";
-import ProductModal from "../components/products/ProductModal";
+import ProductTypeSelector from "../components/products/ProductTypeSelector";
 import TasksList from "../components/tasks/TasksList";
 import TaskCard from "../components/tasks/TaskCard";
 import TaskAssignmentModal from "../components/tasks/TaskAssignmentModal";
@@ -23,11 +23,16 @@ import {
   useGetProjectProductsQuery,
   useGetProductTasksQuery,
   useGetAllTechniciansQuery,
-  useCreateProductMutation,
-  useUpdateProductMutation,
   useCreateTaskMutation,
   useUpdateTaskMutation,
 } from "../services/taskService";
+
+// Product Template Service APIs
+import {
+  useGetPublishedTemplatesQuery,
+  useAddProductToProjectMutation,
+  useUpdateEventStatusMutation
+} from "../services/productTemplateService";
 import {
   Product,
   Task,
@@ -36,6 +41,9 @@ import {
   ProductStatus,
   TaskStatus,
   TaskPriority,
+  ProductTemplate,
+  ProjectEvent,
+  ProjectProduct,
 } from "../types/task";
 
 // Import icons
@@ -77,9 +85,8 @@ interface ToastOptions {
   duration: number;
 }
 
-interface ProductModalData {
+interface ProductTypeSelectorData {
   isOpen: boolean;
-  product?: Product;
 }
 
 interface TaskModalData {
@@ -145,9 +152,12 @@ const ProjectDetailPage = (): JSX.Element | null => {
     priority?: TaskPriority;
     technicianId?: string;
   }>({});
-  const [productModal, setProductModal] = useState<ProductModalData>({
+  const [productTypeSelector, setProductTypeSelector] = useState<ProductTypeSelectorData>({
     isOpen: false,
   });
+  
+  // Fetch all published product templates
+  const { data: publishedTemplates = [], isLoading: templatesLoading } = useGetPublishedTemplatesQuery();
   const [taskModal, setTaskModal] = useState<TaskModalData>({ isOpen: false });
 
   // Helper function for tab class names
@@ -163,11 +173,8 @@ const ProjectDetailPage = (): JSX.Element | null => {
   // Map state is already defined above
 
   // RTK Query hooks for task management
-  const {
-    data: products = [],
-    isLoading: productsLoading,
-    refetch: refetchProducts,
-  } = useGetProjectProductsQuery(projectId || "", {
+  const { data: products = [], isLoading: productsLoading, refetch: refetchProducts } =
+    useGetProjectProductsQuery(projectId || "", {
     skip: !projectId,
   });
 
@@ -182,11 +189,11 @@ const ProjectDetailPage = (): JSX.Element | null => {
   const { data: technicians = [], isLoading: techniciansLoading } =
     useGetAllTechniciansQuery();
 
-  // Mutation hooks
-  const [createProduct] = useCreateProductMutation();
-  const [updateProduct] = useUpdateProductMutation();
+  // Task state and API integration
   const [createTask] = useCreateTaskMutation();
   const [updateTask] = useUpdateTaskMutation();
+  const [addProductToProject] = useAddProductToProjectMutation();
+  const [updateEventStatus] = useUpdateEventStatusMutation();
 
   // Custom toast function to replace Chakra UI's useToast
   const showToast = ({
@@ -452,26 +459,42 @@ const ProjectDetailPage = (): JSX.Element | null => {
     }
   };
 
-  // Handle product modal actions
-  const handleProductSave = async (productData: Partial<Product>) => {
+  // Handle product type selection
+  const handleProductTemplateSelect = async (selectedTemplateIds: string[]) => {
     try {
-      if (productModal.product?.id) {
-        // Update existing product
-        await updateProduct({
-          ...productData,
-          id: productModal.product.id,
+      if (!projectId) return;
+      
+      // Add each selected product template to the project
+      const addPromises = selectedTemplateIds.map(templateId => {
+        return addProductToProject({
+          projectId,
+          templateId
         }).unwrap();
-      } else {
-        // Add new product
-        await createProduct({
-          ...productData,
-          status: "not_started",
-          projectId: projectId || "",
-        }).unwrap();
-      }
-      setProductModal({ isOpen: false });
+      });
+      
+      await Promise.all(addPromises);
+      setProductTypeSelector({ isOpen: false });
+      
+      // Refetch project products to show the newly added ones
+      refetchProducts();
     } catch (err) {
-      setError("Failed to save product");
+      setError("Failed to add products to project");
+    }
+  };
+  
+  // Handle event status update
+  const handleEventStatusUpdate = async (projectProductId: string, eventId: string, statusId: string) => {
+    try {
+      await updateEventStatus({
+        projectProductId,
+        eventId,
+        statusId
+      }).unwrap();
+      
+      // Refetch project products to show updated status
+      refetchProducts();
+    } catch (err) {
+      setError("Failed to update event status");
     }
   };
 
@@ -607,6 +630,42 @@ const ProjectDetailPage = (): JSX.Element | null => {
             </h1>
           </header>
 
+          {/* Project Location Map */}
+          {project.address && (
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white">
+                  Project Location
+                </h3>
+                <button
+                  onClick={() => setShowMap(!showMap)}
+                  className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
+                >
+                  {showMap ? "Hide Map" : "Show Map"}
+                </button>
+              </div>
+
+              {showMap && (
+                <div className="h-80 rounded-lg overflow-hidden">
+                  <MapContainer
+                    markers={[
+                      {
+                        id: project._id || "1",
+                        latitude: 30.2672, // Placeholder - would be geocoded from project.address
+                        longitude: -97.7431, // Placeholder - would be geocoded from project.address
+                        title: project.homeowner || "Project Location",
+                        description: project.address,
+                        color: "#10B981", // teal-500
+                      },
+                    ]}
+                    showDirectionsButton={true}
+                    zoom={15}
+                  />
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="space-y-6">
             {/* Custom tabs implementation */}
             <div className="flex gap-2 border-b border-gray-200 dark:border-gray-700">
@@ -682,43 +741,6 @@ const ProjectDetailPage = (): JSX.Element | null => {
                         </div>
                       ))}
                     </div>
-
-                    {/* Project Location Map */}
-                    {project.address && (
-                      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6">
-                        <div className="flex justify-between items-center mb-4">
-                          <h3 className="text-lg font-medium text-gray-900 dark:text-white">
-                            Project Location
-                          </h3>
-                          <button
-                            onClick={() => setShowMap(!showMap)}
-                            className="inline-flex items-center px-3 py-1.5 border border-gray-300 dark:border-gray-600 rounded-md text-sm font-medium text-gray-700 dark:text-gray-200 bg-white dark:bg-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
-                          >
-                            {showMap ? "Hide Map" : "Show Map"}
-                          </button>
-                        </div>
-
-                        {showMap && (
-                          <div className="h-80 rounded-lg overflow-hidden">
-                            <MapContainer
-                              markers={[
-                                {
-                                  id: project._id || "1",
-                                  latitude: 30.2672, // Placeholder - would be geocoded from project.address
-                                  longitude: -97.7431, // Placeholder - would be geocoded from project.address
-                                  title:
-                                    project.homeowner || "Project Location",
-                                  description: project.address,
-                                  color: "#10B981", // teal-500
-                                },
-                              ]}
-                              showDirectionsButton={true}
-                              zoom={15}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    )}
                   </div>
                 ) : null)}
 
@@ -731,7 +753,7 @@ const ProjectDetailPage = (): JSX.Element | null => {
                     </h2>
                     <button
                       type="button"
-                      onClick={() => setProductModal({ isOpen: true })}
+                      onClick={() => setProductTypeSelector({ isOpen: true })}
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-teal-600 hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-teal-500"
                     >
                       <FiPlus className="-ml-1 mr-2 h-5 w-5" />
@@ -821,14 +843,12 @@ const ProjectDetailPage = (): JSX.Element | null => {
                           .map((product) => (
                             <ProductCard
                               key={product.id}
-                              product={product}
+                              product={product as unknown as ProjectProduct}
                               onClick={() => {
                                 setSelectedProductId(product.id);
                                 setActiveTab("tasks");
                               }}
-                              onEdit={() =>
-                                setProductModal({ isOpen: true, product })
-                              }
+                              onStatusUpdate={handleEventStatusUpdate}
                             />
                           ))}
                       </div>
@@ -1046,12 +1066,13 @@ const ProjectDetailPage = (): JSX.Element | null => {
       </div>
 
       {/* Product Modal */}
-      {productModal.isOpen && (
-        <ProductModal
-          isOpen={productModal.isOpen}
-          onClose={() => setProductModal({ isOpen: false })}
-          product={productModal.product}
-          onSave={handleProductSave}
+      {productTypeSelector.isOpen && (
+        <ProductTypeSelector
+          isOpen={productTypeSelector.isOpen}
+          onClose={() => setProductTypeSelector({ isOpen: false })}
+          onSelect={handleProductTemplateSelect}
+          availableTemplates={publishedTemplates}
+          existingProductTypes={products.map(product => product.type)}
         />
       )}
 

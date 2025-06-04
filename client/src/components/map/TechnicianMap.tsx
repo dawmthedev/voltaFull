@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import MapContainer from './MapContainer';
 import { Technician } from '../../types/task';
 import { DEFAULT_CENTER } from '../../config/mapConfig';
@@ -51,6 +51,45 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
 }) => {
   const [markers, setMarkers] = useState<TechnicianMarker[]>([]);
   const [mapInstance, setMapInstance] = useState<mapboxgl.Map | null>(null);
+  const [showLegend, setShowLegend] = useState(false);
+  const mapContainerRef = useRef<HTMLDivElement>(null);
+  const isMounted = useRef(true);
+  
+  // Cleanup function for component unmount
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+      if (mapInstance) {
+        try {
+          // Remove all layers and sources
+          if (mapInstance.getLayer('route-line')) {
+            mapInstance.removeLayer('route-line');
+          }
+          if (mapInstance.getLayer('route-points')) {
+            mapInstance.removeLayer('route-points');
+          }
+          if (mapInstance.getSource('route')) {
+            mapInstance.removeSource('route');
+          }
+          // Remove the map instance
+          mapInstance.remove();
+        } catch (error) {
+          console.warn('Error during map cleanup:', error);
+        }
+      }
+    };
+  }, [mapInstance]);
+
+  // Function to safely get map source
+  const safeGetSource = useCallback((sourceId: string) => {
+    if (!mapInstance || !mapInstance.getSource) return null;
+    try {
+      return mapInstance.getSource(sourceId);
+    } catch (error) {
+      console.warn(`Error getting source ${sourceId}:`, error);
+      return null;
+    }
+  }, [mapInstance]);
 
   // Get color based on technician status
   const getTechnicianStatusColor = useCallback((status?: string): string => {
@@ -80,7 +119,7 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
       // Generate random but consistent history for each technician
       const techSeed = tech.id.charCodeAt(0) % 10;
       const historyCount = (techSeed % 3) + 2; // 2-4 history points
-      
+
       // Create history array with the current location as the last point
       const history = Array(historyCount).fill(null).map((_, i): TravelHistoryPoint => {
         if (i === historyCount - 1 && tech.currentLocation) {
@@ -88,28 +127,58 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
           return {
             time: new Date(tech.currentLocation.lastUpdated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}),
             location: 'Current Location',
-            coordinates: [tech.currentLocation.lng, tech.currentLocation.lat] as [number, number]
+            coordinates: [tech.currentLocation.lng, tech.currentLocation.lat],
           };
         } else {
-          // Previous locations - use offset from nearby locations
-          const basePoint = mockHistoryPoints[i % mockHistoryPoints.length];
-          const offset = {
-            lng: ((techSeed * 0.01) - 0.005) * (i + 1),
-            lat: ((techSeed * 0.01) - 0.005) * (i + 1)
-          };
+          // Generate some random points within a reasonable distance from current location
+          const jitter = ((i + 1) * 0.01) + (techSeed * 0.005);
+          const baseLat = tech.currentLocation?.lat || 34.0522;
+          const baseLng = tech.currentLocation?.lng || -118.2437;
+
+          // Sample points from the array or use generated ones
+          const point = mockHistoryPoints[i % mockHistoryPoints.length];
           return {
-            time: basePoint.time,
-            location: basePoint.location,
-            coordinates: [basePoint.coordinates[0] + offset.lng, basePoint.coordinates[1] + offset.lat] as [number, number]
+            time: point.time,
+            location: point.location,
+            coordinates: [
+              baseLng - jitter * (techSeed % 2 === 0 ? 1 : -1),
+              baseLat - jitter * (techSeed % 3 === 0 ? 1 : -1)
+            ],
           };
         }
       });
-      
+
       acc[tech.id] = history;
       return acc;
     }, {});
   }, [technicians]);
 
+  // Calculate route statistics for selected technician
+  // This effect is redundant with the routeStats useMemo above
+  // Removing this effect as it's using a non-existent setRouteStats function
+
+  // Safely check if a layer exists without throwing errors
+  const safeLayerExists = useCallback((layerId: string): boolean => {
+    if (!mapInstance) return false;
+    try {
+      return mapInstance.getLayer(layerId) !== undefined;
+    } catch (e) {
+      console.warn(`Error checking if layer ${layerId} exists:`, e);
+      return false;
+    }
+  }, [mapInstance]);
+
+  // Safely check if a source exists without throwing errors
+  const safeSourceExists = useCallback((sourceId: string): boolean => {
+    if (!mapInstance) return false;
+    try {
+      return mapInstance.getSource(sourceId) !== undefined;
+    } catch (e) {
+      console.warn(`Error checking if source ${sourceId} exists:`, e);
+      return false;
+    }
+  }, [mapInstance]);
+  
   // Handle marker click - show travel history and fly to location
   const handleMarkerClick = useCallback((technicianId: string) => {
     // If we have a selection handler from props, use it
@@ -118,19 +187,37 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
     }
     
     // Only proceed if we have a map instance
-    if (!mapInstance) return;
+    if (!mapInstance) {
+      console.warn('Map instance not ready');
+      return;
+    }
     
     // Find the technician data
     const technician = technicians.find(t => t.id === technicianId);
-    if (!technician || !travelHistory[technicianId]) return;
+    if (!technician || !travelHistory[technicianId]) {
+      console.warn('Technician or travel history not found');
+      return;
+    }
     
     const history = travelHistory[technicianId];
     
-    // Clear previous route if any
-    if (mapInstance.getSource('route')) {
-      mapInstance.removeLayer('route-line');
-      mapInstance.removeLayer('route-points');
-      mapInstance.removeSource('route');
+    // Safely clean up existing layers and sources
+    try {
+      // Only remove layers/sources if they exist
+      if (safeLayerExists('route-line')) {
+        mapInstance.removeLayer('route-line');
+      }
+      
+      if (safeLayerExists('route-points')) {
+        mapInstance.removeLayer('route-points');
+      }
+      
+      if (safeSourceExists('route')) {
+        mapInstance.removeSource('route');
+      }
+    } catch (error) {
+      console.warn('Error cleaning up previous route:', error);
+      // Continue with new route creation even if cleanup fails
     }
     
     // If we have travel history, show it
@@ -145,54 +232,80 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
         essential: true
       });
       
-      // Create a GeoJSON source for the route
-      const routeData: GeoJSONData = {
-        type: 'FeatureCollection',
-        features: [
-          {
-            type: 'Feature',
-            geometry: {
-              type: 'LineString',
-              coordinates: history.map(point => point.coordinates)
-            },
-            properties: {}
+      // Create a GeoJSON source for the route safely
+      try {
+        const routeData: GeoJSONData = {
+          type: 'FeatureCollection',
+          features: [
+            {
+              type: 'Feature',
+              geometry: {
+                type: 'LineString',
+                coordinates: history.map(point => point.coordinates)
+              },
+              properties: {}
+            }
+          ]
+        };
+        
+        // Only add the source if it doesn't already exist
+        if (!safeSourceExists('route')) {
+          mapInstance.addSource('route', {
+            type: 'geojson',
+            data: routeData
+          });
+        } else {
+          // Update existing source data
+          const source = mapInstance.getSource('route') as mapboxgl.GeoJSONSource;
+          if (source && source.setData) {
+            source.setData(routeData);
           }
-        ]
-      };
-      
-      mapInstance.addSource('route', {
-        type: 'geojson',
-        data: routeData
-      });
-      
-      // Add a line layer for the route
-      mapInstance.addLayer({
-        id: 'route-line',
-        type: 'line',
-        source: 'route',
-        layout: {
-          'line-join': 'round',
-          'line-cap': 'round'
-        },
-        paint: {
-          'line-color': '#0ea5e9', // sky-500
-          'line-width': 3,
-          'line-dasharray': [1, 1]
         }
-      });
+      } catch (error) {
+        console.error('Error creating route source:', error);
+        return; // Exit early if we can't create the source
+      }
       
-      // Add circle points for each history point
-      mapInstance.addLayer({
-        id: 'route-points',
-        type: 'circle',
-        source: 'route',
-        paint: {
-          'circle-radius': 5,
-          'circle-color': '#0ea5e9',
-          'circle-stroke-width': 1,
-          'circle-stroke-color': '#ffffff'
+      // Add a line layer for the route safely
+      try {
+        if (!safeLayerExists('route-line')) {
+          mapInstance.addLayer({
+            id: 'route-line',
+            type: 'line',
+            source: 'route',
+            layout: {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            paint: {
+              'line-color': '#4B5563', // gray-600 (using neutral gray palette)
+              'line-width': 3,
+              'line-dasharray': [1, 1]
+            }
+          });
         }
-      });
+      } catch (error) {
+        console.error('Error adding route line layer:', error);
+      }
+      
+      // Add circle points for each history point safely
+      try {
+        if (!safeLayerExists('route-points')) {
+          mapInstance.addLayer({
+            id: 'route-points',
+            type: 'circle',
+            source: 'route',
+            paint: {
+              'circle-radius': 5,
+              'circle-color': '#4B5563', // gray-600 (using neutral gray palette)
+              'circle-stroke-width': 1,
+              'circle-stroke-color': '#ffffff'
+            }
+          });
+        }
+      } catch (error) {
+        console.error('Error adding route points layer:', error);
+      }
       
       // Fit bounds to show the entire path
       const bounds = new mapboxgl.LngLatBounds();
@@ -273,7 +386,38 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
       DEFAULT_CENTER;
   }, [markers]);
 
-  // Render placeholders if needed
+  // Calculate route statistics for selected technician
+  const routeStats = useMemo(() => {
+    if (!selectedTechnicianId) return null;
+    
+    const history = travelHistory[selectedTechnicianId] || [];
+    if (history.length < 2) return null;
+    
+    // Calculate distance in miles (approximate using simple formula)
+    let totalDistance = 0;
+    for (let i = 1; i < history.length; i++) {
+      const [prevLng, prevLat] = history[i-1].coordinates;
+      const [currLng, currLat] = history[i].coordinates;
+      
+      // Approximate distance calculation
+      const latDiff = Math.abs(currLat - prevLat) * 69; // ~69 miles per degree latitude
+      const lngDiff = Math.abs(currLng - prevLng) * 55; // ~55 miles per degree longitude at this latitude
+      
+      const segmentDistance = Math.sqrt(latDiff * latDiff + lngDiff * lngDiff);
+      totalDistance += segmentDistance;
+    }
+    
+    return {
+      distance: totalDistance.toFixed(1),
+      stops: history.length,
+      timeActive: '5h 23m', // Mocked for demo
+      nextJob: '30m away' // Mocked for demo
+    };
+  }, [selectedTechnicianId, travelHistory]);
+  
+  // Empty comment to avoid duplicate renderPlaceholder function
+
+  // Render placeholders function definition moved to top level to avoid hook rule violations
   const renderPlaceholder = (message: string) => (
     <div className={`${className || ''} flex items-center justify-center bg-gray-100 dark:bg-gray-700 h-full w-full min-h-[400px]`}>
       <p className="text-gray-500 dark:text-gray-300">{message}</p>
@@ -293,7 +437,7 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 relative">
       <MapContainer
         markers={markers}
         center={mapCenter}
@@ -303,7 +447,81 @@ const TechnicianMap: React.FC<TechnicianMapProps> = ({
         selectedMarkerId={selectedTechnicianId}
         onMapLoad={handleMapLoad}
       />
-      <div className="flex flex-wrap items-center gap-4 px-2">
+      
+      {/* Map controls */}
+      <div className="absolute top-4 right-4 z-10 flex flex-col gap-2">
+        <button 
+          onClick={() => setShowLegend(!showLegend)}
+          className="bg-white dark:bg-gray-800 p-2 rounded-md shadow-md hover:bg-gray-50 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300 transition-colors focus:outline-none focus:ring-2 focus:ring-teal-500 border border-gray-200 dark:border-gray-700"
+          title="Toggle Travel History Legend"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        </button>
+      </div>
+      
+      {/* Travel history legend */}
+      {showLegend && (
+        <div className="absolute left-4 top-4 z-10 bg-white dark:bg-gray-800 p-3 rounded-md shadow-md text-sm max-w-xs border border-gray-200 dark:border-gray-700">
+          <div className="flex justify-between items-center mb-2">
+            <h3 className="font-medium text-gray-800 dark:text-gray-200">Travel History Legend</h3>
+            <button 
+              onClick={() => setShowLegend(false)}
+              className="text-gray-400 hover:text-gray-600 dark:text-gray-500 dark:hover:text-gray-300"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="space-y-2">
+            <div className="flex items-center">
+              <div className="w-6 h-0.5 bg-gray-600 dark:bg-gray-400 mr-2"></div>
+              <span className="text-gray-700 dark:text-gray-300">Travel path</span>
+            </div>
+            <div className="flex items-center">
+              <div className="w-3 h-3 rounded-full bg-gray-600 dark:bg-gray-400 mr-2"></div>
+              <span className="text-gray-700 dark:text-gray-300">Travel checkpoint</span>
+            </div>
+            <div className="flex items-center">
+              <div className="flex items-center justify-center w-5 h-5 rounded-full bg-white border-2 border-gray-600 dark:border-gray-400 mr-2"></div>
+              <span className="text-gray-700 dark:text-gray-300">Current location</span>
+            </div>
+            <div className="mt-3 pt-2 border-t border-gray-200 dark:border-gray-700 text-xs text-gray-500 dark:text-gray-400">
+              <p>Click on a technician marker to view their travel history on the map.</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Selected technician route stats (shows when a technician is selected and has route data) */}
+      {selectedTechnicianId && routeStats && (
+        <div className="absolute left-4 bottom-12 z-10 bg-white dark:bg-gray-800 p-3 rounded-md shadow-md max-w-xs border border-gray-200 dark:border-gray-700">
+          <h3 className="font-medium text-gray-800 dark:text-gray-200 text-sm mb-2">Travel Stats</h3>
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+              <div className="text-gray-500 dark:text-gray-400">Distance</div>
+              <div className="font-medium text-gray-800 dark:text-gray-200">{routeStats.distance} miles</div>
+            </div>
+            <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+              <div className="text-gray-500 dark:text-gray-400">Stops</div>
+              <div className="font-medium text-gray-800 dark:text-gray-200">{routeStats.stops} locations</div>
+            </div>
+            <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+              <div className="text-gray-500 dark:text-gray-400">Time active</div>
+              <div className="font-medium text-gray-800 dark:text-gray-200">{routeStats.timeActive}</div>
+            </div>
+            <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded">
+              <div className="text-gray-500 dark:text-gray-400">Next job</div>
+              <div className="font-medium text-gray-800 dark:text-gray-200">{routeStats.nextJob}</div>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Status legend */}
+      <div className="flex flex-wrap items-center gap-4 px-2 bg-white dark:bg-gray-800 p-2 rounded-md shadow-sm">
         <p className="text-sm font-medium text-gray-700 dark:text-gray-300">Status Legend:</p>
         <div className="flex items-center">
           <span className="inline-block w-3 h-3 rounded-full bg-teal-500 mr-1"></span>

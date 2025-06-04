@@ -8,6 +8,7 @@ import projectProductsReducer, { projectProductsApi } from './projectProductsSli
 import { useDispatch, TypedUseSelectorHook, useSelector } from 'react-redux'
 import { api } from '../services/api'
 import { taskApi } from '../services/taskService'
+import { productTemplateApi } from '../services/productTemplateService'
 
 export const store = configureStore({
   reducer: {
@@ -20,14 +21,16 @@ export const store = configureStore({
     [api.reducerPath]: api.reducer,
     [taskApi.reducerPath]: taskApi.reducer,
     [productTemplatesApi.reducerPath]: productTemplatesApi.reducer,
-    [projectProductsApi.reducerPath]: projectProductsApi.reducer
+    [projectProductsApi.reducerPath]: projectProductsApi.reducer,
+    [productTemplateApi.reducerPath]: productTemplateApi.reducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(
       api.middleware, 
       taskApi.middleware, 
       productTemplatesApi.middleware, 
-      projectProductsApi.middleware
+      projectProductsApi.middleware,
+      productTemplateApi.middleware
     )
 })
 

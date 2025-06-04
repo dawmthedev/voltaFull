@@ -17,7 +17,8 @@ const initialEventTemplate: EventTemplate = {
   name: '',
   description: '',
   defaultTasks: [],
-  order: 0
+  order: 0,
+  statuses: [] // Add the missing statuses property
 };
 
 const initialTaskTemplate: TaskTemplate = {
