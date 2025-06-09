@@ -1,0 +1,5 @@
+{
+  "buildCommand": "cd client && bash ./setup-build.sh",
+  "outputDirectory": "client/build",
+  "devCommand": "cd client && npm run dev"
+}
