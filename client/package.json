@@ -48,5 +48,10 @@
   },
   "engines": {
     "node": "18.x"
+  },
+  "overrides": {
+    "terser-webpack-plugin": "5.3.10",
+    "schema-utils": "3.1.1"
   }
 }
+
