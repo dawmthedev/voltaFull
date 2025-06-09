@@ -26,6 +26,8 @@
     "zod": "3.22.4"
   },
   "devDependencies": {
+    "terser-webpack-plugin": "5.3.10",
+    "schema-utils": "3.1.1",
     "@types/react": "^18.2.28",
     "@types/react-dom": "^18.2.14",
     "@types/react-redux": "^7.1.25",
