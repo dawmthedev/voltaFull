@@ -167,17 +167,35 @@ const MapContainer: React.FC<MapContainerProps> = ({
         
         // Create marker element
         const markerElement = document.createElement('div');
-        markerElement.className = 'marker bg-blue-500 hover:bg-blue-600 w-6 h-6 rounded-full flex items-center justify-center cursor-pointer transform transition-transform duration-200 shadow-md';
+        markerElement.className = 'marker flex flex-col items-center group';
         
-        // Set color if specified
-        if (marker.color) {
-          markerElement.style.backgroundColor = marker.color;
+        // Add homeowner name label (always visible, above the dot)
+        if (marker.title) {
+          const label = document.createElement('div');
+          label.textContent = marker.title;
+          label.className = 'mb-1 px-2 py-0.5 rounded bg-gray-900 text-white text-xs font-semibold shadow-lg opacity-90 pointer-events-none group-hover:opacity-100';
+          markerElement.appendChild(label);
         }
         
-        // Add marker icon (a simple white dot)
+        // Marker dot
+        const dot = document.createElement('div');
+        dot.className = 'relative w-6 h-6 flex items-center justify-center';
+        // Pulse effect
+        const pulse = document.createElement('div');
+        pulse.className = 'absolute w-10 h-10 rounded-full animate-ping opacity-40';
+        pulse.style.backgroundColor = marker.color || '#F59E0B';
+        dot.appendChild(pulse);
+        // Marker dot
+        const pin = document.createElement('div');
+        pin.className = 'w-6 h-6 rounded-full flex items-center justify-center shadow-md z-10';
+        pin.style.backgroundColor = marker.color || '#F59E0B';
+        pin.style.border = '2px solid white';
+        // Add white inner dot
         const innerDot = document.createElement('div');
         innerDot.className = 'w-2 h-2 rounded-full bg-white';
-        markerElement.appendChild(innerDot);
+        pin.appendChild(innerDot);
+        dot.appendChild(pin);
+        markerElement.appendChild(dot);
         
         // Apply custom class if provided
         if (marker.customClass) {

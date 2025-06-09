@@ -35,6 +35,8 @@ export interface Project {
   piecemealPercent?: number;
   payroll?: PayrollItem[];
   technicians?: string[];
+  startDate?: string;
+  estimatedCompletionDate?: string;
 }
 
 interface ProjectsState {

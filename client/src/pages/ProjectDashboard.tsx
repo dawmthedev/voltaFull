@@ -1,8 +1,9 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { useAppDispatch, useAppSelector } from "../store";
 import { fetchProjects, Project } from "../store/projectsSlice";
 import MapContainer, { type MapMarker } from "../components/map/MapContainer";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import {
   FaMapMarkerAlt,
   FaDollarSign,
@@ -119,88 +120,254 @@ const ProjectDashboard: React.FC = () => {
     return projects.filter((project) => project.status === statusFilter);
   }, [projects, statusFilter]);
 
-  // Generate coordinates from address (simplified version)
-  const generateCoordinatesFromAddress = (address: string): [number, number] => {
-    // This is a simplified version - in a real app, you'd use a geocoding service
-    // For now, we'll return coordinates for California with small variations
+  // Cache for geocoded addresses to avoid redundant API calls
+  const geocodeCache = React.useRef<Record<string, [number, number]>>({});
+  
+  // Function to geocode an address using Mapbox API
+  const geocodeAddress = useCallback(async (address: string): Promise<[number, number] | null> => {
+    if (!address) return null;
+    
+    // Check cache first
+    const cacheKey = address.toLowerCase().trim();
+    if (geocodeCache.current[cacheKey]) {
+      return geocodeCache.current[cacheKey];
+    }
+    
+    try {
+      // Use Mapbox Geocoding API
+      const response = await axios.get(
+        `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(address)}.json`,
+        {
+          params: {
+            access_token: process.env.REACT_APP_MAPBOX_TOKEN,
+            country: 'US',
+            region: 'CA',
+            types: 'address,place,postcode,neighborhood',
+            limit: 1
+          }
+        }
+      );
+      
+      if (response.data && response.data.features && response.data.features.length > 0) {
+        const [lng, lat] = response.data.features[0].center;
+        // Cache the result
+        geocodeCache.current[cacheKey] = [lng, lat];
+        return [lng, lat];
+      }
+      console.warn('[Geocode] No features found for address:', address);
+      return null;
+    } catch (error) {
+      console.error('[Geocode] Error for address:', address, error);
+      return null;
+    }
+  }, []);
+  
+  // Function to generate coordinates with fallback
+  const generateCoordinatesFromAddress = async (address: string): Promise<[number, number]> => {
+    if (!address) return DEFAULT_CENTER;
+    
+    // Try to geocode the address
+    const coordinates = await geocodeAddress(address);
+    if (coordinates) return coordinates;
+    
+    // Fallback to a simple hash-based approach if geocoding fails
     const hash = address.split('').reduce((acc, char) => {
-      return ((acc << 5) - acc) + char.charCodeAt(0);
+      return (acc << 5) - acc + char.charCodeAt(0);
     }, 0);
     
-    // Generate small variations based on address hash
-    const lat = 36.7783 + ((hash % 100) / 10000);
-    const lng = -119.4179 + ((hash % 1000) / 10000);
+    // Southern California bounding box (more restricted area)
+    const socalBounds = {
+      minLng: -118.7,  // West boundary (further east to focus on populated areas)
+      maxLng: -116.8,  // East boundary (further west to avoid desert)
+      minLat: 33.5,    // South boundary (north of San Diego)
+      maxLat: 34.4     // North boundary (south of Bakersfield)
+    };
+    
+    // Generate coordinates within Southern California bounds
+    const lng = socalBounds.minLng + (Math.abs(hash) % (socalBounds.maxLng - socalBounds.minLng));
+    const lat = socalBounds.minLat + (Math.abs(hash * 1.5) % (socalBounds.maxLat - socalBounds.minLat));
     
     return [lng, lat];
   };
 
-  // Generate map markers from filtered projects
-  const generateMapMarkers = useMemo((): MapMarker[] => {
-    if (!filteredProjects.length) return [];
+  // State for markers with coordinates
+  const [markers, setMarkers] = useState<MapMarker[]>([]);
+  
+  // Update markers when filtered projects change
+  useEffect(() => {
+    const updateMarkers = async () => {
+      if (!filteredProjects || !filteredProjects.length) {
+        setMarkers([]);
+        return;
+      }
+      
+      const newMarkers: MapMarker[] = [];
+      
+      // Process projects in chunks to avoid overwhelming the geocoding service
+      const chunkSize = 5;
+      for (let i = 0; i < filteredProjects.length; i += chunkSize) {
+        const chunk = filteredProjects.slice(i, i + chunkSize);
+        const chunkPromises = chunk.map(async (project) => {
+          if (!project.address) return null;
+          
+          const coordinates = await generateCoordinatesFromAddress(project.address);
+          const status = project.status || "pending";
+          const projectId = project._id || "";
+          const homeowner = project.homeowner || "Unnamed Project";
+          const contractAmount = project.contractAmount || 0;
+          
+          // Format the status for display
+          const formattedStatus = status
+            .split('_')
+            .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+            .join(' ');
+            
+          // Determine marker color based on status
+          const markerColor = status === 'Active' 
+            ? '#10B981' // green-500 for Active
+            : '#F59E0B'; // yellow-500 for all other statuses
+            
+          // Format project details for the popup
+          const formatDate = (dateString?: string) => {
+            if (!dateString) return 'N/A';
+            return new Date(dateString).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'short',
+              day: 'numeric'
+            });
+          };
 
-    return filteredProjects
-      .filter((project) => project.address)
-      .map((project) => {
-        // Use address for geocoding or default to California coordinates
-        const coordinates = project.address ? 
-          generateCoordinatesFromAddress(project.address) : 
-          [0, 0]; // Default coordinates if no address
-        const status = project.status || "pending";
-        const projectId = project._id || "";
-        const homeowner = project.homeowner || "Unnamed Project";
-        const contractAmount = project.contractAmount || 0;
-
-        const description = `
-          <div class="popup-content p-2">
-            <h3 class="text-lg font-bold mb-2">${homeowner}</h3>
-            <div class="mb-2">
-              <p class="text-gray-600 text-sm">
-                <span class="inline-flex items-center">
-                  <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          const description = `
+            <div class="popup-content w-72 p-4 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
+              <div class="flex items-start justify-between mb-3">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white">${homeowner}</h3>
+                <span class="px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                  status === 'Active' 
+                    ? 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400' 
+                    : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400'
+                }">
+                  ${formattedStatus}
+                </span>
+              </div>
+              
+              <div class="space-y-2 text-sm text-gray-700 dark:text-gray-300 mb-4">
+                <div class="flex items-start">
+                  <svg class="w-4 h-4 mt-0.5 mr-2 flex-shrink-0 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
-                  ${project.address || "No address"}
-                </span>
-              </p>
+                  <span class="break-words">${project.address || 'No address available'}</span>
+                </div>
+                
+                ${contractAmount ? `
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                  <span class="font-medium">${formatAmount(contractAmount)}</span>
+                </div>` : ''}
+                
+                ${project.startDate ? `
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                  <span>Start: ${formatDate(project.startDate)}</span>
+                </div>` : ''}
+                
+                ${project.estimatedCompletionDate ? `
+                <div class="flex items-center">
+                  <svg class="w-4 h-4 mr-2 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"></path>
+                  </svg>
+                  <span>Est. Completion: ${formatDate(project.estimatedCompletionDate)}</span>
+                </div>` : ''}
+              </div>
+              
+              <div class="flex space-x-2">
+                <a 
+                  href="#" 
+                  class="flex-1 px-3 py-2 text-center bg-gray-700 hover:bg-gray-800 text-white text-sm font-medium rounded transition-colors shadow-sm"
+                  onclick="event.preventDefault(); event.stopPropagation(); window.location.href='/dashboard/projects/${projectId}';"
+                >
+                  View Details
+                </a>
+                <button 
+                  class="p-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  onclick="event.stopPropagation(); this.closest('.mapboxgl-popup')?.remove();"
+                  aria-label="Close"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                </button>
+              </div>
             </div>
-            <div class="flex justify-between items-center mb-3">
-              <span class="font-medium text-gray-900">${formatAmount(contractAmount)}</span>
-              <span class="px-2 py-1 rounded text-xs font-medium ${
-                status === "completed"
-                  ? "bg-green-100 text-green-800"
-                  : status === "in_progress"
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-yellow-100 text-yellow-800"
-              }">
-                ${status
-                  .split("_")
-                  .map((s) => s.charAt(0).toUpperCase() + s.slice(1))
-                  .join(" ")}
-              </span>
-            </div>
-            <button id="view-project-${projectId}" class="w-full px-3 py-2 text-center bg-gray-700 hover:bg-gray-800 text-white text-sm rounded transition-colors shadow-sm">
-              View Project Details
-            </button>
-          </div>
-        `;
+          `;
 
-        return {
-          id: projectId,
-          latitude: coordinates[1],
-          longitude: coordinates[0],
-          title: homeowner,
-          description: description,
-          color:
-            status === "completed"
-              ? "#10B981"
-              : status === "in_progress"
-                ? "#3B82F6"
-                : "#F59E0B",
-          onClick: () => navigate(`/projects/${projectId}`),
-        };
-      });
+          return {
+            id: projectId,
+            latitude: coordinates[1],
+            longitude: coordinates[0],
+            title: homeowner,
+            description: description,
+            color: markerColor,
+            onClick: () => navigate(`/dashboard/projects/${projectId}`),
+          };
+        });
+        
+        const chunkResults = await Promise.all(chunkPromises);
+        const validMarkers = chunkResults.filter((marker): marker is NonNullable<typeof marker> => marker !== null);
+        
+        // Only update if we have valid markers
+        if (validMarkers.length > 0) {
+          newMarkers.push(...validMarkers);
+          // Update markers after each chunk to show progress
+          setMarkers(prevMarkers => [...prevMarkers, ...validMarkers]);
+        }
+      }
+    };
+    
+    updateMarkers();
   }, [filteredProjects, navigate]);
+
+  // Use the markers state in the component
+  const generateMapMarkers = useMemo((): MapMarker[] => {
+    return markers.map(marker => ({
+      ...marker,
+      // Ensure id is always a string
+      id: String(marker.id),
+      // Add a title for the default tooltip
+      title: marker.title || 'Project Location'
+    }));
+  }, [markers]);
+  
+  // Add custom popup styles
+  useEffect(() => {
+    const style = document.createElement('style');
+    style.textContent = `
+      .mapboxgl-popup-close-button {
+        display: none; /* Hide default close button */
+      }
+      .mapboxgl-popup-content {
+        padding: 0 !important;
+        border-radius: 0.5rem !important;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+        pointer-events: auto !important;
+      }
+      .mapboxgl-popup-tip {
+        display: none;
+      }
+      .mapboxgl-popup {
+        pointer-events: none;
+      }
+    `;
+    document.head.appendChild(style);
+    
+    return () => {
+      document.head.removeChild(style);
+    };
+  }, []);
 
   // Handle project selection
   const handleProjectSelect = (markerId: string | number) => {
@@ -211,7 +378,7 @@ const ProjectDashboard: React.FC = () => {
   // Get the selected project details
   const selectedProject = useMemo(() => {
     if (!selectedProjectId || !projects) return null;
-    return projects.find((p) => p._id === selectedProjectId);
+    return projects.find((p: Project) => p._id === selectedProjectId);
   }, [selectedProjectId, projects]);
 
   return (
@@ -319,6 +486,12 @@ const ProjectDashboard: React.FC = () => {
                 <span className="inline-block w-3 h-3 rounded-full bg-blue-400 mr-1"></span>
                 <span className="text-gray-600 dark:text-gray-400">
                   In Progress
+                </span>
+              </div>
+              <div className="flex items-center">
+                <span className="inline-block w-3 h-3 rounded-full bg-green-500 mr-1"></span>
+                <span className="text-gray-600 dark:text-gray-400">
+                  Active
                 </span>
               </div>
               <div className="flex items-center">
