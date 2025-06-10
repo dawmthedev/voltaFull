@@ -1,6 +1,5 @@
 import React, { useEffect, useState, Fragment } from "react";
-import { FaCalendarAlt } from "react-icons/fa";
-import Select from "react-select";
+import { FaCalendarAlt, FaCheck, FaChevronDown, FaTimes } from "react-icons/fa";
 import axios from "axios";
 import { useAppDispatch } from "../store";
 import { createProject } from "../store/projectsSlice";
@@ -28,6 +27,8 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
   const [salesReps, setSalesReps] = useState<UserOption[]>([]);
   const [techUsers, setTechUsers] = useState<UserOption[]>([]);
   const [loading, setLoading] = useState(false);
+  const [productsOpen, setProductsOpen] = useState(false);
+  const [techsOpen, setTechsOpen] = useState(false);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -107,22 +108,61 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
                 <FaCalendarAlt className="text-gray-400" />
               </div>
             </div>
-            <Select
-              isMulti
-              options={[
-                { label: "Solar", value: "Solar" },
-                { label: "Battery", value: "Battery" },
-                { label: "Service", value: "Service" },
-                { label: "Roofing", value: "Roofing" },
-                { label: "EV Charger", value: "EV Charger" },
-                { label: "HVAC", value: "HVAC" },
-              ]}
-              placeholder="Products"
-              value={products.map((p) => ({ label: p, value: p }))}
-              onChange={(vals: any) => setProducts(vals.map((v: any) => v.value))}
-              className="react-select-container"
-              classNamePrefix="react-select"
-            />
+            <div className="relative">  
+              <button 
+                type="button" 
+                className="w-full flex items-center justify-between px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-left"
+                onClick={() => setProductsOpen(!productsOpen)}
+              >
+                <span>{products.length > 0 ? `${products.length} products selected` : 'Select products'}</span>
+                <FaChevronDown className={`transition-transform ${productsOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {productsOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md py-1 border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+                  {[
+                    { label: "Solar", value: "Solar" },
+                    { label: "Battery", value: "Battery" },
+                    { label: "EV Charger", value: "EV Charger" },
+                    { label: "Roofing", value: "Roofing" },
+                    { label: "HVAC", value: "HVAC" },
+                    { label: "Service", value: "Service" }
+                  ].map((option) => (
+                    <div 
+                      key={option.value}
+                      className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => {
+                        if (products.includes(option.value)) {
+                          setProducts(products.filter(p => p !== option.value));
+                        } else {
+                          setProducts([...products, option.value]);
+                        }
+                      }}
+                    >
+                      <div className={`w-4 h-4 border rounded flex items-center justify-center mr-2 ${products.includes(option.value) ? 'bg-blue-500 border-blue-500' : 'border-gray-300 dark:border-gray-500'}`}>
+                        {products.includes(option.value) && <FaCheck className="text-white text-xs" />}
+                      </div>
+                      <span>{option.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap gap-2 mt-2">
+              {products.map(product => (
+                <span key={product} className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-md dark:bg-blue-900 dark:text-blue-300">
+                  {product}
+                  <button 
+                    type="button" 
+                    onClick={() => setProducts(products.filter(p => p !== product))}
+                    className="ml-1 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                  >
+                    <FaTimes size={12} />
+                  </button>
+                </span>
+              ))}
+            </div> 
             <input
               id="contractAmount"
               aria-label="Contract Amount"
@@ -164,22 +204,63 @@ const AddProjectModal: React.FC<AddProjectModalProps> = ({
                 </option>
               ))}
             </select>
-            <Select
-              isMulti
-              placeholder="Assign Technician"
-              options={techUsers.map((t) => ({
-                label: `${t.name} (${t.role})`,
-                value: t._id,
-              }))}
-              value={techUsers
-                .filter((t) => technicians.includes(t._id))
-                .map((t) => ({ label: `${t.name} (${t.role})`, value: t._id }))}
-              onChange={(vals: any) =>
-                setTechnicians(vals.slice(0, 3).map((v: any) => v.value))
-              }
-              className="react-select-container"
-              classNamePrefix="react-select"
-            />
+            <div className="relative">
+              <button 
+                type="button" 
+                className="w-full flex items-center justify-between px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:text-white text-left"
+                onClick={() => setTechsOpen(!techsOpen)}
+              >
+                <span>
+                  {technicians.length > 0 
+                    ? `${technicians.length} technician${technicians.length > 1 ? 's' : ''} selected` 
+                    : 'Assign Technician'}
+                </span>
+                <FaChevronDown className={`transition-transform ${techsOpen ? 'rotate-180' : ''}`} />
+              </button>
+              
+              {techsOpen && (
+                <div className="absolute z-10 mt-1 w-full bg-white dark:bg-gray-800 shadow-lg rounded-md py-1 border border-gray-200 dark:border-gray-700 max-h-60 overflow-auto">
+                  {techUsers.map((tech) => (
+                    <div 
+                      key={tech._id}
+                      className="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100 dark:hover:bg-gray-700"
+                      onClick={() => {
+                        if (technicians.includes(tech._id)) {
+                          setTechnicians(technicians.filter(id => id !== tech._id));
+                        } else {
+                          // Limit to 3 technicians
+                          if (technicians.length < 3) {
+                            setTechnicians([...technicians, tech._id]);
+                          }
+                        }
+                      }}
+                    >
+                      <div className={`w-4 h-4 border rounded flex items-center justify-center mr-2 ${technicians.includes(tech._id) ? 'bg-blue-500 border-blue-500' : 'border-gray-300 dark:border-gray-500'}`}>
+                        {technicians.includes(tech._id) && <FaCheck className="text-white text-xs" />}
+                      </div>
+                      <span>{`${tech.name} (${tech.role})`}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            
+            <div className="flex flex-wrap gap-2 mt-2">
+              {techUsers
+                .filter(tech => technicians.includes(tech._id))
+                .map(tech => (
+                  <span key={tech._id} className="inline-flex items-center bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-md dark:bg-blue-900 dark:text-blue-300">
+                    {tech.name}
+                    <button 
+                      type="button" 
+                      onClick={() => setTechnicians(technicians.filter(id => id !== tech._id))}
+                      className="ml-1 text-blue-500 hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+                    >
+                      <FaTimes size={12} />
+                    </button>
+                  </span>
+                ))}
+            </div>
           </div>
           <pre className="mt-4 text-xs bg-gray-100 p-2 rounded">
             {JSON.stringify(

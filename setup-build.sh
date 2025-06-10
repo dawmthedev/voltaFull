@@ -28,8 +28,8 @@ echo "Installing client dependencies..."
 npm install
 
 # Force reinstall schema-utils in the right version
-echo "Force reinstalling schema-utils 3.0.0..."
-npm install --no-save schema-utils@3.0.0
+echo "Force reinstalling schema-utils 4.2.0..."
+npm install --no-save schema-utils@4.2.0
 
 # Function to fix schema-utils module - with absolute paths
 function fix_schema_utils {
