@@ -1,5 +1,6 @@
 {
   "buildCommand": "cd client && npm install && npm run build",
+  "installCommand": "cd client && npm install && mkdir -p ./node_modules/schema-utils/dist/util && touch ./node_modules/schema-utils/dist/util/memorize.js && echo 'module.exports = function memorize(fn) { const cache = new Map(); return (...args) => { const key = JSON.stringify(args); if (cache.has(key)) { return cache.get(key); } const result = fn(...args); cache.set(key, result); return result; }; }' > ./node_modules/schema-utils/dist/util/memorize.js",
   "outputDirectory": "client/build",
   "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
 }
