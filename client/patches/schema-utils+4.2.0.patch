@@ -1,0 +1,27 @@
+diff --git a/node_modules/schema-utils/dist/util/memorize.js b/node_modules/schema-utils/dist/util/memorize.js
+new file mode 100644
+index 0000000..b89e829
+--- /dev/null
++++ b/node_modules/schema-utils/dist/util/memorize.js
+@@ -0,0 +1,19 @@
++"use strict";
++
++Object.defineProperty(exports, "__esModule", {
++  value: true
++});
++exports.default = memorize;
++
++function memorize(fn) {
++  const cache = new Map();
++  
++  // Return a memoized version of the function
++  return (...args) => {
++    const key = JSON.stringify(args);
++    if (cache.has(key)) {
++      return cache.get(key);
++    }
++    const result = fn(...args);
++    cache.set(key, result);
++    return result;
++  };
++}
